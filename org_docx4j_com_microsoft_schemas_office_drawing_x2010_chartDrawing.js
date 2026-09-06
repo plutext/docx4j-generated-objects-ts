@@ -1,0 +1,88 @@
+var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module_Factory = function () {
+  var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing = {
+    name: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2010\/chartDrawing',
+    dependencies: ['org_docx4j_com_microsoft_schemas_office_drawing_x2010_main', 'org_docx4j_dml'],
+    typeInfos: [{
+        localName: 'CTApplicationNonVisualDrawingProps',
+        typeName: 'CT_ApplicationNonVisualDrawingProps',
+        propertyInfos: [{
+            name: 'macro',
+            attributeName: {
+              localPart: 'macro'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fPublished',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'fPublished'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTContentPart',
+        typeName: 'CT_ContentPart',
+        propertyInfos: [{
+            name: 'nvContentPartPr',
+            typeInfo: '.CTContentPartNonVisual'
+          }, {
+            name: 'nvPr',
+            typeInfo: '.CTApplicationNonVisualDrawingProps'
+          }, {
+            name: 'xfrm',
+            typeInfo: 'org_docx4j_dml.CTTransform2D'
+          }, {
+            name: 'extLst',
+            typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bwMode',
+            typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
+            defaultValue: 'auto',
+            attributeName: {
+              localPart: 'bwMode'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTContentPartNonVisual',
+        typeName: 'CT_ContentPartNonVisual',
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvContentPartPr',
+            typeInfo: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTNonVisualInkContentPartProperties'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: '.CTContentPart',
+        elementName: 'contentPart'
+      }]
+  };
+  return {
+    org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing: org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module_Factory);
+}
+else {
+  var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module = org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing = org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module.org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing;
+  }
+  else {
+    var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing = org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module.org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing;
+  }
+}

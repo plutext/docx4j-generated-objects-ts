@@ -1,0 +1,42 @@
+var org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module_Factory = function () {
+  var org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram = {
+    name: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2010\/diagram',
+    dependencies: ['org_docx4j_dml'],
+    typeInfos: [{
+        localName: 'CTBoolean',
+        typeName: 'CT_Boolean',
+        propertyInfos: [{
+            name: 'val',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps',
+        elementName: 'cNvPr'
+      }, {
+        typeInfo: '.CTBoolean',
+        elementName: 'recolorImg'
+      }]
+  };
+  return {
+    org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram: org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module_Factory);
+}
+else {
+  var org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module = org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram = org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module.org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram;
+  }
+  else {
+    var org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram = org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram_Module.org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram;
+  }
+}

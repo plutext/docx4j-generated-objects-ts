@@ -1,0 +1,110 @@
+var org_docx4j_docProps_core_dc_elements_Module_Factory = function () {
+  var org_docx4j_docProps_core_dc_elements = {
+    name: 'org_docx4j_docProps_core_dc_elements',
+    defaultElementNamespaceURI: 'http:\/\/purl.org\/dc\/elements\/1.1\/',
+    defaultAttributeNamespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace',
+    typeInfos: [{
+        localName: 'ElementContainer',
+        typeName: 'elementContainer',
+        propertyInfos: [{
+            name: 'any',
+            minOccurs: 0,
+            collection: true,
+            mixed: false,
+            allowDom: false,
+            typeInfo: '.SimpleLiteral',
+            type: 'elementRef'
+          }]
+      }, {
+        localName: 'SimpleLiteral',
+        propertyInfos: [{
+            name: 'content',
+            collection: true,
+            allowDom: false,
+            type: 'elementRefs'
+          }, {
+            name: 'lang',
+            type: 'attribute'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: '.SimpleLiteral',
+        elementName: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'contributor',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'coverage',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'creator',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'date',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'description',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'format',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'identifier',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'language',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'publisher',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'relation',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'rights',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'source',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'subject',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'title',
+        substitutionHead: 'any'
+      }, {
+        typeInfo: '.SimpleLiteral',
+        elementName: 'type',
+        substitutionHead: 'any'
+      }]
+  };
+  return {
+    org_docx4j_docProps_core_dc_elements: org_docx4j_docProps_core_dc_elements
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_docProps_core_dc_elements_Module_Factory);
+}
+else {
+  var org_docx4j_docProps_core_dc_elements_Module = org_docx4j_docProps_core_dc_elements_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_docProps_core_dc_elements = org_docx4j_docProps_core_dc_elements_Module.org_docx4j_docProps_core_dc_elements;
+  }
+  else {
+    var org_docx4j_docProps_core_dc_elements = org_docx4j_docProps_core_dc_elements_Module.org_docx4j_docProps_core_dc_elements;
+  }
+}

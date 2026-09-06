@@ -1,0 +1,714 @@
+var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory = function () {
+  var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main = {
+    name: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/powerpoint\/2010\/main',
+    dependencies: ['org_docx4j_com_microsoft_schemas_office_drawing_x2010_main', 'org_docx4j_dml', 'org_pptx4j_pml'],
+    typeInfos: [{
+        localName: 'CTBrowseMode',
+        typeName: 'CT_BrowseMode',
+        propertyInfos: [{
+            name: 'showStatus',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showStatus'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTContentPartNonVisual',
+        typeName: 'CT_ContentPartNonVisual',
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvContentPartPr',
+            typeInfo: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTNonVisualInkContentPartProperties'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: 'org_pptx4j_pml.NvPr'
+          }]
+      }, {
+        localName: 'CTDefaultImageDpi',
+        typeName: 'CT_DefaultImageDpi',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTDiscardImageEditData',
+        typeName: 'CT_DiscardImageEditData',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTFlyThroughTransition',
+        typeName: 'CT_FlyThroughTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: 'org_pptx4j_pml.STTransitionInOutDirectionType',
+            defaultValue: 'in',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hasBounce',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'hasBounce'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTGlitterTransition',
+        typeName: 'CT_GlitterTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: 'org_pptx4j_pml.STTransitionSideDirectionType',
+            defaultValue: 'l',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pattern',
+            typeInfo: '.STTransitionPattern',
+            defaultValue: 'diamond',
+            attributeName: {
+              localPart: 'pattern'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTLaserTrace',
+        typeName: 'CT_LaserTrace',
+        propertyInfos: [{
+            name: 'tracePt',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTLaserTracePoint'
+          }]
+      }, {
+        localName: 'CTLaserTraceList',
+        typeName: 'CT_LaserTraceList',
+        propertyInfos: [{
+            name: 'tracePtLst',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTLaserTrace'
+          }]
+      }, {
+        localName: 'CTLaserTracePoint',
+        typeName: 'CT_LaserTracePoint',
+        propertyInfos: [{
+            name: 't',
+            required: true,
+            attributeName: {
+              localPart: 't'
+            },
+            type: 'attribute'
+          }, {
+            name: 'x',
+            required: true,
+            typeInfo: 'Long',
+            attributeName: {
+              localPart: 'x'
+            },
+            type: 'attribute'
+          }, {
+            name: 'y',
+            required: true,
+            typeInfo: 'Long',
+            attributeName: {
+              localPart: 'y'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTLeftRightDirectionTransition',
+        typeName: 'CT_LeftRightDirectionTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: '.STTransitionLeftRightDirectionType',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMedia',
+        typeName: 'CT_Media',
+        propertyInfos: [{
+            name: 'trim',
+            typeInfo: '.CTMediaTrim'
+          }, {
+            name: 'fade',
+            typeInfo: '.CTMediaFade'
+          }, {
+            name: 'bmkLst',
+            typeInfo: '.CTMediaBookmarkList'
+          }, {
+            name: 'extLst',
+            typeInfo: 'org_pptx4j_pml.CTExtensionList'
+          }, {
+            name: 'embed',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'embed',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'link',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'link',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaBookmark',
+        typeName: 'CT_MediaBookmark',
+        propertyInfos: [{
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'time',
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaBookmarkList',
+        typeName: 'CT_MediaBookmarkList',
+        propertyInfos: [{
+            name: 'bmk',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTMediaBookmark'
+          }]
+      }, {
+        localName: 'CTMediaBookmarkTarget',
+        typeName: 'CT_MediaBookmarkTarget',
+        propertyInfos: [{
+            name: 'spid',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bmkName',
+            required: true,
+            attributeName: {
+              localPart: 'bmkName'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaFade',
+        typeName: 'CT_MediaFade',
+        propertyInfos: [{
+            name: 'in',
+            defaultValue: '0',
+            attributeName: {
+              localPart: 'in'
+            },
+            type: 'attribute'
+          }, {
+            name: 'out',
+            defaultValue: '0',
+            attributeName: {
+              localPart: 'out'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaPlaybackEventRecord',
+        typeName: 'CT_MediaPlaybackEventRecord',
+        propertyInfos: [{
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'objId'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaSeekEventRecord',
+        typeName: 'CT_MediaSeekEventRecord',
+        propertyInfos: [{
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'objId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'seek',
+            required: true,
+            attributeName: {
+              localPart: 'seek'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMediaTrim',
+        typeName: 'CT_MediaTrim',
+        propertyInfos: [{
+            name: 'st',
+            defaultValue: '0',
+            attributeName: {
+              localPart: 'st'
+            },
+            type: 'attribute'
+          }, {
+            name: 'end',
+            defaultValue: '0',
+            attributeName: {
+              localPart: 'end'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTNullEventRecord',
+        typeName: 'CT_NullEventRecord',
+        propertyInfos: [{
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'objId'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPrismTransition',
+        typeName: 'CT_PrismTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: 'org_pptx4j_pml.STTransitionSideDirectionType',
+            defaultValue: 'l',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'isContent',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'isContent'
+            },
+            type: 'attribute'
+          }, {
+            name: 'isInverted',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'isInverted'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRandomId',
+        typeName: 'CT_RandomId',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRevealTransition',
+        typeName: 'CT_RevealTransition',
+        propertyInfos: [{
+            name: 'thruBlk',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'thruBlk'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dir',
+            typeInfo: '.STTransitionLeftRightDirectionType',
+            defaultValue: 'l',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRippleTransition',
+        typeName: 'CT_RippleTransition',
+        propertyInfos: [{
+            name: 'dir',
+            defaultValue: 'center',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSection',
+        typeName: 'CT_Section',
+        propertyInfos: [{
+            name: 'sldIdLst',
+            required: true,
+            typeInfo: '.CTSectionSlideIdList'
+          }, {
+            name: 'extLst',
+            typeInfo: 'org_pptx4j_pml.CTExtensionList'
+          }, {
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSectionList',
+        typeName: 'CT_SectionList',
+        propertyInfos: [{
+            name: 'section',
+            required: true,
+            collection: true,
+            typeInfo: '.CTSection'
+          }]
+      }, {
+        localName: 'CTSectionSlideIdList',
+        typeName: 'CT_SectionSlideIdList',
+        propertyInfos: [{
+            name: 'sldId',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTSectionSlideIdListEntry'
+          }]
+      }, {
+        localName: 'CTSectionSlideIdListEntry',
+        typeName: 'CT_SectionSlideIdListEntry',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShowEventRecordList',
+        typeName: 'CT_ShowEventRecordList',
+        propertyInfos: [{
+            name: 'triggerEvtOrPlayEvtOrStopEvt',
+            minOccurs: 0,
+            collection: true,
+            mixed: false,
+            allowDom: false,
+            elementTypeInfos: [{
+                elementName: 'triggerEvt',
+                typeInfo: '.CTTriggerEventRecord'
+              }, {
+                elementName: 'playEvt',
+                typeInfo: '.CTMediaPlaybackEventRecord'
+              }, {
+                elementName: 'stopEvt',
+                typeInfo: '.CTMediaPlaybackEventRecord'
+              }, {
+                elementName: 'pauseEvt',
+                typeInfo: '.CTMediaPlaybackEventRecord'
+              }, {
+                elementName: 'resumeEvt',
+                typeInfo: '.CTMediaPlaybackEventRecord'
+              }, {
+                elementName: 'seekEvt',
+                typeInfo: '.CTMediaSeekEventRecord'
+              }, {
+                elementName: 'nullEvt',
+                typeInfo: '.CTNullEventRecord'
+              }],
+            type: 'elementRefs'
+          }]
+      }, {
+        localName: 'CTShowMediaControls',
+        typeName: 'CT_ShowMediaControls',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShredTransition',
+        typeName: 'CT_ShredTransition',
+        propertyInfos: [{
+            name: 'pattern',
+            typeInfo: '.STTransitionShredPattern',
+            defaultValue: 'strip',
+            attributeName: {
+              localPart: 'pattern'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dir',
+            typeInfo: 'org_pptx4j_pml.STTransitionInOutDirectionType',
+            defaultValue: 'in',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTriggerEventRecord',
+        typeName: 'CT_TriggerEventRecord',
+        propertyInfos: [{
+            name: 'type',
+            required: true,
+            typeInfo: 'org_pptx4j_pml.STTLTriggerEvent',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'objId'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionCenterDirectionType',
+        baseTypeInfo: 'Token',
+        values: ['center']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionLeftRightDirectionType',
+        baseTypeInfo: 'Token',
+        values: ['l', 'r']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionPattern',
+        baseTypeInfo: 'Token',
+        values: ['diamond', 'hexagon']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionShredPattern',
+        baseTypeInfo: 'Token',
+        values: ['strip', 'rectangle']
+      }],
+    elementInfos: [{
+        typeInfo: '.CTMediaBookmarkTarget',
+        elementName: 'bmkTgt'
+      }, {
+        typeInfo: '.CTBrowseMode',
+        elementName: 'browseMode'
+      }, {
+        typeInfo: '.CTLeftRightDirectionTransition',
+        elementName: 'conveyor'
+      }, {
+        typeInfo: '.CTRandomId',
+        elementName: 'creationId'
+      }, {
+        typeInfo: '.CTDefaultImageDpi',
+        elementName: 'defaultImageDpi'
+      }, {
+        typeInfo: '.CTDiscardImageEditData',
+        elementName: 'discardImageEditData'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTOrientationTransition',
+        elementName: 'doors'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTExtensionListModify',
+        elementName: 'extLst'
+      }, {
+        typeInfo: '.CTLeftRightDirectionTransition',
+        elementName: 'ferris'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTEmpty',
+        elementName: 'flash'
+      }, {
+        typeInfo: '.CTLeftRightDirectionTransition',
+        elementName: 'flip'
+      }, {
+        typeInfo: '.CTFlyThroughTransition',
+        elementName: 'flythrough'
+      }, {
+        typeInfo: '.CTLeftRightDirectionTransition',
+        elementName: 'gallery'
+      }, {
+        typeInfo: '.CTGlitterTransition',
+        elementName: 'glitter'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTEmpty',
+        elementName: 'honeycomb'
+      }, {
+        typeInfo: 'org_docx4j_dml.CTColor',
+        elementName: 'laserClr'
+      }, {
+        typeInfo: '.CTLaserTraceList',
+        elementName: 'laserTraceLst'
+      }, {
+        typeInfo: '.CTMedia',
+        elementName: 'media'
+      }, {
+        typeInfo: '.CTRandomId',
+        elementName: 'modId'
+      }, {
+        typeInfo: '.CTNullEventRecord',
+        elementName: 'nullEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTContentPartNonVisual',
+        elementName: 'nvContentPartPr'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTSideDirectionTransition',
+        elementName: 'pan'
+      }, {
+        typeInfo: '.CTMediaPlaybackEventRecord',
+        elementName: 'pauseEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTMediaPlaybackEventRecord',
+        elementName: 'playEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTPrismTransition',
+        elementName: 'prism'
+      }, {
+        typeInfo: '.CTMediaPlaybackEventRecord',
+        elementName: 'resumeEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTRevealTransition',
+        elementName: 'reveal'
+      }, {
+        typeInfo: '.CTRippleTransition',
+        elementName: 'ripple'
+      }, {
+        typeInfo: '.CTSectionList',
+        elementName: 'sectionLst'
+      }, {
+        typeInfo: '.CTMediaSeekEventRecord',
+        elementName: 'seekEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTShowEventRecordList',
+        elementName: 'showEvtLst'
+      }, {
+        typeInfo: '.CTShowMediaControls',
+        elementName: 'showMediaCtrls'
+      }, {
+        typeInfo: '.CTShredTransition',
+        elementName: 'shred'
+      }, {
+        typeInfo: '.CTMediaPlaybackEventRecord',
+        elementName: 'stopEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: '.CTLeftRightDirectionTransition',
+        elementName: 'switch'
+      }, {
+        typeInfo: '.CTTriggerEventRecord',
+        elementName: 'triggerEvt',
+        scope: '.CTShowEventRecordList'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTSideDirectionTransition',
+        elementName: 'vortex'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTInOutTransition',
+        elementName: 'warp'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTWheelTransition',
+        elementName: 'wheelReverse'
+      }, {
+        typeInfo: 'org_pptx4j_pml.CTOrientationTransition',
+        elementName: 'window'
+      }, {
+        typeInfo: 'org_docx4j_dml.CTTransform2D',
+        elementName: 'xfrm'
+      }]
+  };
+  return {
+    org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main: org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory);
+}
+else {
+  var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module = org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main = org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module.org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main;
+  }
+  else {
+    var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main = org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module.org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main;
+  }
+}

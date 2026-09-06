@@ -1,0 +1,1450 @@
+var org_docx4j_vml_officedrawing_Module_Factory = function () {
+  var org_docx4j_vml_officedrawing = {
+    name: 'org_docx4j_vml_officedrawing',
+    defaultElementNamespaceURI: 'urn:schemas-microsoft-com:office:office',
+    dependencies: ['org_docx4j_vml'],
+    typeInfos: [{
+        localName: 'CTCallout',
+        typeName: 'CT_Callout',
+        propertyInfos: [{
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'gap',
+            attributeName: {
+              localPart: 'gap'
+            },
+            type: 'attribute'
+          }, {
+            name: 'angle',
+            values: ['any', '30', '45', '60', '90', 'auto'],
+            attributeName: {
+              localPart: 'angle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dropauto',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'dropauto'
+            },
+            type: 'attribute'
+          }, {
+            name: 'drop',
+            attributeName: {
+              localPart: 'drop'
+            },
+            type: 'attribute'
+          }, {
+            name: 'distance',
+            attributeName: {
+              localPart: 'distance'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lengthspecified',
+            typeInfo: '.STTrueFalse',
+            defaultValue: 'f',
+            attributeName: {
+              localPart: 'lengthspecified'
+            },
+            type: 'attribute'
+          }, {
+            name: 'length',
+            attributeName: {
+              localPart: 'length'
+            },
+            type: 'attribute'
+          }, {
+            name: 'accentbar',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'accentbar'
+            },
+            type: 'attribute'
+          }, {
+            name: 'textborder',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'textborder'
+            },
+            type: 'attribute'
+          }, {
+            name: 'minusx',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'minusx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'minusy',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'minusy'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTClipPath',
+        typeName: 'CT_ClipPath',
+        propertyInfos: [{
+            name: 'v',
+            required: true,
+            attributeName: {
+              localPart: 'v',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTColorMenu',
+        typeName: 'CT_ColorMenu',
+        propertyInfos: [{
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'shadowcolor',
+            attributeName: {
+              localPart: 'shadowcolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'extrusioncolor',
+            attributeName: {
+              localPart: 'extrusioncolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTColorMru',
+        typeName: 'CT_ColorMru',
+        propertyInfos: [{
+            name: 'colors',
+            attributeName: {
+              localPart: 'colors'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTComplex',
+        typeName: 'CT_Complex',
+        propertyInfos: [{
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTDiagram',
+        typeName: 'CT_Diagram',
+        propertyInfos: [{
+            name: 'relationtable',
+            typeInfo: '.CTRelationTable'
+          }, {
+            name: 'dgmstyle',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmstyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autoformat',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'autoformat'
+            },
+            type: 'attribute'
+          }, {
+            name: 'reverse',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'reverse'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autolayout',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'autolayout'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmscalex',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmscalex'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmscaley',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmscaley'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmfontsize',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmfontsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'constrainbounds',
+            attributeName: {
+              localPart: 'constrainbounds'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmbasetextscale',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmbasetextscale'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTEntry',
+        typeName: 'CT_Entry',
+        propertyInfos: [{
+            name: '_new',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'new'
+            },
+            type: 'attribute'
+          }, {
+            name: 'old',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'old'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTExtrusion',
+        typeName: 'CT_Extrusion',
+        propertyInfos: [{
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STExtrusionType',
+            defaultValue: 'parallel',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'render',
+            typeInfo: '.STExtrusionRender',
+            defaultValue: 'solid',
+            attributeName: {
+              localPart: 'render'
+            },
+            type: 'attribute'
+          }, {
+            name: 'viewpointorigin',
+            attributeName: {
+              localPart: 'viewpointorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'viewpoint',
+            attributeName: {
+              localPart: 'viewpoint'
+            },
+            type: 'attribute'
+          }, {
+            name: 'plane',
+            typeInfo: '.STExtrusionPlane',
+            defaultValue: 'XY',
+            attributeName: {
+              localPart: 'plane'
+            },
+            type: 'attribute'
+          }, {
+            name: 'skewangle',
+            typeInfo: 'Float',
+            attributeName: {
+              localPart: 'skewangle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'skewamt',
+            attributeName: {
+              localPart: 'skewamt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'foredepth',
+            attributeName: {
+              localPart: 'foredepth'
+            },
+            type: 'attribute'
+          }, {
+            name: 'backdepth',
+            attributeName: {
+              localPart: 'backdepth'
+            },
+            type: 'attribute'
+          }, {
+            name: 'orientation',
+            attributeName: {
+              localPart: 'orientation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'orientationangle',
+            typeInfo: 'Float',
+            attributeName: {
+              localPart: 'orientationangle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lockrotationcenter',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lockrotationcenter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autorotationcenter',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'autorotationcenter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rotationcenter',
+            attributeName: {
+              localPart: 'rotationcenter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rotationangle',
+            attributeName: {
+              localPart: 'rotationangle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'colormode',
+            typeInfo: '.STColorMode',
+            attributeName: {
+              localPart: 'colormode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'color',
+            attributeName: {
+              localPart: 'color'
+            },
+            type: 'attribute'
+          }, {
+            name: 'shininess',
+            typeInfo: 'Float',
+            attributeName: {
+              localPart: 'shininess'
+            },
+            type: 'attribute'
+          }, {
+            name: 'specularity',
+            attributeName: {
+              localPart: 'specularity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'diffusity',
+            attributeName: {
+              localPart: 'diffusity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'metal',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'metal'
+            },
+            type: 'attribute'
+          }, {
+            name: 'edge',
+            attributeName: {
+              localPart: 'edge'
+            },
+            type: 'attribute'
+          }, {
+            name: 'facet',
+            attributeName: {
+              localPart: 'facet'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightface',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lightface'
+            },
+            type: 'attribute'
+          }, {
+            name: 'brightness',
+            attributeName: {
+              localPart: 'brightness'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightposition',
+            attributeName: {
+              localPart: 'lightposition'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightlevel',
+            attributeName: {
+              localPart: 'lightlevel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightharsh',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lightharsh'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightposition2',
+            attributeName: {
+              localPart: 'lightposition2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightlevel2',
+            attributeName: {
+              localPart: 'lightlevel2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightharsh2',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lightharsh2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTFill',
+        typeName: 'CT_Fill',
+        propertyInfos: [{
+            name: 'type',
+            typeInfo: '.STFillType',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTIdMap',
+        typeName: 'CT_IdMap',
+        propertyInfos: [{
+            name: 'data',
+            attributeName: {
+              localPart: 'data'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTInk',
+        typeName: 'CT_Ink',
+        propertyInfos: [{
+            name: 'i',
+            typeInfo: 'Base64Binary',
+            attributeName: {
+              localPart: 'i'
+            },
+            type: 'attribute'
+          }, {
+            name: 'annotation',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'annotation'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTLock',
+        typeName: 'CT_Lock',
+        propertyInfos: [{
+            name: 'position',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'position'
+            },
+            type: 'attribute'
+          }, {
+            name: 'selection',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'selection'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grouping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'grouping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ungrouping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'ungrouping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rotation',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'rotation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'cropping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'verticies',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'verticies'
+            },
+            type: 'attribute'
+          }, {
+            name: 'adjusthandles',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'adjusthandles'
+            },
+            type: 'attribute'
+          }, {
+            name: 'text',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'text'
+            },
+            type: 'attribute'
+          }, {
+            name: 'aspectratio',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'aspectratio'
+            },
+            type: 'attribute'
+          }, {
+            name: 'shapetype',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'shapetype'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOLEObject',
+        typeName: 'CT_OLEObject',
+        propertyInfos: [{
+            name: 'linkType',
+            elementName: 'LinkType',
+            typeInfo: '.STOLELinkType'
+          }, {
+            name: 'lockedField',
+            elementName: 'LockedField',
+            values: ['', 't', 'f', 'true', 'false']
+          }, {
+            name: 'fieldCodes',
+            elementName: 'FieldCodes'
+          }, {
+            name: 'type',
+            typeInfo: '.STOLEType',
+            attributeName: {
+              localPart: 'Type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'progID',
+            attributeName: {
+              localPart: 'ProgID'
+            },
+            type: 'attribute'
+          }, {
+            name: 'shapeID',
+            attributeName: {
+              localPart: 'ShapeID'
+            },
+            type: 'attribute'
+          }, {
+            name: 'drawAspect',
+            typeInfo: '.STOLEDrawAspect',
+            attributeName: {
+              localPart: 'DrawAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objectID',
+            attributeName: {
+              localPart: 'ObjectID'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'updateMode',
+            typeInfo: '.STOLEUpdateMode',
+            attributeName: {
+              localPart: 'UpdateMode'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTProxy',
+        typeName: 'CT_Proxy',
+        propertyInfos: [{
+            name: 'start',
+            values: ['', 't', 'f', 'true', 'false'],
+            defaultValue: 'false',
+            attributeName: {
+              localPart: 'start'
+            },
+            type: 'attribute'
+          }, {
+            name: 'end',
+            values: ['', 't', 'f', 'true', 'false'],
+            defaultValue: 'false',
+            attributeName: {
+              localPart: 'end'
+            },
+            type: 'attribute'
+          }, {
+            name: 'idref',
+            attributeName: {
+              localPart: 'idref'
+            },
+            type: 'attribute'
+          }, {
+            name: 'connectloc',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'connectloc'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTR',
+        typeName: 'CT_R',
+        propertyInfos: [{
+            name: 'proxy',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTProxy'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STRType',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'how',
+            typeInfo: '.STHow',
+            attributeName: {
+              localPart: 'how'
+            },
+            type: 'attribute'
+          }, {
+            name: 'idref',
+            attributeName: {
+              localPart: 'idref'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRegroupTable',
+        typeName: 'CT_RegroupTable',
+        propertyInfos: [{
+            name: 'entry',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTEntry'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRelation',
+        typeName: 'CT_Relation',
+        propertyInfos: [{
+            name: 'idsrc',
+            attributeName: {
+              localPart: 'idsrc'
+            },
+            type: 'attribute'
+          }, {
+            name: 'iddest',
+            attributeName: {
+              localPart: 'iddest'
+            },
+            type: 'attribute'
+          }, {
+            name: 'idcntr',
+            attributeName: {
+              localPart: 'idcntr'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRelationTable',
+        typeName: 'CT_RelationTable',
+        propertyInfos: [{
+            name: 'rel',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTRelation'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRules',
+        typeName: 'CT_Rules',
+        propertyInfos: [{
+            name: 'r',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTR'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShapeDefaults',
+        typeName: 'CT_ShapeDefaults',
+        propertyInfos: [{
+            name: 'fill',
+            elementName: {
+              localPart: 'fill',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            typeInfo: 'org_docx4j_vml.CTFill'
+          }, {
+            name: 'stroke',
+            elementName: {
+              localPart: 'stroke',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            typeInfo: 'org_docx4j_vml.CTStroke'
+          }, {
+            name: 'textbox',
+            elementName: {
+              localPart: 'textbox',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            typeInfo: 'org_docx4j_vml.CTTextbox'
+          }, {
+            name: 'shadow',
+            elementName: {
+              localPart: 'shadow',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            typeInfo: 'org_docx4j_vml.CTShadow'
+          }, {
+            name: 'skew',
+            typeInfo: '.CTSkew'
+          }, {
+            name: 'extrusion',
+            typeInfo: '.CTExtrusion'
+          }, {
+            name: 'callout',
+            typeInfo: '.CTCallout'
+          }, {
+            name: 'lock',
+            typeInfo: '.CTLock'
+          }, {
+            name: 'colormru',
+            typeInfo: '.CTColorMru'
+          }, {
+            name: 'colormenu',
+            typeInfo: '.CTColorMenu'
+          }, {
+            name: 'spidmax',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'spidmax'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillToggle',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'fill'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeToggle',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroke'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'allowincell',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShapeLayout',
+        typeName: 'CT_ShapeLayout',
+        propertyInfos: [{
+            name: 'idmap',
+            typeInfo: '.CTIdMap'
+          }, {
+            name: 'regrouptable',
+            typeInfo: '.CTRegroupTable'
+          }, {
+            name: 'rules',
+            typeInfo: '.CTRules'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSignatureLine',
+        typeName: 'CT_SignatureLine',
+        propertyInfos: [{
+            name: 'issignatureline',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'issignatureline'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'provid',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'provid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'signinginstructionsset',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'signinginstructionsset'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowcomments',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'allowcomments'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showsigndate',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'showsigndate'
+            },
+            type: 'attribute'
+          }, {
+            name: 'suggestedsigner',
+            attributeName: {
+              localPart: 'suggestedsigner',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'suggestedsigner2',
+            attributeName: {
+              localPart: 'suggestedsigner2',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'suggestedsigneremail',
+            attributeName: {
+              localPart: 'suggestedsigneremail',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'signinginstructions',
+            attributeName: {
+              localPart: 'signinginstructions',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'addlxml',
+            attributeName: {
+              localPart: 'addlxml',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sigprovurl',
+            attributeName: {
+              localPart: 'sigprovurl',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSkew',
+        typeName: 'CT_Skew',
+        propertyInfos: [{
+            name: 'id',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'offset',
+            attributeName: {
+              localPart: 'offset'
+            },
+            type: 'attribute'
+          }, {
+            name: 'origin',
+            attributeName: {
+              localPart: 'origin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'matrix',
+            attributeName: {
+              localPart: 'matrix'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTStrokeChild',
+        typeName: 'CT_StrokeChild',
+        propertyInfos: [{
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'weight',
+            attributeName: {
+              localPart: 'weight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'color',
+            attributeName: {
+              localPart: 'color'
+            },
+            type: 'attribute'
+          }, {
+            name: 'color2',
+            attributeName: {
+              localPart: 'color2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'linestyle',
+            typeInfo: 'org_docx4j_vml.STStrokeLineStyle',
+            attributeName: {
+              localPart: 'linestyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'miterlimit',
+            attributeName: {
+              localPart: 'miterlimit'
+            },
+            type: 'attribute'
+          }, {
+            name: 'joinstyle',
+            typeInfo: 'org_docx4j_vml.STStrokeJoinStyle',
+            attributeName: {
+              localPart: 'joinstyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endcap',
+            typeInfo: 'org_docx4j_vml.STStrokeEndCap',
+            attributeName: {
+              localPart: 'endcap'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dashstyle',
+            attributeName: {
+              localPart: 'dashstyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'insetpen'
+            },
+            type: 'attribute'
+          }, {
+            name: 'filltype',
+            typeInfo: 'org_docx4j_vml.STFillType',
+            attributeName: {
+              localPart: 'filltype'
+            },
+            type: 'attribute'
+          }, {
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imageaspect',
+            typeInfo: 'org_docx4j_vml.STImageAspect',
+            attributeName: {
+              localPart: 'imageaspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imagesize',
+            attributeName: {
+              localPart: 'imagesize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imagealignshape',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'imagealignshape'
+            },
+            type: 'attribute'
+          }, {
+            name: 'startarrow',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowType',
+            attributeName: {
+              localPart: 'startarrow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'startarrowwidth',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowWidth',
+            attributeName: {
+              localPart: 'startarrowwidth'
+            },
+            type: 'attribute'
+          }, {
+            name: 'startarrowlength',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowLength',
+            attributeName: {
+              localPart: 'startarrowlength'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endarrow',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowType',
+            attributeName: {
+              localPart: 'endarrow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endarrowwidth',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowWidth',
+            attributeName: {
+              localPart: 'endarrowwidth'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endarrowlength',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowLength',
+            attributeName: {
+              localPart: 'endarrowlength'
+            },
+            type: 'attribute'
+          }, {
+            name: 'href',
+            attributeName: {
+              localPart: 'href',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'althref',
+            attributeName: {
+              localPart: 'althref',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'forcedash',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ext',
+            typeInfo: 'org_docx4j_vml.STExt',
+            attributeName: {
+              localPart: 'ext',
+              namespaceURI: 'urn:schemas-microsoft-com:vml'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        type: 'enumInfo',
+        localName: 'STBWMode',
+        values: ['color', 'auto', 'grayScale', 'lightGrayscale', 'inverseGray', 'grayOutline', 'highContrast', 'black', 'white', 'hide', 'undrawn', 'blackTextAndLines']
+      }, {
+        type: 'enumInfo',
+        localName: 'STCalloutPlacement',
+        values: ['top', 'center', 'bottom', 'user']
+      }, {
+        type: 'enumInfo',
+        localName: 'STColorMode',
+        values: ['auto', 'custom']
+      }, {
+        type: 'enumInfo',
+        localName: 'STConnectType',
+        values: ['none', 'rect', 'segments', 'custom']
+      }, {
+        type: 'enumInfo',
+        localName: 'STConnectorType',
+        values: ['none', 'straight', 'elbow', 'curved']
+      }, {
+        type: 'enumInfo',
+        localName: 'STExtrusionPlane',
+        values: ['XY', 'ZX', 'YZ']
+      }, {
+        type: 'enumInfo',
+        localName: 'STExtrusionRender',
+        values: ['solid', 'wireFrame', 'boundingCube']
+      }, {
+        type: 'enumInfo',
+        localName: 'STExtrusionType',
+        values: ['perspective', 'parallel']
+      }, {
+        type: 'enumInfo',
+        localName: 'STFillType',
+        values: ['gradientCenter', 'solid', 'pattern', 'tile', 'frame', 'gradientUnscaled', 'gradientRadial', 'gradient', 'background']
+      }, {
+        type: 'enumInfo',
+        localName: 'STHow',
+        values: ['top', 'middle', 'bottom', 'left', 'center', 'right']
+      }, {
+        type: 'enumInfo',
+        localName: 'STHrAlign',
+        values: ['left', 'right', 'center']
+      }, {
+        type: 'enumInfo',
+        localName: 'STInsetMode',
+        values: ['auto', 'custom']
+      }, {
+        type: 'enumInfo',
+        localName: 'STOLEDrawAspect',
+        values: ['Content', 'Icon']
+      }, {
+        type: 'enumInfo',
+        localName: 'STOLELinkType',
+        values: ['Picture', 'Bitmap', 'EnhancedMetaFile']
+      }, {
+        type: 'enumInfo',
+        localName: 'STOLEType',
+        values: ['Embed', 'Link']
+      }, {
+        type: 'enumInfo',
+        localName: 'STOLEUpdateMode',
+        values: ['Always', 'OnCall']
+      }, {
+        type: 'enumInfo',
+        localName: 'STRType',
+        values: ['arc', 'callout', 'connector', 'align']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTrueFalse',
+        values: ['t', 'f', 'true', 'false']
+      }],
+    elementInfos: [{
+        typeInfo: '.CTOLEObject',
+        elementName: 'OLEObject'
+      }, {
+        typeInfo: '.CTStrokeChild',
+        elementName: 'bottom'
+      }, {
+        typeInfo: '.CTCallout',
+        elementName: 'callout'
+      }, {
+        typeInfo: '.CTClipPath',
+        elementName: 'clippath'
+      }, {
+        typeInfo: '.CTStrokeChild',
+        elementName: 'column'
+      }, {
+        typeInfo: '.CTComplex',
+        elementName: 'complex'
+      }, {
+        typeInfo: '.CTDiagram',
+        elementName: 'diagram'
+      }, {
+        typeInfo: '.CTExtrusion',
+        elementName: 'extrusion'
+      }, {
+        typeInfo: '.CTFill',
+        elementName: 'fill'
+      }, {
+        typeInfo: '.CTInk',
+        elementName: 'ink'
+      }, {
+        typeInfo: '.CTStrokeChild',
+        elementName: 'left'
+      }, {
+        typeInfo: '.CTLock',
+        elementName: 'lock'
+      }, {
+        typeInfo: '.CTStrokeChild',
+        elementName: 'right'
+      }, {
+        typeInfo: '.CTShapeDefaults',
+        elementName: 'shapedefaults'
+      }, {
+        typeInfo: '.CTShapeLayout',
+        elementName: 'shapelayout'
+      }, {
+        typeInfo: '.CTSignatureLine',
+        elementName: 'signatureline'
+      }, {
+        typeInfo: '.CTSkew',
+        elementName: 'skew'
+      }, {
+        typeInfo: '.CTStrokeChild',
+        elementName: 'top'
+      }]
+  };
+  return {
+    org_docx4j_vml_officedrawing: org_docx4j_vml_officedrawing
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_vml_officedrawing_Module_Factory);
+}
+else {
+  var org_docx4j_vml_officedrawing_Module = org_docx4j_vml_officedrawing_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_vml_officedrawing = org_docx4j_vml_officedrawing_Module.org_docx4j_vml_officedrawing;
+  }
+  else {
+    var org_docx4j_vml_officedrawing = org_docx4j_vml_officedrawing_Module.org_docx4j_vml_officedrawing;
+  }
+}

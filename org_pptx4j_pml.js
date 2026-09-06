@@ -1,0 +1,4041 @@
+var org_pptx4j_pml_Module_Factory = function () {
+  var org_pptx4j_pml = {
+    name: 'org_pptx4j_pml',
+    defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/presentationml\/2006\/main',
+    dependencies: ['org_docx4j_dml', 'org_docx4j_mce', 'org_docx4j_sharedtypes'],
+    typeInfos: [{
+        localName: 'CTBackground',
+        typeName: 'CT_Background',
+        propertyInfos: [{
+            name: 'bgPr',
+            required: true,
+            typeInfo: '.CTBackgroundProperties'
+          }, {
+            name: 'bgRef',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTStyleMatrixReference'
+          }, {
+            name: 'bwMode',
+            typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
+            defaultValue: 'white',
+            attributeName: {
+              localPart: 'bwMode'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTBackgroundProperties',
+        typeName: 'CT_BackgroundProperties',
+        propertyInfos: [{
+            name: 'noFill',
+            required: true,
+            elementName: {
+              localPart: 'noFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTNoFillProperties'
+          }, {
+            name: 'solidFill',
+            required: true,
+            elementName: {
+              localPart: 'solidFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTSolidColorFillProperties'
+          }, {
+            name: 'gradFill',
+            required: true,
+            elementName: {
+              localPart: 'gradFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTGradientFillProperties'
+          }, {
+            name: 'blipFill',
+            required: true,
+            elementName: {
+              localPart: 'blipFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTBlipFillProperties'
+          }, {
+            name: 'pattFill',
+            required: true,
+            elementName: {
+              localPart: 'pattFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTPatternFillProperties'
+          }, {
+            name: 'grpFill',
+            required: true,
+            elementName: {
+              localPart: 'grpFill',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTGroupFillProperties'
+          }, {
+            name: 'effectLst',
+            required: true,
+            elementName: {
+              localPart: 'effectLst',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTEffectList'
+          }, {
+            name: 'effectDag',
+            required: true,
+            elementName: {
+              localPart: 'effectDag',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTEffectContainer'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'shadeToTitle',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'shadeToTitle'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTBuildList',
+        typeName: 'CT_BuildList',
+        propertyInfos: [{
+            name: 'bldPOrBldDgmOrBldOleChart',
+            required: true,
+            collection: true,
+            elementTypeInfos: [{
+                elementName: 'bldP',
+                typeInfo: '.CTTLBuildParagraph'
+              }, {
+                elementName: 'bldDgm',
+                typeInfo: '.CTTLBuildDiagram'
+              }, {
+                elementName: 'bldOleChart',
+                typeInfo: '.CTTLOleBuildChart'
+              }, {
+                elementName: 'bldGraphic',
+                typeInfo: '.CTTLGraphicalObjectBuild'
+              }],
+            type: 'elements'
+          }]
+      }, {
+        localName: 'CTComment',
+        typeName: 'CT_Comment',
+        propertyInfos: [{
+            name: 'pos',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTPoint2D'
+          }, {
+            name: 'text',
+            required: true
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'authorId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'authorId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dt',
+            typeInfo: 'DateTime',
+            attributeName: {
+              localPart: 'dt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'idx',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'idx'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCommentAuthor',
+        typeName: 'CT_CommentAuthor',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            required: true,
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'initials',
+            required: true,
+            attributeName: {
+              localPart: 'initials'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lastIdx',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'lastIdx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clrIdx',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'clrIdx'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCommentAuthorList',
+        typeName: 'CT_CommentAuthorList',
+        propertyInfos: [{
+            name: 'cmAuthor',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTCommentAuthor'
+          }]
+      }, {
+        localName: 'CTCommentList',
+        typeName: 'CT_CommentList',
+        propertyInfos: [{
+            name: 'cm',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTComment'
+          }]
+      }, {
+        localName: 'CTCommonSlideViewProperties',
+        typeName: 'CT_CommonSlideViewProperties',
+        propertyInfos: [{
+            name: 'cViewPr',
+            required: true,
+            typeInfo: '.CTCommonViewProperties'
+          }, {
+            name: 'guideLst',
+            typeInfo: '.CTGuideList'
+          }, {
+            name: 'snapToGrid',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'snapToGrid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'snapToObjects',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'snapToObjects'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showGuides',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'showGuides'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCommonViewProperties',
+        typeName: 'CT_CommonViewProperties',
+        propertyInfos: [{
+            name: 'scale',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTScale2D'
+          }, {
+            name: 'origin',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTPoint2D'
+          }, {
+            name: 'varScale',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'varScale'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTControl',
+        typeName: 'CT_Control',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'pic',
+            typeInfo: '.Pic'
+          }, {
+            name: 'name',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showAsIcon',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'showAsIcon'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imgW',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'imgW'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imgH',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'imgH'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTControlList',
+        typeName: 'CT_ControlList',
+        propertyInfos: [{
+            name: 'control',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTControl'
+          }, {
+            name: 'alternateContent',
+            required: true,
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
+          }]
+      }, {
+        localName: 'CTCornerDirectionTransition',
+        typeName: 'CT_CornerDirectionTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: '.STTransitionCornerDirectionType',
+            defaultValue: 'lu',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCustomShow',
+        typeName: 'CT_CustomShow',
+        propertyInfos: [{
+            name: 'sldLst',
+            required: true,
+            typeInfo: '.CTSlideRelationshipList'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'name',
+            required: true,
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCustomShowId',
+        typeName: 'CT_CustomShowId',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCustomShowList',
+        typeName: 'CT_CustomShowList',
+        propertyInfos: [{
+            name: 'custShow',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTCustomShow'
+          }]
+      }, {
+        localName: 'CTCustomerData',
+        typeName: 'CT_CustomerData',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCustomerDataList',
+        typeName: 'CT_CustomerDataList',
+        propertyInfos: [{
+            name: 'custData',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTCustomerData'
+          }, {
+            name: 'tags',
+            typeInfo: '.CTTagsData'
+          }]
+      }, {
+        localName: 'CTEightDirectionTransition',
+        typeName: 'CT_EightDirectionTransition',
+        propertyInfos: [{
+            name: 'dir',
+            defaultValue: 'l',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTEmbeddedFontDataId',
+        typeName: 'CT_EmbeddedFontDataId',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTEmbeddedFontList',
+        typeName: 'CT_EmbeddedFontList',
+        propertyInfos: [{
+            name: 'embeddedFont',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTEmbeddedFontListEntry'
+          }]
+      }, {
+        localName: 'CTEmbeddedFontListEntry',
+        typeName: 'CT_EmbeddedFontListEntry',
+        propertyInfos: [{
+            name: 'font',
+            required: true,
+            typeInfo: 'org_docx4j_dml.TextFont'
+          }, {
+            name: 'regular',
+            typeInfo: '.CTEmbeddedFontDataId'
+          }, {
+            name: 'bold',
+            typeInfo: '.CTEmbeddedFontDataId'
+          }, {
+            name: 'italic',
+            typeInfo: '.CTEmbeddedFontDataId'
+          }, {
+            name: 'boldItalic',
+            typeInfo: '.CTEmbeddedFontDataId'
+          }]
+      }, {
+        localName: 'CTEmpty',
+        typeName: 'CT_Empty'
+      }, {
+        localName: 'CTExtension',
+        typeName: 'CT_Extension',
+        propertyInfos: [{
+            name: 'any',
+            required: true,
+            mixed: false,
+            type: 'anyElement'
+          }, {
+            name: 'uri',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'uri'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTExtensionList',
+        typeName: 'CT_ExtensionList',
+        propertyInfos: [{
+            name: 'ext',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTExtension'
+          }]
+      }, {
+        localName: 'CTExtensionListModify',
+        typeName: 'CT_ExtensionListModify',
+        propertyInfos: [{
+            name: 'ext',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTExtension'
+          }, {
+            name: 'mod',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'mod'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTGraphicalObjectFrame',
+        typeName: 'CT_GraphicalObjectFrame',
+        propertyInfos: [{
+            name: 'nvGraphicFramePr',
+            required: true,
+            typeInfo: '.CTGraphicalObjectFrameNonVisual'
+          }, {
+            name: 'xfrm',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTTransform2D'
+          }, {
+            name: 'graphic',
+            required: true,
+            elementName: {
+              localPart: 'graphic',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.Graphic'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'CTGraphicalObjectFrameNonVisual',
+        typeName: 'CT_GraphicalObjectFrameNonVisual',
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvGraphicFramePr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualGraphicFrameProperties'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: '.NvPr'
+          }]
+      }, {
+        localName: 'CTGuide',
+        typeName: 'CT_Guide',
+        propertyInfos: [{
+            name: 'orient',
+            typeInfo: '.STDirection',
+            defaultValue: 'vert',
+            attributeName: {
+              localPart: 'orient'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pos',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'pos'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTGuideList',
+        typeName: 'CT_GuideList',
+        propertyInfos: [{
+            name: 'guide',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTGuide'
+          }]
+      }, {
+        localName: 'CTHandoutMasterIdList',
+        typeName: 'CT_HandoutMasterIdList',
+        propertyInfos: [{
+            name: 'handoutMasterId',
+            typeInfo: '.CTHandoutMasterIdListEntry'
+          }]
+      }, {
+        localName: 'CTHandoutMasterIdListEntry',
+        typeName: 'CT_HandoutMasterIdListEntry',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTHeaderFooter',
+        typeName: 'CT_HeaderFooter',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'sldNum',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'sldNum'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hdr',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'hdr'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ftr',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'ftr'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dt',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'dt'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTHtmlPublishProperties',
+        typeName: 'CT_HtmlPublishProperties',
+        propertyInfos: [{
+            name: 'sldAll',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'sldRg',
+            required: true,
+            typeInfo: '.CTIndexRange'
+          }, {
+            name: 'custShow',
+            required: true,
+            typeInfo: '.CTCustomShowId'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'showSpeakerNotes',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showSpeakerNotes'
+            },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTInOutTransition',
+        typeName: 'CT_InOutTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: '.STTransitionInOutDirectionType',
+            defaultValue: 'out',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTIndexRange',
+        typeName: 'CT_IndexRange',
+        propertyInfos: [{
+            name: 'st',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'st'
+            },
+            type: 'attribute'
+          }, {
+            name: 'end',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'end'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTKinsoku',
+        typeName: 'CT_Kinsoku',
+        propertyInfos: [{
+            name: 'lang',
+            attributeName: {
+              localPart: 'lang'
+            },
+            type: 'attribute'
+          }, {
+            name: 'invalStChars',
+            required: true,
+            attributeName: {
+              localPart: 'invalStChars'
+            },
+            type: 'attribute'
+          }, {
+            name: 'invalEndChars',
+            required: true,
+            attributeName: {
+              localPart: 'invalEndChars'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTModifyVerifier',
+        typeName: 'CT_ModifyVerifier',
+        propertyInfos: [{
+            name: 'algorithmName',
+            attributeName: {
+              localPart: 'algorithmName'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hashValue',
+            typeInfo: 'Base64Binary',
+            attributeName: {
+              localPart: 'hashValue'
+            },
+            type: 'attribute'
+          }, {
+            name: 'saltValue',
+            typeInfo: 'Base64Binary',
+            attributeName: {
+              localPart: 'saltValue'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spinValue',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'spinValue'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTNormalViewPortion',
+        typeName: 'CT_NormalViewPortion',
+        propertyInfos: [{
+            name: 'sz',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'sz'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autoAdjust',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'autoAdjust'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTNormalViewProperties',
+        typeName: 'CT_NormalViewProperties',
+        propertyInfos: [{
+            name: 'restoredLeft',
+            required: true,
+            typeInfo: '.CTNormalViewPortion'
+          }, {
+            name: 'restoredTop',
+            required: true,
+            typeInfo: '.CTNormalViewPortion'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'showOutlineIcons',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showOutlineIcons'
+            },
+            type: 'attribute'
+          }, {
+            name: 'snapVertSplitter',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'snapVertSplitter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vertBarState',
+            typeInfo: '.STSplitterBarState',
+            defaultValue: 'restored',
+            attributeName: {
+              localPart: 'vertBarState'
+            },
+            type: 'attribute'
+          }, {
+            name: 'horzBarState',
+            typeInfo: '.STSplitterBarState',
+            defaultValue: 'restored',
+            attributeName: {
+              localPart: 'horzBarState'
+            },
+            type: 'attribute'
+          }, {
+            name: 'preferSingleView',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'preferSingleView'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTNotesMasterIdList',
+        typeName: 'CT_NotesMasterIdList',
+        propertyInfos: [{
+            name: 'notesMasterId',
+            typeInfo: '.CTNotesMasterIdListEntry'
+          }]
+      }, {
+        localName: 'CTNotesMasterIdListEntry',
+        typeName: 'CT_NotesMasterIdListEntry',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTNotesTextViewProperties',
+        typeName: 'CT_NotesTextViewProperties',
+        propertyInfos: [{
+            name: 'cViewPr',
+            required: true,
+            typeInfo: '.CTCommonViewProperties'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'CTNotesViewProperties',
+        typeName: 'CT_NotesViewProperties',
+        propertyInfos: [{
+            name: 'cSldViewPr',
+            required: true,
+            typeInfo: '.CTCommonSlideViewProperties'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'CTOleObject',
+        typeName: 'CT_OleObject',
+        propertyInfos: [{
+            name: 'embed',
+            required: true,
+            typeInfo: '.CTOleObjectEmbed'
+          }, {
+            name: 'link',
+            required: true,
+            typeInfo: '.CTOleObjectLink'
+          }, {
+            name: 'pic',
+            required: true,
+            typeInfo: '.Pic'
+          }, {
+            name: 'progId',
+            attributeName: {
+              localPart: 'progId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showAsIcon',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'showAsIcon'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imgW',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'imgW'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imgH',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'imgH'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOleObjectEmbed',
+        typeName: 'CT_OleObjectEmbed',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'followColorScheme',
+            typeInfo: '.STOleObjectFollowColorScheme',
+            defaultValue: 'none',
+            attributeName: {
+              localPart: 'followColorScheme'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOleObjectLink',
+        typeName: 'CT_OleObjectLink',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'updateAutomatic',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'updateAutomatic'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOptionalBlackTransition',
+        typeName: 'CT_OptionalBlackTransition',
+        propertyInfos: [{
+            name: 'thruBlk',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'thruBlk'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOrientationTransition',
+        typeName: 'CT_OrientationTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: '.STDirection',
+            defaultValue: 'horz',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOutlineViewProperties',
+        typeName: 'CT_OutlineViewProperties',
+        propertyInfos: [{
+            name: 'cViewPr',
+            required: true,
+            typeInfo: '.CTCommonViewProperties'
+          }, {
+            name: 'sldLst',
+            typeInfo: '.CTOutlineViewSlideList'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'CTOutlineViewSlideEntry',
+        typeName: 'CT_OutlineViewSlideEntry',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }, {
+            name: 'collapse',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'collapse'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTOutlineViewSlideList',
+        typeName: 'CT_OutlineViewSlideList',
+        propertyInfos: [{
+            name: 'sld',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTOutlineViewSlideEntry'
+          }]
+      }, {
+        localName: 'CTPhotoAlbum',
+        typeName: 'CT_PhotoAlbum',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'bw',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'bw'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showCaptions',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'showCaptions'
+            },
+            type: 'attribute'
+          }, {
+            name: 'layout',
+            typeInfo: 'Token',
+            values: ['fitToSlide', '1pic', '2pic', '4pic', '1picTitle', '2picTitle', '4picTitle'],
+            defaultValue: 'fitToSlide',
+            attributeName: {
+              localPart: 'layout'
+            },
+            type: 'attribute'
+          }, {
+            name: 'frame',
+            typeInfo: '.STPhotoAlbumFrameShape',
+            defaultValue: 'frameStyle1',
+            attributeName: {
+              localPart: 'frame'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPlaceholder',
+        typeName: 'CT_Placeholder',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'type',
+            typeInfo: '.STPlaceholderType',
+            defaultValue: 'obj',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'orient',
+            typeInfo: '.STDirection',
+            defaultValue: 'horz',
+            attributeName: {
+              localPart: 'orient'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sz',
+            typeInfo: '.STPlaceholderSize',
+            defaultValue: 'full',
+            attributeName: {
+              localPart: 'sz'
+            },
+            type: 'attribute'
+          }, {
+            name: 'idx',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'idx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hasCustomPrompt',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'hasCustomPrompt'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPrintProperties',
+        typeName: 'CT_PrintProperties',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'prnWhat',
+            typeInfo: '.STPrintWhat',
+            defaultValue: 'slides',
+            attributeName: {
+              localPart: 'prnWhat'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clrMode',
+            typeInfo: '.STPrintColorMode',
+            defaultValue: 'clr',
+            attributeName: {
+              localPart: 'clrMode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hiddenSlides',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'hiddenSlides'
+            },
+            type: 'attribute'
+          }, {
+            name: 'scaleToFitPaper',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'scaleToFitPaper'
+            },
+            type: 'attribute'
+          }, {
+            name: 'frameSlides',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'frameSlides'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTRel',
+        typeName: 'CT_Rel',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShowInfoBrowse',
+        typeName: 'CT_ShowInfoBrowse',
+        propertyInfos: [{
+            name: 'showScrollbar',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showScrollbar'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShowInfoKiosk',
+        typeName: 'CT_ShowInfoKiosk',
+        propertyInfos: [{
+            name: 'restart',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 300000,
+            attributeName: {
+              localPart: 'restart'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTShowProperties',
+        typeName: 'CT_ShowProperties',
+        propertyInfos: [{
+            name: 'present',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'browse',
+            required: true,
+            typeInfo: '.CTShowInfoBrowse'
+          }, {
+            name: 'kiosk',
+            required: true,
+            typeInfo: '.CTShowInfoKiosk'
+          }, {
+            name: 'sldAll',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'sldRg',
+            required: true,
+            typeInfo: '.CTIndexRange'
+          }, {
+            name: 'custShow',
+            required: true,
+            typeInfo: '.CTCustomShowId'
+          }, {
+            name: 'penClr',
+            typeInfo: 'org_docx4j_dml.CTColor'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'loop',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'loop'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showNarration',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'showNarration'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showAnimation',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showAnimation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'useTimings',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'useTimings'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSideDirectionTransition',
+        typeName: 'CT_SideDirectionTransition',
+        propertyInfos: [{
+            name: 'dir',
+            typeInfo: '.STTransitionSideDirectionType',
+            defaultValue: 'l',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSlideMasterTextStyles',
+        typeName: 'CT_SlideMasterTextStyles',
+        propertyInfos: [{
+            name: 'titleStyle',
+            typeInfo: 'org_docx4j_dml.CTTextListStyle'
+          }, {
+            name: 'bodyStyle',
+            typeInfo: 'org_docx4j_dml.CTTextListStyle'
+          }, {
+            name: 'otherStyle',
+            typeInfo: 'org_docx4j_dml.CTTextListStyle'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'CTSlideRelationshipList',
+        typeName: 'CT_SlideRelationshipList',
+        propertyInfos: [{
+            name: 'sld',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTSlideRelationshipListEntry'
+          }]
+      }, {
+        localName: 'CTSlideRelationshipListEntry',
+        typeName: 'CT_SlideRelationshipListEntry',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSlideSorterViewProperties',
+        typeName: 'CT_SlideSorterViewProperties',
+        propertyInfos: [{
+            name: 'cViewPr',
+            required: true,
+            typeInfo: '.CTCommonViewProperties'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'showFormatting',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showFormatting'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSlideSyncProperties',
+        typeName: 'CT_SlideSyncProperties',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'serverSldId',
+            required: true,
+            attributeName: {
+              localPart: 'serverSldId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'serverSldModifiedTime',
+            required: true,
+            typeInfo: 'DateTime',
+            attributeName: {
+              localPart: 'serverSldModifiedTime'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clientInsertedTime',
+            required: true,
+            typeInfo: 'DateTime',
+            attributeName: {
+              localPart: 'clientInsertedTime'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSlideTiming',
+        typeName: 'CT_SlideTiming',
+        propertyInfos: [{
+            name: 'tnLst',
+            typeInfo: '.CTTimeNodeList'
+          }, {
+            name: 'bldLst',
+            typeInfo: '.CTBuildList'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'CTSlideTransition',
+        typeName: 'CT_SlideTransition',
+        propertyInfos: [{
+            name: 'blinds',
+            required: true,
+            typeInfo: '.CTOrientationTransition'
+          }, {
+            name: 'checker',
+            required: true,
+            typeInfo: '.CTOrientationTransition'
+          }, {
+            name: 'circle',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'dissolve',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'comb',
+            required: true,
+            typeInfo: '.CTOrientationTransition'
+          }, {
+            name: 'cover',
+            required: true,
+            typeInfo: '.CTEightDirectionTransition'
+          }, {
+            name: 'cut',
+            required: true,
+            typeInfo: '.CTOptionalBlackTransition'
+          }, {
+            name: 'diamond',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'fade',
+            required: true,
+            typeInfo: '.CTOptionalBlackTransition'
+          }, {
+            name: 'newsflash',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'plus',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'pull',
+            required: true,
+            typeInfo: '.CTEightDirectionTransition'
+          }, {
+            name: 'push',
+            required: true,
+            typeInfo: '.CTSideDirectionTransition'
+          }, {
+            name: 'random',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'randomBar',
+            required: true,
+            typeInfo: '.CTOrientationTransition'
+          }, {
+            name: 'split',
+            required: true,
+            typeInfo: '.CTSplitTransition'
+          }, {
+            name: 'strips',
+            required: true,
+            typeInfo: '.CTCornerDirectionTransition'
+          }, {
+            name: 'wedge',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'wheel',
+            required: true,
+            typeInfo: '.CTWheelTransition'
+          }, {
+            name: 'wipe',
+            required: true,
+            typeInfo: '.CTSideDirectionTransition'
+          }, {
+            name: 'zoom',
+            required: true,
+            typeInfo: '.CTInOutTransition'
+          }, {
+            name: 'sndAc',
+            typeInfo: '.CTTransitionSoundAction'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'spd',
+            typeInfo: '.STTransitionSpeed',
+            defaultValue: 'fast',
+            attributeName: {
+              localPart: 'spd'
+            },
+            type: 'attribute'
+          }, {
+            name: 'advClick',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'advClick'
+            },
+            type: 'attribute'
+          }, {
+            name: 'advTm',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'advTm'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSlideViewProperties',
+        typeName: 'CT_SlideViewProperties',
+        propertyInfos: [{
+            name: 'cSldViewPr',
+            required: true,
+            typeInfo: '.CTCommonSlideViewProperties'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'CTSmartTags',
+        typeName: 'CT_SmartTags',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSplitTransition',
+        typeName: 'CT_SplitTransition',
+        propertyInfos: [{
+            name: 'orient',
+            typeInfo: '.STDirection',
+            defaultValue: 'horz',
+            attributeName: {
+              localPart: 'orient'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dir',
+            typeInfo: '.STTransitionInOutDirectionType',
+            defaultValue: 'out',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTStringTag',
+        typeName: 'CT_StringTag',
+        propertyInfos: [{
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'val',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimVariant',
+        typeName: 'CT_TLAnimVariant',
+        propertyInfos: [{
+            name: 'boolVal',
+            required: true,
+            typeInfo: '.CTTLAnimVariantBooleanVal'
+          }, {
+            name: 'intVal',
+            required: true,
+            typeInfo: '.CTTLAnimVariantIntegerVal'
+          }, {
+            name: 'fltVal',
+            required: true,
+            typeInfo: '.CTTLAnimVariantFloatVal'
+          }, {
+            name: 'strVal',
+            required: true,
+            typeInfo: '.CTTLAnimVariantStringVal'
+          }, {
+            name: 'clrVal',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTColor'
+          }]
+      }, {
+        localName: 'CTTLAnimVariantBooleanVal',
+        typeName: 'CT_TLAnimVariantBooleanVal',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimVariantFloatVal',
+        typeName: 'CT_TLAnimVariantFloatVal',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Float',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimVariantIntegerVal',
+        typeName: 'CT_TLAnimVariantIntegerVal',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimVariantStringVal',
+        typeName: 'CT_TLAnimVariantStringVal',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateBehavior',
+        typeName: 'CT_TLAnimateBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'tavLst',
+            typeInfo: '.CTTLTimeAnimateValueList'
+          }, {
+            name: 'by',
+            attributeName: {
+              localPart: 'by'
+            },
+            type: 'attribute'
+          }, {
+            name: 'from',
+            attributeName: {
+              localPart: 'from'
+            },
+            type: 'attribute'
+          }, {
+            name: 'to',
+            attributeName: {
+              localPart: 'to'
+            },
+            type: 'attribute'
+          }, {
+            name: 'calcmode',
+            typeInfo: '.STTLAnimateBehaviorCalcMode',
+            attributeName: {
+              localPart: 'calcmode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'valueType',
+            typeInfo: '.STTLAnimateBehaviorValueType',
+            attributeName: {
+              localPart: 'valueType'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateColorBehavior',
+        typeName: 'CT_TLAnimateColorBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'by',
+            typeInfo: '.CTTLByAnimateColorTransform'
+          }, {
+            name: 'from',
+            typeInfo: 'org_docx4j_dml.CTColor'
+          }, {
+            name: 'to',
+            typeInfo: 'org_docx4j_dml.CTColor'
+          }, {
+            name: 'clrSpc',
+            typeInfo: '.STTLAnimateColorSpace',
+            attributeName: {
+              localPart: 'clrSpc'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dir',
+            typeInfo: '.STTLAnimateColorDirection',
+            attributeName: {
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateEffectBehavior',
+        typeName: 'CT_TLAnimateEffectBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'progress',
+            typeInfo: '.CTTLAnimVariant'
+          }, {
+            name: 'transition',
+            typeInfo: '.STTLAnimateEffectTransition',
+            attributeName: {
+              localPart: 'transition'
+            },
+            type: 'attribute'
+          }, {
+            name: 'filter',
+            attributeName: {
+              localPart: 'filter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'prLst',
+            attributeName: {
+              localPart: 'prLst'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateMotionBehavior',
+        typeName: 'CT_TLAnimateMotionBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'by',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'from',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'to',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'rCtr',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'origin',
+            typeInfo: '.STTLAnimateMotionBehaviorOrigin',
+            attributeName: {
+              localPart: 'origin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'path',
+            attributeName: {
+              localPart: 'path'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pathEditMode',
+            typeInfo: '.STTLAnimateMotionPathEditMode',
+            attributeName: {
+              localPart: 'pathEditMode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rAng',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'rAng'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ptsTypes',
+            attributeName: {
+              localPart: 'ptsTypes'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateRotationBehavior',
+        typeName: 'CT_TLAnimateRotationBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'by',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'by'
+            },
+            type: 'attribute'
+          }, {
+            name: 'from',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'from'
+            },
+            type: 'attribute'
+          }, {
+            name: 'to',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'to'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLAnimateScaleBehavior',
+        typeName: 'CT_TLAnimateScaleBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'by',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'from',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'to',
+            typeInfo: '.CTTLPoint'
+          }, {
+            name: 'zoomContents',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'zoomContents'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLBehaviorAttributeNameList',
+        typeName: 'CT_TLBehaviorAttributeNameList',
+        propertyInfos: [{
+            name: 'attrName',
+            required: true,
+            collection: true
+          }]
+      }, {
+        localName: 'CTTLBuildDiagram',
+        typeName: 'CT_TLBuildDiagram',
+        propertyInfos: [{
+            name: 'bld',
+            typeInfo: '.STTLDiagramBuildType',
+            defaultValue: 'whole',
+            attributeName: {
+              localPart: 'bld'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grpId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'grpId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'uiExpand',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'uiExpand'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLBuildParagraph',
+        typeName: 'CT_TLBuildParagraph',
+        propertyInfos: [{
+            name: 'tmplLst',
+            typeInfo: '.CTTLTemplateList'
+          }, {
+            name: 'build',
+            typeInfo: '.STTLParaBuildType',
+            defaultValue: 'whole',
+            attributeName: {
+              localPart: 'build'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bldLvl',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'bldLvl'
+            },
+            type: 'attribute'
+          }, {
+            name: 'animBg',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'animBg'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autoUpdateAnimBg',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'autoUpdateAnimBg'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rev',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'rev'
+            },
+            type: 'attribute'
+          }, {
+            name: 'advAuto',
+            defaultValue: 'indefinite',
+            attributeName: {
+              localPart: 'advAuto'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grpId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'grpId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'uiExpand',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'uiExpand'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLByAnimateColorTransform',
+        typeName: 'CT_TLByAnimateColorTransform',
+        propertyInfos: [{
+            name: 'rgb',
+            required: true,
+            typeInfo: '.CTTLByRgbColorTransform'
+          }, {
+            name: 'hsl',
+            required: true,
+            typeInfo: '.CTTLByHslColorTransform'
+          }]
+      }, {
+        localName: 'CTTLByHslColorTransform',
+        typeName: 'CT_TLByHslColorTransform',
+        propertyInfos: [{
+            name: 'h',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'h'
+            },
+            type: 'attribute'
+          }, {
+            name: 's',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 's'
+            },
+            type: 'attribute'
+          }, {
+            name: 'l',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'l'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLByRgbColorTransform',
+        typeName: 'CT_TLByRgbColorTransform',
+        propertyInfos: [{
+            name: 'r',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'r'
+            },
+            type: 'attribute'
+          }, {
+            name: 'g',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'g'
+            },
+            type: 'attribute'
+          }, {
+            name: 'b',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLCommandBehavior',
+        typeName: 'CT_TLCommandBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'type',
+            typeInfo: '.STTLCommandType',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cmd',
+            attributeName: {
+              localPart: 'cmd'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLCommonBehaviorData',
+        typeName: 'CT_TLCommonBehaviorData',
+        propertyInfos: [{
+            name: 'cTn',
+            required: true,
+            typeInfo: '.CTTLCommonTimeNodeData'
+          }, {
+            name: 'tgtEl',
+            required: true,
+            typeInfo: '.CTTLTimeTargetElement'
+          }, {
+            name: 'attrNameLst',
+            typeInfo: '.CTTLBehaviorAttributeNameList'
+          }, {
+            name: 'additive',
+            typeInfo: '.STTLBehaviorAdditiveType',
+            attributeName: {
+              localPart: 'additive'
+            },
+            type: 'attribute'
+          }, {
+            name: 'accumulate',
+            typeInfo: '.STTLBehaviorAccumulateType',
+            attributeName: {
+              localPart: 'accumulate'
+            },
+            type: 'attribute'
+          }, {
+            name: 'xfrmType',
+            typeInfo: '.STTLBehaviorTransformType',
+            attributeName: {
+              localPart: 'xfrmType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'from',
+            attributeName: {
+              localPart: 'from'
+            },
+            type: 'attribute'
+          }, {
+            name: 'to',
+            attributeName: {
+              localPart: 'to'
+            },
+            type: 'attribute'
+          }, {
+            name: 'by',
+            attributeName: {
+              localPart: 'by'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rctx',
+            attributeName: {
+              localPart: 'rctx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'override',
+            typeInfo: '.STTLBehaviorOverrideType',
+            attributeName: {
+              localPart: 'override'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLCommonMediaNodeData',
+        typeName: 'CT_TLCommonMediaNodeData',
+        propertyInfos: [{
+            name: 'cTn',
+            required: true,
+            typeInfo: '.CTTLCommonTimeNodeData'
+          }, {
+            name: 'tgtEl',
+            required: true,
+            typeInfo: '.CTTLTimeTargetElement'
+          }, {
+            name: 'vol',
+            typeInfo: 'Int',
+            defaultValue: 50,
+            attributeName: {
+              localPart: 'vol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'mute',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'mute'
+            },
+            type: 'attribute'
+          }, {
+            name: 'numSld',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'numSld'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showWhenStopped',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showWhenStopped'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLCommonTimeNodeData',
+        typeName: 'CT_TLCommonTimeNodeData',
+        propertyInfos: [{
+            name: 'stCondLst',
+            typeInfo: '.CTTLTimeConditionList'
+          }, {
+            name: 'endCondLst',
+            typeInfo: '.CTTLTimeConditionList'
+          }, {
+            name: 'endSync',
+            typeInfo: '.CTTLTimeCondition'
+          }, {
+            name: 'iterate',
+            typeInfo: '.CTTLIterateData'
+          }, {
+            name: 'childTnLst',
+            typeInfo: '.CTTimeNodeList'
+          }, {
+            name: 'subTnLst',
+            typeInfo: '.CTTimeNodeList'
+          }, {
+            name: 'id',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'presetID',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'presetID'
+            },
+            type: 'attribute'
+          }, {
+            name: 'presetClass',
+            typeInfo: '.STTLTimeNodePresetClassType',
+            attributeName: {
+              localPart: 'presetClass'
+            },
+            type: 'attribute'
+          }, {
+            name: 'presetSubtype',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'presetSubtype'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dur',
+            attributeName: {
+              localPart: 'dur'
+            },
+            type: 'attribute'
+          }, {
+            name: 'repeatCount',
+            defaultValue: '1000',
+            attributeName: {
+              localPart: 'repeatCount'
+            },
+            type: 'attribute'
+          }, {
+            name: 'repeatDur',
+            attributeName: {
+              localPart: 'repeatDur'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spd',
+            typeInfo: 'Int',
+            defaultValue: 100,
+            attributeName: {
+              localPart: 'spd'
+            },
+            type: 'attribute'
+          }, {
+            name: 'accel',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'accel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'decel',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'decel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autoRev',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'autoRev'
+            },
+            type: 'attribute'
+          }, {
+            name: 'restart',
+            typeInfo: '.STTLTimeNodeRestartType',
+            attributeName: {
+              localPart: 'restart'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fill',
+            typeInfo: '.STTLTimeNodeFillType',
+            attributeName: {
+              localPart: 'fill'
+            },
+            type: 'attribute'
+          }, {
+            name: 'syncBehavior',
+            typeInfo: '.STTLTimeNodeSyncType',
+            attributeName: {
+              localPart: 'syncBehavior'
+            },
+            type: 'attribute'
+          }, {
+            name: 'tmFilter',
+            attributeName: {
+              localPart: 'tmFilter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'evtFilter',
+            attributeName: {
+              localPart: 'evtFilter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'display',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'display'
+            },
+            type: 'attribute'
+          }, {
+            name: 'masterRel',
+            typeInfo: '.STTLTimeNodeMasterRelation',
+            attributeName: {
+              localPart: 'masterRel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bldLvl',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'bldLvl'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grpId',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'grpId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'afterEffect',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'afterEffect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'nodeType',
+            typeInfo: '.STTLTimeNodeType',
+            attributeName: {
+              localPart: 'nodeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'nodePh',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'nodePh'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLGraphicalObjectBuild',
+        typeName: 'CT_TLGraphicalObjectBuild',
+        propertyInfos: [{
+            name: 'bldAsOne',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'bldSub',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties'
+          }, {
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grpId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'grpId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'uiExpand',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'uiExpand'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLIterateData',
+        typeName: 'CT_TLIterateData',
+        propertyInfos: [{
+            name: 'tmAbs',
+            required: true,
+            typeInfo: '.CTTLIterateIntervalTime'
+          }, {
+            name: 'tmPct',
+            required: true,
+            typeInfo: '.CTTLIterateIntervalPercentage'
+          }, {
+            name: 'type',
+            typeInfo: '.STIterateType',
+            defaultValue: 'el',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'backwards',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'backwards'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLIterateIntervalPercentage',
+        typeName: 'CT_TLIterateIntervalPercentage',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLIterateIntervalTime',
+        typeName: 'CT_TLIterateIntervalTime',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLMediaNodeAudio',
+        typeName: 'CT_TLMediaNodeAudio',
+        propertyInfos: [{
+            name: 'cMediaNode',
+            required: true,
+            typeInfo: '.CTTLCommonMediaNodeData'
+          }, {
+            name: 'isNarration',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'isNarration'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLMediaNodeVideo',
+        typeName: 'CT_TLMediaNodeVideo',
+        propertyInfos: [{
+            name: 'cMediaNode',
+            required: true,
+            typeInfo: '.CTTLCommonMediaNodeData'
+          }, {
+            name: 'fullScrn',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'fullScrn'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLOleBuildChart',
+        typeName: 'CT_TLOleBuildChart',
+        propertyInfos: [{
+            name: 'bld',
+            typeInfo: '.STTLOleChartBuildType',
+            defaultValue: 'allAtOnce',
+            attributeName: {
+              localPart: 'bld'
+            },
+            type: 'attribute'
+          }, {
+            name: 'animBg',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'animBg'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grpId',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'grpId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'uiExpand',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'uiExpand'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLOleChartTargetElement',
+        typeName: 'CT_TLOleChartTargetElement',
+        propertyInfos: [{
+            name: 'type',
+            required: true,
+            typeInfo: '.STTLChartSubelementType',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lvl',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'lvl'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLPoint',
+        typeName: 'CT_TLPoint',
+        propertyInfos: [{
+            name: 'x',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'x'
+            },
+            type: 'attribute'
+          }, {
+            name: 'y',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'y'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLSetBehavior',
+        typeName: 'CT_TLSetBehavior',
+        propertyInfos: [{
+            name: 'cBhvr',
+            required: true,
+            typeInfo: '.CTTLCommonBehaviorData'
+          }, {
+            name: 'to',
+            typeInfo: '.CTTLAnimVariant'
+          }]
+      }, {
+        localName: 'CTTLShapeTargetElement',
+        typeName: 'CT_TLShapeTargetElement',
+        propertyInfos: [{
+            name: 'bg',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'subSp',
+            required: true,
+            typeInfo: '.CTTLSubShapeId'
+          }, {
+            name: 'oleChartEl',
+            required: true,
+            typeInfo: '.CTTLOleChartTargetElement'
+          }, {
+            name: 'txEl',
+            required: true,
+            typeInfo: '.CTTLTextTargetElement'
+          }, {
+            name: 'graphicEl',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTAnimationElementChoice'
+          }, {
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLSubShapeId',
+        typeName: 'CT_TLSubShapeId',
+        propertyInfos: [{
+            name: 'spid',
+            required: true,
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'spid'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTemplate',
+        typeName: 'CT_TLTemplate',
+        propertyInfos: [{
+            name: 'tnLst',
+            required: true,
+            typeInfo: '.CTTimeNodeList'
+          }, {
+            name: 'lvl',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'lvl'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTemplateList',
+        typeName: 'CT_TLTemplateList',
+        propertyInfos: [{
+            name: 'tmpl',
+            minOccurs: 0,
+            maxOccurs: 9,
+            collection: true,
+            typeInfo: '.CTTLTemplate'
+          }]
+      }, {
+        localName: 'CTTLTextTargetElement',
+        typeName: 'CT_TLTextTargetElement',
+        propertyInfos: [{
+            name: 'charRg',
+            required: true,
+            typeInfo: '.CTIndexRange'
+          }, {
+            name: 'pRg',
+            required: true,
+            typeInfo: '.CTIndexRange'
+          }]
+      }, {
+        localName: 'CTTLTimeAnimateValue',
+        typeName: 'CT_TLTimeAnimateValue',
+        propertyInfos: [{
+            name: 'val',
+            typeInfo: '.CTTLAnimVariant'
+          }, {
+            name: 'tm',
+            defaultValue: 'indefinite',
+            attributeName: {
+              localPart: 'tm'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fmla',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'fmla'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTimeAnimateValueList',
+        typeName: 'CT_TLTimeAnimateValueList',
+        propertyInfos: [{
+            name: 'tav',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTTLTimeAnimateValue'
+          }]
+      }, {
+        localName: 'CTTLTimeCondition',
+        typeName: 'CT_TLTimeCondition',
+        propertyInfos: [{
+            name: 'tgtEl',
+            required: true,
+            typeInfo: '.CTTLTimeTargetElement'
+          }, {
+            name: 'tn',
+            required: true,
+            typeInfo: '.CTTLTriggerTimeNodeID'
+          }, {
+            name: 'rtn',
+            required: true,
+            typeInfo: '.CTTLTriggerRuntimeNode'
+          }, {
+            name: 'evt',
+            typeInfo: '.STTLTriggerEvent',
+            attributeName: {
+              localPart: 'evt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'delay',
+            attributeName: {
+              localPart: 'delay'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTimeConditionList',
+        typeName: 'CT_TLTimeConditionList',
+        propertyInfos: [{
+            name: 'cond',
+            required: true,
+            collection: true,
+            typeInfo: '.CTTLTimeCondition'
+          }]
+      }, {
+        localName: 'CTTLTimeNodeExclusive',
+        typeName: 'CT_TLTimeNodeExclusive',
+        propertyInfos: [{
+            name: 'cTn',
+            required: true,
+            typeInfo: '.CTTLCommonTimeNodeData'
+          }]
+      }, {
+        localName: 'CTTLTimeNodeParallel',
+        typeName: 'CT_TLTimeNodeParallel',
+        propertyInfos: [{
+            name: 'cTn',
+            required: true,
+            typeInfo: '.CTTLCommonTimeNodeData'
+          }]
+      }, {
+        localName: 'CTTLTimeNodeSequence',
+        typeName: 'CT_TLTimeNodeSequence',
+        propertyInfos: [{
+            name: 'cTn',
+            required: true,
+            typeInfo: '.CTTLCommonTimeNodeData'
+          }, {
+            name: 'prevCondLst',
+            typeInfo: '.CTTLTimeConditionList'
+          }, {
+            name: 'nextCondLst',
+            typeInfo: '.CTTLTimeConditionList'
+          }, {
+            name: 'concurrent',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'concurrent'
+            },
+            type: 'attribute'
+          }, {
+            name: 'prevAc',
+            typeInfo: '.STTLPreviousActionType',
+            attributeName: {
+              localPart: 'prevAc'
+            },
+            type: 'attribute'
+          }, {
+            name: 'nextAc',
+            typeInfo: '.STTLNextActionType',
+            attributeName: {
+              localPart: 'nextAc'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTimeTargetElement',
+        typeName: 'CT_TLTimeTargetElement',
+        propertyInfos: [{
+            name: 'sldTgt',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }, {
+            name: 'sndTgt',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTEmbeddedWAVAudioFile'
+          }, {
+            name: 'spTgt',
+            required: true,
+            typeInfo: '.CTTLShapeTargetElement'
+          }, {
+            name: 'inkTgt',
+            required: true,
+            typeInfo: '.CTTLSubShapeId'
+          }]
+      }, {
+        localName: 'CTTLTriggerRuntimeNode',
+        typeName: 'CT_TLTriggerRuntimeNode',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: '.STTLTriggerRuntimeNode',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTLTriggerTimeNodeID',
+        typeName: 'CT_TLTriggerTimeNodeID',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTagsData',
+        typeName: 'CT_TagsData',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTimeNodeList',
+        typeName: 'CT_TimeNodeList',
+        propertyInfos: [{
+            name: 'parOrSeqOrExcl',
+            required: true,
+            collection: true,
+            elementTypeInfos: [{
+                elementName: 'par',
+                typeInfo: '.CTTLTimeNodeParallel'
+              }, {
+                elementName: 'seq',
+                typeInfo: '.CTTLTimeNodeSequence'
+              }, {
+                elementName: 'excl',
+                typeInfo: '.CTTLTimeNodeExclusive'
+              }, {
+                elementName: 'anim',
+                typeInfo: '.CTTLAnimateBehavior'
+              }, {
+                elementName: 'animClr',
+                typeInfo: '.CTTLAnimateColorBehavior'
+              }, {
+                elementName: 'animEffect',
+                typeInfo: '.CTTLAnimateEffectBehavior'
+              }, {
+                elementName: 'animMotion',
+                typeInfo: '.CTTLAnimateMotionBehavior'
+              }, {
+                elementName: 'animRot',
+                typeInfo: '.CTTLAnimateRotationBehavior'
+              }, {
+                elementName: 'animScale',
+                typeInfo: '.CTTLAnimateScaleBehavior'
+              }, {
+                elementName: 'cmd',
+                typeInfo: '.CTTLCommandBehavior'
+              }, {
+                elementName: 'set',
+                typeInfo: '.CTTLSetBehavior'
+              }, {
+                elementName: 'audio',
+                typeInfo: '.CTTLMediaNodeAudio'
+              }, {
+                elementName: 'video',
+                typeInfo: '.CTTLMediaNodeVideo'
+              }],
+            type: 'elements'
+          }]
+      }, {
+        localName: 'CTTransitionSoundAction',
+        typeName: 'CT_TransitionSoundAction',
+        propertyInfos: [{
+            name: 'stSnd',
+            required: true,
+            typeInfo: '.CTTransitionStartSoundAction'
+          }, {
+            name: 'endSnd',
+            required: true,
+            typeInfo: '.CTEmpty'
+          }]
+      }, {
+        localName: 'CTTransitionStartSoundAction',
+        typeName: 'CT_TransitionStartSoundAction',
+        propertyInfos: [{
+            name: 'snd',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTEmbeddedWAVAudioFile'
+          }, {
+            name: 'loop',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'loop'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTWheelTransition',
+        typeName: 'CT_WheelTransition',
+        propertyInfos: [{
+            name: 'spokes',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 4,
+            attributeName: {
+              localPart: 'spokes'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CommonSlideData',
+        typeName: 'CT_CommonSlideData',
+        propertyInfos: [{
+            name: 'bg',
+            typeInfo: '.CTBackground'
+          }, {
+            name: 'spTree',
+            required: true,
+            typeInfo: '.GroupShape'
+          }, {
+            name: 'custDataLst',
+            typeInfo: '.CTCustomerDataList'
+          }, {
+            name: 'controls',
+            typeInfo: '.CTControlList'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'name',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CxnSp',
+        typeName: 'CT_Connector',
+        propertyInfos: [{
+            name: 'nvCxnSpPr',
+            required: true,
+            typeInfo: '.CxnSp.NvCxnSpPr'
+          }, {
+            name: 'spPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTShapeProperties'
+          }, {
+            name: 'style',
+            typeInfo: 'org_docx4j_dml.CTShapeStyle'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'CxnSp.NvCxnSpPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvCxnSpPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualConnectorProperties'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: '.NvPr'
+          }]
+      }, {
+        localName: 'GroupShape',
+        typeName: 'CT_GroupShape',
+        propertyInfos: [{
+            name: 'nvGrpSpPr',
+            required: true,
+            typeInfo: '.GroupShape.NvGrpSpPr'
+          }, {
+            name: 'grpSpPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTGroupShapeProperties'
+          }, {
+            name: 'spOrGrpSpOrGraphicFrame',
+            minOccurs: 0,
+            collection: true,
+            elementTypeInfos: [{
+                elementName: 'sp',
+                typeInfo: '.Shape'
+              }, {
+                elementName: 'grpSp',
+                typeInfo: '.GroupShape'
+              }, {
+                elementName: 'graphicFrame',
+                typeInfo: '.CTGraphicalObjectFrame'
+              }, {
+                elementName: 'cxnSp',
+                typeInfo: '.CxnSp'
+              }, {
+                elementName: 'pic',
+                typeInfo: '.Pic'
+              }, {
+                elementName: 'contentPart',
+                typeInfo: '.CTRel'
+              }, {
+                elementName: {
+                  localPart: 'AlternateContent',
+                  namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+                },
+                typeInfo: 'org_docx4j_mce.AlternateContent'
+              }],
+            type: 'elements'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'GroupShape.NvGrpSpPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvGrpSpPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualGroupDrawingShapeProps'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: '.NvPr'
+          }]
+      }, {
+        localName: 'HandoutMaster',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMap',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTColorMapping'
+          }, {
+            name: 'hf',
+            typeInfo: '.CTHeaderFooter'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'Notes',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMapOvr',
+            typeInfo: 'org_docx4j_dml.CTColorMappingOverride'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'showMasterSp',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterSp'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showMasterPhAnim',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterPhAnim'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'NotesMaster',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMap',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTColorMapping'
+          }, {
+            name: 'hf',
+            typeInfo: '.CTHeaderFooter'
+          }, {
+            name: 'notesStyle',
+            typeInfo: 'org_docx4j_dml.CTTextListStyle'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'NvPr',
+        typeName: 'CT_ApplicationNonVisualDrawingProps',
+        propertyInfos: [{
+            name: 'ph',
+            typeInfo: '.CTPlaceholder'
+          }, {
+            name: 'audioCd',
+            required: true,
+            elementName: {
+              localPart: 'audioCd',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTAudioCD'
+          }, {
+            name: 'wavAudioFile',
+            required: true,
+            elementName: {
+              localPart: 'wavAudioFile',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTEmbeddedWAVAudioFile'
+          }, {
+            name: 'audioFile',
+            required: true,
+            elementName: {
+              localPart: 'audioFile',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTAudioFile'
+          }, {
+            name: 'videoFile',
+            required: true,
+            elementName: {
+              localPart: 'videoFile',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTVideoFile'
+          }, {
+            name: 'quickTimeFile',
+            required: true,
+            elementName: {
+              localPart: 'quickTimeFile',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTQuickTimeFile'
+          }, {
+            name: 'custDataLst',
+            typeInfo: '.CTCustomerDataList'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'isPhoto',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'isPhoto'
+            },
+            type: 'attribute'
+          }, {
+            name: 'userDrawn',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'userDrawn'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'Pic',
+        typeName: 'CT_Picture',
+        propertyInfos: [{
+            name: 'nvPicPr',
+            required: true,
+            typeInfo: '.Pic.NvPicPr'
+          }, {
+            name: 'blipFill',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTBlipFillProperties'
+          }, {
+            name: 'spPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTShapeProperties'
+          }, {
+            name: 'style',
+            typeInfo: 'org_docx4j_dml.CTShapeStyle'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }]
+      }, {
+        localName: 'Pic.NvPicPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvPicPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualPictureProperties'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: '.NvPr'
+          }]
+      }, {
+        localName: 'Presentation',
+        typeName: null,
+        propertyInfos: [{
+            name: 'sldMasterIdLst',
+            typeInfo: '.Presentation.SldMasterIdLst'
+          }, {
+            name: 'notesMasterIdLst',
+            typeInfo: '.CTNotesMasterIdList'
+          }, {
+            name: 'handoutMasterIdLst',
+            typeInfo: '.CTHandoutMasterIdList'
+          }, {
+            name: 'sldIdLst',
+            typeInfo: '.Presentation.SldIdLst'
+          }, {
+            name: 'sldSz',
+            typeInfo: '.Presentation.SldSz'
+          }, {
+            name: 'notesSz',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
+          }, {
+            name: 'smartTags',
+            typeInfo: '.CTSmartTags'
+          }, {
+            name: 'embeddedFontLst',
+            typeInfo: '.CTEmbeddedFontList'
+          }, {
+            name: 'custShowLst',
+            typeInfo: '.CTCustomShowList'
+          }, {
+            name: 'photoAlbum',
+            typeInfo: '.CTPhotoAlbum'
+          }, {
+            name: 'custDataLst',
+            typeInfo: '.CTCustomerDataList'
+          }, {
+            name: 'kinsoku',
+            typeInfo: '.CTKinsoku'
+          }, {
+            name: 'defaultTextStyle',
+            typeInfo: 'org_docx4j_dml.CTTextListStyle'
+          }, {
+            name: 'modifyVerifier',
+            typeInfo: '.CTModifyVerifier'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'serverZoom',
+            typeInfo: 'Int',
+            defaultValue: 50,
+            attributeName: {
+              localPart: 'serverZoom'
+            },
+            type: 'attribute'
+          }, {
+            name: 'firstSlideNum',
+            typeInfo: 'Int',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'firstSlideNum'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showSpecialPlsOnTitleSld',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showSpecialPlsOnTitleSld'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rtl',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'rtl'
+            },
+            type: 'attribute'
+          }, {
+            name: 'removePersonalInfoOnSave',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'removePersonalInfoOnSave'
+            },
+            type: 'attribute'
+          }, {
+            name: 'compatMode',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'compatMode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strictFirstAndLastChars',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'strictFirstAndLastChars'
+            },
+            type: 'attribute'
+          }, {
+            name: 'embedTrueTypeFonts',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'embedTrueTypeFonts'
+            },
+            type: 'attribute'
+          }, {
+            name: 'saveSubsetFonts',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'saveSubsetFonts'
+            },
+            type: 'attribute'
+          }, {
+            name: 'autoCompressPictures',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'autoCompressPictures'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bookmarkIdSeed',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'bookmarkIdSeed'
+            },
+            type: 'attribute'
+          }, {
+            name: 'conformance',
+            typeInfo: 'org_docx4j_sharedtypes.STConformanceClass',
+            attributeName: {
+              localPart: 'conformance'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'Presentation.SldIdLst',
+        typeName: null,
+        propertyInfos: [{
+            name: 'sldId',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.Presentation.SldIdLst.SldId'
+          }]
+      }, {
+        localName: 'Presentation.SldIdLst.SldId',
+        typeName: null,
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rid',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'Presentation.SldMasterIdLst',
+        typeName: null,
+        propertyInfos: [{
+            name: 'sldMasterId',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.Presentation.SldMasterIdLst.SldMasterId'
+          }]
+      }, {
+        localName: 'Presentation.SldMasterIdLst.SldMasterId',
+        typeName: null,
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rid',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'Presentation.SldSz',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cx',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'cx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cy',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'cy'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: 'Token',
+            values: ['screen4x3', 'letter', 'A4', '35mm', 'overhead', 'banner', 'custom', 'ledger', 'A3', 'B4ISO', 'B5ISO', 'B4JIS', 'B5JIS', 'hagakiCard', 'screen16x9', 'screen16x10'],
+            defaultValue: 'custom',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'PresentationPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'prnPr',
+            typeInfo: '.CTPrintProperties'
+          }, {
+            name: 'showPr',
+            typeInfo: '.CTShowProperties'
+          }, {
+            name: 'clrMru',
+            typeInfo: 'org_docx4j_dml.CTColorMRU'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }]
+      }, {
+        localName: 'Shape',
+        typeName: 'CT_Shape',
+        propertyInfos: [{
+            name: 'nvSpPr',
+            required: true,
+            typeInfo: '.Shape.NvSpPr'
+          }, {
+            name: 'spPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTShapeProperties'
+          }, {
+            name: 'style',
+            typeInfo: 'org_docx4j_dml.CTShapeStyle'
+          }, {
+            name: 'txBody',
+            typeInfo: 'org_docx4j_dml.CTTextBody'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'useBgFill',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'useBgFill'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'Shape.NvSpPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cNvPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
+          }, {
+            name: 'cNvSpPr',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTNonVisualDrawingShapeProps'
+          }, {
+            name: 'nvPr',
+            required: true,
+            typeInfo: '.NvPr'
+          }]
+      }, {
+        localName: 'Sld',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMapOvr',
+            typeInfo: 'org_docx4j_dml.CTColorMappingOverride'
+          }, {
+            name: 'transition',
+            typeInfo: '.CTSlideTransition'
+          }, {
+            name: 'timing',
+            typeInfo: '.CTSlideTiming'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'show',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'show'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showMasterSp',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterSp'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showMasterPhAnim',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterPhAnim'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'SldLayout',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMapOvr',
+            typeInfo: 'org_docx4j_dml.CTColorMappingOverride'
+          }, {
+            name: 'transition',
+            typeInfo: '.CTSlideTransition'
+          }, {
+            name: 'timing',
+            typeInfo: '.CTSlideTiming'
+          }, {
+            name: 'hf',
+            typeInfo: '.CTHeaderFooter'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'matchingName',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'matchingName'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STSlideLayoutType',
+            defaultValue: 'cust',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'preserve',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'preserve'
+            },
+            type: 'attribute'
+          }, {
+            name: 'userDrawn',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'userDrawn'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showMasterSp',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterSp'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showMasterPhAnim',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showMasterPhAnim'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'SldMaster',
+        typeName: null,
+        propertyInfos: [{
+            name: 'cSld',
+            required: true,
+            typeInfo: '.CommonSlideData'
+          }, {
+            name: 'clrMap',
+            required: true,
+            typeInfo: 'org_docx4j_dml.CTColorMapping'
+          }, {
+            name: 'sldLayoutIdLst',
+            typeInfo: '.SlideLayoutIdList'
+          }, {
+            name: 'transition',
+            typeInfo: '.CTSlideTransition'
+          }, {
+            name: 'timing',
+            typeInfo: '.CTSlideTiming'
+          }, {
+            name: 'hf',
+            typeInfo: '.CTHeaderFooter'
+          }, {
+            name: 'txStyles',
+            typeInfo: '.CTSlideMasterTextStyles'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionListModify'
+          }, {
+            name: 'preserve',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'preserve'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'SlideLayoutIdList',
+        typeName: 'CT_SlideLayoutIdList',
+        propertyInfos: [{
+            name: 'sldLayoutId',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.SlideLayoutIdList.SldLayoutId'
+          }]
+      }, {
+        localName: 'SlideLayoutIdList.SldLayoutId',
+        typeName: null,
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'id',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rid',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'TagLst',
+        typeName: null,
+        propertyInfos: [{
+            name: 'tag',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTStringTag'
+          }]
+      }, {
+        localName: 'ViewPr',
+        typeName: null,
+        propertyInfos: [{
+            name: 'normalViewPr',
+            typeInfo: '.CTNormalViewProperties'
+          }, {
+            name: 'slideViewPr',
+            typeInfo: '.CTSlideViewProperties'
+          }, {
+            name: 'outlineViewPr',
+            typeInfo: '.CTOutlineViewProperties'
+          }, {
+            name: 'notesTextViewPr',
+            typeInfo: '.CTNotesTextViewProperties'
+          }, {
+            name: 'sorterViewPr',
+            typeInfo: '.CTSlideSorterViewProperties'
+          }, {
+            name: 'notesViewPr',
+            typeInfo: '.CTNotesViewProperties'
+          }, {
+            name: 'gridSpacing',
+            typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
+          }, {
+            name: 'extLst',
+            typeInfo: '.CTExtensionList'
+          }, {
+            name: 'lastView',
+            typeInfo: '.STViewType',
+            defaultValue: 'sldView',
+            attributeName: {
+              localPart: 'lastView'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showComments',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'showComments'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        type: 'enumInfo',
+        localName: 'STDirection',
+        baseTypeInfo: 'Token',
+        values: ['horz', 'vert']
+      }, {
+        type: 'enumInfo',
+        localName: 'STIterateType',
+        baseTypeInfo: 'Token',
+        values: ['el', 'wd', 'lt']
+      }, {
+        type: 'enumInfo',
+        localName: 'STOleObjectFollowColorScheme',
+        baseTypeInfo: 'Token',
+        values: ['none', 'full', 'textAndBackground']
+      }, {
+        type: 'enumInfo',
+        localName: 'STPhotoAlbumFrameShape',
+        baseTypeInfo: 'Token',
+        values: ['frameStyle1', 'frameStyle2', 'frameStyle3', 'frameStyle4', 'frameStyle5', 'frameStyle6', 'frameStyle7']
+      }, {
+        type: 'enumInfo',
+        localName: 'STPlaceholderSize',
+        baseTypeInfo: 'Token',
+        values: ['full', 'half', 'quarter']
+      }, {
+        type: 'enumInfo',
+        localName: 'STPlaceholderType',
+        baseTypeInfo: 'Token',
+        values: ['title', 'body', 'ctrTitle', 'subTitle', 'dt', 'sldNum', 'ftr', 'hdr', 'obj', 'chart', 'tbl', 'clipArt', 'dgm', 'media', 'sldImg', 'pic']
+      }, {
+        type: 'enumInfo',
+        localName: 'STPrintColorMode',
+        baseTypeInfo: 'Token',
+        values: ['bw', 'gray', 'clr']
+      }, {
+        type: 'enumInfo',
+        localName: 'STPrintWhat',
+        baseTypeInfo: 'Token',
+        values: ['slides', 'handouts1', 'handouts2', 'handouts3', 'handouts4', 'handouts6', 'handouts9', 'notes', 'outline']
+      }, {
+        type: 'enumInfo',
+        localName: 'STSlideLayoutType',
+        baseTypeInfo: 'Token',
+        values: ['title', 'tx', 'twoColTx', 'tbl', 'txAndChart', 'chartAndTx', 'dgm', 'chart', 'txAndClipArt', 'clipArtAndTx', 'titleOnly', 'blank', 'txAndObj', 'objAndTx', 'objOnly', 'obj', 'txAndMedia', 'mediaAndTx', 'objOverTx', 'txOverObj', 'txAndTwoObj', 'twoObjAndTx', 'twoObjOverTx', 'fourObj', 'vertTx', 'clipArtAndVertTx', 'vertTitleAndTx', 'vertTitleAndTxOverChart', 'twoObj', 'objAndTwoObj', 'twoObjAndObj', 'cust', 'secHead', 'twoTxTwoObj', 'objTx', 'picTx']
+      }, {
+        type: 'enumInfo',
+        localName: 'STSplitterBarState',
+        baseTypeInfo: 'Token',
+        values: ['minimized', 'restored', 'maximized']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateBehaviorCalcMode',
+        baseTypeInfo: 'Token',
+        values: ['discrete', 'lin', 'fmla']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateBehaviorValueType',
+        baseTypeInfo: 'Token',
+        values: ['str', 'num', 'clr']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateColorDirection',
+        baseTypeInfo: 'Token',
+        values: ['cw', 'ccw']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateColorSpace',
+        baseTypeInfo: 'Token',
+        values: ['rgb', 'hsl']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateEffectTransition',
+        baseTypeInfo: 'Token',
+        values: ['in', 'out', 'none']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateMotionBehaviorOrigin',
+        baseTypeInfo: 'Token',
+        values: ['parent', 'layout']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLAnimateMotionPathEditMode',
+        baseTypeInfo: 'Token',
+        values: ['relative', 'fixed']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLBehaviorAccumulateType',
+        baseTypeInfo: 'Token',
+        values: ['none', 'always']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLBehaviorAdditiveType',
+        baseTypeInfo: 'Token',
+        values: ['base', 'sum', 'repl', 'mult', 'none']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLBehaviorOverrideType',
+        baseTypeInfo: 'Token',
+        values: ['normal', 'childStyle']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLBehaviorTransformType',
+        baseTypeInfo: 'Token',
+        values: ['pt', 'img']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLChartSubelementType',
+        baseTypeInfo: 'Token',
+        values: ['gridLegend', 'series', 'category', 'ptInSeries', 'ptInCategory']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLCommandType',
+        baseTypeInfo: 'Token',
+        values: ['evt', 'call', 'verb']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLDiagramBuildType',
+        baseTypeInfo: 'Token',
+        values: ['whole', 'depthByNode', 'depthByBranch', 'breadthByNode', 'breadthByLvl', 'cw', 'cwIn', 'cwOut', 'ccw', 'ccwIn', 'ccwOut', 'inByRing', 'outByRing', 'up', 'down', 'allAtOnce', 'cust']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLNextActionType',
+        baseTypeInfo: 'Token',
+        values: ['none', 'seek']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLOleChartBuildType',
+        baseTypeInfo: 'Token',
+        values: ['allAtOnce', 'series', 'category', 'seriesEl', 'categoryEl']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLParaBuildType',
+        baseTypeInfo: 'Token',
+        values: ['allAtOnce', 'p', 'cust', 'whole']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLPreviousActionType',
+        baseTypeInfo: 'Token',
+        values: ['none', 'skipTimed']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeIndefinite',
+        baseTypeInfo: 'Token',
+        values: ['indefinite']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodeFillType',
+        baseTypeInfo: 'Token',
+        values: ['remove', 'freeze', 'hold', 'transition']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodeMasterRelation',
+        baseTypeInfo: 'Token',
+        values: ['sameClick', 'lastClick', 'nextClick']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodePresetClassType',
+        baseTypeInfo: 'Token',
+        values: ['entr', 'exit', 'emph', 'path', 'verb', 'mediacall']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodeRestartType',
+        baseTypeInfo: 'Token',
+        values: ['always', 'whenNotActive', 'never']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodeSyncType',
+        baseTypeInfo: 'Token',
+        values: ['canSlip', 'locked']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTimeNodeType',
+        baseTypeInfo: 'Token',
+        values: ['clickEffect', 'withEffect', 'afterEffect', 'mainSeq', 'interactiveSeq', 'clickPar', 'withGroup', 'afterGroup', 'tmRoot']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTriggerEvent',
+        baseTypeInfo: 'Token',
+        values: ['onBegin', 'onEnd', 'begin', 'end', 'onClick', 'onDblClick', 'onMouseOver', 'onMouseOut', 'onNext', 'onPrev', 'onStopAudio']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTLTriggerRuntimeNode',
+        baseTypeInfo: 'Token',
+        values: ['first', 'last', 'all']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionCornerDirectionType',
+        baseTypeInfo: 'Token',
+        values: ['lu', 'ru', 'ld', 'rd']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionInOutDirectionType',
+        baseTypeInfo: 'Token',
+        values: ['out', 'in']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionSideDirectionType',
+        baseTypeInfo: 'Token',
+        values: ['l', 'u', 'r', 'd']
+      }, {
+        type: 'enumInfo',
+        localName: 'STTransitionSpeed',
+        baseTypeInfo: 'Token',
+        values: ['slow', 'med', 'fast']
+      }, {
+        type: 'enumInfo',
+        localName: 'STViewType',
+        baseTypeInfo: 'Token',
+        values: ['sldView', 'sldMasterView', 'notesView', 'handoutView', 'notesMasterView', 'outlineView', 'sldSorterView', 'sldThumbnailView']
+      }],
+    elementInfos: [{
+        typeInfo: '.CTCommentAuthorList',
+        elementName: 'cmAuthorLst'
+      }, {
+        typeInfo: '.CTCommentList',
+        elementName: 'cmLst'
+      }, {
+        typeInfo: '.HandoutMaster',
+        elementName: 'handoutMaster'
+      }, {
+        typeInfo: '.Notes',
+        elementName: 'notes'
+      }, {
+        typeInfo: '.NotesMaster',
+        elementName: 'notesMaster'
+      }, {
+        typeInfo: '.CTOleObject',
+        elementName: 'oleObj'
+      }, {
+        typeInfo: '.Presentation',
+        elementName: 'presentation'
+      }, {
+        typeInfo: '.PresentationPr',
+        elementName: 'presentationPr'
+      }, {
+        typeInfo: '.Sld',
+        elementName: 'sld'
+      }, {
+        typeInfo: '.SldLayout',
+        elementName: 'sldLayout'
+      }, {
+        typeInfo: '.SldMaster',
+        elementName: 'sldMaster'
+      }, {
+        typeInfo: '.CTSlideSyncProperties',
+        elementName: 'sldSyncPr'
+      }, {
+        typeInfo: '.TagLst',
+        elementName: 'tagLst'
+      }, {
+        typeInfo: '.ViewPr',
+        elementName: 'viewPr'
+      }]
+  };
+  return {
+    org_pptx4j_pml: org_pptx4j_pml
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_pptx4j_pml_Module_Factory);
+}
+else {
+  var org_pptx4j_pml_Module = org_pptx4j_pml_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_pptx4j_pml = org_pptx4j_pml_Module.org_pptx4j_pml;
+  }
+  else {
+    var org_pptx4j_pml = org_pptx4j_pml_Module.org_pptx4j_pml;
+  }
+}

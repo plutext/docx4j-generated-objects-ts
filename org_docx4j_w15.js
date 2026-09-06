@@ -1,0 +1,154 @@
+var org_docx4j_w15_Module_Factory = function () {
+  var org_docx4j_w15 = {
+    name: 'org_docx4j_w15',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2012\/wordml',
+    defaultAttributeNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2012\/wordml',
+    dependencies: ['org_docx4j_wml'],
+    typeInfos: [{
+        localName: 'CTCommentEx',
+        typeName: 'CT_CommentEx',
+        propertyInfos: [{
+            name: 'paraId',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'paraIdParent',
+            type: 'attribute'
+          }, {
+            name: 'done',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCommentsEx',
+        typeName: 'CT_CommentsEx',
+        propertyInfos: [{
+            name: 'commentEx',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTCommentEx'
+          }]
+      }, {
+        localName: 'CTGuid',
+        typeName: 'CT_Guid',
+        propertyInfos: [{
+            name: 'val',
+            typeInfo: 'Token',
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPeople',
+        typeName: 'CT_People',
+        propertyInfos: [{
+            name: 'person',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTPerson'
+          }]
+      }, {
+        localName: 'CTPerson',
+        typeName: 'CT_Person',
+        propertyInfos: [{
+            name: 'presenceInfo',
+            typeInfo: '.CTPresenceInfo'
+          }, {
+            name: 'author',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'contact',
+            required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPresenceInfo',
+        typeName: 'CT_PresenceInfo',
+        propertyInfos: [{
+            name: 'providerId',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'userId',
+            required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSdtAppearance',
+        typeName: 'CT_SdtAppearance',
+        propertyInfos: [{
+            name: 'val',
+            typeInfo: '.STSdtAppearance',
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTSdtRepeatedSection',
+        typeName: 'CT_SdtRepeatedSection',
+        propertyInfos: [{
+            name: 'sectionTitle',
+            typeInfo: 'org_docx4j_wml.CTString'
+          }, {
+            name: 'doNotAllowInsertDeleteSection',
+            typeInfo: 'org_docx4j_wml.BooleanDefaultTrue'
+          }]
+      }, {
+        type: 'enumInfo',
+        localName: 'STSdtAppearance',
+        values: ['boundingBox', 'tags', 'hidden']
+      }],
+    elementInfos: [{
+        typeInfo: '.CTSdtAppearance',
+        elementName: 'appearance'
+      }, {
+        typeInfo: 'org_docx4j_wml.BooleanDefaultTrue',
+        elementName: 'chartTrackingRefBased'
+      }, {
+        typeInfo: 'org_docx4j_wml.BooleanDefaultTrue',
+        elementName: 'collapsed'
+      }, {
+        typeInfo: 'org_docx4j_wml.CTColor',
+        elementName: 'color'
+      }, {
+        typeInfo: '.CTCommentsEx',
+        elementName: 'commentsEx'
+      }, {
+        typeInfo: 'org_docx4j_wml.CTDataBinding',
+        elementName: 'dataBinding'
+      }, {
+        typeInfo: '.CTGuid',
+        elementName: 'docId'
+      }, {
+        typeInfo: 'org_docx4j_wml.CTDecimalNumber',
+        elementName: 'footnoteColumns'
+      }, {
+        typeInfo: '.CTPeople',
+        elementName: 'people'
+      }, {
+        typeInfo: '.CTSdtRepeatedSection',
+        elementName: 'repeatingSection'
+      }, {
+        typeInfo: 'org_docx4j_wml.CTEmpty',
+        elementName: 'repeatingSectionItem'
+      }, {
+        typeInfo: 'org_docx4j_wml.BooleanDefaultTrue',
+        elementName: 'webExtensionCreated'
+      }, {
+        typeInfo: 'org_docx4j_wml.BooleanDefaultTrue',
+        elementName: 'webExtensionLinked'
+      }]
+  };
+  return {
+    org_docx4j_w15: org_docx4j_w15
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_w15_Module_Factory);
+}
+else {
+  var org_docx4j_w15_Module = org_docx4j_w15_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_w15 = org_docx4j_w15_Module.org_docx4j_w15;
+  }
+  else {
+    var org_docx4j_w15 = org_docx4j_w15_Module.org_docx4j_w15;
+  }
+}

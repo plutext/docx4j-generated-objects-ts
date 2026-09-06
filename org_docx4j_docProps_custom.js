@@ -1,0 +1,206 @@
+var org_docx4j_docProps_custom_Module_Factory = function () {
+  var org_docx4j_docProps_custom = {
+    name: 'org_docx4j_docProps_custom',
+    defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/docPropsVTypes',
+    dependencies: ['org_docx4j_docProps_variantTypes'],
+    typeInfos: [{
+        localName: 'Properties',
+        typeName: null,
+        propertyInfos: [{
+            name: 'property',
+            minOccurs: 0,
+            collection: true,
+            elementName: {
+              localPart: 'property',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/custom-properties'
+            },
+            typeInfo: '.Properties.Property'
+          }]
+      }, {
+        localName: 'Properties.Property',
+        typeName: null,
+        propertyInfos: [{
+            name: 'vector',
+            required: true,
+            typeInfo: 'org_docx4j_docProps_variantTypes.Vector'
+          }, {
+            name: 'array',
+            required: true,
+            typeInfo: 'org_docx4j_docProps_variantTypes.Array'
+          }, {
+            name: 'blob',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'oblob',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'empty',
+            required: true,
+            typeInfo: 'org_docx4j_docProps_variantTypes.Empty'
+          }, {
+            name: '_null',
+            required: true,
+            elementName: 'null',
+            typeInfo: 'org_docx4j_docProps_variantTypes.Null'
+          }, {
+            name: 'i1',
+            required: true,
+            typeInfo: 'Byte'
+          }, {
+            name: 'i2',
+            required: true,
+            typeInfo: 'Short'
+          }, {
+            name: 'i4',
+            required: true,
+            typeInfo: 'Int'
+          }, {
+            name: 'i8',
+            required: true,
+            typeInfo: 'Long'
+          }, {
+            name: '_int',
+            required: true,
+            elementName: 'int',
+            typeInfo: 'Int'
+          }, {
+            name: 'ui1',
+            required: true,
+            typeInfo: 'UnsignedByte'
+          }, {
+            name: 'ui2',
+            required: true,
+            typeInfo: 'UnsignedShort'
+          }, {
+            name: 'ui4',
+            required: true,
+            typeInfo: 'UnsignedInt'
+          }, {
+            name: 'ui8',
+            required: true,
+            typeInfo: 'UnsignedLong'
+          }, {
+            name: 'uint',
+            required: true,
+            typeInfo: 'UnsignedInt'
+          }, {
+            name: 'r4',
+            required: true,
+            typeInfo: 'Float'
+          }, {
+            name: 'r8',
+            required: true,
+            typeInfo: 'Double'
+          }, {
+            name: 'decimal',
+            required: true,
+            typeInfo: 'Decimal'
+          }, {
+            name: 'lpstr',
+            required: true
+          }, {
+            name: 'lpwstr',
+            required: true
+          }, {
+            name: 'bstr',
+            required: true
+          }, {
+            name: 'date',
+            required: true,
+            typeInfo: 'DateTime'
+          }, {
+            name: 'filetime',
+            required: true,
+            typeInfo: 'DateTime'
+          }, {
+            name: 'bool',
+            required: true,
+            typeInfo: 'Boolean'
+          }, {
+            name: 'cy',
+            required: true
+          }, {
+            name: 'error',
+            required: true
+          }, {
+            name: 'stream',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'ostream',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'storage',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'ostorage',
+            required: true,
+            typeInfo: 'Base64Binary'
+          }, {
+            name: 'vstream',
+            required: true,
+            typeInfo: 'org_docx4j_docProps_variantTypes.Vstream'
+          }, {
+            name: 'clsid',
+            required: true
+          }, {
+            name: 'cf',
+            required: true,
+            typeInfo: 'org_docx4j_docProps_variantTypes.Cf'
+          }, {
+            name: 'fmtid',
+            required: true,
+            attributeName: {
+              localPart: 'fmtid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pid',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'pid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'linkTarget',
+            attributeName: {
+              localPart: 'linkTarget'
+            },
+            type: 'attribute'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: '.Properties',
+        elementName: {
+          localPart: 'Properties',
+          namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/custom-properties'
+        }
+      }]
+  };
+  return {
+    org_docx4j_docProps_custom: org_docx4j_docProps_custom
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_docProps_custom_Module_Factory);
+}
+else {
+  var org_docx4j_docProps_custom_Module = org_docx4j_docProps_custom_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_docProps_custom = org_docx4j_docProps_custom_Module.org_docx4j_docProps_custom;
+  }
+  else {
+    var org_docx4j_docProps_custom = org_docx4j_docProps_custom_Module.org_docx4j_docProps_custom;
+  }
+}

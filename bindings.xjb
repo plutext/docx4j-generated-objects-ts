@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Jsonix customizations for generating Office Open XML (docx4j) mappings.
+  Attached to docx4j's ROOT.xsd; the mapping names and packages come from the jaxb:package
+  annotations inside the docx4j schemas themselves (org.docx4j.wml -> org_docx4j_wml, ...).
+-->
+<jaxb:bindings version="3.0"
+	xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:jsonix="http://jsonix.highsource.org/customizations"
+	jaxb:extensionBindingPrefixes="jsonix">
+
+	<jaxb:bindings schemaLocation="../../docx4j/xsd/ROOT.xsd" node="/xsd:schema">
+		<!-- Defaults for every module: UMD mapping, ES-module mapping, TypeScript declarations. -->
+		<jsonix:output naming="standard"/>
+		<jsonix:output naming="standard" format="esm"/>
+		<jsonix:typeScript/>
+	</jaxb:bindings>
+
+</jaxb:bindings>

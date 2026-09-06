@@ -1,0 +1,278 @@
+var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = function () {
+  var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml = {
+    name: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2006\/wordml',
+    defaultAttributeNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2006\/wordml',
+    typeInfos: [{
+        localName: 'CTAcd',
+        typeName: 'CT_Acd',
+        propertyInfos: [{
+            name: 'argValue',
+            type: 'attribute'
+          }, {
+            name: 'fciBasedOn',
+            type: 'attribute'
+          }, {
+            name: 'fciIndexBasedOn',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'acdName',
+            required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTAcdKeymap',
+        typeName: 'CT_AcdKeymap',
+        propertyInfos: [{
+            name: 'acdName',
+            required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTAcdManifest',
+        typeName: 'CT_AcdManifest',
+        propertyInfos: [{
+            name: 'acdEntry',
+            required: true,
+            collection: true,
+            typeInfo: '.CTAcdKeymap'
+          }]
+      }, {
+        localName: 'CTAcds',
+        typeName: 'CT_Acds',
+        propertyInfos: [{
+            name: 'acd',
+            required: true,
+            collection: true,
+            typeInfo: '.CTAcd'
+          }]
+      }, {
+        localName: 'CTDocEvents',
+        typeName: 'CT_DocEvents',
+        propertyInfos: [{
+            name: 'eventDocNew',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocOpen',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocClose',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocSync',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocXmlAfterInsert',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocXmlBeforeDelete',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocContentControlAfterInsert',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocContentControlBeforeDelete',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocContentControlOnExit',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocContentControlOnEnter',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocStoreUpdate',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocContentControlContentUpdate',
+            typeInfo: 'AnyType'
+          }, {
+            name: 'eventDocBuildingBlockAfterInsert',
+            typeInfo: 'AnyType'
+          }]
+      }, {
+        localName: 'CTFci',
+        typeName: 'CT_Fci',
+        propertyInfos: [{
+            name: 'fciName',
+            type: 'attribute'
+          }, {
+            name: 'fciIndex',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'swArg',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTKeymap',
+        typeName: 'CT_Keymap',
+        propertyInfos: [{
+            name: 'fci',
+            required: true,
+            typeInfo: '.CTFci'
+          }, {
+            name: 'macro',
+            required: true,
+            typeInfo: '.CTMacroWll'
+          }, {
+            name: 'acd',
+            required: true,
+            typeInfo: '.CTAcdKeymap'
+          }, {
+            name: 'wll',
+            required: true,
+            typeInfo: '.CTMacroWll'
+          }, {
+            name: 'wch',
+            required: true,
+            typeInfo: '.CTLongHexNumber'
+          }, {
+            name: 'chmPrimary',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'chmSecondary',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'kcmPrimary',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'kcmSecondary',
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'mask',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTKeymaps',
+        typeName: 'CT_Keymaps',
+        propertyInfos: [{
+            name: 'keymap',
+            required: true,
+            collection: true,
+            typeInfo: '.CTKeymap'
+          }]
+      }, {
+        localName: 'CTLongHexNumber',
+        typeName: 'CT_LongHexNumber',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'HexBinary',
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMacroWll',
+        typeName: 'CT_MacroWll',
+        propertyInfos: [{
+            name: 'macroName',
+            required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMcd',
+        typeName: 'CT_Mcd',
+        propertyInfos: [{
+            name: 'macroName',
+            type: 'attribute'
+          }, {
+            name: 'name',
+            type: 'attribute'
+          }, {
+            name: 'menuHelp',
+            type: 'attribute'
+          }, {
+            name: 'bEncrypt',
+            type: 'attribute'
+          }, {
+            name: 'cmg',
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTMcds',
+        typeName: 'CT_Mcds',
+        propertyInfos: [{
+            name: 'mcd',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTMcd'
+          }]
+      }, {
+        localName: 'CTRel',
+        typeName: 'CT_Rel',
+        propertyInfos: [{
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTTcg',
+        typeName: 'CT_Tcg',
+        propertyInfos: [{
+            name: 'keymaps',
+            typeInfo: '.CTKeymaps'
+          }, {
+            name: 'keymapsBad',
+            typeInfo: '.CTKeymaps'
+          }, {
+            name: 'toolbars',
+            typeInfo: '.CTToolbars'
+          }, {
+            name: 'acds',
+            typeInfo: '.CTAcds'
+          }]
+      }, {
+        localName: 'CTToolbars',
+        typeName: 'CT_Toolbars',
+        propertyInfos: [{
+            name: 'acdManifest',
+            typeInfo: '.CTAcdManifest'
+          }, {
+            name: 'toolbarData',
+            typeInfo: '.CTRel'
+          }]
+      }, {
+        localName: 'CTVbaSuppData',
+        typeName: 'CT_VbaSuppData',
+        propertyInfos: [{
+            name: 'docEvents',
+            typeInfo: '.CTDocEvents'
+          }, {
+            name: 'mcds',
+            typeInfo: '.CTMcds'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: '.CTTcg',
+        elementName: 'tcg'
+      }, {
+        typeInfo: '.CTVbaSuppData',
+        elementName: 'vbaSuppData'
+      }]
+  };
+  return {
+    org_docx4j_com_microsoft_schemas_office_word_x2006_wordml: org_docx4j_com_microsoft_schemas_office_word_x2006_wordml
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory);
+}
+else {
+  var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module = org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_com_microsoft_schemas_office_word_x2006_wordml = org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module.org_docx4j_com_microsoft_schemas_office_word_x2006_wordml;
+  }
+  else {
+    var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml = org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module.org_docx4j_com_microsoft_schemas_office_word_x2006_wordml;
+  }
+}
