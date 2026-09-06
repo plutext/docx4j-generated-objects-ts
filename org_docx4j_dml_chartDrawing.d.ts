@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAbsSizeAnchor {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTAbsSizeAnchor';
+  readonly PARENT?: CTDrawing;
   from: CTMarker;
   ext: Dep_org_docx4j_dml.CTPositiveSize2D;
   sp: CTShape;
@@ -32,6 +33,7 @@ export interface CTAbsSizeAnchor {
 
 export interface CTConnector {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTConnector';
+  readonly PARENT?: CTAbsSizeAnchor | CTGroupShape | CTRelSizeAnchor;
   nvCxnSpPr: CTConnectorNonVisual;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
@@ -41,6 +43,7 @@ export interface CTConnector {
 
 export interface CTConnectorNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTConnectorNonVisual';
+  readonly PARENT?: CTConnector;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvCxnSpPr: Dep_org_docx4j_dml.CTNonVisualConnectorProperties;
 }
@@ -52,6 +55,7 @@ export interface CTDrawing {
 
 export interface CTGraphicFrame {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTGraphicFrame';
+  readonly PARENT?: CTAbsSizeAnchor | CTGroupShape | CTRelSizeAnchor;
   nvGraphicFramePr: CTGraphicFrameNonVisual;
   xfrm: Dep_org_docx4j_dml.CTTransform2D;
   graphic: Dep_org_docx4j_dml.Graphic;
@@ -61,12 +65,14 @@ export interface CTGraphicFrame {
 
 export interface CTGraphicFrameNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTGraphicFrameNonVisual';
+  readonly PARENT?: CTGraphicFrame;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGraphicFramePr: Dep_org_docx4j_dml.CTNonVisualGraphicFrameProperties;
 }
 
 export interface CTGroupShape {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTGroupShape';
+  readonly PARENT?: CTAbsSizeAnchor | CTGroupShape | CTRelSizeAnchor;
   nvGrpSpPr: CTGroupShapeNonVisual;
   grpSpPr: Dep_org_docx4j_dml.CTGroupShapeProperties;
   spOrGrpSpOrGraphicFrame?: (CTShape | CTGroupShape | CTGraphicFrame | CTConnector | CTPicture)[];
@@ -74,18 +80,21 @@ export interface CTGroupShape {
 
 export interface CTGroupShapeNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTGroupShapeNonVisual';
+  readonly PARENT?: CTGroupShape;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGrpSpPr: Dep_org_docx4j_dml.CTNonVisualGroupDrawingShapeProps;
 }
 
 export interface CTMarker {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTMarker';
+  readonly PARENT?: CTAbsSizeAnchor | CTRelSizeAnchor;
   x: number;
   y: number;
 }
 
 export interface CTPicture {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTPicture';
+  readonly PARENT?: CTAbsSizeAnchor | CTGroupShape | CTRelSizeAnchor;
   nvPicPr: CTPictureNonVisual;
   blipFill: Dep_org_docx4j_dml.CTBlipFillProperties;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
@@ -96,12 +105,14 @@ export interface CTPicture {
 
 export interface CTPictureNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTPictureNonVisual';
+  readonly PARENT?: CTPicture;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvPicPr: Dep_org_docx4j_dml.CTNonVisualPictureProperties;
 }
 
 export interface CTRelSizeAnchor {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTRelSizeAnchor';
+  readonly PARENT?: CTDrawing;
   from: CTMarker;
   to: CTMarker;
   sp: CTShape;
@@ -113,6 +124,7 @@ export interface CTRelSizeAnchor {
 
 export interface CTShape {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTShape';
+  readonly PARENT?: CTAbsSizeAnchor | CTGroupShape | CTRelSizeAnchor;
   nvSpPr: CTShapeNonVisual;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
@@ -125,6 +137,7 @@ export interface CTShape {
 
 export interface CTShapeNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_chartDrawing.CTShapeNonVisual';
+  readonly PARENT?: CTShape;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvSpPr: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
 }

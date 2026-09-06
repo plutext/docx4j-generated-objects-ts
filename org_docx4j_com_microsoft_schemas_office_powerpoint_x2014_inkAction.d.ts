@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAction {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTAction';
+  readonly PARENT?: CTActionGroup | CTActions;
   property?: CTActionProperty[];
   actionDataOrActionDataGroup?: (CTActionData | CTActionDataGroup)[];
   id?: string;
@@ -30,6 +31,7 @@ export interface CTAction {
 
 export interface CTActionData {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionData';
+  readonly PARENT?: CTAction | CTActionDataGroup;
   transform?: Dep_org_docx4j_org_w3_x2003_inkML.CTMatrix;
   traceOrTraceView?: (Dep_org_docx4j_org_w3_x2003_inkML.TraceType | Dep_org_docx4j_org_w3_x2003_inkML.TraceViewType)[];
   id?: string;
@@ -39,6 +41,7 @@ export interface CTActionData {
 
 export interface CTActionDataGroup {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionDataGroup';
+  readonly PARENT?: CTAction;
   actionData: CTActionData[];
   id?: string;
   name?: string;
@@ -46,6 +49,7 @@ export interface CTActionDataGroup {
 
 export interface CTActionGroup {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionGroup';
+  readonly PARENT?: CTActions;
   action: CTAction[];
   id?: string;
   type: string;
@@ -54,6 +58,7 @@ export interface CTActionGroup {
 
 export interface CTActionProperty {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionProperty';
+  readonly PARENT?: CTAction;
   name: string;
   value?: string;
 }

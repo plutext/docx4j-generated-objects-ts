@@ -25,6 +25,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTArc {
   TYPE_NAME?: 'org_docx4j_vml.CTArc';
+  readonly PARENT?: CTGroup;
   egShapeElements?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   startAngle?: number;
   endAngle?: number;
@@ -97,6 +98,7 @@ export interface CTBackground {
 
 export interface CTCurve {
   TYPE_NAME?: 'org_docx4j_vml.CTCurve';
+  readonly PARENT?: CTGroup;
   egShapeElements?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   from?: string;
   control1?: string;
@@ -159,11 +161,13 @@ export interface CTCurve {
 
 export interface CTF {
   TYPE_NAME?: 'org_docx4j_vml.CTF';
+  readonly PARENT?: CTFormulas;
   eqn?: string;
 }
 
 export interface CTFill {
   TYPE_NAME?: 'org_docx4j_vml.CTFill';
+  readonly PARENT?: CTArc | CTBackground | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype | Dep_org_docx4j_vml_officedrawing.CTShapeDefaults;
   fill?: Dep_org_docx4j_vml_officedrawing.CTFill;
   type?: STFillType;
   on?: STTrueFalse;
@@ -196,11 +200,13 @@ export interface CTFill {
 
 export interface CTFormulas {
   TYPE_NAME?: 'org_docx4j_vml.CTFormulas';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype;
   f?: CTF[];
 }
 
 export interface CTGroup {
   TYPE_NAME?: 'org_docx4j_vml.CTGroup';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel> | TypedNamedValue<CTGroup> | TypedNamedValue<CTShape> | TypedNamedValue<CTShapetype> | TypedNamedValue<CTArc> | TypedNamedValue<CTCurve> | TypedNamedValue<CTImage> | TypedNamedValue<CTLine> | TypedNamedValue<CTOval> | TypedNamedValue<CTPolyLine> | TypedNamedValue<CTRect> | TypedNamedValue<CTRoundRect> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTDiagram>)[];
   editas?: STEditAs;
   tableproperties?: string;
@@ -245,6 +251,7 @@ export interface CTGroup {
 
 export interface CTH {
   TYPE_NAME?: 'org_docx4j_vml.CTH';
+  readonly PARENT?: CTHandles;
   position?: string;
   polar?: string;
   map?: string;
@@ -258,11 +265,13 @@ export interface CTH {
 
 export interface CTHandles {
   TYPE_NAME?: 'org_docx4j_vml.CTHandles';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype;
   h?: CTH[];
 }
 
 export interface CTImage {
   TYPE_NAME?: 'org_docx4j_vml.CTImage';
+  readonly PARENT?: CTGroup;
   egShapeElements?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   opacity?: string;
   stroked?: STTrueFalse;
@@ -331,6 +340,7 @@ export interface CTImage {
 
 export interface CTImageData {
   TYPE_NAME?: 'org_docx4j_vml.CTImageData';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype;
   embosscolor?: string;
   recolortarget?: string;
   ohref?: string;
@@ -359,6 +369,7 @@ export interface CTImageData {
 
 export interface CTLine {
   TYPE_NAME?: 'org_docx4j_vml.CTLine';
+  readonly PARENT?: CTGroup;
   egShapeElements?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   from?: string;
   to?: string;
@@ -419,6 +430,7 @@ export interface CTLine {
 
 export interface CTOval {
   TYPE_NAME?: 'org_docx4j_vml.CTOval';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   opacity?: string;
   stroked?: STTrueFalse;
@@ -477,6 +489,7 @@ export interface CTOval {
 
 export interface CTPath {
   TYPE_NAME?: 'org_docx4j_vml.CTPath';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype;
   v?: string;
   limo?: string;
   textboxrect?: string;
@@ -496,6 +509,7 @@ export interface CTPath {
 
 export interface CTPolyLine {
   TYPE_NAME?: 'org_docx4j_vml.CTPolyLine';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTInk>)[];
   points?: string;
   opacity?: string;
@@ -555,6 +569,7 @@ export interface CTPolyLine {
 
 export interface CTRect {
   TYPE_NAME?: 'org_docx4j_vml.CTRect';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   opacity?: string;
   stroked?: STTrueFalse;
@@ -613,6 +628,7 @@ export interface CTRect {
 
 export interface CTRoundRect {
   TYPE_NAME?: 'org_docx4j_vml.CTRoundRect';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   arcsize?: string;
   opacity?: string;
@@ -672,6 +688,7 @@ export interface CTRoundRect {
 
 export interface CTShadow {
   TYPE_NAME?: 'org_docx4j_vml.CTShadow';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype | Dep_org_docx4j_vml_officedrawing.CTShapeDefaults;
   on?: STTrueFalse;
   type?: STShadowType;
   obscured?: STTrueFalse;
@@ -687,6 +704,7 @@ export interface CTShadow {
 
 export interface CTShape {
   TYPE_NAME?: 'org_docx4j_vml.CTShape';
+  readonly PARENT?: CTGroup;
   pathOrFormulasOrHandles?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTInk> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTEmpty>)[];
   gfxdata?: string;
   equationxml?: string;
@@ -750,6 +768,7 @@ export interface CTShape {
 
 export interface CTShapetype {
   TYPE_NAME?: 'org_docx4j_vml.CTShapetype';
+  readonly PARENT?: CTGroup;
   egShapeElements?: (TypedNamedValue<CTPath> | TypedNamedValue<CTFormulas> | TypedNamedValue<CTHandles> | TypedNamedValue<CTFill> | TypedNamedValue<CTStroke> | TypedNamedValue<CTShadow> | TypedNamedValue<CTTextbox> | TypedNamedValue<CTTextPath> | TypedNamedValue<CTImageData> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSkew> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTExtrusion> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTCallout> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTLock> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTClipPath> | TypedNamedValue<Dep_org_docx4j_vml_officedrawing.CTSignatureLine> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTWrap> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTAnchorLock> | TypedNamedValue<Dep_org_docx4j_vml_wordprocessingDrawing.CTBorder> | TypedNamedValue<Dep_org_docx4j_vml_spreadsheetDrawing.CTClientData> | TypedNamedValue<Dep_org_docx4j_vml_presentationDrawing.CTRel>)[];
   complex?: Dep_org_docx4j_vml_officedrawing.CTComplex;
   master?: string;
@@ -812,6 +831,7 @@ export interface CTShapetype {
 
 export interface CTStroke {
   TYPE_NAME?: 'org_docx4j_vml.CTStroke';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype | Dep_org_docx4j_vml_officedrawing.CTShapeDefaults;
   left?: Dep_org_docx4j_vml_officedrawing.CTStrokeChild;
   top?: Dep_org_docx4j_vml_officedrawing.CTStrokeChild;
   right?: Dep_org_docx4j_vml_officedrawing.CTStrokeChild;
@@ -850,6 +870,7 @@ export interface CTStroke {
 
 export interface CTTextPath {
   TYPE_NAME?: 'org_docx4j_vml.CTTextPath';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype;
   on?: STTrueFalse;
   fitshape?: STTrueFalse;
   fitpath?: STTrueFalse;
@@ -862,6 +883,7 @@ export interface CTTextPath {
 
 export interface CTTextbox {
   TYPE_NAME?: 'org_docx4j_vml.CTTextbox';
+  readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype | Dep_org_docx4j_vml_officedrawing.CTShapeDefaults;
   txbxContent?: Dep_org_docx4j_wml.CTTxbxContent;
   any: XmlAnyElement;
   inset?: string;

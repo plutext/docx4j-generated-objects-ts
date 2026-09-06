@@ -22,6 +22,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTOsfTaskpane {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_webextensions_taskpanes_2010_11.CTOsfTaskpane';
+  readonly PARENT?: CTOsfTaskpanes;
   webextensionref: Dep_org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11.CTWebExtensionPartRef;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   dockstate: string;

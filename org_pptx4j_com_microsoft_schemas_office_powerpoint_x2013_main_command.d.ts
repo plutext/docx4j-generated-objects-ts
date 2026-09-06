@@ -27,6 +27,7 @@ export interface CTChangesInfo {
 
 export interface CTCommentAuthorChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentAuthorChanges';
+  readonly PARENT?: CTDocumentChanges;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   cmAuthorMkLst: CTCommentAuthorMonikerList;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
@@ -40,11 +41,13 @@ export interface CTCommentAuthorMoniker {
 
 export interface CTCommentAuthorMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentAuthorMonikerList';
+  readonly PARENT?: CTCommentAuthorChanges;
   any?: XmlAnyElement[];
 }
 
 export interface CTCommentChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentChanges';
+  readonly PARENT?: CTSlideChanges;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   cmMkLst: CTCommentMonikerList;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
@@ -59,11 +62,13 @@ export interface CTCommentMoniker {
 
 export interface CTCommentMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentMonikerList';
+  readonly PARENT?: CTCommentChanges;
   any?: XmlAnyElement[];
 }
 
 export interface CTDocumentChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChanges';
+  readonly PARENT?: CTDocumentChangesList;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   docMkLst: CTDocumentMonikerList;
   sldChg?: CTSlideChanges[];
@@ -75,6 +80,7 @@ export interface CTDocumentChanges {
 
 export interface CTDocumentChangesList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChangesList';
+  readonly PARENT?: CTChangesInfo;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   docChg?: CTDocumentChanges[];
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
@@ -86,11 +92,13 @@ export interface CTDocumentMoniker {
 
 export interface CTDocumentMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentMonikerList';
+  readonly PARENT?: CTDocumentChanges;
   any?: XmlAnyElement[];
 }
 
 export interface CTMainMasterChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTMainMasterChanges';
+  readonly PARENT?: CTDocumentChanges;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   sldMasterMkLst: CTMainMasterMonikerList;
   spChg?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTShapeChanges[];
@@ -112,6 +120,7 @@ export interface CTMainMasterMoniker {
 
 export interface CTMainMasterMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTMainMasterMonikerList';
+  readonly PARENT?: CTMainMasterChanges;
   any?: XmlAnyElement[];
 }
 
@@ -122,6 +131,7 @@ export interface CTSlideBaseMonikerList {
 
 export interface CTSlideChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideChanges';
+  readonly PARENT?: CTDocumentChanges;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   sldMkLst: CTSlideMonikerList;
   spChg?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTShapeChanges[];
@@ -137,6 +147,7 @@ export interface CTSlideChanges {
 
 export interface CTSlideLayoutChanges {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideLayoutChanges';
+  readonly PARENT?: CTMainMasterChanges;
   chgData?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTChangesData;
   sldLayoutMkLst: CTSlideLayoutMonikerList;
   spChg?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTShapeChanges[];
@@ -157,6 +168,7 @@ export interface CTSlideLayoutMoniker {
 
 export interface CTSlideLayoutMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideLayoutMonikerList';
+  readonly PARENT?: CTSlideLayoutChanges;
   any?: XmlAnyElement[];
 }
 
@@ -168,6 +180,7 @@ export interface CTSlideMoniker {
 
 export interface CTSlideMonikerList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideMonikerList';
+  readonly PARENT?: CTSlideChanges;
   any?: XmlAnyElement[];
 }
 

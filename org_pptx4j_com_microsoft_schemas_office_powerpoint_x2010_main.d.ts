@@ -57,6 +57,7 @@ export interface CTGlitterTransition {
 
 export interface CTLaserTrace {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTLaserTrace';
+  readonly PARENT?: CTLaserTraceList;
   tracePt?: CTLaserTracePoint[];
 }
 
@@ -67,6 +68,7 @@ export interface CTLaserTraceList {
 
 export interface CTLaserTracePoint {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTLaserTracePoint';
+  readonly PARENT?: CTLaserTrace;
   t: string;
   x: number;
   y: number;
@@ -89,12 +91,14 @@ export interface CTMedia {
 
 export interface CTMediaBookmark {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaBookmark';
+  readonly PARENT?: CTMediaBookmarkList;
   name?: string;
   time?: string;
 }
 
 export interface CTMediaBookmarkList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaBookmarkList';
+  readonly PARENT?: CTMedia;
   bmk?: CTMediaBookmark[];
 }
 
@@ -106,18 +110,21 @@ export interface CTMediaBookmarkTarget {
 
 export interface CTMediaFade {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaFade';
+  readonly PARENT?: CTMedia;
   in?: string;
   out?: string;
 }
 
 export interface CTMediaPlaybackEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaPlaybackEventRecord';
+  readonly PARENT?: CTShowEventRecordList;
   time: string;
   objId: number;
 }
 
 export interface CTMediaSeekEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaSeekEventRecord';
+  readonly PARENT?: CTShowEventRecordList;
   time: string;
   objId: number;
   seek: string;
@@ -125,12 +132,14 @@ export interface CTMediaSeekEventRecord {
 
 export interface CTMediaTrim {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaTrim';
+  readonly PARENT?: CTMedia;
   st?: string;
   end?: string;
 }
 
 export interface CTNullEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTNullEventRecord';
+  readonly PARENT?: CTShowEventRecordList;
   time: string;
   objId: number;
 }
@@ -160,6 +169,7 @@ export interface CTRippleTransition {
 
 export interface CTSection {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTSection';
+  readonly PARENT?: CTSectionList;
   sldIdLst: CTSectionSlideIdList;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
   name?: string;
@@ -173,11 +183,13 @@ export interface CTSectionList {
 
 export interface CTSectionSlideIdList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTSectionSlideIdList';
+  readonly PARENT?: CTSection;
   sldId?: CTSectionSlideIdListEntry[];
 }
 
 export interface CTSectionSlideIdListEntry {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTSectionSlideIdListEntry';
+  readonly PARENT?: CTSectionSlideIdList;
   id: number;
 }
 
@@ -199,6 +211,7 @@ export interface CTShredTransition {
 
 export interface CTTriggerEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTTriggerEventRecord';
+  readonly PARENT?: CTShowEventRecordList;
   type: Dep_org_pptx4j_pml.STTLTriggerEvent;
   time: string;
   objId: number;

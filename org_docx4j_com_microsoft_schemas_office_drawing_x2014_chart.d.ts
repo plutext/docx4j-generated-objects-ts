@@ -22,11 +22,13 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTBooleanFalse {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTBooleanFalse';
+  readonly PARENT?: CTPivotOptions16;
   val?: boolean;
 }
 
 export interface CTCategoryFilterException {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTCategoryFilterException';
+  readonly PARENT?: CTCategoryFilterExceptions;
   uniqueId: CTChartUniqueID;
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   explosion?: Dep_org_docx4j_dml_chart.CTUnsignedInt;
@@ -48,12 +50,14 @@ export interface CTChartDataPointUniqueIDMap {
 
 export interface CTChartDataPointUniqueIDMapEntry {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTChartDataPointUniqueIDMapEntry';
+  readonly PARENT?: CTChartDataPointUniqueIDMap;
   ptidx: number;
   uniqueID: CTChartUniqueID;
 }
 
 export interface CTChartUniqueID {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTChartUniqueID';
+  readonly PARENT?: CTCategoryFilterException | CTChartDataPointUniqueIDMapEntry;
   val: string;
 }
 

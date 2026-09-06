@@ -21,17 +21,20 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAdj {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTAdj';
+  readonly PARENT?: CTAdjLst;
   idx: number;
   val: number;
 }
 
 export interface CTAdjLst {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTAdjLst';
+  readonly PARENT?: CTShape;
   adj?: CTAdj[];
 }
 
 export interface CTAlgorithm {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTAlgorithm';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   param?: CTParameter[];
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   type: STAlgorithmType;
@@ -40,44 +43,52 @@ export interface CTAlgorithm {
 
 export interface CTAnimLvl {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTAnimLvl';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: STAnimLvlStr;
 }
 
 export interface CTAnimOne {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTAnimOne';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: STAnimOneStr;
 }
 
 export interface CTBulletEnabled {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTBulletEnabled';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: boolean;
 }
 
 export interface CTCTCategories {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTCategories';
+  readonly PARENT?: CTColorTransform | CTColorTransformHeader;
   cat?: CTCTCategory[];
 }
 
 export interface CTCTCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTCategory';
+  readonly PARENT?: CTCTCategories;
   type: string;
   pri: number;
 }
 
 export interface CTCTDescription {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTDescription';
+  readonly PARENT?: CTColorTransform | CTColorTransformHeader;
   lang?: string;
   val: string;
 }
 
 export interface CTCTName {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTName';
+  readonly PARENT?: CTColorTransform | CTColorTransformHeader;
   lang?: string;
   val: string;
 }
 
 export interface CTCTStyleLabel {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTStyleLabel';
+  readonly PARENT?: CTColorTransform;
   fillClrLst?: CTColors;
   linClrLst?: CTColors;
   effectClrLst?: CTColors;
@@ -90,27 +101,32 @@ export interface CTCTStyleLabel {
 
 export interface CTCategories {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCategories';
+  readonly PARENT?: CTDiagramDefinition | CTDiagramDefinitionHeader;
   cat?: CTCategory[];
 }
 
 export interface CTCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCategory';
+  readonly PARENT?: CTCategories;
   type: string;
   pri: number;
 }
 
 export interface CTChildMax {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTChildMax';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: number;
 }
 
 export interface CTChildPref {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTChildPref';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: number;
 }
 
 export interface CTChoose {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTChoose';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   _if: CTWhen[];
   _else?: CTOtherwise;
   name?: string;
@@ -129,6 +145,7 @@ export interface CTColorTransform {
 
 export interface CTColorTransformHeader {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTColorTransformHeader';
+  readonly PARENT?: CTColorTransformHeaderLst;
   title: CTCTName[];
   desc: CTCTDescription[];
   catLst?: CTCTCategories;
@@ -145,6 +162,7 @@ export interface CTColorTransformHeaderLst {
 
 export interface CTColors {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTColors';
+  readonly PARENT?: CTCTStyleLabel;
   egColorChoice?: (Dep_org_docx4j_dml.CTScRgbColor | Dep_org_docx4j_dml.CTSRgbColor | Dep_org_docx4j_dml.CTHslColor | Dep_org_docx4j_dml.CTSystemColor | Dep_org_docx4j_dml.CTSchemeColor | Dep_org_docx4j_dml.CTPresetColor)[];
   meth?: STClrAppMethod;
   hueDir?: STHueDir;
@@ -152,6 +170,7 @@ export interface CTColors {
 
 export interface CTConstraint {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTConstraint';
+  readonly PARENT?: CTConstraints;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   op?: STBoolOperator;
   val?: number;
@@ -168,11 +187,13 @@ export interface CTConstraint {
 
 export interface CTConstraints {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTConstraints';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   constr?: CTConstraint[];
 }
 
 export interface CTCxn {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCxn';
+  readonly PARENT?: CTCxnList;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   modelId: string;
   type?: STCxnType;
@@ -187,11 +208,13 @@ export interface CTCxn {
 
 export interface CTCxnList {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCxnList';
+  readonly PARENT?: CTDataModel;
   cxn?: CTCxn[];
 }
 
 export interface CTDataModel {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTDataModel';
+  readonly PARENT?: CTSampleData;
   ptLst: CTPtList;
   cxnLst?: CTCxnList;
   bg?: Dep_org_docx4j_dml.CTBackgroundFormatting;
@@ -201,6 +224,7 @@ export interface CTDataModel {
 
 export interface CTDescription {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTDescription';
+  readonly PARENT?: CTDiagramDefinition | CTDiagramDefinitionHeader;
   lang?: string;
   val: string;
 }
@@ -222,6 +246,7 @@ export interface CTDiagramDefinition {
 
 export interface CTDiagramDefinitionHeader {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTDiagramDefinitionHeader';
+  readonly PARENT?: CTDiagramDefinitionHeaderLst;
   title: CTName[];
   desc: CTDescription[];
   catLst?: CTCategories;
@@ -239,11 +264,13 @@ export interface CTDiagramDefinitionHeaderLst {
 
 export interface CTDirection {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTDirection';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: STDirection;
 }
 
 export interface CTElemPropSet {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTElemPropSet';
+  readonly PARENT?: CTPt;
   presLayoutVars?: CTLayoutVariablePropertySet;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
   presAssocID?: string;
@@ -278,6 +305,7 @@ export interface CTElemPropSet {
 
 export interface CTForEach {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTForEach';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
   name?: string;
   ref?: string;
@@ -291,11 +319,13 @@ export interface CTForEach {
 
 export interface CTHierBranchStyle {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTHierBranchStyle';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: STHierBranchStyle;
 }
 
 export interface CTLayoutNode {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTLayoutNode';
+  readonly PARENT?: CTDiagramDefinition | CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTLayoutVariablePropertySet | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
   name?: string;
   styleLbl?: string;
@@ -305,6 +335,7 @@ export interface CTLayoutNode {
 
 export interface CTLayoutVariablePropertySet {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTLayoutVariablePropertySet';
+  readonly PARENT?: CTElemPropSet | CTLayoutNode;
   orgChart?: CTOrgChart;
   chMax?: CTChildMax;
   chPref?: CTChildPref;
@@ -318,12 +349,14 @@ export interface CTLayoutVariablePropertySet {
 
 export interface CTName {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTName';
+  readonly PARENT?: CTDiagramDefinition | CTDiagramDefinitionHeader;
   lang?: string;
   val: string;
 }
 
 export interface CTNumericRule {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTNumericRule';
+  readonly PARENT?: CTRules;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   val?: number;
   fact?: number;
@@ -336,23 +369,27 @@ export interface CTNumericRule {
 
 export interface CTOrgChart {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTOrgChart';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: boolean;
 }
 
 export interface CTOtherwise {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTOtherwise';
+  readonly PARENT?: CTChoose;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
   name?: string;
 }
 
 export interface CTParameter {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTParameter';
+  readonly PARENT?: CTAlgorithm;
   type: STParameterId;
   val: string;
 }
 
 export interface CTPresentationOf {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTPresentationOf';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   axis?: STAxisType[];
   ptType?: STElementType[];
@@ -364,6 +401,7 @@ export interface CTPresentationOf {
 
 export interface CTPt {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTPt';
+  readonly PARENT?: CTPtList;
   prSet?: CTElemPropSet;
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   t?: Dep_org_docx4j_dml.CTTextBody;
@@ -375,6 +413,7 @@ export interface CTPt {
 
 export interface CTPtList {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTPtList';
+  readonly PARENT?: CTDataModel;
   pt?: CTPt[];
 }
 
@@ -388,45 +427,53 @@ export interface CTRelIds {
 
 export interface CTResizeHandles {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTResizeHandles';
+  readonly PARENT?: CTLayoutVariablePropertySet;
   val?: STResizeHandlesStr;
 }
 
 export interface CTRules {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTRules';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   rule?: CTNumericRule[];
 }
 
 export interface CTSDCategories {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSDCategories';
+  readonly PARENT?: CTStyleDefinition | CTStyleDefinitionHeader;
   cat?: CTSDCategory[];
 }
 
 export interface CTSDCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSDCategory';
+  readonly PARENT?: CTSDCategories;
   type: string;
   pri: number;
 }
 
 export interface CTSDDescription {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSDDescription';
+  readonly PARENT?: CTStyleDefinition | CTStyleDefinitionHeader;
   lang?: string;
   val: string;
 }
 
 export interface CTSDName {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSDName';
+  readonly PARENT?: CTStyleDefinition | CTStyleDefinitionHeader;
   lang?: string;
   val: string;
 }
 
 export interface CTSampleData {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSampleData';
+  readonly PARENT?: CTDiagramDefinition;
   dataModel?: CTDataModel;
   useDef?: boolean;
 }
 
 export interface CTShape {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTShape';
+  readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   adjLst?: CTAdjLst;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   rot?: number;
@@ -452,6 +499,7 @@ export interface CTStyleDefinition {
 
 export interface CTStyleDefinitionHeader {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTStyleDefinitionHeader';
+  readonly PARENT?: CTStyleDefinitionHeaderLst;
   title: CTSDName[];
   desc: CTSDDescription[];
   catLst?: CTSDCategories;
@@ -468,6 +516,7 @@ export interface CTStyleDefinitionHeaderLst {
 
 export interface CTStyleLabel {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTStyleLabel';
+  readonly PARENT?: CTStyleDefinition;
   scene3D?: Dep_org_docx4j_dml.CTScene3D;
   sp3D?: Dep_org_docx4j_dml.CTShape3D;
   txPr?: CTTextProps;
@@ -478,12 +527,14 @@ export interface CTStyleLabel {
 
 export interface CTTextProps {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTTextProps';
+  readonly PARENT?: CTStyleLabel;
   sp3D: Dep_org_docx4j_dml.CTShape3D;
   flatTx: Dep_org_docx4j_dml.CTFlatText;
 }
 
 export interface CTWhen {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTWhen';
+  readonly PARENT?: CTChoose;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
   name?: string;
   func: STFunctionType;

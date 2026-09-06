@@ -22,10 +22,12 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTFixedLayout {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTFixedLayout';
+  readonly PARENT?: CTSummaryZoom;
 }
 
 export interface CTGridLayout {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTGridLayout';
+  readonly PARENT?: CTSummaryZoom;
 }
 
 export interface CTSummaryZoom {
@@ -38,6 +40,7 @@ export interface CTSummaryZoom {
 
 export interface CTSummaryZoomObject {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTSummaryZoomObject';
+  readonly PARENT?: CTSummaryZoom;
   zmPr: Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
   sectionId: string;

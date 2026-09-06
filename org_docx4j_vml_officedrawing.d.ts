@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTCallout {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTCallout';
+  readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   on?: STTrueFalse;
   type?: string;
   gap?: string;
@@ -39,11 +40,13 @@ export interface CTCallout {
 
 export interface CTClipPath {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTClipPath';
+  readonly PARENT?: Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   v: string;
 }
 
 export interface CTColorMenu {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTColorMenu';
+  readonly PARENT?: CTShapeDefaults;
   strokecolor?: string;
   fillcolor?: string;
   shadowcolor?: string;
@@ -53,17 +56,20 @@ export interface CTColorMenu {
 
 export interface CTColorMru {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTColorMru';
+  readonly PARENT?: CTShapeDefaults;
   colors?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTComplex {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTComplex';
+  readonly PARENT?: Dep_org_docx4j_vml.CTShapetype;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTDiagram {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTDiagram';
+  readonly PARENT?: Dep_org_docx4j_vml.CTGroup;
   relationtable?: CTRelationTable;
   dgmstyle?: number;
   autoformat?: STTrueFalse;
@@ -79,12 +85,14 @@ export interface CTDiagram {
 
 export interface CTEntry {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTEntry';
+  readonly PARENT?: CTRegroupTable;
   _new?: number;
   old?: number;
 }
 
 export interface CTExtrusion {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTExtrusion';
+  readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   on?: STTrueFalse;
   type?: STExtrusionType;
   render?: STExtrusionRender;
@@ -122,24 +130,28 @@ export interface CTExtrusion {
 
 export interface CTFill {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTFill';
+  readonly PARENT?: Dep_org_docx4j_vml.CTFill;
   type?: STFillType;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTIdMap {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTIdMap';
+  readonly PARENT?: CTShapeLayout;
   data?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTInk {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTInk';
+  readonly PARENT?: Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTShape;
   i?: string;
   annotation?: STTrueFalse;
 }
 
 export interface CTLock {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTLock';
+  readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   position?: STTrueFalse;
   selection?: STTrueFalse;
   grouping?: STTrueFalse;
@@ -170,6 +182,7 @@ export interface CTOLEObject {
 
 export interface CTProxy {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTProxy';
+  readonly PARENT?: CTR;
   start?: string;
   end?: string;
   idref?: string;
@@ -178,6 +191,7 @@ export interface CTProxy {
 
 export interface CTR {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTR';
+  readonly PARENT?: CTRules;
   proxy?: CTProxy[];
   id: string;
   type?: STRType;
@@ -187,12 +201,14 @@ export interface CTR {
 
 export interface CTRegroupTable {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTRegroupTable';
+  readonly PARENT?: CTShapeLayout;
   entry?: CTEntry[];
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTRelation {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTRelation';
+  readonly PARENT?: CTRelationTable;
   idsrc?: string;
   iddest?: string;
   idcntr?: string;
@@ -201,12 +217,14 @@ export interface CTRelation {
 
 export interface CTRelationTable {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTRelationTable';
+  readonly PARENT?: CTDiagram;
   rel?: CTRelation[];
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTRules {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTRules';
+  readonly PARENT?: CTShapeLayout;
   r?: CTR[];
   ext?: Dep_org_docx4j_vml.STExt;
 }
@@ -243,6 +261,7 @@ export interface CTShapeLayout {
 
 export interface CTSignatureLine {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTSignatureLine';
+  readonly PARENT?: Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   issignatureline?: STTrueFalse;
   id?: string;
   provid?: string;
@@ -260,6 +279,7 @@ export interface CTSignatureLine {
 
 export interface CTSkew {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTSkew';
+  readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   id?: string;
   on?: STTrueFalse;
   offset?: string;
@@ -270,6 +290,7 @@ export interface CTSkew {
 
 export interface CTStrokeChild {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTStrokeChild';
+  readonly PARENT?: Dep_org_docx4j_vml.CTStroke;
   on?: STTrueFalse;
   weight?: string;
   color?: string;

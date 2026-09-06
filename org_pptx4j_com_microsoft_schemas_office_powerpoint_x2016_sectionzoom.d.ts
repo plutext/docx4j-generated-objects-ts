@@ -28,6 +28,7 @@ export interface CTSectionZoom {
 
 export interface CTSectionZoomObject {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom.CTSectionZoomObject';
+  readonly PARENT?: CTSectionZoom;
   zmPr: Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
   sectionId: string;

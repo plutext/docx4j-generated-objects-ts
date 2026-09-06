@@ -20,6 +20,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTBooleanFalse {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart.CTBooleanFalse';
+  readonly PARENT?: CTDataDisplayOptions16;
   val?: boolean;
 }
 

@@ -32,6 +32,7 @@ export type RootElement = PropertiesElement;
 export namespace Properties {
   export interface Property {
     TYPE_NAME?: 'org_docx4j_docProps_custom.Properties.Property';
+    readonly PARENT?: Properties;
     vector: Dep_org_docx4j_docProps_variantTypes.Vector;
     array: Dep_org_docx4j_docProps_variantTypes.Array;
     blob: string;

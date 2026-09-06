@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTBooleanFalse {
   TYPE_NAME?: 'org_docx4j_dml_chart_x2007.CTBooleanFalse';
+  readonly PARENT?: CTPivotOptions;
   val?: boolean;
 }
 

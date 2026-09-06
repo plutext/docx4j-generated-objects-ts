@@ -22,6 +22,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAmbientLight {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTAmbientLight';
+  readonly PARENT?: CTModel3D;
   clr: Dep_org_docx4j_dml.CTColor;
   illuminance: CTPositiveRatio;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
@@ -30,6 +31,7 @@ export interface CTAmbientLight {
 
 export interface CTDirectionalLight {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTDirectionalLight';
+  readonly PARENT?: CTModel3D;
   clr: Dep_org_docx4j_dml.CTColor;
   illuminance: CTPositiveRatio;
   pos: Dep_org_docx4j_dml.CTPoint3D;
@@ -57,6 +59,7 @@ export interface CTModel3D {
 
 export interface CTModel3DCamera {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTModel3DCamera';
+  readonly PARENT?: CTModel3D;
   pos: Dep_org_docx4j_dml.CTPoint3D;
   up: Dep_org_docx4j_dml.CTVector3D;
   lookAt: Dep_org_docx4j_dml.CTPoint3D;
@@ -67,6 +70,7 @@ export interface CTModel3DCamera {
 
 export interface CTModel3DRaster {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTModel3DRaster';
+  readonly PARENT?: CTModel3D;
   blip?: Dep_org_docx4j_dml.CTBlip;
   rName: string;
   rVer: string;
@@ -74,6 +78,7 @@ export interface CTModel3DRaster {
 
 export interface CTModel3DTransform {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTModel3DTransform';
+  readonly PARENT?: CTModel3D;
   meterPerModelUnit?: CTPositiveRatio;
   preTrans?: Dep_org_docx4j_dml.CTVector3D;
   scale?: CTScale3D;
@@ -84,24 +89,28 @@ export interface CTModel3DTransform {
 
 export interface CTObjectViewport {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTObjectViewport';
+  readonly PARENT?: CTModel3D;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   viewportSz: number;
 }
 
 export interface CTOrthographicProjection {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTOrthographicProjection';
+  readonly PARENT?: CTModel3DCamera;
   sz: CTPositiveRatio;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
 }
 
 export interface CTPerspectiveProjection {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTPerspectiveProjection';
+  readonly PARENT?: CTModel3DCamera;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   fov: number;
 }
 
 export interface CTPointLight {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTPointLight';
+  readonly PARENT?: CTModel3D;
   clr: Dep_org_docx4j_dml.CTColor;
   intensity: CTPositiveRatio;
   pos: Dep_org_docx4j_dml.CTPoint3D;
@@ -112,12 +121,14 @@ export interface CTPointLight {
 
 export interface CTPositiveRatio {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTPositiveRatio';
+  readonly PARENT?: CTAmbientLight | CTDirectionalLight | CTModel3DTransform | CTOrthographicProjection | CTPointLight | CTSpotLight;
   n: number;
   d: number;
 }
 
 export interface CTRotate3D {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTRotate3D';
+  readonly PARENT?: CTModel3DTransform;
   ax?: number;
   ay?: number;
   az?: number;
@@ -125,6 +136,7 @@ export interface CTRotate3D {
 
 export interface CTScale3D {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTScale3D';
+  readonly PARENT?: CTModel3DTransform;
   sx: Dep_org_docx4j_dml.CTRatio;
   sy: Dep_org_docx4j_dml.CTRatio;
   sz: Dep_org_docx4j_dml.CTRatio;
@@ -132,6 +144,7 @@ export interface CTScale3D {
 
 export interface CTSpotLight {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTSpotLight';
+  readonly PARENT?: CTModel3D;
   clr: Dep_org_docx4j_dml.CTColor;
   intensity: CTPositiveRatio;
   pos: Dep_org_docx4j_dml.CTPoint3D;
@@ -144,10 +157,12 @@ export interface CTSpotLight {
 
 export interface CTUnknownLight {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTUnknownLight';
+  readonly PARENT?: CTModel3D;
 }
 
 export interface CTWindowViewport {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTWindowViewport';
+  readonly PARENT?: CTModel3D;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
 }
 

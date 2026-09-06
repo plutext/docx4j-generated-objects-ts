@@ -28,6 +28,7 @@ export interface CTSlideZoom {
 
 export interface CTSlideZoomObject {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom.CTSlideZoomObject';
+  readonly PARENT?: CTSlideZoom;
   zmPr: Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
   sldId: number;

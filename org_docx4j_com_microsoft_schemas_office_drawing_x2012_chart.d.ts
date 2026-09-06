@@ -22,6 +22,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTCategoryFilterException {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTCategoryFilterException';
+  readonly PARENT?: CTCategoryFilterExceptions;
   sqref: string;
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   explosion?: Dep_org_docx4j_dml_chart.CTUnsignedInt;
@@ -43,6 +44,7 @@ export interface CTDataLabelFieldTable {
 
 export interface CTDataLabelFieldTableEntry {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTDataLabelFieldTableEntry';
+  readonly PARENT?: CTDataLabelFieldTable;
   txfldGUID: string;
   f: string;
   dlblFieldTableCache?: Dep_org_docx4j_dml_chart.CTStrData;

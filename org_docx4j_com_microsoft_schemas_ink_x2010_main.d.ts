@@ -20,6 +20,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTCtxLink {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_ink_x2010_main.CTCtxLink';
+  readonly PARENT?: CTCtxNode;
   direction?: STDir;
   ref?: string;
 }
@@ -54,6 +55,7 @@ export interface CTCtxNode {
 
 export interface CTProperty {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_ink_x2010_main.CTProperty';
+  readonly PARENT?: CTCtxNode;
   value?: string;
   type?: string;
 }

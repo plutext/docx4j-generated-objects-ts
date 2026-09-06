@@ -23,36 +23,42 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAcc {
   TYPE_NAME?: 'org_docx4j_math.CTAcc';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   accPr?: CTAccPr;
   e: CTOMathArg;
 }
 
 export interface CTAccPr {
   TYPE_NAME?: 'org_docx4j_math.CTAccPr';
+  readonly PARENT?: CTAcc;
   chr?: CTChar;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTBar {
   TYPE_NAME?: 'org_docx4j_math.CTBar';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   barPr?: CTBarPr;
   e: CTOMathArg;
 }
 
 export interface CTBarPr {
   TYPE_NAME?: 'org_docx4j_math.CTBarPr';
+  readonly PARENT?: CTBar;
   pos?: CTTopBot;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTBorderBox {
   TYPE_NAME?: 'org_docx4j_math.CTBorderBox';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   borderBoxPr?: CTBorderBoxPr;
   e: CTOMathArg;
 }
 
 export interface CTBorderBoxPr {
   TYPE_NAME?: 'org_docx4j_math.CTBorderBoxPr';
+  readonly PARENT?: CTBorderBox;
   hideTop?: CTOnOff;
   hideBot?: CTOnOff;
   hideLeft?: CTOnOff;
@@ -66,12 +72,14 @@ export interface CTBorderBoxPr {
 
 export interface CTBox {
   TYPE_NAME?: 'org_docx4j_math.CTBox';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   boxPr?: CTBoxPr;
   e: CTOMathArg;
 }
 
 export interface CTBoxPr {
   TYPE_NAME?: 'org_docx4j_math.CTBoxPr';
+  readonly PARENT?: CTBox;
   opEmu?: CTOnOff;
   noBreak?: CTOnOff;
   diff?: CTOnOff;
@@ -82,21 +90,25 @@ export interface CTBoxPr {
 
 export interface CTBreakBin {
   TYPE_NAME?: 'org_docx4j_math.CTBreakBin';
+  readonly PARENT?: CTMathPr;
   val?: STBreakBin;
 }
 
 export interface CTBreakBinSub {
   TYPE_NAME?: 'org_docx4j_math.CTBreakBinSub';
+  readonly PARENT?: CTMathPr;
   val?: string;
 }
 
 export interface CTChar {
   TYPE_NAME?: 'org_docx4j_math.CTChar';
+  readonly PARENT?: CTAccPr | CTDPr | CTGroupChrPr | CTNaryPr;
   val: string;
 }
 
 export interface CTCtrlPr {
   TYPE_NAME?: 'org_docx4j_math.CTCtrlPr';
+  readonly PARENT?: CTAccPr | CTBarPr | CTBorderBoxPr | CTBoxPr | CTDPr | CTEqArrPr | CTFPr | CTFuncPr | CTGroupChrPr | CTLimLowPr | CTLimUppPr | CTMPr | CTNaryPr | CTOMathArg | CTPhantPr | CTRadPr | CTSPrePr | CTSSubPr | CTSSubSupPr | CTSSupPr;
   rPr?: Dep_org_docx4j_wml.RPr;
   ins: Dep_org_docx4j_wml.CTRPrChange;
   del: Dep_org_docx4j_wml.CTRPrChange;
@@ -104,12 +116,14 @@ export interface CTCtrlPr {
 
 export interface CTD {
   TYPE_NAME?: 'org_docx4j_math.CTD';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   dPr?: CTDPr;
   e: CTOMathArg[];
 }
 
 export interface CTDPr {
   TYPE_NAME?: 'org_docx4j_math.CTDPr';
+  readonly PARENT?: CTD;
   begChr?: CTChar;
   sepChr?: CTChar;
   endChr?: CTChar;
@@ -120,12 +134,14 @@ export interface CTDPr {
 
 export interface CTEqArr {
   TYPE_NAME?: 'org_docx4j_math.CTEqArr';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   eqArrPr?: CTEqArrPr;
   e: CTOMathArg[];
 }
 
 export interface CTEqArrPr {
   TYPE_NAME?: 'org_docx4j_math.CTEqArrPr';
+  readonly PARENT?: CTEqArr;
   baseJc?: CTYAlign;
   maxDist?: CTOnOff;
   objDist?: CTOnOff;
@@ -136,6 +152,7 @@ export interface CTEqArrPr {
 
 export interface CTF {
   TYPE_NAME?: 'org_docx4j_math.CTF';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   fPr?: CTFPr;
   num: CTOMathArg;
   den: CTOMathArg;
@@ -143,17 +160,20 @@ export interface CTF {
 
 export interface CTFPr {
   TYPE_NAME?: 'org_docx4j_math.CTFPr';
+  readonly PARENT?: CTF;
   type?: CTFType;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTFType {
   TYPE_NAME?: 'org_docx4j_math.CTFType';
+  readonly PARENT?: CTFPr;
   val: STFType;
 }
 
 export interface CTFunc {
   TYPE_NAME?: 'org_docx4j_math.CTFunc';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   funcPr?: CTFuncPr;
   fName: CTOMathArg;
   e: CTOMathArg;
@@ -161,17 +181,20 @@ export interface CTFunc {
 
 export interface CTFuncPr {
   TYPE_NAME?: 'org_docx4j_math.CTFuncPr';
+  readonly PARENT?: CTFunc;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTGroupChr {
   TYPE_NAME?: 'org_docx4j_math.CTGroupChr';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   groupChrPr?: CTGroupChrPr;
   e: CTOMathArg;
 }
 
 export interface CTGroupChrPr {
   TYPE_NAME?: 'org_docx4j_math.CTGroupChrPr';
+  readonly PARENT?: CTGroupChr;
   chr?: CTChar;
   pos?: CTTopBot;
   vertJc?: CTTopBot;
@@ -180,21 +203,25 @@ export interface CTGroupChrPr {
 
 export interface CTInteger2 {
   TYPE_NAME?: 'org_docx4j_math.CTInteger2';
+  readonly PARENT?: CTOMathArgPr;
   val: number;
 }
 
 export interface CTInteger255 {
   TYPE_NAME?: 'org_docx4j_math.CTInteger255';
+  readonly PARENT?: CTMCPr;
   val: number;
 }
 
 export interface CTLimLoc {
   TYPE_NAME?: 'org_docx4j_math.CTLimLoc';
+  readonly PARENT?: CTMathPr | CTNaryPr;
   val: STLimLoc;
 }
 
 export interface CTLimLow {
   TYPE_NAME?: 'org_docx4j_math.CTLimLow';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   limLowPr?: CTLimLowPr;
   e: CTOMathArg;
   lim: CTOMathArg;
@@ -202,11 +229,13 @@ export interface CTLimLow {
 
 export interface CTLimLowPr {
   TYPE_NAME?: 'org_docx4j_math.CTLimLowPr';
+  readonly PARENT?: CTLimLow;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTLimUpp {
   TYPE_NAME?: 'org_docx4j_math.CTLimUpp';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   limUppPr?: CTLimUppPr;
   e: CTOMathArg;
   lim: CTOMathArg;
@@ -214,33 +243,39 @@ export interface CTLimUpp {
 
 export interface CTLimUppPr {
   TYPE_NAME?: 'org_docx4j_math.CTLimUppPr';
+  readonly PARENT?: CTLimUpp;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTM {
   TYPE_NAME?: 'org_docx4j_math.CTM';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   mPr?: CTMPr;
   mr: CTMR[];
 }
 
 export interface CTMC {
   TYPE_NAME?: 'org_docx4j_math.CTMC';
+  readonly PARENT?: CTMCS;
   mcPr?: CTMCPr;
 }
 
 export interface CTMCPr {
   TYPE_NAME?: 'org_docx4j_math.CTMCPr';
+  readonly PARENT?: CTMC;
   count?: CTInteger255;
   mcJc?: CTXAlign;
 }
 
 export interface CTMCS {
   TYPE_NAME?: 'org_docx4j_math.CTMCS';
+  readonly PARENT?: CTMPr;
   mc: CTMC[];
 }
 
 export interface CTMPr {
   TYPE_NAME?: 'org_docx4j_math.CTMPr';
+  readonly PARENT?: CTM;
   baseJc?: CTYAlign;
   plcHide?: CTOnOff;
   rSpRule?: CTSpacingRule;
@@ -254,16 +289,19 @@ export interface CTMPr {
 
 export interface CTMR {
   TYPE_NAME?: 'org_docx4j_math.CTMR';
+  readonly PARENT?: CTM;
   e: CTOMathArg[];
 }
 
 export interface CTManualBreak {
   TYPE_NAME?: 'org_docx4j_math.CTManualBreak';
+  readonly PARENT?: CTBoxPr | CTRPR;
   alnAt?: number;
 }
 
 export interface CTMathPr {
   TYPE_NAME?: 'org_docx4j_math.CTMathPr';
+  readonly PARENT?: Dep_org_docx4j_wml.CTSettings;
   mathFont?: CTString;
   brkBin?: CTBreakBin;
   brkBinSub?: CTBreakBinSub;
@@ -284,6 +322,7 @@ export interface CTMathPr {
 
 export interface CTNary {
   TYPE_NAME?: 'org_docx4j_math.CTNary';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   naryPr?: CTNaryPr;
   sub: CTOMathArg;
   sup: CTOMathArg;
@@ -292,6 +331,7 @@ export interface CTNary {
 
 export interface CTNaryPr {
   TYPE_NAME?: 'org_docx4j_math.CTNaryPr';
+  readonly PARENT?: CTNary;
   chr?: CTChar;
   limLoc?: CTLimLoc;
   grow?: CTOnOff;
@@ -302,11 +342,13 @@ export interface CTNaryPr {
 
 export interface CTOMath {
   TYPE_NAME?: 'org_docx4j_math.CTOMath';
+  readonly PARENT?: CTOMath | CTOMathArg | CTOMathPara | Dep_org_docx4j_wml.Body | Dep_org_docx4j_wml.CTCustomXmlBlock | Dep_org_docx4j_wml.CTCustomXmlCell | Dep_org_docx4j_wml.CTCustomXmlRow | Dep_org_docx4j_wml.CTCustomXmlRun | Dep_org_docx4j_wml.CTFtnEdn | Dep_org_docx4j_wml.CTRubyContent | Dep_org_docx4j_wml.CTSdtContentCell | Dep_org_docx4j_wml.CTSdtContentRow | Dep_org_docx4j_wml.CTSdtContentRun | Dep_org_docx4j_wml.CTSimpleField | Dep_org_docx4j_wml.CTSmartTagRun | Dep_org_docx4j_wml.CTTxbxContent | Dep_org_docx4j_wml.Comments.Comment | Dep_org_docx4j_wml.Ftr | Dep_org_docx4j_wml.Hdr | Dep_org_docx4j_wml.P | Dep_org_docx4j_wml.P.Bdo | Dep_org_docx4j_wml.P.Dir | Dep_org_docx4j_wml.P.Hyperlink | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange | Dep_org_docx4j_wml.SdtContentBlock | Dep_org_docx4j_wml.Tbl | Dep_org_docx4j_wml.Tc | Dep_org_docx4j_wml.Tr;
   egoMathElements?: (TypedNamedValue<CTAcc> | TypedNamedValue<CTBar> | TypedNamedValue<CTBox> | TypedNamedValue<CTBorderBox> | TypedNamedValue<CTD> | TypedNamedValue<CTEqArr> | TypedNamedValue<CTF> | TypedNamedValue<CTFunc> | TypedNamedValue<CTGroupChr> | TypedNamedValue<CTLimLow> | TypedNamedValue<CTLimUpp> | TypedNamedValue<CTM> | TypedNamedValue<CTNary> | TypedNamedValue<CTPhant> | TypedNamedValue<CTRad> | TypedNamedValue<CTSPre> | TypedNamedValue<CTSSub> | TypedNamedValue<CTSSubSup> | TypedNamedValue<CTSSup> | TypedNamedValue<CTR> | TypedNamedValue<Dep_org_docx4j_wml.ProofErr> | TypedNamedValue<Dep_org_docx4j_wml.RangePermissionStart> | TypedNamedValue<Dep_org_docx4j_wml.CTPerm> | TypedNamedValue<Dep_org_docx4j_wml.CTBookmark> | TypedNamedValue<Dep_org_docx4j_wml.CTMarkupRange> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveBookmark> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveFromRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveToRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CommentRangeStart> | TypedNamedValue<Dep_org_docx4j_wml.CommentRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CTTrackChange> | TypedNamedValue<Dep_org_docx4j_wml.CTMarkup> | TypedNamedValue<Dep_org_docx4j_wml.RunIns> | TypedNamedValue<Dep_org_docx4j_wml.RunDel> | TypedNamedValue<Dep_org_docx4j_wml.RunTrackChange> | TypedNamedValue<CTOMathPara> | TypedNamedValue<CTOMath>)[];
 }
 
 export interface CTOMathArg {
   TYPE_NAME?: 'org_docx4j_math.CTOMathArg';
+  readonly PARENT?: CTAcc | CTBar | CTBorderBox | CTBox | CTD | CTEqArr | CTF | CTFunc | CTGroupChr | CTLimLow | CTLimUpp | CTMR | CTNary | CTPhant | CTRad | CTSPre | CTSSub | CTSSubSup | CTSSup;
   argPr?: CTOMathArgPr;
   egoMathElements?: (TypedNamedValue<CTAcc> | TypedNamedValue<CTBar> | TypedNamedValue<CTBox> | TypedNamedValue<CTBorderBox> | TypedNamedValue<CTD> | TypedNamedValue<CTEqArr> | TypedNamedValue<CTF> | TypedNamedValue<CTFunc> | TypedNamedValue<CTGroupChr> | TypedNamedValue<CTLimLow> | TypedNamedValue<CTLimUpp> | TypedNamedValue<CTM> | TypedNamedValue<CTNary> | TypedNamedValue<CTPhant> | TypedNamedValue<CTRad> | TypedNamedValue<CTSPre> | TypedNamedValue<CTSSub> | TypedNamedValue<CTSSubSup> | TypedNamedValue<CTSSup> | TypedNamedValue<CTR> | TypedNamedValue<Dep_org_docx4j_wml.ProofErr> | TypedNamedValue<Dep_org_docx4j_wml.RangePermissionStart> | TypedNamedValue<Dep_org_docx4j_wml.CTPerm> | TypedNamedValue<Dep_org_docx4j_wml.CTBookmark> | TypedNamedValue<Dep_org_docx4j_wml.CTMarkupRange> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveBookmark> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveFromRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CTMoveToRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CommentRangeStart> | TypedNamedValue<Dep_org_docx4j_wml.CommentRangeEnd> | TypedNamedValue<Dep_org_docx4j_wml.CTTrackChange> | TypedNamedValue<Dep_org_docx4j_wml.CTMarkup> | TypedNamedValue<Dep_org_docx4j_wml.RunIns> | TypedNamedValue<Dep_org_docx4j_wml.RunDel> | TypedNamedValue<Dep_org_docx4j_wml.RunTrackChange> | TypedNamedValue<CTOMathPara> | TypedNamedValue<CTOMath>)[];
   ctrlPr?: CTCtrlPr;
@@ -314,38 +356,45 @@ export interface CTOMathArg {
 
 export interface CTOMathArgPr {
   TYPE_NAME?: 'org_docx4j_math.CTOMathArgPr';
+  readonly PARENT?: CTOMathArg;
   argSz?: CTInteger2;
 }
 
 export interface CTOMathJc {
   TYPE_NAME?: 'org_docx4j_math.CTOMathJc';
+  readonly PARENT?: CTMathPr | CTOMathParaPr;
   val?: STJc;
 }
 
 export interface CTOMathPara {
   TYPE_NAME?: 'org_docx4j_math.CTOMathPara';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.Body | Dep_org_docx4j_wml.CTCustomXmlBlock | Dep_org_docx4j_wml.CTCustomXmlCell | Dep_org_docx4j_wml.CTCustomXmlRow | Dep_org_docx4j_wml.CTCustomXmlRun | Dep_org_docx4j_wml.CTFtnEdn | Dep_org_docx4j_wml.CTRubyContent | Dep_org_docx4j_wml.CTSdtContentCell | Dep_org_docx4j_wml.CTSdtContentRow | Dep_org_docx4j_wml.CTSdtContentRun | Dep_org_docx4j_wml.CTSimpleField | Dep_org_docx4j_wml.CTSmartTagRun | Dep_org_docx4j_wml.CTTxbxContent | Dep_org_docx4j_wml.Comments.Comment | Dep_org_docx4j_wml.Ftr | Dep_org_docx4j_wml.Hdr | Dep_org_docx4j_wml.P | Dep_org_docx4j_wml.P.Bdo | Dep_org_docx4j_wml.P.Dir | Dep_org_docx4j_wml.P.Hyperlink | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange | Dep_org_docx4j_wml.SdtContentBlock | Dep_org_docx4j_wml.Tbl | Dep_org_docx4j_wml.Tc | Dep_org_docx4j_wml.Tr;
   oMathParaPr?: CTOMathParaPr;
   oMath: CTOMath[];
 }
 
 export interface CTOMathParaPr {
   TYPE_NAME?: 'org_docx4j_math.CTOMathParaPr';
+  readonly PARENT?: CTOMathPara;
   jc?: CTOMathJc;
 }
 
 export interface CTOnOff {
   TYPE_NAME?: 'org_docx4j_math.CTOnOff';
+  readonly PARENT?: CTBorderBoxPr | CTBoxPr | CTDPr | CTEqArrPr | CTMPr | CTMathPr | CTNaryPr | CTPhantPr | CTRPR | CTRadPr | CTSSubSupPr;
   val?: Dep_org_docx4j_sharedtypes.STOnOff;
 }
 
 export interface CTPhant {
   TYPE_NAME?: 'org_docx4j_math.CTPhant';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   phantPr?: CTPhantPr;
   e: CTOMathArg;
 }
 
 export interface CTPhantPr {
   TYPE_NAME?: 'org_docx4j_math.CTPhantPr';
+  readonly PARENT?: CTPhant;
   show?: CTOnOff;
   zeroWid?: CTOnOff;
   zeroAsc?: CTOnOff;
@@ -356,11 +405,13 @@ export interface CTPhantPr {
 
 export interface CTR {
   TYPE_NAME?: 'org_docx4j_math.CTR';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   content?: (TypedNamedValue<CTRPR> | TypedNamedValue<Dep_org_docx4j_wml.RPr> | TypedNamedValue<Dep_org_docx4j_wml.Br> | TypedNamedValue<Dep_org_docx4j_wml.Text> | TypedNamedValue<Dep_org_docx4j_wml.DelText> | TypedNamedValue<Dep_org_docx4j_wml.R.NoBreakHyphen> | TypedNamedValue<Dep_org_docx4j_wml.R.SoftHyphen> | TypedNamedValue<Dep_org_docx4j_wml.R.DayShort> | TypedNamedValue<Dep_org_docx4j_wml.R.MonthShort> | TypedNamedValue<Dep_org_docx4j_wml.R.YearShort> | TypedNamedValue<Dep_org_docx4j_wml.R.DayLong> | TypedNamedValue<Dep_org_docx4j_wml.R.MonthLong> | TypedNamedValue<Dep_org_docx4j_wml.R.YearLong> | TypedNamedValue<Dep_org_docx4j_wml.R.AnnotationRef> | TypedNamedValue<Dep_org_docx4j_wml.R.FootnoteRef> | TypedNamedValue<Dep_org_docx4j_wml.R.EndnoteRef> | TypedNamedValue<Dep_org_docx4j_wml.R.Separator> | TypedNamedValue<Dep_org_docx4j_wml.R.ContinuationSeparator> | TypedNamedValue<Dep_org_docx4j_wml.R.Sym> | TypedNamedValue<Dep_org_docx4j_wml.R.PgNum> | TypedNamedValue<Dep_org_docx4j_wml.R.Cr> | TypedNamedValue<Dep_org_docx4j_wml.R.Tab> | TypedNamedValue<Dep_org_docx4j_wml.CTObject> | TypedNamedValue<Dep_org_docx4j_wml.Pict> | TypedNamedValue<Dep_org_docx4j_wml.FldChar> | TypedNamedValue<Dep_org_docx4j_wml.CTRuby> | TypedNamedValue<Dep_org_docx4j_wml.CTFtnEdnRef> | TypedNamedValue<Dep_org_docx4j_wml.R.CommentReference> | TypedNamedValue<Dep_org_docx4j_wml.Drawing> | TypedNamedValue<Dep_org_docx4j_wml.R.Ptab> | TypedNamedValue<Dep_org_docx4j_wml.R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent> | TypedNamedValue<CTText> | TypedNamedValue<Dep_org_docx4j_wml.CTMathRunTrackChange>)[];
 }
 
 export interface CTRPR {
   TYPE_NAME?: 'org_docx4j_math.CTRPR';
+  readonly PARENT?: CTR | Dep_org_docx4j_wml.CTMathRunTrackChange;
   lit?: CTOnOff;
   nor?: CTOnOff;
   scr?: CTScript;
@@ -371,6 +422,7 @@ export interface CTRPR {
 
 export interface CTRad {
   TYPE_NAME?: 'org_docx4j_math.CTRad';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   radPr?: CTRadPr;
   deg: CTOMathArg;
   e: CTOMathArg;
@@ -378,12 +430,14 @@ export interface CTRad {
 
 export interface CTRadPr {
   TYPE_NAME?: 'org_docx4j_math.CTRadPr';
+  readonly PARENT?: CTRad;
   degHide?: CTOnOff;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTSPre {
   TYPE_NAME?: 'org_docx4j_math.CTSPre';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   sPrePr?: CTSPrePr;
   sub: CTOMathArg;
   sup: CTOMathArg;
@@ -392,11 +446,13 @@ export interface CTSPre {
 
 export interface CTSPrePr {
   TYPE_NAME?: 'org_docx4j_math.CTSPrePr';
+  readonly PARENT?: CTSPre;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTSSub {
   TYPE_NAME?: 'org_docx4j_math.CTSSub';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   sSubPr?: CTSSubPr;
   e: CTOMathArg;
   sub: CTOMathArg;
@@ -404,11 +460,13 @@ export interface CTSSub {
 
 export interface CTSSubPr {
   TYPE_NAME?: 'org_docx4j_math.CTSSubPr';
+  readonly PARENT?: CTSSub;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTSSubSup {
   TYPE_NAME?: 'org_docx4j_math.CTSSubSup';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   sSubSupPr?: CTSSubSupPr;
   e: CTOMathArg;
   sub: CTOMathArg;
@@ -417,12 +475,14 @@ export interface CTSSubSup {
 
 export interface CTSSubSupPr {
   TYPE_NAME?: 'org_docx4j_math.CTSSubSupPr';
+  readonly PARENT?: CTSSubSup;
   alnScr?: CTOnOff;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTSSup {
   TYPE_NAME?: 'org_docx4j_math.CTSSup';
+  readonly PARENT?: CTOMath | CTOMathArg | Dep_org_docx4j_wml.RunDel | Dep_org_docx4j_wml.RunIns | Dep_org_docx4j_wml.RunTrackChange;
   sSupPr?: CTSSupPr;
   e: CTOMathArg;
   sup: CTOMathArg;
@@ -430,62 +490,74 @@ export interface CTSSup {
 
 export interface CTSSupPr {
   TYPE_NAME?: 'org_docx4j_math.CTSSupPr';
+  readonly PARENT?: CTSSup;
   ctrlPr?: CTCtrlPr;
 }
 
 export interface CTScript {
   TYPE_NAME?: 'org_docx4j_math.CTScript';
+  readonly PARENT?: CTRPR;
   val?: STScript;
 }
 
 export interface CTShp {
   TYPE_NAME?: 'org_docx4j_math.CTShp';
+  readonly PARENT?: CTDPr;
   val: STShp;
 }
 
 export interface CTSpacingRule {
   TYPE_NAME?: 'org_docx4j_math.CTSpacingRule';
+  readonly PARENT?: CTEqArrPr | CTMPr;
   val: number;
 }
 
 export interface CTString {
   TYPE_NAME?: 'org_docx4j_math.CTString';
+  readonly PARENT?: CTMathPr;
   val?: string;
 }
 
 export interface CTStyle {
   TYPE_NAME?: 'org_docx4j_math.CTStyle';
+  readonly PARENT?: CTRPR;
   val?: STStyle;
 }
 
 export interface CTText {
   TYPE_NAME?: 'org_docx4j_math.CTText';
+  readonly PARENT?: CTR | Dep_org_docx4j_wml.CTMathRunTrackChange;
   value?: string;
   space?: string;
 }
 
 export interface CTTopBot {
   TYPE_NAME?: 'org_docx4j_math.CTTopBot';
+  readonly PARENT?: CTBarPr | CTGroupChrPr;
   val: STTopBot;
 }
 
 export interface CTTwipsMeasure {
   TYPE_NAME?: 'org_docx4j_math.CTTwipsMeasure';
+  readonly PARENT?: CTMathPr;
   val: string;
 }
 
 export interface CTUnSignedInteger {
   TYPE_NAME?: 'org_docx4j_math.CTUnSignedInteger';
+  readonly PARENT?: CTEqArrPr | CTMPr;
   val: number;
 }
 
 export interface CTXAlign {
   TYPE_NAME?: 'org_docx4j_math.CTXAlign';
+  readonly PARENT?: CTMCPr;
   val: Dep_org_docx4j_sharedtypes.STXAlign;
 }
 
 export interface CTYAlign {
   TYPE_NAME?: 'org_docx4j_math.CTYAlign';
+  readonly PARENT?: CTEqArrPr | CTMPr;
   val: Dep_org_docx4j_sharedtypes.STYAlign;
 }
 

@@ -2,6 +2,8 @@
 // Describes the objects Jsonix produces when unmarshalling with this module's mappings.
 import type * as Dep_org_docx4j_dml from './org_docx4j_dml';
 import type * as Dep_org_docx4j_wml from './org_docx4j_wml';
+import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas';
+import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup';
 
 /** Jsonix.XML.QName */
 export interface XmlQName { namespaceURI: string; localPart: string; prefix?: string; key?: string; string?: string; }
@@ -22,6 +24,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTLinkedTextboxInformation {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTLinkedTextboxInformation';
+  readonly PARENT?: CTWordprocessingShape;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   id: number;
   seq: number;
@@ -29,6 +32,7 @@ export interface CTLinkedTextboxInformation {
 
 export interface CTTextboxInfo {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTTextboxInfo';
+  readonly PARENT?: CTWordprocessingShape;
   txbxContent?: Dep_org_docx4j_wml.CTTxbxContent;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   id?: number;
@@ -36,6 +40,7 @@ export interface CTTextboxInfo {
 
 export interface CTWordprocessingShape {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTWordprocessingShape';
+  readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas.CTWordprocessingCanvas | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup.CTWordprocessingGroup;
   cNvPr?: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvSpPr: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
   cNvCnPr: Dep_org_docx4j_dml.CTNonVisualConnectorProperties;

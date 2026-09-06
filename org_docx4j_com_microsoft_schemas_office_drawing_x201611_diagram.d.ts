@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTDiagramAutoBullet {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.CTDiagramAutoBullet';
+  readonly PARENT?: CTNumberDiagramInfo;
   buNone: Dep_org_docx4j_dml.CTTextNoBullet;
   buAutoNum: Dep_org_docx4j_dml.CTTextAutonumberBullet;
   buChar: Dep_org_docx4j_dml.CTTextCharBullet;
@@ -31,6 +32,7 @@ export interface CTDiagramAutoBullet {
 
 export interface CTNumberDiagramInfo {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.CTNumberDiagramInfo';
+  readonly PARENT?: CTNumberDiagramInfoList;
   buPr: CTDiagramAutoBullet;
   lvl: number;
   ptType: STSTorageType;

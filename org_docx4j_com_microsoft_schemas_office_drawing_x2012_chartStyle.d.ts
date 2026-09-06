@@ -67,11 +67,13 @@ export interface CTColorStyle {
 
 export interface CTColorStyleVariation {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTColorStyleVariation';
+  readonly PARENT?: CTColorStyle;
   egColorTransform?: (TypedNamedValue<Dep_org_docx4j_dml.CTPositiveFixedPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTComplementTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTInverseTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTGrayscaleTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTFixedPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTPositivePercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTPositiveFixedAngle> | TypedNamedValue<Dep_org_docx4j_dml.CTAngle> | TypedNamedValue<Dep_org_docx4j_dml.CTPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTGammaTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTInverseGammaTransform>)[];
 }
 
 export interface CTFontReference {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTFontReference';
+  readonly PARENT?: CTStyleEntry;
   scrgbClr: Dep_org_docx4j_dml.CTScRgbColor;
   srgbClr: Dep_org_docx4j_dml.CTSRgbColor;
   hslClr: Dep_org_docx4j_dml.CTHslColor;
@@ -85,18 +87,21 @@ export interface CTFontReference {
 
 export interface CTMarkerLayout {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTMarkerLayout';
+  readonly PARENT?: CTChartStyle;
   symbol?: STMarkerStyle;
   size?: number;
 }
 
 export interface CTStyleColor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleColor';
+  readonly PARENT?: CTFontReference | CTStyleReference;
   egColorTransform?: (TypedNamedValue<Dep_org_docx4j_dml.CTPositiveFixedPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTComplementTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTInverseTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTGrayscaleTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTFixedPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTPositivePercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTPositiveFixedAngle> | TypedNamedValue<Dep_org_docx4j_dml.CTAngle> | TypedNamedValue<Dep_org_docx4j_dml.CTPercentage> | TypedNamedValue<Dep_org_docx4j_dml.CTGammaTransform> | TypedNamedValue<Dep_org_docx4j_dml.CTInverseGammaTransform>)[];
   val?: string;
 }
 
 export interface CTStyleEntry {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry';
+  readonly PARENT?: CTChartStyle;
   lnRef: CTStyleReference;
   lineWidthScale?: number;
   fillRef: CTStyleReference;
@@ -111,6 +116,7 @@ export interface CTStyleEntry {
 
 export interface CTStyleReference {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleReference';
+  readonly PARENT?: CTStyleEntry;
   scrgbClr: Dep_org_docx4j_dml.CTScRgbColor;
   srgbClr: Dep_org_docx4j_dml.CTSRgbColor;
   hslClr: Dep_org_docx4j_dml.CTHslColor;

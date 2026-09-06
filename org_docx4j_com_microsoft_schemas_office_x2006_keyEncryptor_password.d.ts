@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTPasswordKeyEncryptor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor';
+  readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptor;
   saltSize: number;
   blockSize: number;
   keyBits: number;

@@ -58,21 +58,25 @@ export type RootElement = PropertiesElement;
 export namespace Properties {
   export interface DigSig {
     TYPE_NAME?: 'org_docx4j_docProps_extended.Properties.DigSig';
+    readonly PARENT?: Properties;
     blob: string;
   }
 
   export interface HLinks {
     TYPE_NAME?: 'org_docx4j_docProps_extended.Properties.HLinks';
+    readonly PARENT?: Properties;
     vector: Dep_org_docx4j_docProps_variantTypes.Vector;
   }
 
   export interface HeadingPairs {
     TYPE_NAME?: 'org_docx4j_docProps_extended.Properties.HeadingPairs';
+    readonly PARENT?: Properties;
     vector: Dep_org_docx4j_docProps_variantTypes.Vector;
   }
 
   export interface TitlesOfParts {
     TYPE_NAME?: 'org_docx4j_docProps_extended.Properties.TitlesOfParts';
+    readonly PARENT?: Properties;
     vector: Dep_org_docx4j_docProps_variantTypes.Vector;
   }
 }

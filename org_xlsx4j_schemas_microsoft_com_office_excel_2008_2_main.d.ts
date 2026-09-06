@@ -21,18 +21,21 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTDefinedName {
   TYPE_NAME?: 'org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main.CTDefinedName';
+  readonly PARENT?: CTDefinedNames;
   argumentDescriptions?: CTDefinedNameArgumentDescriptions;
   name: string;
 }
 
 export interface CTDefinedNameArgumentDescription {
   TYPE_NAME?: 'org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main.CTDefinedNameArgumentDescription';
+  readonly PARENT?: CTDefinedNameArgumentDescriptions;
   value?: string;
   index: number;
 }
 
 export interface CTDefinedNameArgumentDescriptions {
   TYPE_NAME?: 'org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main.CTDefinedNameArgumentDescriptions';
+  readonly PARENT?: CTDefinedName;
   argumentDescription: CTDefinedNameArgumentDescription[];
   count?: number;
 }

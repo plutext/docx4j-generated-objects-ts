@@ -22,6 +22,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTDataIntegrity {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTDataIntegrity';
+  readonly PARENT?: CTEncryption;
   encryptedHmacKey: string;
   encryptedHmacValue: string;
 }
@@ -35,6 +36,7 @@ export interface CTEncryption {
 
 export interface CTKeyData {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyData';
+  readonly PARENT?: CTEncryption;
   saltSize: number;
   blockSize: number;
   keyBits: number;
@@ -47,6 +49,7 @@ export interface CTKeyData {
 
 export interface CTKeyEncryptor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptor';
+  readonly PARENT?: CTKeyEncryptors;
   encryptedPasswordKey: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor;
   encryptedCertificateKey: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate.CTCertificateKeyEncryptor;
   uri?: string;
@@ -54,6 +57,7 @@ export interface CTKeyEncryptor {
 
 export interface CTKeyEncryptors {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptors';
+  readonly PARENT?: CTEncryption;
   keyEncryptor: CTKeyEncryptor[];
 }
 

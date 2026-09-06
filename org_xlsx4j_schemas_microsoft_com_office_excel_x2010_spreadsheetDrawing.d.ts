@@ -22,6 +22,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTApplicationNonVisualDrawingProps {
   TYPE_NAME?: 'org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing.CTApplicationNonVisualDrawingProps';
+  readonly PARENT?: CTContentPart;
   macro?: string;
   fPublished?: boolean;
 }
@@ -38,6 +39,7 @@ export interface CTContentPart {
 
 export interface CTContentPartNonVisual {
   TYPE_NAME?: 'org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing.CTContentPartNonVisual';
+  readonly PARENT?: CTContentPart;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvContentPartPr?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTNonVisualInkContentPartProperties;
 }

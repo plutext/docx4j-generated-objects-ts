@@ -20,6 +20,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTTrack {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201703_main.CTTrack';
+  readonly PARENT?: CTTrackList;
   id: string;
   label: string;
   lang?: string;
@@ -29,6 +30,7 @@ export interface CTTrack {
 
 export interface CTTrackList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201703_main.CTTrackList';
+  readonly PARENT?: CTTracksInfo;
   track?: CTTrack[];
 }
 

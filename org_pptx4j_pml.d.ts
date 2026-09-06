@@ -2,6 +2,13 @@
 // Describes the objects Jsonix produces when unmarshalling with this module's mappings.
 import type * as Dep_org_docx4j_dml from './org_docx4j_dml';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command';
+import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes';
 
 /** Jsonix.XML.QName */
@@ -23,6 +30,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTBackground {
   TYPE_NAME?: 'org_pptx4j_pml.CTBackground';
+  readonly PARENT?: CommonSlideData;
   bgPr: CTBackgroundProperties;
   bgRef: Dep_org_docx4j_dml.CTStyleMatrixReference;
   bwMode?: Dep_org_docx4j_dml.STBlackWhiteMode;
@@ -30,6 +38,7 @@ export interface CTBackground {
 
 export interface CTBackgroundProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTBackgroundProperties';
+  readonly PARENT?: CTBackground;
   noFill: Dep_org_docx4j_dml.CTNoFillProperties;
   solidFill: Dep_org_docx4j_dml.CTSolidColorFillProperties;
   gradFill: Dep_org_docx4j_dml.CTGradientFillProperties;
@@ -44,11 +53,13 @@ export interface CTBackgroundProperties {
 
 export interface CTBuildList {
   TYPE_NAME?: 'org_pptx4j_pml.CTBuildList';
+  readonly PARENT?: CTSlideTiming;
   bldPOrBldDgmOrBldOleChart: (CTTLBuildParagraph | CTTLBuildDiagram | CTTLOleBuildChart | CTTLGraphicalObjectBuild)[];
 }
 
 export interface CTComment {
   TYPE_NAME?: 'org_pptx4j_pml.CTComment';
+  readonly PARENT?: CTCommentList;
   pos: Dep_org_docx4j_dml.CTPoint2D;
   text: string;
   extLst?: CTExtensionListModify;
@@ -59,6 +70,7 @@ export interface CTComment {
 
 export interface CTCommentAuthor {
   TYPE_NAME?: 'org_pptx4j_pml.CTCommentAuthor';
+  readonly PARENT?: CTCommentAuthorList;
   extLst?: CTExtensionList;
   id: number;
   name: string;
@@ -79,6 +91,7 @@ export interface CTCommentList {
 
 export interface CTCommonSlideViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTCommonSlideViewProperties';
+  readonly PARENT?: CTNotesViewProperties | CTSlideViewProperties;
   cViewPr: CTCommonViewProperties;
   guideLst?: CTGuideList;
   snapToGrid?: boolean;
@@ -88,6 +101,7 @@ export interface CTCommonSlideViewProperties {
 
 export interface CTCommonViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTCommonViewProperties';
+  readonly PARENT?: CTCommonSlideViewProperties | CTNotesTextViewProperties | CTOutlineViewProperties | CTSlideSorterViewProperties;
   scale: Dep_org_docx4j_dml.CTScale2D;
   origin: Dep_org_docx4j_dml.CTPoint2D;
   varScale?: boolean;
@@ -95,6 +109,7 @@ export interface CTCommonViewProperties {
 
 export interface CTControl {
   TYPE_NAME?: 'org_pptx4j_pml.CTControl';
+  readonly PARENT?: CTControlList;
   extLst?: CTExtensionList;
   pic?: Pic;
   name?: string;
@@ -106,17 +121,20 @@ export interface CTControl {
 
 export interface CTControlList {
   TYPE_NAME?: 'org_pptx4j_pml.CTControlList';
+  readonly PARENT?: CommonSlideData;
   control?: CTControl[];
   alternateContent: Dep_org_docx4j_mce.AlternateContent;
 }
 
 export interface CTCornerDirectionTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTCornerDirectionTransition';
+  readonly PARENT?: CTSlideTransition;
   dir?: STTransitionCornerDirectionType;
 }
 
 export interface CTCustomShow {
   TYPE_NAME?: 'org_pptx4j_pml.CTCustomShow';
+  readonly PARENT?: CTCustomShowList;
   sldLst: CTSlideRelationshipList;
   extLst?: CTExtensionList;
   name: string;
@@ -125,42 +143,50 @@ export interface CTCustomShow {
 
 export interface CTCustomShowId {
   TYPE_NAME?: 'org_pptx4j_pml.CTCustomShowId';
+  readonly PARENT?: CTHtmlPublishProperties | CTShowProperties;
   id: number;
 }
 
 export interface CTCustomShowList {
   TYPE_NAME?: 'org_pptx4j_pml.CTCustomShowList';
+  readonly PARENT?: Presentation;
   custShow?: CTCustomShow[];
 }
 
 export interface CTCustomerData {
   TYPE_NAME?: 'org_pptx4j_pml.CTCustomerData';
+  readonly PARENT?: CTCustomerDataList;
   id: string;
 }
 
 export interface CTCustomerDataList {
   TYPE_NAME?: 'org_pptx4j_pml.CTCustomerDataList';
+  readonly PARENT?: CommonSlideData | NvPr | Presentation;
   custData?: CTCustomerData[];
   tags?: CTTagsData;
 }
 
 export interface CTEightDirectionTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTEightDirectionTransition';
+  readonly PARENT?: CTSlideTransition;
   dir?: string;
 }
 
 export interface CTEmbeddedFontDataId {
   TYPE_NAME?: 'org_pptx4j_pml.CTEmbeddedFontDataId';
+  readonly PARENT?: CTEmbeddedFontListEntry;
   id: string;
 }
 
 export interface CTEmbeddedFontList {
   TYPE_NAME?: 'org_pptx4j_pml.CTEmbeddedFontList';
+  readonly PARENT?: Presentation;
   embeddedFont?: CTEmbeddedFontListEntry[];
 }
 
 export interface CTEmbeddedFontListEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTEmbeddedFontListEntry';
+  readonly PARENT?: CTEmbeddedFontList;
   font: Dep_org_docx4j_dml.TextFont;
   regular?: CTEmbeddedFontDataId;
   bold?: CTEmbeddedFontDataId;
@@ -170,27 +196,32 @@ export interface CTEmbeddedFontListEntry {
 
 export interface CTEmpty {
   TYPE_NAME?: 'org_pptx4j_pml.CTEmpty';
+  readonly PARENT?: CTHtmlPublishProperties | CTShowProperties | CTSlideTransition | CTTLGraphicalObjectBuild | CTTLShapeTargetElement | CTTLTimeTargetElement | CTTransitionSoundAction;
 }
 
 export interface CTExtension {
   TYPE_NAME?: 'org_pptx4j_pml.CTExtension';
+  readonly PARENT?: CTExtensionList | CTExtensionListModify;
   any: XmlAnyElement;
   uri?: string;
 }
 
 export interface CTExtensionList {
   TYPE_NAME?: 'org_pptx4j_pml.CTExtensionList';
+  readonly PARENT?: CTBackgroundProperties | CTCommentAuthor | CTControl | CTCustomShow | CTHandoutMasterIdListEntry | CTHtmlPublishProperties | CTNormalViewProperties | CTNotesMasterIdListEntry | CTNotesTextViewProperties | CTNotesViewProperties | CTOleObjectEmbed | CTOleObjectLink | CTOutlineViewProperties | CTPhotoAlbum | CTPrintProperties | CTShowProperties | CTSlideMasterTextStyles | CTSlideSorterViewProperties | CTSlideSyncProperties | CTSlideViewProperties | CommonSlideData | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMedia | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTSection | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTExtendedGuide | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTExtendedGuideList | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentAuthorChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChangesList | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTMainMasterChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideLayoutChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main.CTRevisionInfo | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom.CTSectionZoom | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom.CTSectionZoomObject | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom.CTSlideZoom | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom.CTSlideZoomObject | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTSummaryZoom | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTSummaryZoomObject | NvPr | Presentation | Presentation.SldIdLst.SldId | Presentation.SldMasterIdLst.SldMasterId | PresentationPr | SlideLayoutIdList.SldLayoutId | ViewPr;
   ext?: CTExtension[];
 }
 
 export interface CTExtensionListModify {
   TYPE_NAME?: 'org_pptx4j_pml.CTExtensionListModify';
+  readonly PARENT?: CTComment | CTGraphicalObjectFrame | CTHeaderFooter | CTPlaceholder | CTSlideTiming | CTSlideTransition | CxnSp | GroupShape | HandoutMaster | Notes | NotesMaster | Pic | Shape | Sld | SldLayout | SldMaster;
   ext?: CTExtension[];
   mod?: boolean;
 }
 
 export interface CTGraphicalObjectFrame {
   TYPE_NAME?: 'org_pptx4j_pml.CTGraphicalObjectFrame';
+  readonly PARENT?: GroupShape;
   nvGraphicFramePr: CTGraphicalObjectFrameNonVisual;
   xfrm: Dep_org_docx4j_dml.CTTransform2D;
   graphic: Dep_org_docx4j_dml.Graphic;
@@ -199,6 +230,7 @@ export interface CTGraphicalObjectFrame {
 
 export interface CTGraphicalObjectFrameNonVisual {
   TYPE_NAME?: 'org_pptx4j_pml.CTGraphicalObjectFrameNonVisual';
+  readonly PARENT?: CTGraphicalObjectFrame;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGraphicFramePr: Dep_org_docx4j_dml.CTNonVisualGraphicFrameProperties;
   nvPr: NvPr;
@@ -206,28 +238,33 @@ export interface CTGraphicalObjectFrameNonVisual {
 
 export interface CTGuide {
   TYPE_NAME?: 'org_pptx4j_pml.CTGuide';
+  readonly PARENT?: CTGuideList;
   orient?: STDirection;
   pos?: number;
 }
 
 export interface CTGuideList {
   TYPE_NAME?: 'org_pptx4j_pml.CTGuideList';
+  readonly PARENT?: CTCommonSlideViewProperties;
   guide?: CTGuide[];
 }
 
 export interface CTHandoutMasterIdList {
   TYPE_NAME?: 'org_pptx4j_pml.CTHandoutMasterIdList';
+  readonly PARENT?: Presentation;
   handoutMasterId?: CTHandoutMasterIdListEntry;
 }
 
 export interface CTHandoutMasterIdListEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTHandoutMasterIdListEntry';
+  readonly PARENT?: CTHandoutMasterIdList;
   extLst?: CTExtensionList;
   id: string;
 }
 
 export interface CTHeaderFooter {
   TYPE_NAME?: 'org_pptx4j_pml.CTHeaderFooter';
+  readonly PARENT?: HandoutMaster | NotesMaster | SldLayout | SldMaster;
   extLst?: CTExtensionListModify;
   sldNum?: boolean;
   hdr?: boolean;
@@ -249,17 +286,20 @@ export interface CTHtmlPublishProperties {
 
 export interface CTInOutTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTInOutTransition';
+  readonly PARENT?: CTSlideTransition;
   dir?: STTransitionInOutDirectionType;
 }
 
 export interface CTIndexRange {
   TYPE_NAME?: 'org_pptx4j_pml.CTIndexRange';
+  readonly PARENT?: CTHtmlPublishProperties | CTShowProperties | CTTLTextTargetElement;
   st: number;
   end: number;
 }
 
 export interface CTKinsoku {
   TYPE_NAME?: 'org_pptx4j_pml.CTKinsoku';
+  readonly PARENT?: Presentation;
   lang?: string;
   invalStChars: string;
   invalEndChars: string;
@@ -267,6 +307,7 @@ export interface CTKinsoku {
 
 export interface CTModifyVerifier {
   TYPE_NAME?: 'org_pptx4j_pml.CTModifyVerifier';
+  readonly PARENT?: Presentation;
   algorithmName?: string;
   hashValue?: string;
   saltValue?: string;
@@ -275,12 +316,14 @@ export interface CTModifyVerifier {
 
 export interface CTNormalViewPortion {
   TYPE_NAME?: 'org_pptx4j_pml.CTNormalViewPortion';
+  readonly PARENT?: CTNormalViewProperties;
   sz: number;
   autoAdjust?: boolean;
 }
 
 export interface CTNormalViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTNormalViewProperties';
+  readonly PARENT?: ViewPr;
   restoredLeft: CTNormalViewPortion;
   restoredTop: CTNormalViewPortion;
   extLst?: CTExtensionList;
@@ -293,23 +336,27 @@ export interface CTNormalViewProperties {
 
 export interface CTNotesMasterIdList {
   TYPE_NAME?: 'org_pptx4j_pml.CTNotesMasterIdList';
+  readonly PARENT?: Presentation;
   notesMasterId?: CTNotesMasterIdListEntry;
 }
 
 export interface CTNotesMasterIdListEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTNotesMasterIdListEntry';
+  readonly PARENT?: CTNotesMasterIdList;
   extLst?: CTExtensionList;
   id: string;
 }
 
 export interface CTNotesTextViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTNotesTextViewProperties';
+  readonly PARENT?: ViewPr;
   cViewPr: CTCommonViewProperties;
   extLst?: CTExtensionList;
 }
 
 export interface CTNotesViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTNotesViewProperties';
+  readonly PARENT?: ViewPr;
   cSldViewPr: CTCommonSlideViewProperties;
   extLst?: CTExtensionList;
 }
@@ -330,28 +377,33 @@ export interface CTOleObject {
 
 export interface CTOleObjectEmbed {
   TYPE_NAME?: 'org_pptx4j_pml.CTOleObjectEmbed';
+  readonly PARENT?: CTOleObject;
   extLst?: CTExtensionList;
   followColorScheme?: STOleObjectFollowColorScheme;
 }
 
 export interface CTOleObjectLink {
   TYPE_NAME?: 'org_pptx4j_pml.CTOleObjectLink';
+  readonly PARENT?: CTOleObject;
   extLst?: CTExtensionList;
   updateAutomatic?: boolean;
 }
 
 export interface CTOptionalBlackTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTOptionalBlackTransition';
+  readonly PARENT?: CTSlideTransition;
   thruBlk?: boolean;
 }
 
 export interface CTOrientationTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTOrientationTransition';
+  readonly PARENT?: CTSlideTransition;
   dir?: STDirection;
 }
 
 export interface CTOutlineViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTOutlineViewProperties';
+  readonly PARENT?: ViewPr;
   cViewPr: CTCommonViewProperties;
   sldLst?: CTOutlineViewSlideList;
   extLst?: CTExtensionList;
@@ -359,17 +411,20 @@ export interface CTOutlineViewProperties {
 
 export interface CTOutlineViewSlideEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTOutlineViewSlideEntry';
+  readonly PARENT?: CTOutlineViewSlideList;
   id: string;
   collapse?: boolean;
 }
 
 export interface CTOutlineViewSlideList {
   TYPE_NAME?: 'org_pptx4j_pml.CTOutlineViewSlideList';
+  readonly PARENT?: CTOutlineViewProperties;
   sld?: CTOutlineViewSlideEntry[];
 }
 
 export interface CTPhotoAlbum {
   TYPE_NAME?: 'org_pptx4j_pml.CTPhotoAlbum';
+  readonly PARENT?: Presentation;
   extLst?: CTExtensionList;
   bw?: boolean;
   showCaptions?: boolean;
@@ -379,6 +434,7 @@ export interface CTPhotoAlbum {
 
 export interface CTPlaceholder {
   TYPE_NAME?: 'org_pptx4j_pml.CTPlaceholder';
+  readonly PARENT?: NvPr;
   extLst?: CTExtensionListModify;
   type?: STPlaceholderType;
   orient?: STDirection;
@@ -389,6 +445,7 @@ export interface CTPlaceholder {
 
 export interface CTPrintProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTPrintProperties';
+  readonly PARENT?: PresentationPr;
   extLst?: CTExtensionList;
   prnWhat?: STPrintWhat;
   clrMode?: STPrintColorMode;
@@ -399,21 +456,25 @@ export interface CTPrintProperties {
 
 export interface CTRel {
   TYPE_NAME?: 'org_pptx4j_pml.CTRel';
+  readonly PARENT?: GroupShape;
   id: string;
 }
 
 export interface CTShowInfoBrowse {
   TYPE_NAME?: 'org_pptx4j_pml.CTShowInfoBrowse';
+  readonly PARENT?: CTShowProperties;
   showScrollbar?: boolean;
 }
 
 export interface CTShowInfoKiosk {
   TYPE_NAME?: 'org_pptx4j_pml.CTShowInfoKiosk';
+  readonly PARENT?: CTShowProperties;
   restart?: number;
 }
 
 export interface CTShowProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTShowProperties';
+  readonly PARENT?: PresentationPr;
   present: CTEmpty;
   browse: CTShowInfoBrowse;
   kiosk: CTShowInfoKiosk;
@@ -430,11 +491,13 @@ export interface CTShowProperties {
 
 export interface CTSideDirectionTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTSideDirectionTransition';
+  readonly PARENT?: CTSlideTransition;
   dir?: STTransitionSideDirectionType;
 }
 
 export interface CTSlideMasterTextStyles {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideMasterTextStyles';
+  readonly PARENT?: SldMaster;
   titleStyle?: Dep_org_docx4j_dml.CTTextListStyle;
   bodyStyle?: Dep_org_docx4j_dml.CTTextListStyle;
   otherStyle?: Dep_org_docx4j_dml.CTTextListStyle;
@@ -443,16 +506,19 @@ export interface CTSlideMasterTextStyles {
 
 export interface CTSlideRelationshipList {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideRelationshipList';
+  readonly PARENT?: CTCustomShow;
   sld?: CTSlideRelationshipListEntry[];
 }
 
 export interface CTSlideRelationshipListEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideRelationshipListEntry';
+  readonly PARENT?: CTSlideRelationshipList;
   id: string;
 }
 
 export interface CTSlideSorterViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideSorterViewProperties';
+  readonly PARENT?: ViewPr;
   cViewPr: CTCommonViewProperties;
   extLst?: CTExtensionList;
   showFormatting?: boolean;
@@ -468,6 +534,7 @@ export interface CTSlideSyncProperties {
 
 export interface CTSlideTiming {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideTiming';
+  readonly PARENT?: Sld | SldLayout | SldMaster;
   tnLst?: CTTimeNodeList;
   bldLst?: CTBuildList;
   extLst?: CTExtensionListModify;
@@ -475,6 +542,7 @@ export interface CTSlideTiming {
 
 export interface CTSlideTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideTransition';
+  readonly PARENT?: Sld | SldLayout | SldMaster;
   blinds: CTOrientationTransition;
   checker: CTOrientationTransition;
   circle: CTEmpty;
@@ -505,29 +573,34 @@ export interface CTSlideTransition {
 
 export interface CTSlideViewProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideViewProperties';
+  readonly PARENT?: ViewPr;
   cSldViewPr: CTCommonSlideViewProperties;
   extLst?: CTExtensionList;
 }
 
 export interface CTSmartTags {
   TYPE_NAME?: 'org_pptx4j_pml.CTSmartTags';
+  readonly PARENT?: Presentation;
   id: string;
 }
 
 export interface CTSplitTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTSplitTransition';
+  readonly PARENT?: CTSlideTransition;
   orient?: STDirection;
   dir?: STTransitionInOutDirectionType;
 }
 
 export interface CTStringTag {
   TYPE_NAME?: 'org_pptx4j_pml.CTStringTag';
+  readonly PARENT?: TagLst;
   name?: string;
   val?: string;
 }
 
 export interface CTTLAnimVariant {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariant';
+  readonly PARENT?: CTTLAnimateEffectBehavior | CTTLSetBehavior | CTTLTimeAnimateValue;
   boolVal: CTTLAnimVariantBooleanVal;
   intVal: CTTLAnimVariantIntegerVal;
   fltVal: CTTLAnimVariantFloatVal;
@@ -537,26 +610,31 @@ export interface CTTLAnimVariant {
 
 export interface CTTLAnimVariantBooleanVal {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariantBooleanVal';
+  readonly PARENT?: CTTLAnimVariant;
   val: boolean;
 }
 
 export interface CTTLAnimVariantFloatVal {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariantFloatVal';
+  readonly PARENT?: CTTLAnimVariant;
   val: number;
 }
 
 export interface CTTLAnimVariantIntegerVal {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariantIntegerVal';
+  readonly PARENT?: CTTLAnimVariant;
   val: number;
 }
 
 export interface CTTLAnimVariantStringVal {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariantStringVal';
+  readonly PARENT?: CTTLAnimVariant;
   val: string;
 }
 
 export interface CTTLAnimateBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   tavLst?: CTTLTimeAnimateValueList;
   by?: string;
@@ -568,6 +646,7 @@ export interface CTTLAnimateBehavior {
 
 export interface CTTLAnimateColorBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateColorBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   by?: CTTLByAnimateColorTransform;
   from?: Dep_org_docx4j_dml.CTColor;
@@ -578,6 +657,7 @@ export interface CTTLAnimateColorBehavior {
 
 export interface CTTLAnimateEffectBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateEffectBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   progress?: CTTLAnimVariant;
   transition?: STTLAnimateEffectTransition;
@@ -587,6 +667,7 @@ export interface CTTLAnimateEffectBehavior {
 
 export interface CTTLAnimateMotionBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateMotionBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   by?: CTTLPoint;
   from?: CTTLPoint;
@@ -601,6 +682,7 @@ export interface CTTLAnimateMotionBehavior {
 
 export interface CTTLAnimateRotationBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateRotationBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   by?: number;
   from?: number;
@@ -609,6 +691,7 @@ export interface CTTLAnimateRotationBehavior {
 
 export interface CTTLAnimateScaleBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimateScaleBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   by?: CTTLPoint;
   from?: CTTLPoint;
@@ -618,11 +701,13 @@ export interface CTTLAnimateScaleBehavior {
 
 export interface CTTLBehaviorAttributeNameList {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLBehaviorAttributeNameList';
+  readonly PARENT?: CTTLCommonBehaviorData;
   attrName: string[];
 }
 
 export interface CTTLBuildDiagram {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLBuildDiagram';
+  readonly PARENT?: CTBuildList;
   bld?: STTLDiagramBuildType;
   spid: string;
   grpId: number;
@@ -631,6 +716,7 @@ export interface CTTLBuildDiagram {
 
 export interface CTTLBuildParagraph {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLBuildParagraph';
+  readonly PARENT?: CTBuildList;
   tmplLst?: CTTLTemplateList;
   build?: STTLParaBuildType;
   bldLvl?: number;
@@ -645,12 +731,14 @@ export interface CTTLBuildParagraph {
 
 export interface CTTLByAnimateColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByAnimateColorTransform';
+  readonly PARENT?: CTTLAnimateColorBehavior;
   rgb: CTTLByRgbColorTransform;
   hsl: CTTLByHslColorTransform;
 }
 
 export interface CTTLByHslColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByHslColorTransform';
+  readonly PARENT?: CTTLByAnimateColorTransform;
   h: number;
   s: number;
   l: number;
@@ -658,6 +746,7 @@ export interface CTTLByHslColorTransform {
 
 export interface CTTLByRgbColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByRgbColorTransform';
+  readonly PARENT?: CTTLByAnimateColorTransform;
   r: number;
   g: number;
   b: number;
@@ -665,6 +754,7 @@ export interface CTTLByRgbColorTransform {
 
 export interface CTTLCommandBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLCommandBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   type?: STTLCommandType;
   cmd?: string;
@@ -672,6 +762,7 @@ export interface CTTLCommandBehavior {
 
 export interface CTTLCommonBehaviorData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLCommonBehaviorData';
+  readonly PARENT?: CTTLAnimateBehavior | CTTLAnimateColorBehavior | CTTLAnimateEffectBehavior | CTTLAnimateMotionBehavior | CTTLAnimateRotationBehavior | CTTLAnimateScaleBehavior | CTTLCommandBehavior | CTTLSetBehavior;
   cTn: CTTLCommonTimeNodeData;
   tgtEl: CTTLTimeTargetElement;
   attrNameLst?: CTTLBehaviorAttributeNameList;
@@ -687,6 +778,7 @@ export interface CTTLCommonBehaviorData {
 
 export interface CTTLCommonMediaNodeData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLCommonMediaNodeData';
+  readonly PARENT?: CTTLMediaNodeAudio | CTTLMediaNodeVideo;
   cTn: CTTLCommonTimeNodeData;
   tgtEl: CTTLTimeTargetElement;
   vol?: number;
@@ -697,6 +789,7 @@ export interface CTTLCommonMediaNodeData {
 
 export interface CTTLCommonTimeNodeData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLCommonTimeNodeData';
+  readonly PARENT?: CTTLCommonBehaviorData | CTTLCommonMediaNodeData | CTTLTimeNodeExclusive | CTTLTimeNodeParallel | CTTLTimeNodeSequence;
   stCondLst?: CTTLTimeConditionList;
   endCondLst?: CTTLTimeConditionList;
   endSync?: CTTLTimeCondition;
@@ -730,6 +823,7 @@ export interface CTTLCommonTimeNodeData {
 
 export interface CTTLGraphicalObjectBuild {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLGraphicalObjectBuild';
+  readonly PARENT?: CTBuildList;
   bldAsOne: CTEmpty;
   bldSub: Dep_org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties;
   spid: string;
@@ -739,6 +833,7 @@ export interface CTTLGraphicalObjectBuild {
 
 export interface CTTLIterateData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLIterateData';
+  readonly PARENT?: CTTLCommonTimeNodeData;
   tmAbs: CTTLIterateIntervalTime;
   tmPct: CTTLIterateIntervalPercentage;
   type?: STIterateType;
@@ -747,28 +842,33 @@ export interface CTTLIterateData {
 
 export interface CTTLIterateIntervalPercentage {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLIterateIntervalPercentage';
+  readonly PARENT?: CTTLIterateData;
   val: number;
 }
 
 export interface CTTLIterateIntervalTime {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLIterateIntervalTime';
+  readonly PARENT?: CTTLIterateData;
   val: string;
 }
 
 export interface CTTLMediaNodeAudio {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLMediaNodeAudio';
+  readonly PARENT?: CTTimeNodeList;
   cMediaNode: CTTLCommonMediaNodeData;
   isNarration?: boolean;
 }
 
 export interface CTTLMediaNodeVideo {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLMediaNodeVideo';
+  readonly PARENT?: CTTimeNodeList;
   cMediaNode: CTTLCommonMediaNodeData;
   fullScrn?: boolean;
 }
 
 export interface CTTLOleBuildChart {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLOleBuildChart';
+  readonly PARENT?: CTBuildList;
   bld?: STTLOleChartBuildType;
   animBg?: boolean;
   spid: string;
@@ -778,24 +878,28 @@ export interface CTTLOleBuildChart {
 
 export interface CTTLOleChartTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLOleChartTargetElement';
+  readonly PARENT?: CTTLShapeTargetElement;
   type: STTLChartSubelementType;
   lvl?: number;
 }
 
 export interface CTTLPoint {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLPoint';
+  readonly PARENT?: CTTLAnimateMotionBehavior | CTTLAnimateScaleBehavior;
   x: number;
   y: number;
 }
 
 export interface CTTLSetBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLSetBehavior';
+  readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   to?: CTTLAnimVariant;
 }
 
 export interface CTTLShapeTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLShapeTargetElement';
+  readonly PARENT?: CTTLTimeTargetElement;
   bg: CTEmpty;
   subSp: CTTLSubShapeId;
   oleChartEl: CTTLOleChartTargetElement;
@@ -806,28 +910,33 @@ export interface CTTLShapeTargetElement {
 
 export interface CTTLSubShapeId {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLSubShapeId';
+  readonly PARENT?: CTTLShapeTargetElement | CTTLTimeTargetElement;
   spid: string;
 }
 
 export interface CTTLTemplate {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTemplate';
+  readonly PARENT?: CTTLTemplateList;
   tnLst: CTTimeNodeList;
   lvl?: number;
 }
 
 export interface CTTLTemplateList {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTemplateList';
+  readonly PARENT?: CTTLBuildParagraph;
   tmpl?: CTTLTemplate[];
 }
 
 export interface CTTLTextTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTextTargetElement';
+  readonly PARENT?: CTTLShapeTargetElement;
   charRg: CTIndexRange;
   pRg: CTIndexRange;
 }
 
 export interface CTTLTimeAnimateValue {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeAnimateValue';
+  readonly PARENT?: CTTLTimeAnimateValueList;
   val?: CTTLAnimVariant;
   tm?: string;
   fmla?: string;
@@ -835,11 +944,13 @@ export interface CTTLTimeAnimateValue {
 
 export interface CTTLTimeAnimateValueList {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeAnimateValueList';
+  readonly PARENT?: CTTLAnimateBehavior;
   tav?: CTTLTimeAnimateValue[];
 }
 
 export interface CTTLTimeCondition {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeCondition';
+  readonly PARENT?: CTTLCommonTimeNodeData | CTTLTimeConditionList;
   tgtEl: CTTLTimeTargetElement;
   tn: CTTLTriggerTimeNodeID;
   rtn: CTTLTriggerRuntimeNode;
@@ -849,21 +960,25 @@ export interface CTTLTimeCondition {
 
 export interface CTTLTimeConditionList {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeConditionList';
+  readonly PARENT?: CTTLCommonTimeNodeData | CTTLTimeNodeSequence;
   cond: CTTLTimeCondition[];
 }
 
 export interface CTTLTimeNodeExclusive {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeNodeExclusive';
+  readonly PARENT?: CTTimeNodeList;
   cTn: CTTLCommonTimeNodeData;
 }
 
 export interface CTTLTimeNodeParallel {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeNodeParallel';
+  readonly PARENT?: CTTimeNodeList;
   cTn: CTTLCommonTimeNodeData;
 }
 
 export interface CTTLTimeNodeSequence {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeNodeSequence';
+  readonly PARENT?: CTTimeNodeList;
   cTn: CTTLCommonTimeNodeData;
   prevCondLst?: CTTLTimeConditionList;
   nextCondLst?: CTTLTimeConditionList;
@@ -874,6 +989,7 @@ export interface CTTLTimeNodeSequence {
 
 export interface CTTLTimeTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeTargetElement';
+  readonly PARENT?: CTTLCommonBehaviorData | CTTLCommonMediaNodeData | CTTLTimeCondition;
   sldTgt: CTEmpty;
   sndTgt: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
   spTgt: CTTLShapeTargetElement;
@@ -882,43 +998,51 @@ export interface CTTLTimeTargetElement {
 
 export interface CTTLTriggerRuntimeNode {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTriggerRuntimeNode';
+  readonly PARENT?: CTTLTimeCondition;
   val: STTLTriggerRuntimeNode;
 }
 
 export interface CTTLTriggerTimeNodeID {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTriggerTimeNodeID';
+  readonly PARENT?: CTTLTimeCondition;
   val: number;
 }
 
 export interface CTTagsData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTagsData';
+  readonly PARENT?: CTCustomerDataList;
   id: string;
 }
 
 export interface CTTimeNodeList {
   TYPE_NAME?: 'org_pptx4j_pml.CTTimeNodeList';
+  readonly PARENT?: CTSlideTiming | CTTLCommonTimeNodeData | CTTLTemplate;
   parOrSeqOrExcl: (CTTLTimeNodeParallel | CTTLTimeNodeSequence | CTTLTimeNodeExclusive | CTTLAnimateBehavior | CTTLAnimateColorBehavior | CTTLAnimateEffectBehavior | CTTLAnimateMotionBehavior | CTTLAnimateRotationBehavior | CTTLAnimateScaleBehavior | CTTLCommandBehavior | CTTLSetBehavior | CTTLMediaNodeAudio | CTTLMediaNodeVideo)[];
 }
 
 export interface CTTransitionSoundAction {
   TYPE_NAME?: 'org_pptx4j_pml.CTTransitionSoundAction';
+  readonly PARENT?: CTSlideTransition;
   stSnd: CTTransitionStartSoundAction;
   endSnd: CTEmpty;
 }
 
 export interface CTTransitionStartSoundAction {
   TYPE_NAME?: 'org_pptx4j_pml.CTTransitionStartSoundAction';
+  readonly PARENT?: CTTransitionSoundAction;
   snd: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
   loop?: boolean;
 }
 
 export interface CTWheelTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTWheelTransition';
+  readonly PARENT?: CTSlideTransition;
   spokes?: number;
 }
 
 export interface CommonSlideData {
   TYPE_NAME?: 'org_pptx4j_pml.CommonSlideData';
+  readonly PARENT?: HandoutMaster | Notes | NotesMaster | Sld | SldLayout | SldMaster;
   bg?: CTBackground;
   spTree: GroupShape;
   custDataLst?: CTCustomerDataList;
@@ -929,6 +1053,7 @@ export interface CommonSlideData {
 
 export interface CxnSp {
   TYPE_NAME?: 'org_pptx4j_pml.CxnSp';
+  readonly PARENT?: GroupShape;
   nvCxnSpPr: CxnSp.NvCxnSpPr;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
@@ -937,6 +1062,7 @@ export interface CxnSp {
 
 export interface GroupShape {
   TYPE_NAME?: 'org_pptx4j_pml.GroupShape';
+  readonly PARENT?: CommonSlideData | GroupShape;
   nvGrpSpPr: GroupShape.NvGrpSpPr;
   grpSpPr: Dep_org_docx4j_dml.CTGroupShapeProperties;
   spOrGrpSpOrGraphicFrame?: (Shape | GroupShape | CTGraphicalObjectFrame | CxnSp | Pic | CTRel | Dep_org_docx4j_mce.AlternateContent)[];
@@ -971,6 +1097,7 @@ export interface NotesMaster {
 
 export interface NvPr {
   TYPE_NAME?: 'org_pptx4j_pml.NvPr';
+  readonly PARENT?: CTGraphicalObjectFrameNonVisual | CxnSp.NvCxnSpPr | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTContentPartNonVisual | GroupShape.NvGrpSpPr | Pic.NvPicPr | Shape.NvSpPr;
   ph?: CTPlaceholder;
   audioCd: Dep_org_docx4j_dml.CTAudioCD;
   wavAudioFile: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
@@ -985,6 +1112,7 @@ export interface NvPr {
 
 export interface Pic {
   TYPE_NAME?: 'org_pptx4j_pml.Pic';
+  readonly PARENT?: CTControl | CTOleObject | GroupShape;
   nvPicPr: Pic.NvPicPr;
   blipFill: Dep_org_docx4j_dml.CTBlipFillProperties;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
@@ -1033,6 +1161,7 @@ export interface PresentationPr {
 
 export interface Shape {
   TYPE_NAME?: 'org_pptx4j_pml.Shape';
+  readonly PARENT?: GroupShape;
   nvSpPr: Shape.NvSpPr;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
@@ -1084,6 +1213,7 @@ export interface SldMaster {
 
 export interface SlideLayoutIdList {
   TYPE_NAME?: 'org_pptx4j_pml.SlideLayoutIdList';
+  readonly PARENT?: SldMaster;
   sldLayoutId?: SlideLayoutIdList.SldLayoutId[];
 }
 
@@ -1224,6 +1354,7 @@ export type RootElement = CmAuthorLstElement | CmLstElement | HandoutMasterEleme
 export namespace CxnSp {
   export interface NvCxnSpPr {
     TYPE_NAME?: 'org_pptx4j_pml.CxnSp.NvCxnSpPr';
+    readonly PARENT?: CxnSp;
     cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
     cNvCxnSpPr: Dep_org_docx4j_dml.CTNonVisualConnectorProperties;
     nvPr: NvPr;
@@ -1233,6 +1364,7 @@ export namespace CxnSp {
 export namespace GroupShape {
   export interface NvGrpSpPr {
     TYPE_NAME?: 'org_pptx4j_pml.GroupShape.NvGrpSpPr';
+    readonly PARENT?: GroupShape;
     cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
     cNvGrpSpPr: Dep_org_docx4j_dml.CTNonVisualGroupDrawingShapeProps;
     nvPr: NvPr;
@@ -1242,6 +1374,7 @@ export namespace GroupShape {
 export namespace Pic {
   export interface NvPicPr {
     TYPE_NAME?: 'org_pptx4j_pml.Pic.NvPicPr';
+    readonly PARENT?: Pic;
     cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
     cNvPicPr: Dep_org_docx4j_dml.CTNonVisualPictureProperties;
     nvPr: NvPr;
@@ -1251,16 +1384,19 @@ export namespace Pic {
 export namespace Presentation {
   export interface SldIdLst {
     TYPE_NAME?: 'org_pptx4j_pml.Presentation.SldIdLst';
+    readonly PARENT?: Presentation;
     sldId?: Presentation.SldIdLst.SldId[];
   }
 
   export interface SldMasterIdLst {
     TYPE_NAME?: 'org_pptx4j_pml.Presentation.SldMasterIdLst';
+    readonly PARENT?: Presentation;
     sldMasterId?: Presentation.SldMasterIdLst.SldMasterId[];
   }
 
   export interface SldSz {
     TYPE_NAME?: 'org_pptx4j_pml.Presentation.SldSz';
+    readonly PARENT?: Presentation;
     cx: number;
     cy: number;
     type?: string;
@@ -1269,6 +1405,7 @@ export namespace Presentation {
   export namespace SldIdLst {
     export interface SldId {
       TYPE_NAME?: 'org_pptx4j_pml.Presentation.SldIdLst.SldId';
+      readonly PARENT?: Presentation.SldIdLst;
       extLst?: CTExtensionList;
       id: number;
       rid: string;
@@ -1278,6 +1415,7 @@ export namespace Presentation {
   export namespace SldMasterIdLst {
     export interface SldMasterId {
       TYPE_NAME?: 'org_pptx4j_pml.Presentation.SldMasterIdLst.SldMasterId';
+      readonly PARENT?: Presentation.SldMasterIdLst;
       extLst?: CTExtensionList;
       id?: number;
       rid: string;
@@ -1288,6 +1426,7 @@ export namespace Presentation {
 export namespace Shape {
   export interface NvSpPr {
     TYPE_NAME?: 'org_pptx4j_pml.Shape.NvSpPr';
+    readonly PARENT?: Shape;
     cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
     cNvSpPr: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
     nvPr: NvPr;
@@ -1297,6 +1436,7 @@ export namespace Shape {
 export namespace SlideLayoutIdList {
   export interface SldLayoutId {
     TYPE_NAME?: 'org_pptx4j_pml.SlideLayoutIdList.SldLayoutId';
+    readonly PARENT?: SlideLayoutIdList;
     extLst?: CTExtensionList;
     id?: number;
     rid: string;

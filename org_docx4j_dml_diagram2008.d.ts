@@ -32,6 +32,7 @@ export interface CTDrawing {
 
 export interface CTGroupShape {
   TYPE_NAME?: 'org_docx4j_dml_diagram2008.CTGroupShape';
+  readonly PARENT?: CTDrawing | CTGroupShape;
   nvGrpSpPr: CTGroupShapeNonVisual;
   grpSpPr: Dep_org_docx4j_dml.CTGroupShapeProperties;
   spOrGrpSp?: (CTShape | CTGroupShape)[];
@@ -40,12 +41,14 @@ export interface CTGroupShape {
 
 export interface CTGroupShapeNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_diagram2008.CTGroupShapeNonVisual';
+  readonly PARENT?: CTGroupShape;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGrpSpPr: Dep_org_docx4j_dml.CTNonVisualGroupDrawingShapeProps;
 }
 
 export interface CTShape {
   TYPE_NAME?: 'org_docx4j_dml_diagram2008.CTShape';
+  readonly PARENT?: CTGroupShape;
   nvSpPr: CTShapeNonVisual;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
@@ -57,6 +60,7 @@ export interface CTShape {
 
 export interface CTShapeNonVisual {
   TYPE_NAME?: 'org_docx4j_dml_diagram2008.CTShapeNonVisual';
+  readonly PARENT?: CTShape;
   cNvPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvSpPr: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
 }

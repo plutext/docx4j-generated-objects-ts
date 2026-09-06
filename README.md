@@ -56,7 +56,8 @@ regenerating with the same inputs gives a clean diff.
 
 ## Verified
 
-- `tsc --strict` over all 188 declaration files (`moduleResolution: bundler`): no errors.
+- `tsc --strict` over all 188 declaration files (`moduleResolution: bundler`): no errors
+  (re-run after CR-006 added `PARENT`; the mapping files did not change).
 - Node 18: all 94 `.mjs` modules imported into one `Jsonix.Context` (`@mitre/jsonix` 3.1.0);
   `word/document.xml` of docx4j's `legals/docx4j_IndividualContributor.docx` unmarshals to a
   `org_docx4j_wml.Document` (39 body entries, 38 paragraphs, first run text "Docx4j Project"),
@@ -82,6 +83,7 @@ const doc = context.createUnmarshaller().unmarshalString<DocumentElement>(xml).v
 for (const entry of doc.body?.content ?? []) {
   if (entry.value.TYPE_NAME === 'org_docx4j_wml.P') {
     const paragraph: P = entry.value; // narrowed by the discriminant
+    const container = paragraph.PARENT; // Body | Tc | Hdr | ... when unmarshalled with parentPointers
   }
 }
 ```
@@ -92,6 +94,12 @@ Notes on the declarations:
   `Body.content`, `P.content`, `R.content`) are unions of `TypedNamedValue<T>` for every element the
   schema allows there, including substitution groups, plus `string` where content is mixed.
 - `TYPE_NAME` is a literal union over the type and its subtypes and is set by Jsonix on unmarshal.
+- `readonly PARENT?` lists the types that can contain each type, as docx4j's `getParent()` would
+  return (for example `P.PARENT` is `Body | CTCustomXmlBlock | CTFtnEdn | CTTxbxContent |
+  Comments.Comment | Ftr | Hdr | SdtContentBlock | Tc`); 1,805 types have one, the median union
+  has one member and the largest (a DrawingML extension list) 113. The runtime fills it in when
+  unmarshalling with `{ parentPointers: true }` (`@mitre/jsonix` 3.2.0+, jsonix-CR-002) and
+  `Jsonix.Util.deepCopy` re-links it, mirroring docx4j's `-Xparent-pointer` and `-Xdocx4j-copy`.
 - Dates are Jsonix calendars (`XmlCalendar`), not JavaScript `Date`s; `xs:double` values are
   `number` (including `NaN` defaults in DrawingML diagrams).
 - Cross-module references appear as `import type * as Dep_<module> from './<module>'`.

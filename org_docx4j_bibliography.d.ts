@@ -20,27 +20,32 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAuthorType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTAuthorType';
+  readonly PARENT?: CTSourceType;
   artistOrAuthorOrBookAuthor?: (TypedNamedValue<CTNameType> | TypedNamedValue<CTNameOrCorporateType>)[];
 }
 
 export interface CTNameListType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTNameListType';
+  readonly PARENT?: CTNameOrCorporateType | CTNameType;
   person: CTPersonType[];
 }
 
 export interface CTNameOrCorporateType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTNameOrCorporateType';
+  readonly PARENT?: CTAuthorType;
   nameList: CTNameListType;
   corporate: string;
 }
 
 export interface CTNameType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTNameType';
+  readonly PARENT?: CTAuthorType;
   nameList: CTNameListType;
 }
 
 export interface CTPersonType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTPersonType';
+  readonly PARENT?: CTNameListType;
   last?: string[];
   first?: string[];
   middle?: string[];
@@ -48,6 +53,7 @@ export interface CTPersonType {
 
 export interface CTSourceType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTSourceType';
+  readonly PARENT?: CTSources;
   abbreviatedCaseNumberOrAlbumTitleOrAuthor?: (TypedNamedValue<string> | TypedNamedValue<CTAuthorType> | TypedNamedValue<STSourceType>)[];
 }
 

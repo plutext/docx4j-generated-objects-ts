@@ -33,6 +33,7 @@ export interface CTCommentThreading {
 
 export interface CTExtendedGuide {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTExtendedGuide';
+  readonly PARENT?: CTExtendedGuideList;
   clr: Dep_org_docx4j_dml.CTColor;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
   id: number;
@@ -50,6 +51,7 @@ export interface CTExtendedGuideList {
 
 export interface CTParentCommentIdentifier {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTParentCommentIdentifier';
+  readonly PARENT?: CTCommentThreading;
   authorId?: number;
   idx?: number;
 }

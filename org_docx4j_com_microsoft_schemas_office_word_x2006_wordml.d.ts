@@ -20,6 +20,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTAcd {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTAcd';
+  readonly PARENT?: CTAcds;
   argValue?: string;
   fciBasedOn?: string;
   fciIndexBasedOn?: string;
@@ -28,21 +29,25 @@ export interface CTAcd {
 
 export interface CTAcdKeymap {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTAcdKeymap';
+  readonly PARENT?: CTAcdManifest | CTKeymap;
   acdName: string;
 }
 
 export interface CTAcdManifest {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTAcdManifest';
+  readonly PARENT?: CTToolbars;
   acdEntry: CTAcdKeymap[];
 }
 
 export interface CTAcds {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTAcds';
+  readonly PARENT?: CTTcg;
   acd: CTAcd[];
 }
 
 export interface CTDocEvents {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTDocEvents';
+  readonly PARENT?: CTVbaSuppData;
   eventDocNew?: any;
   eventDocOpen?: any;
   eventDocClose?: any;
@@ -60,6 +65,7 @@ export interface CTDocEvents {
 
 export interface CTFci {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTFci';
+  readonly PARENT?: CTKeymap;
   fciName?: string;
   fciIndex?: string;
   swArg?: string;
@@ -67,6 +73,7 @@ export interface CTFci {
 
 export interface CTKeymap {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTKeymap';
+  readonly PARENT?: CTKeymaps;
   fci: CTFci;
   macro: CTMacroWll;
   acd: CTAcdKeymap;
@@ -81,21 +88,25 @@ export interface CTKeymap {
 
 export interface CTKeymaps {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTKeymaps';
+  readonly PARENT?: CTTcg;
   keymap: CTKeymap[];
 }
 
 export interface CTLongHexNumber {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTLongHexNumber';
+  readonly PARENT?: CTKeymap;
   val: string;
 }
 
 export interface CTMacroWll {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTMacroWll';
+  readonly PARENT?: CTKeymap;
   macroName: string;
 }
 
 export interface CTMcd {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTMcd';
+  readonly PARENT?: CTMcds;
   macroName?: string;
   name?: string;
   menuHelp?: string;
@@ -105,11 +116,13 @@ export interface CTMcd {
 
 export interface CTMcds {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTMcds';
+  readonly PARENT?: CTVbaSuppData;
   mcd?: CTMcd[];
 }
 
 export interface CTRel {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTRel';
+  readonly PARENT?: CTToolbars;
   id: string;
 }
 
@@ -123,6 +136,7 @@ export interface CTTcg {
 
 export interface CTToolbars {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTToolbars';
+  readonly PARENT?: CTTcg;
   acdManifest?: CTAcdManifest;
   toolbarData?: CTRel;
 }

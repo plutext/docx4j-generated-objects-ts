@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTCommentEx {
   TYPE_NAME?: 'org_docx4j_w15.CTCommentEx';
+  readonly PARENT?: CTCommentsEx;
   paraId: string;
   paraIdParent?: string;
   done?: string;
@@ -33,6 +34,7 @@ export interface CTCommentsEx {
 
 export interface CTGuid {
   TYPE_NAME?: 'org_docx4j_w15.CTGuid';
+  readonly PARENT?: Dep_org_docx4j_wml.CTSettings;
   val?: string;
 }
 
@@ -43,6 +45,7 @@ export interface CTPeople {
 
 export interface CTPerson {
   TYPE_NAME?: 'org_docx4j_w15.CTPerson';
+  readonly PARENT?: CTPeople;
   presenceInfo?: CTPresenceInfo;
   author: string;
   contact: string;
@@ -50,17 +53,20 @@ export interface CTPerson {
 
 export interface CTPresenceInfo {
   TYPE_NAME?: 'org_docx4j_w15.CTPresenceInfo';
+  readonly PARENT?: CTPerson;
   providerId: string;
   userId: string;
 }
 
 export interface CTSdtAppearance {
   TYPE_NAME?: 'org_docx4j_w15.CTSdtAppearance';
+  readonly PARENT?: Dep_org_docx4j_wml.SdtPr;
   val?: STSdtAppearance;
 }
 
 export interface CTSdtRepeatedSection {
   TYPE_NAME?: 'org_docx4j_w15.CTSdtRepeatedSection';
+  readonly PARENT?: Dep_org_docx4j_wml.SdtPr;
   sectionTitle?: Dep_org_docx4j_wml.CTString;
   doNotAllowInsertDeleteSection?: Dep_org_docx4j_wml.BooleanDefaultTrue;
 }

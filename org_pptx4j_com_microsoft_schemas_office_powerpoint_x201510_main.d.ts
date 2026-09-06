@@ -21,6 +21,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTClientRevision {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main.CTClientRevision';
+  readonly PARENT?: CTClientRevisionList;
   id: string;
   v?: number;
   vWet?: number;
@@ -29,6 +30,7 @@ export interface CTClientRevision {
 
 export interface CTClientRevisionList {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main.CTClientRevisionList';
+  readonly PARENT?: CTRevisionInfo;
   client?: CTClientRevision[];
 }
 

@@ -26,6 +26,7 @@ export interface DatastoreItem {
 
 export interface SchemaRefs {
   TYPE_NAME?: 'org_docx4j_customXmlProperties.SchemaRefs';
+  readonly PARENT?: DatastoreItem;
   schemaRef?: SchemaRefs.SchemaRef[];
 }
 
@@ -39,6 +40,7 @@ export type RootElement = DatastoreItemElement | SchemaRefsElement;
 export namespace SchemaRefs {
   export interface SchemaRef {
     TYPE_NAME?: 'org_docx4j_customXmlProperties.SchemaRefs.SchemaRef';
+    readonly PARENT?: SchemaRefs;
     uri: string;
   }
 }

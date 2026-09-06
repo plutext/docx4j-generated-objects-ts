@@ -20,6 +20,7 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTCommentId {
   TYPE_NAME?: 'org_docx4j_w16cid.CTCommentId';
+  readonly PARENT?: CTCommentsIds;
   paraId?: string;
   durableId?: string;
 }
