@@ -3,6 +3,8 @@
 import { Jsonix } from '@docx4j/jsonix';
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
+import type { PackageElement, Package, Part } from '../modules/org_docx4j_xmlPackage.mjs';
+export type { PackageElement, Package, Part };
 
 /** All generated modules, one Jsonix mapping each; they reference each other, so a context needs them all. */
 export const MODULE_NAMES = [
@@ -143,4 +145,54 @@ export function unwrap<T>(element: Jsonix.TypedNamedValue<T>): T {
 /** docx4j XmlUtils.deepCopy: a structural copy with PARENT re-linked (Jsonix.Util.deepCopy). */
 export function deepCopy<T>(value: T, parent?: unknown): T {
   return Jsonix.Util.deepCopy(value, parent);
+}
+
+/** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context. */
+export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(node: Node): Promise<E> {
+  return (await getContext()).createUnmarshaller().unmarshalDocument<E>(node);
+}
+
+/** docx4j XmlUtils.marshaltoW3CDomDocument: the element as a DOM element. */
+export async function marshalNode(element: Jsonix.TypedNamedValue): Promise<Element> {
+  return (await getContext()).createMarshaller().marshalDocument(element).documentElement;
+}
+
+function isNode(value: unknown): value is Node {
+  return typeof value === 'object' && value !== null && typeof (value as Node).nodeType === 'number';
+}
+
+/**
+ * A flat OPC package, as Office JS `getOoxml()` returns it: `pkg:part/pkg:xmlData` content is
+ * DOM in the schema (`processContents="skip"`); this unmarshals each XML part whose root element
+ * the model knows (`w:document`, `w:styles`, relationships, ...) to a typed element, leaving the
+ * rest as DOM. Reverse with `marshalPackage` before `insertOoxml()`.
+ */
+export async function unmarshalPackage(ooxml: string): Promise<PackageElement> {
+  const pkg = await unmarshalString<PackageElement>(ooxml);
+  const unmarshaller = (await getContext()).createUnmarshaller();
+  for (const part of pkg.value.part ?? []) {
+    const any = part.xmlData?.any;
+    if (part.xmlData && isNode(any)) {
+      try {
+        part.xmlData.any = unmarshaller.unmarshalDocument(any);
+      } catch {
+        // root element unknown to the model: keep the DOM
+      }
+    }
+  }
+  return pkg;
+}
+
+/** The inverse of `unmarshalPackage`: typed XML parts become DOM again, then the package is serialised. The input is not modified. */
+export async function marshalPackage(pkg: PackageElement): Promise<string> {
+  const marshaller = (await getContext()).createMarshaller();
+  const parts: Part[] = (pkg.value.part ?? []).map((part) => {
+    const any = part.xmlData?.any;
+    if (part.xmlData && any && !isNode(any) && typeof any === 'object' && 'name' in any && 'value' in any) {
+      return { ...part, xmlData: { ...part.xmlData, any: marshaller.marshalDocument(any as Jsonix.TypedNamedValue).documentElement } };
+    }
+    return part;
+  });
+  const value: Package = { ...pkg.value, part: parts };
+  return marshaller.marshalString({ name: pkg.name, value });
 }

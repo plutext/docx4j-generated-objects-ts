@@ -42,6 +42,10 @@ by package self-reference) and via `import()` through `./modules/*`.
   (`import` → `.mjs`, `require` → `.js`, `types` → `.d.ts`). Keep them stable.
 - The facade builds one `Jsonix.Context` over all modules lazily (`getContext`, first use) with
   `parentPointers: true`; modules depend on each other, so the context is all-or-nothing.
+  `unmarshalPackage` / `marshalPackage` handle flat OPC packages (Office JS `getOoxml()`): parts are
+  `xsd:any processContents="skip"`, hence DOM by the schema, and are converted to typed elements
+  where the model knows the root element (and back to DOM on marshal, without modifying the input).
+  README examples are compile-checked in `test/readme-examples.ts` against minimal Office JS stubs.
   `MODULE_NAMES` in `src/index.mts` is maintained by hand when modules appear or disappear; the
   smoke fails on a stale list (a mapping references a missing dependency).
 - `src/` and `test/` import from `../modules/...` and `../dist/...`; `dist/` is git-ignored and

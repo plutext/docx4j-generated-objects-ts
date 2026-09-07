@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unwrap, deepCopy, getContext, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, getContext, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -43,4 +43,25 @@ assert.equal(require('../modules/org_docx4j_wml.js').org_docx4j_wml.name, 'org_d
 assert.equal(require('@docx4j/docx4j-ts/modules/org_docx4j_wml').org_docx4j_wml.name, 'org_docx4j_wml');
 const { org_docx4j_wml } = await import('@docx4j/docx4j-ts/modules/org_docx4j_wml');
 assert.equal(org_docx4j_wml.name, 'org_docx4j_wml');
-console.log('docx4j-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order OK');
+// Flat OPC package as Office JS getOoxml() returns it: the w:document inside pkg:xmlData is typed.
+const flat = `<?xml version="1.0" standalone="yes"?><pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">
+<pkg:part pkg:name="/_rels/.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml"><pkg:xmlData>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships></pkg:xmlData></pkg:part>
+<pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${xml.replace(/^<\?xml[^>]*>\s*/, '')}</pkg:xmlData></pkg:part></pkg:package>`;
+const raw = await unmarshalString(flat);
+assert.equal(raw.value.TYPE_NAME, 'org_docx4j_xmlPackage.Package');
+assert.equal(typeof raw.value.part[1].xmlData.any.nodeType, 'number', 'the schema says skip: plain unmarshalling yields DOM');
+const pkgElement = await unmarshalPackage(flat);
+const docPart = pkgElement.value.part.find((p) => p.name === '/word/document.xml');
+assert.equal(docPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_wml.Document', 'unmarshalPackage types the known parts');
+assert.equal(docPart.xmlData.any.value.body.content[0].value.TYPE_NAME, 'org_docx4j_wml.P');
+const relsPart = pkgElement.value.part.find((p) => p.name === '/_rels/.rels');
+assert.equal(relsPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_relationships.Relationships');
+unwrap(docPart.xmlData.any.value.body.content[0]).content[0].value.content[0].value.value = 'HELLO';
+const packaged = await marshalPackage(pkgElement);
+assert.match(packaged, /pkg:package/);
+assert.match(packaged, /<w:t>HELLO<\/w:t>/);
+assert.equal(docPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_wml.Document', 'marshalPackage does not modify its input');
+const roundTripped = await unmarshalPackage(packaged);
+assert.equal(unwrap(roundTripped.value.part.find((p) => p.name === '/word/document.xml').xmlData.any).body.content.length, 2);
+console.log('docx4j-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip OK');
