@@ -3,5 +3,6 @@ package-lock.json
 # built from index.mts / helpers/wml.ts by `npm run build`
 /index.mjs
 /index.d.mts
-/helpers/wml.js
-/helpers/wml.d.ts
+/helpers/wml.mjs
+/helpers/wml.d.mts
+/.runtime

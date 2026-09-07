@@ -6,8 +6,12 @@ jobs:
     strategy: { fail-fast: false, matrix: { node: ["18", "20", "22"] } }
     steps:
       - uses: actions/checkout@v4
+      # @docx4j/jsonix 3.2.0 is not on npm yet: use the runtime repository checkout. Once published,
+      # drop this step and the --no-save install below; `npm install` alone then suffices.
+      - uses: actions/checkout@v4
+        with: { repository: plutext/jsonix, path: .runtime }
       - uses: actions/setup-node@v4
         with: { node-version: "${{ matrix.node }}" }
-      - run: npm install --no-audit --no-fund
+      - run: npm install --no-audit --no-fund --no-save typescript@5.6.3 ./.runtime/nodejs/scripts
       - run: npm run typecheck
       - run: npm test

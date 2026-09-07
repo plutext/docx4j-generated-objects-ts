@@ -3,5 +3,5 @@ test
 .github
 tsconfig*.json
 index.mts
-helpers/wml.ts
+helpers/wml.mts
 generate.md

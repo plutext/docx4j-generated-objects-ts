@@ -2,7 +2,7 @@
 // They carry the docx4j decisions that its ModifyGeneratedSources adds to the generated Java:
 // the w:highlight colour table (Highlight.setVal / getHexVal), the LsdException.isQFormat()
 // fallback to the latent styles' defQFormat (needs parent pointers, jsonix-CR-002), and the
-// Style.isCustomStyle() rule (docx4j issue 641). Type-checked with the rest of the directory.
+// Style.isCustomStyle() rule (docx4j issue 641). Compiled to helpers/wml.mjs by `npm run build`.
 import type { Highlight, Style, Styles } from '../org_docx4j_wml';
 
 /** w:highlight names and their sRGB values, as in docx4j (darkYellow uses gold). */

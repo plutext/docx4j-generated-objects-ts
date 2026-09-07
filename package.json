@@ -2,7 +2,6 @@
   "name": "@docx4j/docx4j-ts",
   "version": "0.1.0",
   "description": "Office Open XML (WordprocessingML, DrawingML, PresentationML, SpreadsheetML, VML, ...) as typed JavaScript: Jsonix mappings and TypeScript declarations generated from docx4j's schemas, with a docx4j-style facade.",
-  "type": "module",
   "main": "./index.mjs",
   "types": "./index.d.mts",
   "exports": {
@@ -11,8 +10,8 @@
       "import": "./index.mjs"
     },
     "./helpers/wml": {
-      "types": "./helpers/wml.d.ts",
-      "import": "./helpers/wml.js"
+      "types": "./helpers/wml.d.mts",
+      "import": "./helpers/wml.mjs"
     },
     "./modules/*": {
       "types": "./*.d.ts",
@@ -23,15 +22,16 @@
   "files": [
     "index.mjs",
     "index.d.mts",
-    "helpers/wml.js",
-    "helpers/wml.d.ts",
+    "helpers/wml.mjs",
+    "helpers/wml.d.mts",
     "*.js",
     "*.mjs",
     "*.d.ts",
     "*.d.mts",
     "bindings.xjb",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
