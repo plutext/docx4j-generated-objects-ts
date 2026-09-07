@@ -1,0 +1,7 @@
+node_modules
+test
+.github
+tsconfig*.json
+index.mts
+helpers/wml.ts
+generate.md

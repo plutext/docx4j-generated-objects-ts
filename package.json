@@ -1,0 +1,72 @@
+{
+  "name": "@docx4j/docx4j-ts",
+  "version": "0.1.0",
+  "description": "Office Open XML (WordprocessingML, DrawingML, PresentationML, SpreadsheetML, VML, ...) as typed JavaScript: Jsonix mappings and TypeScript declarations generated from docx4j's schemas, with a docx4j-style facade.",
+  "type": "module",
+  "main": "./index.mjs",
+  "types": "./index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./index.d.mts",
+      "import": "./index.mjs"
+    },
+    "./helpers/wml": {
+      "types": "./helpers/wml.d.ts",
+      "import": "./helpers/wml.js"
+    },
+    "./modules/*": {
+      "types": "./*.d.ts",
+      "import": "./*.mjs",
+      "require": "./*.js"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.mts",
+    "helpers/wml.js",
+    "helpers/wml.d.ts",
+    "*.js",
+    "*.mjs",
+    "*.d.ts",
+    "*.d.mts",
+    "bindings.xjb",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "npm run build && node test/smoke.mjs",
+    "prepublishOnly": "npm run typecheck && npm test"
+  },
+  "keywords": [
+    "docx4j",
+    "ooxml",
+    "office open xml",
+    "wordprocessingml",
+    "drawingml",
+    "presentationml",
+    "spreadsheetml",
+    "jsonix",
+    "xml",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plutext/docx4j-ts.git"
+  },
+  "homepage": "https://github.com/plutext/docx4j-ts",
+  "bugs": {
+    "url": "https://github.com/plutext/docx4j-ts/issues"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@docx4j/jsonix": "^3.2.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
