@@ -80,7 +80,7 @@ order for types built from several attribute groups varies with the JVM.
 
 - `tsc --strict` over all 188 declaration files plus `helpers/wml.ts` (`moduleResolution: bundler`): no errors.
 - Regeneration is identical under `java -Xshare:off`, `-XX:+UseSerialGC` and `-Xint` (CR-007).
-- Node 18: all 94 `.mjs` modules imported into one `Jsonix.Context` (`@mitre/jsonix` 3.1.0);
+- Node 18: all 94 `.mjs` modules imported into one `Jsonix.Context` (`@docx4j/jsonix` 3.1.0);
   `word/document.xml` of docx4j's `legals/docx4j_IndividualContributor.docx` unmarshals to a
   `org_docx4j_wml.Document` (39 body entries, 38 paragraphs, first run text "Docx4j Project"),
   marshals back to XML and re-unmarshals to the same structure.
@@ -89,13 +89,13 @@ order for types built from several attribute groups varies with the JVM.
 
 ```js
 // CommonJS / UMD
-const { Jsonix } = require('@mitre/jsonix');
+const { Jsonix } = require('@docx4j/jsonix');
 const wml = require('./OfficeOpenXML/org_docx4j_wml').org_docx4j_wml;
 ```
 
 ```ts
 // ES modules + TypeScript (all modules, since they depend on each other)
-import { Jsonix } from '@mitre/jsonix';
+import { Jsonix } from '@docx4j/jsonix';
 import { org_docx4j_wml } from './OfficeOpenXML/org_docx4j_wml.mjs';
 import type { DocumentElement, P, R, Text } from './OfficeOpenXML/org_docx4j_wml.mjs';
 // ... import the other 93 modules the same way (or load them dynamically from the directory)
@@ -120,7 +120,7 @@ Notes on the declarations:
   return (for example `P.PARENT` is `Body | CTCustomXmlBlock | CTFtnEdn | CTTxbxContent |
   Comments.Comment | Ftr | Hdr | SdtContentBlock | Tc`); 1,805 types have one, the median union
   has one member and the largest (a DrawingML extension list) 113. The runtime fills it in when
-  unmarshalling with `{ parentPointers: true }` (`@mitre/jsonix` 3.2.0+, jsonix-CR-002) and
+  unmarshalling with `{ parentPointers: true }` (`@docx4j/jsonix` 3.2.0+, jsonix-CR-002) and
   `Jsonix.Util.deepCopy` re-links it, mirroring docx4j's `-Xparent-pointer` and `-Xdocx4j-copy`.
 - Dates are Jsonix calendars (`XmlCalendar`), not JavaScript `Date`s; `xs:double` values are
   `number` (including `NaN` defaults in DrawingML diagrams).
