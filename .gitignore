@@ -1,8 +1,5 @@
 node_modules
 package-lock.json
-# built from index.mts / helpers/wml.ts by `npm run build`
-/index.mjs
-/index.d.mts
-/helpers/wml.mjs
-/helpers/wml.d.mts
 /.runtime
+# built from src/ by `npm run build`
+/dist

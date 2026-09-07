@@ -1,7 +1,7 @@
 node_modules
+.runtime
 test
 .github
+src
 tsconfig*.json
-index.mts
-helpers/wml.mts
 generate.md

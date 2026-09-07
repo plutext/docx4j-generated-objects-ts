@@ -11,10 +11,11 @@
     "types": [],
     "declaration": true,
     "skipLibCheck": true,
-    "outDir": "."
+    "outDir": "dist",
+    "rootDir": "src"
   },
   "files": [
-    "index.mts",
-    "helpers/wml.mts"
+    "src/index.mts",
+    "src/helpers/wml.mts"
   ]
 }

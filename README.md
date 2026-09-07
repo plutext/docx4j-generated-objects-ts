@@ -28,18 +28,18 @@ const xmlAgain = await marshalString({ name: { namespaceURI: 'http://schemas.ope
 
 ## What is here
 
-- **The facade** (`index.mts`): `getContext()` builds one `Jsonix.Context` over all 94 modules,
+- **The facade** (`src/index.mts`, built to `dist/`): `getContext()` builds one `Jsonix.Context` over all 94 modules,
   lazily on first use, with `parentPointers: true`; `unmarshalString`, `marshalString`, `unwrap`
   and `deepCopy` are docx4j's `XmlUtils` names over it; `Jsonix` is re-exported. The facade is
   asynchronous because the modules are loaded with dynamic `import()`; for a synchronous setup
   import the modules you need from `@docx4j/docx4j-ts/modules/<module>` and build your own context.
-- **94 modules**, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
+- **94 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.
-- **`helpers/wml`**: docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
+- **`@docx4j/docx4j-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
   `isCustomStyle`.
-- `bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
+- `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).
 
 Mapping names, module names and `TYPE_NAME` discriminants all use the docx4j package names, so

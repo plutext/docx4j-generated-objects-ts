@@ -13,10 +13,9 @@
     "skipLibCheck": false
   },
   "include": [
-    "*.d.ts",
-    "*.d.mts",
-    "index.mts",
-    "helpers/*.mts",
+    "modules/*.d.ts",
+    "modules/*.d.mts",
+    "src/**/*.mts",
     "test/*.ts"
   ]
 }

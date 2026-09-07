@@ -1,9 +1,9 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unwrap, deepCopy, getContext, Jsonix } from '../index.mjs';
+import { unmarshalString, marshalString, unwrap, deepCopy, getContext, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
-import { highlightHexValue, isCustomStyle } from '../helpers/wml.mjs';
+import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
 const xml = readFileSync(new URL('./fixtures/document.xml', import.meta.url), 'utf8');
 const element = await unmarshalString(xml);
@@ -39,7 +39,7 @@ const line = ctx.createMarshaller().marshalString({ name: { namespaceURI: 'urn:s
 assert.match(line, /line id="l1" style="x" from="0,0" to="1,1"/);
 // The UMD mappings stay CommonJS-loadable (no "type": "module" in package.json), also by package self-reference.
 const require = createRequire(import.meta.url);
-assert.equal(require('../org_docx4j_wml.js').org_docx4j_wml.name, 'org_docx4j_wml');
+assert.equal(require('../modules/org_docx4j_wml.js').org_docx4j_wml.name, 'org_docx4j_wml');
 assert.equal(require('@docx4j/docx4j-ts/modules/org_docx4j_wml').org_docx4j_wml.name, 'org_docx4j_wml');
 const { org_docx4j_wml } = await import('@docx4j/docx4j-ts/modules/org_docx4j_wml');
 assert.equal(org_docx4j_wml.name, 'org_docx4j_wml');

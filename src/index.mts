@@ -1,8 +1,8 @@
 // The facade of @docx4j/docx4j-ts: docx4j's names over the Jsonix runtime and the generated
-// Office Open XML mappings. Hand-written; MODULE_NAMES is regenerated with the mappings.
+// Office Open XML mappings in ../modules. Hand-written; MODULE_NAMES is regenerated with the mappings.
 import { Jsonix } from '@docx4j/jsonix';
 export { Jsonix };
-export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from './org_docx4j_wml.mjs';
+export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
 
 /** All generated modules, one Jsonix mapping each; they reference each other, so a context needs them all. */
 export const MODULE_NAMES = [
@@ -113,7 +113,7 @@ let contextPromise: Promise<Jsonix.Context> | undefined;
  */
 export function getContext(options?: Jsonix.ContextOptions): Promise<Jsonix.Context> {
   if (contextPromise === undefined) {
-    contextPromise = Promise.all(MODULE_NAMES.map((name) => import(`./${name}.mjs`))).then(
+    contextPromise = Promise.all(MODULE_NAMES.map((name) => import(`../modules/${name}.mjs`))).then(
       (modules) => new Jsonix.Context(modules.flatMap((m) => Object.values(m) as Jsonix.Mapping[]), { parentPointers: true, ...options }),
     );
   }

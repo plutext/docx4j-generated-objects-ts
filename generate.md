@@ -16,5 +16,5 @@ OfficeOpenXML/generate.sh ../docx4j/xsd/ROOT.xsd ../docx4j-ts
 
 Then in this repository: `npm run build && npm test`, and commit citing the compiler commit and
 the docx4j commit used. Regeneration is deterministic (compiler CR-003, CR-007); a regeneration
-with the same inputs gives an empty diff. `index.mts`'s `MODULE_NAMES` list is maintained by hand
+with the same inputs gives an empty diff. `src/index.mts`'s `MODULE_NAMES` list is maintained by hand
 when modules appear or disappear (the smoke test fails on a stale list).
