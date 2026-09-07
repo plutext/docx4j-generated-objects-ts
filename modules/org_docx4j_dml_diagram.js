@@ -1783,7 +1783,6 @@ var org_docx4j_dml_diagram_Module_Factory = function () {
         typeName: 'CT_TextProps',
         propertyInfos: [{
             name: 'sp3D',
-            required: true,
             elementName: {
               localPart: 'sp3d',
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -1791,7 +1790,6 @@ var org_docx4j_dml_diagram_Module_Factory = function () {
             typeInfo: 'org_docx4j_dml.CTShape3D'
           }, {
             name: 'flatTx',
-            required: true,
             elementName: {
               localPart: 'flatTx',
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'

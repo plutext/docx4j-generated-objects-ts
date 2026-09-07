@@ -33,8 +33,8 @@ export interface CTGridLayout {
 export interface CTSummaryZoom {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom.CTSummaryZoom';
   summaryZmObj?: CTSummaryZoomObject[];
-  gridLayout: CTGridLayout;
-  fixedLayout: CTFixedLayout;
+  gridLayout?: CTGridLayout;
+  fixedLayout?: CTFixedLayout;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
 }
 

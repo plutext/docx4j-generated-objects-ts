@@ -56,11 +56,9 @@ var org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape_Modul
             typeInfo: 'org_docx4j_dml.CTNonVisualDrawingProps'
           }, {
             name: 'cNvSpPr',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTNonVisualDrawingShapeProps'
           }, {
             name: 'cNvCnPr',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTNonVisualConnectorProperties'
           }, {
             name: 'spPr',
@@ -74,11 +72,9 @@ var org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape_Modul
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
             name: 'txbx',
-            required: true,
             typeInfo: '.CTTextboxInfo'
           }, {
             name: 'linkedTxbx',
-            required: true,
             typeInfo: '.CTLinkedTextboxInformation'
           }, {
             name: 'bodyPr',

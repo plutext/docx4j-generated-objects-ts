@@ -74,12 +74,12 @@ export interface CTColorStyleVariation {
 export interface CTFontReference {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTFontReference';
   readonly PARENT?: CTStyleEntry;
-  scrgbClr: Dep_org_docx4j_dml.CTScRgbColor;
-  srgbClr: Dep_org_docx4j_dml.CTSRgbColor;
-  hslClr: Dep_org_docx4j_dml.CTHslColor;
-  sysClr: Dep_org_docx4j_dml.CTSystemColor;
-  schemeClr: Dep_org_docx4j_dml.CTSchemeColor;
-  prstClr: Dep_org_docx4j_dml.CTPresetColor;
+  scrgbClr?: Dep_org_docx4j_dml.CTScRgbColor;
+  srgbClr?: Dep_org_docx4j_dml.CTSRgbColor;
+  hslClr?: Dep_org_docx4j_dml.CTHslColor;
+  sysClr?: Dep_org_docx4j_dml.CTSystemColor;
+  schemeClr?: Dep_org_docx4j_dml.CTSchemeColor;
+  prstClr?: Dep_org_docx4j_dml.CTPresetColor;
   styleClr?: CTStyleColor;
   idx: Dep_org_docx4j_dml.STFontCollectionIndex;
   mods?: string[];
@@ -117,12 +117,12 @@ export interface CTStyleEntry {
 export interface CTStyleReference {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleReference';
   readonly PARENT?: CTStyleEntry;
-  scrgbClr: Dep_org_docx4j_dml.CTScRgbColor;
-  srgbClr: Dep_org_docx4j_dml.CTSRgbColor;
-  hslClr: Dep_org_docx4j_dml.CTHslColor;
-  sysClr: Dep_org_docx4j_dml.CTSystemColor;
-  schemeClr: Dep_org_docx4j_dml.CTSchemeColor;
-  prstClr: Dep_org_docx4j_dml.CTPresetColor;
+  scrgbClr?: Dep_org_docx4j_dml.CTScRgbColor;
+  srgbClr?: Dep_org_docx4j_dml.CTSRgbColor;
+  hslClr?: Dep_org_docx4j_dml.CTHslColor;
+  sysClr?: Dep_org_docx4j_dml.CTSystemColor;
+  schemeClr?: Dep_org_docx4j_dml.CTSchemeColor;
+  prstClr?: Dep_org_docx4j_dml.CTPresetColor;
   styleClr?: CTStyleColor;
   idx: number;
   mods?: string[];

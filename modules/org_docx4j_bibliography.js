@@ -77,12 +77,10 @@ var org_docx4j_bibliography_Module_Factory = function () {
         typeName: 'CT_NameOrCorporateType',
         propertyInfos: [{
             name: 'nameList',
-            required: true,
             elementName: 'NameList',
             typeInfo: '.CTNameListType'
           }, {
             name: 'corporate',
-            required: true,
             elementName: 'Corporate'
           }]
       }, {

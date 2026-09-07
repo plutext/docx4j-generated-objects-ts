@@ -19,11 +19,9 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom_Module_
             typeInfo: '.CTSummaryZoomObject'
           }, {
             name: 'gridLayout',
-            required: true,
             typeInfo: '.CTGridLayout'
           }, {
             name: 'fixedLayout',
-            required: true,
             typeInfo: '.CTFixedLayout'
           }, {
             name: 'extLst',

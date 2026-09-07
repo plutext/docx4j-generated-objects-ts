@@ -660,11 +660,9 @@ var org_xlsx4j_sml_Module_Factory = function () {
         typeName: 'CT_CacheSource',
         propertyInfos: [{
             name: 'worksheetSource',
-            required: true,
             typeInfo: '.CTWorksheetSource'
           }, {
             name: 'consolidation',
-            required: true,
             typeInfo: '.CTConsolidation'
           }, {
             name: 'extLst',
@@ -5804,19 +5802,15 @@ var org_xlsx4j_sml_Module_Factory = function () {
         typeName: 'CT_Mdx',
         propertyInfos: [{
             name: 't',
-            required: true,
             typeInfo: '.CTMdxTuple'
           }, {
             name: 'ms',
-            required: true,
             typeInfo: '.CTMdxSet'
           }, {
             name: 'p',
-            required: true,
             typeInfo: '.CTMdxMemeberProp'
           }, {
             name: 'k',
-            required: true,
             typeInfo: '.CTMdxKPI'
           }, {
             name: 'f',

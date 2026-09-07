@@ -16,23 +16,18 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
             typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
           }, {
             name: 'sp',
-            required: true,
             typeInfo: '.CTShape'
           }, {
             name: 'grpSp',
-            required: true,
             typeInfo: '.CTGroupShape'
           }, {
             name: 'graphicFrame',
-            required: true,
             typeInfo: '.CTGraphicalObjectFrame'
           }, {
             name: 'cxnSp',
-            required: true,
             typeInfo: '.CTConnector'
           }, {
             name: 'pic',
-            required: true,
             typeInfo: '.CTPicture'
           }, {
             name: 'clientData',
@@ -243,23 +238,18 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
             typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
           }, {
             name: 'sp',
-            required: true,
             typeInfo: '.CTShape'
           }, {
             name: 'grpSp',
-            required: true,
             typeInfo: '.CTGroupShape'
           }, {
             name: 'graphicFrame',
-            required: true,
             typeInfo: '.CTGraphicalObjectFrame'
           }, {
             name: 'cxnSp',
-            required: true,
             typeInfo: '.CTConnector'
           }, {
             name: 'pic',
-            required: true,
             typeInfo: '.CTPicture'
           }, {
             name: 'clientData',
@@ -383,23 +373,18 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
             typeInfo: '.CTMarker'
           }, {
             name: 'sp',
-            required: true,
             typeInfo: '.CTShape'
           }, {
             name: 'grpSp',
-            required: true,
             typeInfo: '.CTGroupShape'
           }, {
             name: 'graphicFrame',
-            required: true,
             typeInfo: '.CTGraphicalObjectFrame'
           }, {
             name: 'cxnSp',
-            required: true,
             typeInfo: '.CTConnector'
           }, {
             name: 'pic',
-            required: true,
             typeInfo: '.CTPicture'
           }, {
             name: 'clientData',

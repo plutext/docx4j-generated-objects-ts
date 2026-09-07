@@ -451,7 +451,7 @@ export const org_docx4j_wml = {
       typeName: 'CT_Columns',
       propertyInfos: [{
           name: 'col',
-          required: true,
+          minOccurs: 0,
           maxOccurs: 45,
           collection: true,
           typeInfo: '.CTColumn'
@@ -1654,11 +1654,9 @@ export const org_docx4j_wml = {
       typeName: 'CT_FFCheckBox',
       propertyInfos: [{
           name: 'size',
-          required: true,
           typeInfo: '.HpsMeasure'
         }, {
           name: 'sizeAuto',
-          required: true,
           typeInfo: '.BooleanDefaultTrue'
         }, {
           name: '_default',
@@ -6619,11 +6617,9 @@ export const org_docx4j_wml = {
       typeName: null,
       propertyInfos: [{
           name: 'pict',
-          required: true,
           typeInfo: '.Pict'
         }, {
           name: 'drawing',
-          required: true,
           typeInfo: '.Drawing'
         }, {
           name: 'numPicBulletId',

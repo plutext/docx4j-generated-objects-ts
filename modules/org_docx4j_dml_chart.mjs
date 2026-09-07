@@ -122,23 +122,18 @@ export const org_docx4j_dml_chart = {
       typeName: 'CT_AxDataSource',
       propertyInfos: [{
           name: 'multiLvlStrRef',
-          required: true,
           typeInfo: '.CTMultiLvlStrRef'
         }, {
           name: 'numRef',
-          required: true,
           typeInfo: '.CTNumRef'
         }, {
           name: 'numLit',
-          required: true,
           typeInfo: '.CTNumData'
         }, {
           name: 'strRef',
-          required: true,
           typeInfo: '.CTStrRef'
         }, {
           name: 'strLit',
-          required: true,
           typeInfo: '.CTStrData'
         }]
     }, {
@@ -524,11 +519,9 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'crosses',
-          required: true,
           typeInfo: '.CTCrosses'
         }, {
           name: 'crossesAt',
-          required: true,
           typeInfo: '.CTDouble'
         }, {
           name: 'auto',
@@ -692,7 +685,6 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'delete',
-          required: true,
           typeInfo: '.CTBoolean'
         }, {
           name: 'layout',
@@ -758,7 +750,6 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTDLbl'
         }, {
           name: 'delete',
-          required: true,
           typeInfo: '.CTBoolean'
         }, {
           name: 'numFmt',
@@ -907,11 +898,9 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'crosses',
-          required: true,
           typeInfo: '.CTCrosses'
         }, {
           name: 'crossesAt',
-          required: true,
           typeInfo: '.CTDouble'
         }, {
           name: 'auto',
@@ -967,11 +956,9 @@ export const org_docx4j_dml_chart = {
       typeName: 'CT_DispUnits',
       propertyInfos: [{
           name: 'custUnit',
-          required: true,
           typeInfo: '.CTDouble'
         }, {
           name: 'builtInUnit',
-          required: true,
           typeInfo: '.CTBuiltInUnit'
         }, {
           name: 'dispUnitsLbl',
@@ -1336,7 +1323,6 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'delete',
-          required: true,
           typeInfo: '.CTBoolean'
         }, {
           name: 'txPr',
@@ -1630,11 +1616,9 @@ export const org_docx4j_dml_chart = {
       typeName: 'CT_NumDataSource',
       propertyInfos: [{
           name: 'numRef',
-          required: true,
           typeInfo: '.CTNumRef'
         }, {
           name: 'numLit',
-          required: true,
           typeInfo: '.CTNumData'
         }]
     }, {
@@ -2512,11 +2496,9 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'crosses',
-          required: true,
           typeInfo: '.CTCrosses'
         }, {
           name: 'crossesAt',
-          required: true,
           typeInfo: '.CTDouble'
         }, {
           name: 'tickLblSkip',
@@ -2533,11 +2515,9 @@ export const org_docx4j_dml_chart = {
       typeName: 'CT_SerTx',
       propertyInfos: [{
           name: 'strRef',
-          required: true,
           typeInfo: '.CTStrRef'
         }, {
-          name: 'v',
-          required: true
+          name: 'v'
         }]
     }, {
       localName: 'CTShape',
@@ -2916,11 +2896,9 @@ export const org_docx4j_dml_chart = {
       typeName: 'CT_Tx',
       propertyInfos: [{
           name: 'strRef',
-          required: true,
           typeInfo: '.CTStrRef'
         }, {
           name: 'rich',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTTextBody'
         }]
     }, {
@@ -3009,11 +2987,9 @@ export const org_docx4j_dml_chart = {
           typeInfo: '.CTUnsignedInt'
         }, {
           name: 'crosses',
-          required: true,
           typeInfo: '.CTCrosses'
         }, {
           name: 'crossesAt',
-          required: true,
           typeInfo: '.CTDouble'
         }, {
           name: 'crossBetween',

@@ -42,13 +42,13 @@ export interface CTWordprocessingShape {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTWordprocessingShape';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas.CTWordprocessingCanvas | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup.CTWordprocessingGroup;
   cNvPr?: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
-  cNvSpPr: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
-  cNvCnPr: Dep_org_docx4j_dml.CTNonVisualConnectorProperties;
+  cNvSpPr?: Dep_org_docx4j_dml.CTNonVisualDrawingShapeProps;
+  cNvCnPr?: Dep_org_docx4j_dml.CTNonVisualConnectorProperties;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  txbx: CTTextboxInfo;
-  linkedTxbx: CTLinkedTextboxInformation;
+  txbx?: CTTextboxInfo;
+  linkedTxbx?: CTLinkedTextboxInformation;
   bodyPr: Dep_org_docx4j_dml.CTTextBodyProperties;
   normalEastAsianFlow?: boolean;
 }

@@ -22,10 +22,10 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTDiagramAutoBullet {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.CTDiagramAutoBullet';
   readonly PARENT?: CTNumberDiagramInfo;
-  buNone: Dep_org_docx4j_dml.CTTextNoBullet;
-  buAutoNum: Dep_org_docx4j_dml.CTTextAutonumberBullet;
-  buChar: Dep_org_docx4j_dml.CTTextCharBullet;
-  buBlip: Dep_org_docx4j_dml.CTTextBlipBullet;
+  buNone?: Dep_org_docx4j_dml.CTTextNoBullet;
+  buAutoNum?: Dep_org_docx4j_dml.CTTextAutonumberBullet;
+  buChar?: Dep_org_docx4j_dml.CTTextCharBullet;
+  buBlip?: Dep_org_docx4j_dml.CTTextBlipBullet;
   leadZeros?: boolean;
   prefix?: string;
 }

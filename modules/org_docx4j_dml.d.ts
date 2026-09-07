@@ -90,12 +90,12 @@ export interface CTAlphaFloorEffect {
 export interface CTAlphaInverseEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTAlphaInverseEffect';
   readonly PARENT?: CTBlip | CTEffectContainer;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
 }
 
 export interface CTAlphaModulateEffect {
@@ -160,15 +160,15 @@ export interface CTAnimationDgmElement {
 export interface CTAnimationElementChoice {
   TYPE_NAME?: 'org_docx4j_dml.CTAnimationElementChoice';
   readonly PARENT?: Dep_org_pptx4j_pml.CTTLShapeTargetElement;
-  dgm: CTAnimationDgmElement;
-  chart: CTAnimationChartElement;
+  dgm?: CTAnimationDgmElement;
+  chart?: CTAnimationChartElement;
 }
 
 export interface CTAnimationGraphicalObjectBuildProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties';
   readonly PARENT?: Dep_org_pptx4j_pml.CTTLGraphicalObjectBuild;
-  bldDgm: CTAnimationDgmBuildProperties;
-  bldChart: CTAnimationChartBuildProperties;
+  bldDgm?: CTAnimationDgmBuildProperties;
+  bldChart?: CTAnimationChartBuildProperties;
 }
 
 export interface CTAudioCD {
@@ -211,14 +211,14 @@ export interface CTBackgroundFillStyleList {
 export interface CTBackgroundFormatting {
   TYPE_NAME?: 'org_docx4j_dml.CTBackgroundFormatting';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas.CTWordprocessingCanvas | Dep_org_docx4j_dml_diagram.CTDataModel;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
 }
 
 export interface CTBaseStylesOverride {
@@ -264,8 +264,8 @@ export interface CTBlipFillProperties {
   readonly PARENT?: CTBackgroundFillStyleList | CTBackgroundFormatting | CTFillEffect | CTFillOverlayEffect | CTFillProperties | CTFillStyleList | CTGroupShapeProperties | CTGvmlPicture | CTShapeProperties | CTTableCellProperties | CTTableProperties | CTTextCharacterProperties | CTTextUnderlineFillGroupWrapper | Dep_org_docx4j_dml_chartDrawing.CTPicture | Dep_org_docx4j_dml_picture.Pic | Dep_org_docx4j_dml_spreadsheetdrawing.CTPicture | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties | Dep_org_pptx4j_pml.CTBackgroundProperties | Dep_org_pptx4j_pml.Pic;
   blip?: CTBlip;
   srcRect?: CTRelativeRect;
-  tile: CTTileInfoProperties;
-  stretch: CTStretchInfoProperties;
+  tile?: CTTileInfoProperties;
+  stretch?: CTStretchInfoProperties;
   dpi?: number;
   rotWithShape?: boolean;
 }
@@ -304,12 +304,12 @@ export interface CTClipboardStyleSheet {
 export interface CTColor {
   TYPE_NAME?: 'org_docx4j_dml.CTColor';
   readonly PARENT?: CTColorChangeEffect | CTColorScheme | CTPatternFillProperties | CTShape3D | CTTextCharacterProperties | CTTextParagraphProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTAmbientLight | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTDirectionalLight | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTPointLight | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTSpotLight | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTExtendedGuide | Dep_org_pptx4j_pml.CTShowProperties | Dep_org_pptx4j_pml.CTTLAnimVariant | Dep_org_pptx4j_pml.CTTLAnimateColorBehavior;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
 }
 
 export interface CTColorChangeEffect {
@@ -347,19 +347,19 @@ export interface CTColorMapping {
 export interface CTColorMappingOverride {
   TYPE_NAME?: 'org_docx4j_dml.CTColorMappingOverride';
   readonly PARENT?: Dep_org_pptx4j_pml.Notes | Dep_org_pptx4j_pml.Sld | Dep_org_pptx4j_pml.SldLayout;
-  masterClrMapping: CTEmptyElement;
-  overrideClrMapping: CTColorMapping;
+  masterClrMapping?: CTEmptyElement;
+  overrideClrMapping?: CTColorMapping;
 }
 
 export interface CTColorReplaceEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTColorReplaceEffect';
   readonly PARENT?: CTBlip | CTEffectContainer;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
 }
 
 export interface CTColorScheme {
@@ -438,12 +438,12 @@ export interface CTConnectorLocking {
 export interface CTCustomColor {
   TYPE_NAME?: 'org_docx4j_dml.CTCustomColor';
   readonly PARENT?: CTCustomColorList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   name?: string;
 }
 
@@ -517,8 +517,8 @@ export interface CTEffectList {
 export interface CTEffectProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTEffectProperties';
   readonly PARENT?: CTTableBackgroundStyle;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
 }
 
 export interface CTEffectReference {
@@ -530,8 +530,8 @@ export interface CTEffectReference {
 export interface CTEffectStyleItem {
   TYPE_NAME?: 'org_docx4j_dml.CTEffectStyleItem';
   readonly PARENT?: CTEffectStyleList;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
   scene3D?: CTScene3D;
   sp3D?: CTShape3D;
 }
@@ -558,35 +558,35 @@ export interface CTEmptyElement {
 export interface CTFillEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTFillEffect';
   readonly PARENT?: CTEffectContainer;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
 }
 
 export interface CTFillOverlayEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTFillOverlayEffect';
   readonly PARENT?: CTBlip | CTEffectContainer | CTEffectList;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
   blend: STBlendMode;
 }
 
 export interface CTFillProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTFillProperties';
   readonly PARENT?: CTTableBackgroundStyle | CTTableStyleCellStyle;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
 }
 
 export interface CTFillStyleList {
@@ -610,12 +610,12 @@ export interface CTFlatText {
 export interface CTFontReference {
   TYPE_NAME?: 'org_docx4j_dml.CTFontReference';
   readonly PARENT?: CTShapeStyle | CTTableStyleTextStyle;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   idx: STFontCollectionIndex;
 }
 
@@ -649,12 +649,12 @@ export interface CTGeomRect {
 export interface CTGlowEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTGlowEffect';
   readonly PARENT?: CTEffectContainer | CTEffectList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   rad?: number;
 }
 
@@ -662,8 +662,8 @@ export interface CTGradientFillProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTGradientFillProperties';
   readonly PARENT?: CTBackgroundFillStyleList | CTBackgroundFormatting | CTFillEffect | CTFillOverlayEffect | CTFillProperties | CTFillStyleList | CTGroupShapeProperties | CTLineProperties | CTShapeProperties | CTTableCellProperties | CTTableProperties | CTTextCharacterProperties | CTTextUnderlineFillGroupWrapper | Dep_org_pptx4j_pml.CTBackgroundProperties;
   gsLst?: CTGradientStopList;
-  lin: CTLinearShadeProperties;
-  path: CTPathShadeProperties;
+  lin?: CTLinearShadeProperties;
+  path?: CTPathShadeProperties;
   tileRect?: CTRelativeRect;
   flip?: STTileFlipMode;
   rotWithShape?: boolean;
@@ -672,12 +672,12 @@ export interface CTGradientFillProperties {
 export interface CTGradientStop {
   TYPE_NAME?: 'org_docx4j_dml.CTGradientStop';
   readonly PARENT?: CTGradientStopList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   pos: number;
 }
 
@@ -731,14 +731,14 @@ export interface CTGroupShapeProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTGroupShapeProperties';
   readonly PARENT?: CTGvmlGroupShape | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup.CTWordprocessingGroup | Dep_org_docx4j_dml_chartDrawing.CTGroupShape | Dep_org_docx4j_dml_diagram2008.CTGroupShape | Dep_org_docx4j_dml_spreadsheetdrawing.CTGroupShape | Dep_org_pptx4j_pml.GroupShape;
   xfrm?: CTGroupTransform2D;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
   scene3D?: CTScene3D;
   extLst?: CTOfficeArtExtensionList;
   bwMode?: STBlackWhiteMode;
@@ -842,8 +842,8 @@ export interface CTGvmlTextShape {
   TYPE_NAME?: 'org_docx4j_dml.CTGvmlTextShape';
   readonly PARENT?: CTGvmlGroupShape | CTGvmlShape;
   txBody: CTTextBody;
-  useSpRect: CTGvmlUseShapeRectangle;
-  xfrm: CTTransform2D;
+  useSpRect?: CTGvmlUseShapeRectangle;
+  xfrm?: CTTransform2D;
   extLst?: CTOfficeArtExtensionList;
 }
 
@@ -887,12 +887,12 @@ export interface CTHyperlink {
 export interface CTInnerShadowEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTInnerShadowEffect';
   readonly PARENT?: CTEffectContainer | CTEffectList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   blurRad?: number;
   dir?: number;
   dist?: number;
@@ -943,15 +943,15 @@ export interface CTLineJoinRound {
 export interface CTLineProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTLineProperties';
   readonly PARENT?: CTLineStyleList | CTShapeProperties | CTTableCellProperties | CTTextCharacterProperties | CTThemeableLineStyle | CTWholeE2OFormatting;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  pattFill: CTPatternFillProperties;
-  prstDash: CTPresetLineDashProperties;
-  custDash: CTDashStopList;
-  round: CTLineJoinRound;
-  bevel: CTLineJoinBevel;
-  miter: CTLineJoinMiterProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  pattFill?: CTPatternFillProperties;
+  prstDash?: CTPresetLineDashProperties;
+  custDash?: CTDashStopList;
+  round?: CTLineJoinRound;
+  bevel?: CTLineJoinBevel;
+  miter?: CTLineJoinMiterProperties;
   headEnd?: CTLineEndProperties;
   tailEnd?: CTLineEndProperties;
   extLst?: CTOfficeArtExtensionList;
@@ -1062,12 +1062,12 @@ export interface CTOfficeArtExtensionList {
 export interface CTOuterShadowEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTOuterShadowEffect';
   readonly PARENT?: CTEffectContainer | CTEffectList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   algn?: STRectAlignment;
   blurRad?: number;
   dir?: number;
@@ -1247,12 +1247,12 @@ export interface CTPresetLineDashProperties {
 export interface CTPresetShadowEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTPresetShadowEffect';
   readonly PARENT?: CTEffectContainer | CTEffectList;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   dir?: number;
   dist?: number;
   prst: STPresetShadowVal;
@@ -1395,17 +1395,17 @@ export interface CTShapeProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTShapeProperties';
   readonly PARENT?: CTDefaultShapeDefinition | CTGvmlConnector | CTGvmlPicture | CTGvmlShape | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTCategoryFilterException | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTCategoryFilterException | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxis | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisTitle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisUnitsLabel | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTChartSpace | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTChartTitle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTDataLabel | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTDataLabels | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTDataPoint | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTFormatOverride | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGridlines | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTLegend | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTPlotArea | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTPlotSurface | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTSeries | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTModel3D | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTWordprocessingShape | Dep_org_docx4j_dml_chart.CTAreaSer | Dep_org_docx4j_dml_chart.CTBandFmt | Dep_org_docx4j_dml_chart.CTBarSer | Dep_org_docx4j_dml_chart.CTBubbleSer | Dep_org_docx4j_dml_chart.CTCatAx | Dep_org_docx4j_dml_chart.CTChartLines | Dep_org_docx4j_dml_chart.CTChartSpace | Dep_org_docx4j_dml_chart.CTDLbl | Dep_org_docx4j_dml_chart.CTDLbls | Dep_org_docx4j_dml_chart.CTDPt | Dep_org_docx4j_dml_chart.CTDTable | Dep_org_docx4j_dml_chart.CTDateAx | Dep_org_docx4j_dml_chart.CTDispUnitsLbl | Dep_org_docx4j_dml_chart.CTErrBars | Dep_org_docx4j_dml_chart.CTLegend | Dep_org_docx4j_dml_chart.CTLineSer | Dep_org_docx4j_dml_chart.CTMarker | Dep_org_docx4j_dml_chart.CTPieSer | Dep_org_docx4j_dml_chart.CTPivotFmt | Dep_org_docx4j_dml_chart.CTPlotArea | Dep_org_docx4j_dml_chart.CTRadarSer | Dep_org_docx4j_dml_chart.CTScatterSer | Dep_org_docx4j_dml_chart.CTSerAx | Dep_org_docx4j_dml_chart.CTSurface | Dep_org_docx4j_dml_chart.CTSurfaceSer | Dep_org_docx4j_dml_chart.CTTitle | Dep_org_docx4j_dml_chart.CTTrendline | Dep_org_docx4j_dml_chart.CTTrendlineLbl | Dep_org_docx4j_dml_chart.CTUpDownBar | Dep_org_docx4j_dml_chart.CTValAx | Dep_org_docx4j_dml_chartDrawing.CTConnector | Dep_org_docx4j_dml_chartDrawing.CTPicture | Dep_org_docx4j_dml_chartDrawing.CTShape | Dep_org_docx4j_dml_chart_x2007.CTInvertSolidFillFmt | Dep_org_docx4j_dml_diagram.CTPt | Dep_org_docx4j_dml_diagram2008.CTShape | Dep_org_docx4j_dml_picture.Pic | Dep_org_docx4j_dml_spreadsheetdrawing.CTConnector | Dep_org_docx4j_dml_spreadsheetdrawing.CTPicture | Dep_org_docx4j_dml_spreadsheetdrawing.CTShape | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties | Dep_org_pptx4j_pml.CxnSp | Dep_org_pptx4j_pml.Pic | Dep_org_pptx4j_pml.Shape;
   xfrm?: CTTransform2D;
-  custGeom: CTCustomGeometry2D;
-  prstGeom: CTPresetGeometry2D;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  custGeom?: CTCustomGeometry2D;
+  prstGeom?: CTPresetGeometry2D;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
   ln?: CTLineProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
   scene3D?: CTScene3D;
   sp3D?: CTShape3D;
   extLst?: CTOfficeArtExtensionList;
@@ -1430,12 +1430,12 @@ export interface CTSoftEdgesEffect {
 export interface CTSolidColorFillProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTSolidColorFillProperties';
   readonly PARENT?: CTBackgroundFillStyleList | CTBackgroundFormatting | CTFillEffect | CTFillOverlayEffect | CTFillProperties | CTFillStyleList | CTGroupShapeProperties | CTLineProperties | CTShapeProperties | CTTableCellProperties | CTTableProperties | CTTextCharacterProperties | CTTextUnderlineFillGroupWrapper | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTValueColors | Dep_org_pptx4j_pml.CTBackgroundProperties;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
 }
 
 export interface CTSphereCoords {
@@ -1465,12 +1465,12 @@ export interface CTStyleMatrix {
 export interface CTStyleMatrixReference {
   TYPE_NAME?: 'org_docx4j_dml.CTStyleMatrixReference';
   readonly PARENT?: CTShapeStyle | CTTableBackgroundStyle | CTTableStyleCellStyle | CTThemeableLineStyle | Dep_org_pptx4j_pml.CTBackground;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   idx: number;
 }
 
@@ -1492,10 +1492,10 @@ export interface CTTable {
 export interface CTTableBackgroundStyle {
   TYPE_NAME?: 'org_docx4j_dml.CTTableBackgroundStyle';
   readonly PARENT?: CTTableStyle;
-  fill: CTFillProperties;
-  fillRef: CTStyleMatrixReference;
-  effect: CTEffectProperties;
-  effectRef: CTStyleMatrixReference;
+  fill?: CTFillProperties;
+  fillRef?: CTStyleMatrixReference;
+  effect?: CTEffectProperties;
+  effectRef?: CTStyleMatrixReference;
 }
 
 export interface CTTableCell {
@@ -1534,12 +1534,12 @@ export interface CTTableCellProperties {
   lnTlToBr?: CTLineProperties;
   lnBlToTr?: CTLineProperties;
   cell3D?: CTCell3D;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
   extLst?: CTOfficeArtExtensionList;
   anchor?: STTextAnchoringType;
   anchorCtr?: boolean;
@@ -1574,16 +1574,16 @@ export interface CTTablePartStyle {
 export interface CTTableProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTTableProperties';
   readonly PARENT?: CTTable;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
-  tableStyle: CTTableStyle;
-  tableStyleId: string;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
+  tableStyle?: CTTableStyle;
+  tableStyleId?: string;
   extLst?: CTOfficeArtExtensionList;
   bandCol?: boolean;
   bandRow?: boolean;
@@ -1628,8 +1628,8 @@ export interface CTTableStyleCellStyle {
   TYPE_NAME?: 'org_docx4j_dml.CTTableStyleCellStyle';
   readonly PARENT?: CTTablePartStyle;
   tcBdr?: CTTableCellBorderStyle;
-  fill: CTFillProperties;
-  fillRef: CTStyleMatrixReference;
+  fill?: CTFillProperties;
+  fillRef?: CTStyleMatrixReference;
   cell3D?: CTCell3D;
 }
 
@@ -1642,14 +1642,14 @@ export interface CTTableStyleList {
 export interface CTTableStyleTextStyle {
   TYPE_NAME?: 'org_docx4j_dml.CTTableStyleTextStyle';
   readonly PARENT?: CTTablePartStyle;
-  font: FontCollection;
-  fontRef: CTFontReference;
-  scrgbClr: CTScRgbColor;
-  srgbClr: CTSRgbColor;
-  hslClr: CTHslColor;
-  sysClr: CTSystemColor;
-  schemeClr: CTSchemeColor;
-  prstClr: CTPresetColor;
+  font?: FontCollection;
+  fontRef?: CTFontReference;
+  scrgbClr?: CTScRgbColor;
+  srgbClr?: CTSRgbColor;
+  hslClr?: CTHslColor;
+  sysClr?: CTSystemColor;
+  schemeClr?: CTSchemeColor;
+  prstClr?: CTPresetColor;
   extLst?: CTOfficeArtExtensionList;
   b?: STOnOffStyleType;
   i?: STOnOffStyleType;
@@ -1680,12 +1680,12 @@ export interface CTTextBodyProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTTextBodyProperties';
   readonly PARENT?: CTDefaultShapeDefinition | CTTextBody | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.CTWordprocessingShape;
   prstTxWarp?: CTPresetTextShape;
-  noAutofit: CTTextNoAutofit;
-  normAutofit: CTTextNormalAutofit;
-  spAutoFit: CTTextShapeAutofit;
+  noAutofit?: CTTextNoAutofit;
+  normAutofit?: CTTextNormalAutofit;
+  spAutoFit?: CTTextShapeAutofit;
   scene3D?: CTScene3D;
-  sp3D: CTShape3D;
-  flatTx: CTFlatText;
+  sp3D?: CTShape3D;
+  flatTx?: CTFlatText;
   extLst?: CTOfficeArtExtensionList;
   anchor?: STTextAnchoringType;
   anchorCtr?: boolean;
@@ -1745,19 +1745,19 @@ export interface CTTextCharacterProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTTextCharacterProperties';
   readonly PARENT?: CTRegularTextRun | CTTextField | CTTextLineBreak | CTTextParagraph | CTTextParagraphProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry;
   ln?: CTLineProperties;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
   highlight?: CTColor;
-  uLnTx: CTTextUnderlineLineFollowText;
+  uLnTx?: CTTextUnderlineLineFollowText;
   uLn?: CTLineProperties;
-  uFillTx: CTTextUnderlineFillFollowText;
-  uFill: CTTextUnderlineFillGroupWrapper;
+  uFillTx?: CTTextUnderlineFillFollowText;
+  uFill?: CTTextUnderlineFillGroupWrapper;
   latin?: TextFont;
   ea?: TextFont;
   cs?: TextFont;
@@ -1849,17 +1849,17 @@ export interface CTTextParagraphProperties {
   lnSpc?: CTTextSpacing;
   spcBef?: CTTextSpacing;
   spcAft?: CTTextSpacing;
-  buClrTx: CTTextBulletColorFollowText;
-  buClr: CTColor;
-  buSzTx: CTTextBulletSizeFollowText;
-  buSzPct: CTTextBulletSizePercent;
-  buSzPts: CTTextBulletSizePoint;
-  buFontTx: CTTextBulletTypefaceFollowText;
-  buFont: TextFont;
-  buNone: CTTextNoBullet;
-  buAutoNum: CTTextAutonumberBullet;
-  buChar: CTTextCharBullet;
-  buBlip: CTTextBlipBullet;
+  buClrTx?: CTTextBulletColorFollowText;
+  buClr?: CTColor;
+  buSzTx?: CTTextBulletSizeFollowText;
+  buSzPct?: CTTextBulletSizePercent;
+  buSzPts?: CTTextBulletSizePoint;
+  buFontTx?: CTTextBulletTypefaceFollowText;
+  buFont?: TextFont;
+  buNone?: CTTextNoBullet;
+  buAutoNum?: CTTextAutonumberBullet;
+  buChar?: CTTextCharBullet;
+  buBlip?: CTTextBlipBullet;
   tabLst?: CTTextTabStopList;
   defRPr?: CTTextCharacterProperties;
   extLst?: CTOfficeArtExtensionList;
@@ -1884,8 +1884,8 @@ export interface CTTextShapeAutofit {
 export interface CTTextSpacing {
   TYPE_NAME?: 'org_docx4j_dml.CTTextSpacing';
   readonly PARENT?: CTTextParagraphProperties;
-  spcPct: CTTextSpacingPercent;
-  spcPts: CTTextSpacingPoint;
+  spcPct?: CTTextSpacingPercent;
+  spcPts?: CTTextSpacingPoint;
 }
 
 export interface CTTextSpacingPercent {
@@ -1921,12 +1921,12 @@ export interface CTTextUnderlineFillFollowText {
 export interface CTTextUnderlineFillGroupWrapper {
   TYPE_NAME?: 'org_docx4j_dml.CTTextUnderlineFillGroupWrapper';
   readonly PARENT?: CTTextCharacterProperties;
-  noFill: CTNoFillProperties;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  blipFill: CTBlipFillProperties;
-  pattFill: CTPatternFillProperties;
-  grpFill: CTGroupFillProperties;
+  noFill?: CTNoFillProperties;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  blipFill?: CTBlipFillProperties;
+  pattFill?: CTPatternFillProperties;
+  grpFill?: CTGroupFillProperties;
 }
 
 export interface CTTextUnderlineLineFollowText {
@@ -1937,8 +1937,8 @@ export interface CTTextUnderlineLineFollowText {
 export interface CTThemeableLineStyle {
   TYPE_NAME?: 'org_docx4j_dml.CTThemeableLineStyle';
   readonly PARENT?: CTTableCellBorderStyle;
-  ln: CTLineProperties;
-  lnRef: CTStyleMatrixReference;
+  ln?: CTLineProperties;
+  lnRef?: CTStyleMatrixReference;
 }
 
 export interface CTTileInfoProperties {
@@ -1999,8 +1999,8 @@ export interface CTWholeE2OFormatting {
   TYPE_NAME?: 'org_docx4j_dml.CTWholeE2OFormatting';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas.CTWordprocessingCanvas | Dep_org_docx4j_dml_diagram.CTDataModel;
   ln?: CTLineProperties;
-  effectLst: CTEffectList;
-  effectDag: CTEffectContainer;
+  effectLst?: CTEffectList;
+  effectDag?: CTEffectContainer;
 }
 
 export interface CTXYAdjustHandle {

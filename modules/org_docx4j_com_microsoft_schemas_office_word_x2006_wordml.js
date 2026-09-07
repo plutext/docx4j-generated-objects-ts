@@ -110,23 +110,18 @@ var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = f
         typeName: 'CT_Keymap',
         propertyInfos: [{
             name: 'fci',
-            required: true,
             typeInfo: '.CTFci'
           }, {
             name: 'macro',
-            required: true,
             typeInfo: '.CTMacroWll'
           }, {
             name: 'acd',
-            required: true,
             typeInfo: '.CTAcdKeymap'
           }, {
             name: 'wll',
-            required: true,
             typeInfo: '.CTMacroWll'
           }, {
             name: 'wch',
-            required: true,
             typeInfo: '.CTLongHexNumber'
           }, {
             name: 'chmPrimary',

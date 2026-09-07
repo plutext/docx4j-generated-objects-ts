@@ -26,8 +26,8 @@ export interface Package {
 export interface Part {
   TYPE_NAME?: 'org_docx4j_xmlPackage.Part';
   readonly PARENT?: Package;
-  xmlData: XmlData;
-  binaryData: string;
+  xmlData?: XmlData;
+  binaryData?: string;
   compression?: string;
   contentType?: string;
   name: string;

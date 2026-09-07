@@ -5169,7 +5169,6 @@ export const org_docx4j_vml = {
           typeInfo: 'org_docx4j_wml.CTTxbxContent'
         }, {
           name: 'any',
-          required: true,
           allowTypedObject: false,
           mixed: false,
           type: 'anyElement'

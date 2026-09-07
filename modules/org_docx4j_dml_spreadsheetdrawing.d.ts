@@ -25,11 +25,11 @@ export interface CTAbsoluteAnchor {
   readonly PARENT?: CTDrawing;
   pos: Dep_org_docx4j_dml.CTPoint2D;
   ext: Dep_org_docx4j_dml.CTPositiveSize2D;
-  sp: CTShape;
-  grpSp: CTGroupShape;
-  graphicFrame: CTGraphicalObjectFrame;
-  cxnSp: CTConnector;
-  pic: CTPicture;
+  sp?: CTShape;
+  grpSp?: CTGroupShape;
+  graphicFrame?: CTGraphicalObjectFrame;
+  cxnSp?: CTConnector;
+  pic?: CTPicture;
   clientData: CTAnchorClientData;
 }
 
@@ -108,11 +108,11 @@ export interface CTOneCellAnchor {
   readonly PARENT?: CTDrawing;
   from: CTMarker;
   ext: Dep_org_docx4j_dml.CTPositiveSize2D;
-  sp: CTShape;
-  grpSp: CTGroupShape;
-  graphicFrame: CTGraphicalObjectFrame;
-  cxnSp: CTConnector;
-  pic: CTPicture;
+  sp?: CTShape;
+  grpSp?: CTGroupShape;
+  graphicFrame?: CTGraphicalObjectFrame;
+  cxnSp?: CTConnector;
+  pic?: CTPicture;
   clientData: CTAnchorClientData;
 }
 
@@ -159,11 +159,11 @@ export interface CTTwoCellAnchor {
   readonly PARENT?: CTDrawing;
   from: CTMarker;
   to: CTMarker;
-  sp: CTShape;
-  grpSp: CTGroupShape;
-  graphicFrame: CTGraphicalObjectFrame;
-  cxnSp: CTConnector;
-  pic: CTPicture;
+  sp?: CTShape;
+  grpSp?: CTGroupShape;
+  graphicFrame?: CTGraphicalObjectFrame;
+  cxnSp?: CTConnector;
+  pic?: CTPicture;
   clientData: CTAnchorClientData;
   editAs?: STEditAs;
 }

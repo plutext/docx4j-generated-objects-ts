@@ -34,11 +34,9 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_Color',
         propertyInfos: [{
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }]
       }, {
@@ -55,15 +53,12 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_FillTextEffect',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: 'org_docx4j_wml.CTEmpty'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }]
       }, {
@@ -71,11 +66,9 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_Glow',
         propertyInfos: [{
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'rad',
@@ -90,11 +83,9 @@ var org_docx4j_w14_Module_Factory = function () {
             typeInfo: '.CTGradientStopList'
           }, {
             name: 'lin',
-            required: true,
             typeInfo: '.CTLinearShadeProperties'
           }, {
             name: 'path',
-            required: true,
             typeInfo: '.CTPathShadeProperties'
           }]
       }, {
@@ -102,11 +93,9 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_GradientStop',
         propertyInfos: [{
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'pos',
@@ -489,11 +478,9 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_Shadow',
         propertyInfos: [{
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'algn',
@@ -533,11 +520,9 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_SolidColorFillProperties',
         propertyInfos: [{
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }]
       }, {
@@ -586,31 +571,24 @@ var org_docx4j_w14_Module_Factory = function () {
         typeName: 'CT_TextOutlineEffect',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: 'org_docx4j_wml.CTEmpty'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'prstDash',
-            required: true,
             typeInfo: '.CTPresetLineDashProperties'
           }, {
             name: 'round',
-            required: true,
             typeInfo: 'org_docx4j_wml.CTEmpty'
           }, {
             name: 'bevel',
-            required: true,
             typeInfo: 'org_docx4j_wml.CTEmpty'
           }, {
             name: 'miter',
-            required: true,
             typeInfo: '.CTLineJoinMiterProperties'
           }, {
             name: 'algn',

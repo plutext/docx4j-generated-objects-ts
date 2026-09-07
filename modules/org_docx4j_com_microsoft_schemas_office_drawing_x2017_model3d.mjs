@@ -91,11 +91,9 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d = {
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
           name: 'objViewport',
-          required: true,
           typeInfo: '.CTObjectViewport'
         }, {
           name: 'winViewport',
-          required: true,
           typeInfo: '.CTWindowViewport'
         }, {
           name: 'ambientLight',
@@ -152,11 +150,9 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d = {
           typeInfo: 'org_docx4j_dml.CTPoint3D'
         }, {
           name: 'orthographic',
-          required: true,
           typeInfo: '.CTOrthographicProjection'
         }, {
           name: 'perspective',
-          required: true,
           typeInfo: '.CTPerspectiveProjection'
         }, {
           name: 'extLst',

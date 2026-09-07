@@ -195,8 +195,8 @@ export interface CTCacheHierarchy {
 export interface CTCacheSource {
   TYPE_NAME?: 'org_xlsx4j_sml.CTCacheSource';
   readonly PARENT?: CTPivotCacheDefinition;
-  worksheetSource: CTWorksheetSource;
-  consolidation: CTConsolidation;
+  worksheetSource?: CTWorksheetSource;
+  consolidation?: CTConsolidation;
   extLst?: CTExtensionList;
   connectionId?: number;
   type: STSourceType;
@@ -1645,10 +1645,10 @@ export interface CTMapInfo {
 export interface CTMdx {
   TYPE_NAME?: 'org_xlsx4j_sml.CTMdx';
   readonly PARENT?: CTMdxMetadata;
-  t: CTMdxTuple;
-  ms: CTMdxSet;
-  p: CTMdxMemeberProp;
-  k: CTMdxKPI;
+  t?: CTMdxTuple;
+  ms?: CTMdxSet;
+  p?: CTMdxMemeberProp;
+  k?: CTMdxKPI;
   f: STMdxFunctionType;
   n: number;
 }

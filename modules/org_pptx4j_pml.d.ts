@@ -31,22 +31,22 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTBackground {
   TYPE_NAME?: 'org_pptx4j_pml.CTBackground';
   readonly PARENT?: CommonSlideData;
-  bgPr: CTBackgroundProperties;
-  bgRef: Dep_org_docx4j_dml.CTStyleMatrixReference;
+  bgPr?: CTBackgroundProperties;
+  bgRef?: Dep_org_docx4j_dml.CTStyleMatrixReference;
   bwMode?: Dep_org_docx4j_dml.STBlackWhiteMode;
 }
 
 export interface CTBackgroundProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTBackgroundProperties';
   readonly PARENT?: CTBackground;
-  noFill: Dep_org_docx4j_dml.CTNoFillProperties;
-  solidFill: Dep_org_docx4j_dml.CTSolidColorFillProperties;
-  gradFill: Dep_org_docx4j_dml.CTGradientFillProperties;
-  blipFill: Dep_org_docx4j_dml.CTBlipFillProperties;
-  pattFill: Dep_org_docx4j_dml.CTPatternFillProperties;
-  grpFill: Dep_org_docx4j_dml.CTGroupFillProperties;
-  effectLst: Dep_org_docx4j_dml.CTEffectList;
-  effectDag: Dep_org_docx4j_dml.CTEffectContainer;
+  noFill?: Dep_org_docx4j_dml.CTNoFillProperties;
+  solidFill?: Dep_org_docx4j_dml.CTSolidColorFillProperties;
+  gradFill?: Dep_org_docx4j_dml.CTGradientFillProperties;
+  blipFill?: Dep_org_docx4j_dml.CTBlipFillProperties;
+  pattFill?: Dep_org_docx4j_dml.CTPatternFillProperties;
+  grpFill?: Dep_org_docx4j_dml.CTGroupFillProperties;
+  effectLst?: Dep_org_docx4j_dml.CTEffectList;
+  effectDag?: Dep_org_docx4j_dml.CTEffectContainer;
   extLst?: CTExtensionList;
   shadeToTitle?: boolean;
 }
@@ -274,9 +274,9 @@ export interface CTHeaderFooter {
 
 export interface CTHtmlPublishProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTHtmlPublishProperties';
-  sldAll: CTEmpty;
-  sldRg: CTIndexRange;
-  custShow: CTCustomShowId;
+  sldAll?: CTEmpty;
+  sldRg?: CTIndexRange;
+  custShow?: CTCustomShowId;
   extLst?: CTExtensionList;
   showSpeakerNotes?: boolean;
   target?: string;
@@ -363,9 +363,9 @@ export interface CTNotesViewProperties {
 
 export interface CTOleObject {
   TYPE_NAME?: 'org_pptx4j_pml.CTOleObject';
-  embed: CTOleObjectEmbed;
-  link: CTOleObjectLink;
-  pic: Pic;
+  embed?: CTOleObjectEmbed;
+  link?: CTOleObjectLink;
+  pic?: Pic;
   imgH?: number;
   imgW?: number;
   name?: string;
@@ -475,12 +475,12 @@ export interface CTShowInfoKiosk {
 export interface CTShowProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTShowProperties';
   readonly PARENT?: PresentationPr;
-  present: CTEmpty;
-  browse: CTShowInfoBrowse;
-  kiosk: CTShowInfoKiosk;
-  sldAll: CTEmpty;
-  sldRg: CTIndexRange;
-  custShow: CTCustomShowId;
+  present?: CTEmpty;
+  browse?: CTShowInfoBrowse;
+  kiosk?: CTShowInfoKiosk;
+  sldAll?: CTEmpty;
+  sldRg?: CTIndexRange;
+  custShow?: CTCustomShowId;
   penClr?: Dep_org_docx4j_dml.CTColor;
   extLst?: CTExtensionList;
   loop?: boolean;
@@ -543,27 +543,27 @@ export interface CTSlideTiming {
 export interface CTSlideTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideTransition';
   readonly PARENT?: Sld | SldLayout | SldMaster;
-  blinds: CTOrientationTransition;
-  checker: CTOrientationTransition;
-  circle: CTEmpty;
-  dissolve: CTEmpty;
-  comb: CTOrientationTransition;
-  cover: CTEightDirectionTransition;
-  cut: CTOptionalBlackTransition;
-  diamond: CTEmpty;
-  fade: CTOptionalBlackTransition;
-  newsflash: CTEmpty;
-  plus: CTEmpty;
-  pull: CTEightDirectionTransition;
-  push: CTSideDirectionTransition;
-  random: CTEmpty;
-  randomBar: CTOrientationTransition;
-  split: CTSplitTransition;
-  strips: CTCornerDirectionTransition;
-  wedge: CTEmpty;
-  wheel: CTWheelTransition;
-  wipe: CTSideDirectionTransition;
-  zoom: CTInOutTransition;
+  blinds?: CTOrientationTransition;
+  checker?: CTOrientationTransition;
+  circle?: CTEmpty;
+  dissolve?: CTEmpty;
+  comb?: CTOrientationTransition;
+  cover?: CTEightDirectionTransition;
+  cut?: CTOptionalBlackTransition;
+  diamond?: CTEmpty;
+  fade?: CTOptionalBlackTransition;
+  newsflash?: CTEmpty;
+  plus?: CTEmpty;
+  pull?: CTEightDirectionTransition;
+  push?: CTSideDirectionTransition;
+  random?: CTEmpty;
+  randomBar?: CTOrientationTransition;
+  split?: CTSplitTransition;
+  strips?: CTCornerDirectionTransition;
+  wedge?: CTEmpty;
+  wheel?: CTWheelTransition;
+  wipe?: CTSideDirectionTransition;
+  zoom?: CTInOutTransition;
   sndAc?: CTTransitionSoundAction;
   extLst?: CTExtensionListModify;
   advClick?: boolean;
@@ -601,11 +601,11 @@ export interface CTStringTag {
 export interface CTTLAnimVariant {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLAnimVariant';
   readonly PARENT?: CTTLAnimateEffectBehavior | CTTLSetBehavior | CTTLTimeAnimateValue;
-  boolVal: CTTLAnimVariantBooleanVal;
-  intVal: CTTLAnimVariantIntegerVal;
-  fltVal: CTTLAnimVariantFloatVal;
-  strVal: CTTLAnimVariantStringVal;
-  clrVal: Dep_org_docx4j_dml.CTColor;
+  boolVal?: CTTLAnimVariantBooleanVal;
+  intVal?: CTTLAnimVariantIntegerVal;
+  fltVal?: CTTLAnimVariantFloatVal;
+  strVal?: CTTLAnimVariantStringVal;
+  clrVal?: Dep_org_docx4j_dml.CTColor;
 }
 
 export interface CTTLAnimVariantBooleanVal {
@@ -732,8 +732,8 @@ export interface CTTLBuildParagraph {
 export interface CTTLByAnimateColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByAnimateColorTransform';
   readonly PARENT?: CTTLAnimateColorBehavior;
-  rgb: CTTLByRgbColorTransform;
-  hsl: CTTLByHslColorTransform;
+  rgb?: CTTLByRgbColorTransform;
+  hsl?: CTTLByHslColorTransform;
 }
 
 export interface CTTLByHslColorTransform {
@@ -824,8 +824,8 @@ export interface CTTLCommonTimeNodeData {
 export interface CTTLGraphicalObjectBuild {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLGraphicalObjectBuild';
   readonly PARENT?: CTBuildList;
-  bldAsOne: CTEmpty;
-  bldSub: Dep_org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties;
+  bldAsOne?: CTEmpty;
+  bldSub?: Dep_org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties;
   grpId: number;
   spid: string;
   uiExpand?: boolean;
@@ -834,8 +834,8 @@ export interface CTTLGraphicalObjectBuild {
 export interface CTTLIterateData {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLIterateData';
   readonly PARENT?: CTTLCommonTimeNodeData;
-  tmAbs: CTTLIterateIntervalTime;
-  tmPct: CTTLIterateIntervalPercentage;
+  tmAbs?: CTTLIterateIntervalTime;
+  tmPct?: CTTLIterateIntervalPercentage;
   backwards?: boolean;
   type?: STIterateType;
 }
@@ -900,11 +900,11 @@ export interface CTTLSetBehavior {
 export interface CTTLShapeTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLShapeTargetElement';
   readonly PARENT?: CTTLTimeTargetElement;
-  bg: CTEmpty;
-  subSp: CTTLSubShapeId;
-  oleChartEl: CTTLOleChartTargetElement;
-  txEl: CTTLTextTargetElement;
-  graphicEl: Dep_org_docx4j_dml.CTAnimationElementChoice;
+  bg?: CTEmpty;
+  subSp?: CTTLSubShapeId;
+  oleChartEl?: CTTLOleChartTargetElement;
+  txEl?: CTTLTextTargetElement;
+  graphicEl?: Dep_org_docx4j_dml.CTAnimationElementChoice;
   spid: string;
 }
 
@@ -930,8 +930,8 @@ export interface CTTLTemplateList {
 export interface CTTLTextTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTextTargetElement';
   readonly PARENT?: CTTLShapeTargetElement;
-  charRg: CTIndexRange;
-  pRg: CTIndexRange;
+  charRg?: CTIndexRange;
+  pRg?: CTIndexRange;
 }
 
 export interface CTTLTimeAnimateValue {
@@ -951,9 +951,9 @@ export interface CTTLTimeAnimateValueList {
 export interface CTTLTimeCondition {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeCondition';
   readonly PARENT?: CTTLCommonTimeNodeData | CTTLTimeConditionList;
-  tgtEl: CTTLTimeTargetElement;
-  tn: CTTLTriggerTimeNodeID;
-  rtn: CTTLTriggerRuntimeNode;
+  tgtEl?: CTTLTimeTargetElement;
+  tn?: CTTLTriggerTimeNodeID;
+  rtn?: CTTLTriggerRuntimeNode;
   delay?: string;
   evt?: STTLTriggerEvent;
 }
@@ -990,10 +990,10 @@ export interface CTTLTimeNodeSequence {
 export interface CTTLTimeTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeTargetElement';
   readonly PARENT?: CTTLCommonBehaviorData | CTTLCommonMediaNodeData | CTTLTimeCondition;
-  sldTgt: CTEmpty;
-  sndTgt: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
-  spTgt: CTTLShapeTargetElement;
-  inkTgt: CTTLSubShapeId;
+  sldTgt?: CTEmpty;
+  sndTgt?: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
+  spTgt?: CTTLShapeTargetElement;
+  inkTgt?: CTTLSubShapeId;
 }
 
 export interface CTTLTriggerRuntimeNode {
@@ -1023,8 +1023,8 @@ export interface CTTimeNodeList {
 export interface CTTransitionSoundAction {
   TYPE_NAME?: 'org_pptx4j_pml.CTTransitionSoundAction';
   readonly PARENT?: CTSlideTransition;
-  stSnd: CTTransitionStartSoundAction;
-  endSnd: CTEmpty;
+  stSnd?: CTTransitionStartSoundAction;
+  endSnd?: CTEmpty;
 }
 
 export interface CTTransitionStartSoundAction {
@@ -1099,11 +1099,11 @@ export interface NvPr {
   TYPE_NAME?: 'org_pptx4j_pml.NvPr';
   readonly PARENT?: CTGraphicalObjectFrameNonVisual | CxnSp.NvCxnSpPr | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTContentPartNonVisual | GroupShape.NvGrpSpPr | Pic.NvPicPr | Shape.NvSpPr;
   ph?: CTPlaceholder;
-  audioCd: Dep_org_docx4j_dml.CTAudioCD;
-  wavAudioFile: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
-  audioFile: Dep_org_docx4j_dml.CTAudioFile;
-  videoFile: Dep_org_docx4j_dml.CTVideoFile;
-  quickTimeFile: Dep_org_docx4j_dml.CTQuickTimeFile;
+  audioCd?: Dep_org_docx4j_dml.CTAudioCD;
+  wavAudioFile?: Dep_org_docx4j_dml.CTEmbeddedWAVAudioFile;
+  audioFile?: Dep_org_docx4j_dml.CTAudioFile;
+  videoFile?: Dep_org_docx4j_dml.CTVideoFile;
+  quickTimeFile?: Dep_org_docx4j_dml.CTQuickTimeFile;
   custDataLst?: CTCustomerDataList;
   extLst?: CTExtensionList;
   isPhoto?: boolean;

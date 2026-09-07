@@ -5169,7 +5169,6 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: 'org_docx4j_wml.CTTxbxContent'
           }, {
             name: 'any',
-            required: true,
             allowTypedObject: false,
             mixed: false,
             type: 'anyElement'

@@ -50,8 +50,8 @@ export interface CTKeyData {
 export interface CTKeyEncryptor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptor';
   readonly PARENT?: CTKeyEncryptors;
-  encryptedPasswordKey: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor;
-  encryptedCertificateKey: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate.CTCertificateKeyEncryptor;
+  encryptedPasswordKey?: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor;
+  encryptedCertificateKey?: Dep_org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate.CTCertificateKeyEncryptor;
   uri?: string;
 }
 

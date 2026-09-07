@@ -74,11 +74,11 @@ export interface CTFci {
 export interface CTKeymap {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTKeymap';
   readonly PARENT?: CTKeymaps;
-  fci: CTFci;
-  macro: CTMacroWll;
-  acd: CTAcdKeymap;
-  wll: CTMacroWll;
-  wch: CTLongHexNumber;
+  fci?: CTFci;
+  macro?: CTMacroWll;
+  acd?: CTAcdKeymap;
+  wll?: CTMacroWll;
+  wch?: CTLongHexNumber;
   chmPrimary?: string;
   chmSecondary?: string;
   kcmPrimary?: string;

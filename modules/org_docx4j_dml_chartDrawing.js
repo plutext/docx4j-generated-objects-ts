@@ -16,23 +16,18 @@ var org_docx4j_dml_chartDrawing_Module_Factory = function () {
             typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
           }, {
             name: 'sp',
-            required: true,
             typeInfo: '.CTShape'
           }, {
             name: 'grpSp',
-            required: true,
             typeInfo: '.CTGroupShape'
           }, {
             name: 'graphicFrame',
-            required: true,
             typeInfo: '.CTGraphicFrame'
           }, {
             name: 'cxnSp',
-            required: true,
             typeInfo: '.CTConnector'
           }, {
             name: 'pic',
-            required: true,
             typeInfo: '.CTPicture'
           }]
       }, {
@@ -254,23 +249,18 @@ var org_docx4j_dml_chartDrawing_Module_Factory = function () {
             typeInfo: '.CTMarker'
           }, {
             name: 'sp',
-            required: true,
             typeInfo: '.CTShape'
           }, {
             name: 'grpSp',
-            required: true,
             typeInfo: '.CTGroupShape'
           }, {
             name: 'graphicFrame',
-            required: true,
             typeInfo: '.CTGraphicFrame'
           }, {
             name: 'cxnSp',
-            required: true,
             typeInfo: '.CTConnector'
           }, {
             name: 'pic',
-            required: true,
             typeInfo: '.CTPicture'
           }]
       }, {

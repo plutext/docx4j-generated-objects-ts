@@ -113,7 +113,6 @@ var org_docx4j_com_microsoft_schemas_office_x2006_encryption_Module_Factory = fu
         typeName: 'CT_KeyEncryptor',
         propertyInfos: [{
             name: 'encryptedPasswordKey',
-            required: true,
             elementName: {
               localPart: 'encryptedKey',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/2006\/keyEncryptor\/password'
@@ -121,7 +120,6 @@ var org_docx4j_com_microsoft_schemas_office_x2006_encryption_Module_Factory = fu
             typeInfo: 'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor'
           }, {
             name: 'encryptedCertificateKey',
-            required: true,
             elementName: {
               localPart: 'encryptedKey',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/2006\/keyEncryptor\/certificate'

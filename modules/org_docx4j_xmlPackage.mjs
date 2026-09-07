@@ -17,11 +17,9 @@ export const org_docx4j_xmlPackage = {
       typeName: 'CT_Part',
       propertyInfos: [{
           name: 'xmlData',
-          required: true,
           typeInfo: '.XmlData'
         }, {
           name: 'binaryData',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'compression',

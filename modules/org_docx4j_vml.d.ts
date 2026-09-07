@@ -885,7 +885,7 @@ export interface CTTextbox {
   TYPE_NAME?: 'org_docx4j_vml.CTTextbox';
   readonly PARENT?: CTArc | CTCurve | CTGroup | CTImage | CTLine | CTOval | CTPolyLine | CTRect | CTRoundRect | CTShape | CTShapetype | Dep_org_docx4j_vml_officedrawing.CTShapeDefaults;
   txbxContent?: Dep_org_docx4j_wml.CTTxbxContent;
-  any: XmlAnyElement;
+  any?: XmlAnyElement;
   vmlId?: string;
   inset?: string;
   style?: string;

@@ -100,27 +100,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_AlphaInverseEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }]
       }, {
@@ -270,11 +264,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_AnimationElementChoice',
         propertyInfos: [{
             name: 'dgm',
-            required: true,
             typeInfo: '.CTAnimationDgmElement'
           }, {
             name: 'chart',
-            required: true,
             typeInfo: '.CTAnimationChartElement'
           }]
       }, {
@@ -282,11 +274,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_AnimationGraphicalObjectBuildProperties',
         propertyInfos: [{
             name: 'bldDgm',
-            required: true,
             typeInfo: '.CTAnimationDgmBuildProperties'
           }, {
             name: 'bldChart',
-            required: true,
             typeInfo: '.CTAnimationChartBuildProperties'
           }]
       }, {
@@ -392,35 +382,27 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_BackgroundFormatting',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }]
       }, {
@@ -613,11 +595,9 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTRelativeRect'
           }, {
             name: 'tile',
-            required: true,
             typeInfo: '.CTTileInfoProperties'
           }, {
             name: 'stretch',
-            required: true,
             typeInfo: '.CTStretchInfoProperties'
           }, {
             name: 'dpi',
@@ -723,27 +703,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_Color',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }]
       }, {
@@ -903,11 +877,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_ColorMappingOverride',
         propertyInfos: [{
             name: 'masterClrMapping',
-            required: true,
             typeInfo: '.CTEmptyElement'
           }, {
             name: 'overrideClrMapping',
-            required: true,
             typeInfo: '.CTColorMapping'
           }]
       }, {
@@ -915,27 +887,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_ColorReplaceEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }]
       }, {
@@ -1159,27 +1125,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_CustomColor',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'name',
@@ -1450,11 +1410,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_EffectProperties',
         propertyInfos: [{
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }]
       }, {
@@ -1473,11 +1431,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_EffectStyleItem',
         propertyInfos: [{
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }, {
             name: 'scene3D',
@@ -1533,27 +1489,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_FillEffect',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }]
       }, {
@@ -1561,27 +1511,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_FillOverlayEffect',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'blend',
@@ -1597,27 +1541,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_FillProperties',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }]
       }, {
@@ -1678,27 +1616,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_FontReference',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'idx',
@@ -1777,27 +1709,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_GlowEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'rad',
@@ -1816,11 +1742,9 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTGradientStopList'
           }, {
             name: 'lin',
-            required: true,
             typeInfo: '.CTLinearShadeProperties'
           }, {
             name: 'path',
-            required: true,
             typeInfo: '.CTPathShadeProperties'
           }, {
             name: 'tileRect',
@@ -1845,27 +1769,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_GradientStop',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'pos',
@@ -2021,35 +1939,27 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTGroupTransform2D'
           }, {
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }, {
             name: 'scene3D',
@@ -2294,11 +2204,9 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTTextBody'
           }, {
             name: 'useSpRect',
-            required: true,
             typeInfo: '.CTGvmlUseShapeRectangle'
           }, {
             name: 'xfrm',
-            required: true,
             typeInfo: '.CTTransform2D'
           }, {
             name: 'extLst',
@@ -2529,27 +2437,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_InnerShadowEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'blurRad',
@@ -2652,39 +2554,30 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_LineProperties',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'prstDash',
-            required: true,
             typeInfo: '.CTPresetLineDashProperties'
           }, {
             name: 'custDash',
-            required: true,
             typeInfo: '.CTDashStopList'
           }, {
             name: 'round',
-            required: true,
             typeInfo: '.CTLineJoinRound'
           }, {
             name: 'bevel',
-            required: true,
             typeInfo: '.CTLineJoinBevel'
           }, {
             name: 'miter',
-            required: true,
             typeInfo: '.CTLineJoinMiterProperties'
           }, {
             name: 'headEnd',
@@ -2936,27 +2829,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_OuterShadowEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'algn',
@@ -3603,27 +3490,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_PresetShadowEffect',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'dir',
@@ -4393,46 +4274,36 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTTransform2D'
           }, {
             name: 'custGeom',
-            required: true,
             typeInfo: '.CTCustomGeometry2D'
           }, {
             name: 'prstGeom',
-            required: true,
             typeInfo: '.CTPresetGeometry2D'
           }, {
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'ln',
             typeInfo: '.CTLineProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }, {
             name: 'scene3D',
@@ -4490,27 +4361,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_SolidColorFillProperties',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }]
       }, {
@@ -4580,27 +4445,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_StyleMatrixReference',
         propertyInfos: [{
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'idx',
@@ -4744,19 +4603,15 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_TableBackgroundStyle',
         propertyInfos: [{
             name: 'fill',
-            required: true,
             typeInfo: '.CTFillProperties'
           }, {
             name: 'fillRef',
-            required: true,
             typeInfo: '.CTStyleMatrixReference'
           }, {
             name: 'effect',
-            required: true,
             typeInfo: '.CTEffectProperties'
           }, {
             name: 'effectRef',
-            required: true,
             typeInfo: '.CTStyleMatrixReference'
           }]
       }, {
@@ -4863,27 +4718,21 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTCell3D'
           }, {
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'extLst',
@@ -4992,43 +4841,33 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_TableProperties',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }, {
             name: 'tableStyle',
-            required: true,
             typeInfo: '.CTTableStyle'
           }, {
             name: 'tableStyleId',
-            required: true,
             typeInfo: 'Token'
           }, {
             name: 'extLst',
@@ -5182,11 +5021,9 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTTableCellBorderStyle'
           }, {
             name: 'fill',
-            required: true,
             typeInfo: '.CTFillProperties'
           }, {
             name: 'fillRef',
-            required: true,
             typeInfo: '.CTStyleMatrixReference'
           }, {
             name: 'cell3D',
@@ -5214,35 +5051,27 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_TableStyleTextStyle',
         propertyInfos: [{
             name: 'font',
-            required: true,
             typeInfo: '.FontCollection'
           }, {
             name: 'fontRef',
-            required: true,
             typeInfo: '.CTFontReference'
           }, {
             name: 'scrgbClr',
-            required: true,
             typeInfo: '.CTScRgbColor'
           }, {
             name: 'srgbClr',
-            required: true,
             typeInfo: '.CTSRgbColor'
           }, {
             name: 'hslClr',
-            required: true,
             typeInfo: '.CTHslColor'
           }, {
             name: 'sysClr',
-            required: true,
             typeInfo: '.CTSystemColor'
           }, {
             name: 'schemeClr',
-            required: true,
             typeInfo: '.CTSchemeColor'
           }, {
             name: 'prstClr',
-            required: true,
             typeInfo: '.CTPresetColor'
           }, {
             name: 'extLst',
@@ -5316,15 +5145,12 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTPresetTextShape'
           }, {
             name: 'noAutofit',
-            required: true,
             typeInfo: '.CTTextNoAutofit'
           }, {
             name: 'normAutofit',
-            required: true,
             typeInfo: '.CTTextNormalAutofit'
           }, {
             name: 'spAutoFit',
-            required: true,
             typeInfo: '.CTTextShapeAutofit'
           }, {
             name: 'scene3D',
@@ -5332,12 +5158,10 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTScene3D'
           }, {
             name: 'sp3D',
-            required: true,
             elementName: 'sp3d',
             typeInfo: '.CTShape3D'
           }, {
             name: 'flatTx',
-            required: true,
             typeInfo: '.CTFlatText'
           }, {
             name: 'extLst',
@@ -5527,53 +5351,42 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTLineProperties'
           }, {
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }, {
             name: 'highlight',
             typeInfo: '.CTColor'
           }, {
             name: 'uLnTx',
-            required: true,
             typeInfo: '.CTTextUnderlineLineFollowText'
           }, {
             name: 'uLn',
             typeInfo: '.CTLineProperties'
           }, {
             name: 'uFillTx',
-            required: true,
             typeInfo: '.CTTextUnderlineFillFollowText'
           }, {
             name: 'uFill',
-            required: true,
             typeInfo: '.CTTextUnderlineFillGroupWrapper'
           }, {
             name: 'latin',
@@ -5875,47 +5688,36 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTTextSpacing'
           }, {
             name: 'buClrTx',
-            required: true,
             typeInfo: '.CTTextBulletColorFollowText'
           }, {
             name: 'buClr',
-            required: true,
             typeInfo: '.CTColor'
           }, {
             name: 'buSzTx',
-            required: true,
             typeInfo: '.CTTextBulletSizeFollowText'
           }, {
             name: 'buSzPct',
-            required: true,
             typeInfo: '.CTTextBulletSizePercent'
           }, {
             name: 'buSzPts',
-            required: true,
             typeInfo: '.CTTextBulletSizePoint'
           }, {
             name: 'buFontTx',
-            required: true,
             typeInfo: '.CTTextBulletTypefaceFollowText'
           }, {
             name: 'buFont',
-            required: true,
             typeInfo: '.TextFont'
           }, {
             name: 'buNone',
-            required: true,
             typeInfo: '.CTTextNoBullet'
           }, {
             name: 'buAutoNum',
-            required: true,
             typeInfo: '.CTTextAutonumberBullet'
           }, {
             name: 'buChar',
-            required: true,
             typeInfo: '.CTTextCharBullet'
           }, {
             name: 'buBlip',
-            required: true,
             typeInfo: '.CTTextBlipBullet'
           }, {
             name: 'tabLst',
@@ -6012,11 +5814,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_TextSpacing',
         propertyInfos: [{
             name: 'spcPct',
-            required: true,
             typeInfo: '.CTTextSpacingPercent'
           }, {
             name: 'spcPts',
-            required: true,
             typeInfo: '.CTTextSpacingPoint'
           }]
       }, {
@@ -6079,27 +5879,21 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_TextUnderlineFillGroupWrapper',
         propertyInfos: [{
             name: 'noFill',
-            required: true,
             typeInfo: '.CTNoFillProperties'
           }, {
             name: 'solidFill',
-            required: true,
             typeInfo: '.CTSolidColorFillProperties'
           }, {
             name: 'gradFill',
-            required: true,
             typeInfo: '.CTGradientFillProperties'
           }, {
             name: 'blipFill',
-            required: true,
             typeInfo: '.CTBlipFillProperties'
           }, {
             name: 'pattFill',
-            required: true,
             typeInfo: '.CTPatternFillProperties'
           }, {
             name: 'grpFill',
-            required: true,
             typeInfo: '.CTGroupFillProperties'
           }]
       }, {
@@ -6110,11 +5904,9 @@ var org_docx4j_dml_Module_Factory = function () {
         typeName: 'CT_ThemeableLineStyle',
         propertyInfos: [{
             name: 'ln',
-            required: true,
             typeInfo: '.CTLineProperties'
           }, {
             name: 'lnRef',
-            required: true,
             typeInfo: '.CTStyleMatrixReference'
           }]
       }, {
@@ -6320,11 +6112,9 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.CTLineProperties'
           }, {
             name: 'effectLst',
-            required: true,
             typeInfo: '.CTEffectList'
           }, {
             name: 'effectDag',
-            required: true,
             typeInfo: '.CTEffectContainer'
           }]
       }, {

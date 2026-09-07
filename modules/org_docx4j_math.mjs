@@ -157,7 +157,6 @@ export const org_docx4j_math = {
           typeInfo: 'org_docx4j_wml.RPr'
         }, {
           name: 'ins',
-          required: true,
           elementName: {
             localPart: 'ins',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main'
@@ -165,7 +164,6 @@ export const org_docx4j_math = {
           typeInfo: 'org_docx4j_wml.CTRPrChange'
         }, {
           name: 'del',
-          required: true,
           elementName: {
             localPart: 'del',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main'
@@ -521,11 +519,9 @@ export const org_docx4j_math = {
           typeInfo: '.CTTwipsMeasure'
         }, {
           name: 'wrapIndent',
-          required: true,
           typeInfo: '.CTTwipsMeasure'
         }, {
           name: 'wrapRight',
-          required: true,
           typeInfo: '.CTOnOff'
         }, {
           name: 'intLim',

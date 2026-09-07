@@ -16,23 +16,18 @@ export const org_docx4j_dml_spreadsheetdrawing = {
           typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
         }, {
           name: 'sp',
-          required: true,
           typeInfo: '.CTShape'
         }, {
           name: 'grpSp',
-          required: true,
           typeInfo: '.CTGroupShape'
         }, {
           name: 'graphicFrame',
-          required: true,
           typeInfo: '.CTGraphicalObjectFrame'
         }, {
           name: 'cxnSp',
-          required: true,
           typeInfo: '.CTConnector'
         }, {
           name: 'pic',
-          required: true,
           typeInfo: '.CTPicture'
         }, {
           name: 'clientData',
@@ -243,23 +238,18 @@ export const org_docx4j_dml_spreadsheetdrawing = {
           typeInfo: 'org_docx4j_dml.CTPositiveSize2D'
         }, {
           name: 'sp',
-          required: true,
           typeInfo: '.CTShape'
         }, {
           name: 'grpSp',
-          required: true,
           typeInfo: '.CTGroupShape'
         }, {
           name: 'graphicFrame',
-          required: true,
           typeInfo: '.CTGraphicalObjectFrame'
         }, {
           name: 'cxnSp',
-          required: true,
           typeInfo: '.CTConnector'
         }, {
           name: 'pic',
-          required: true,
           typeInfo: '.CTPicture'
         }, {
           name: 'clientData',
@@ -383,23 +373,18 @@ export const org_docx4j_dml_spreadsheetdrawing = {
           typeInfo: '.CTMarker'
         }, {
           name: 'sp',
-          required: true,
           typeInfo: '.CTShape'
         }, {
           name: 'grpSp',
-          required: true,
           typeInfo: '.CTGroupShape'
         }, {
           name: 'graphicFrame',
-          required: true,
           typeInfo: '.CTGraphicalObjectFrame'
         }, {
           name: 'cxnSp',
-          required: true,
           typeInfo: '.CTConnector'
         }, {
           name: 'pic',
-          required: true,
           typeInfo: '.CTPicture'
         }, {
           name: 'clientData',

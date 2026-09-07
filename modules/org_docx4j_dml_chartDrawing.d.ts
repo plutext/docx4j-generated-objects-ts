@@ -24,11 +24,11 @@ export interface CTAbsSizeAnchor {
   readonly PARENT?: CTDrawing;
   from: CTMarker;
   ext: Dep_org_docx4j_dml.CTPositiveSize2D;
-  sp: CTShape;
-  grpSp: CTGroupShape;
-  graphicFrame: CTGraphicFrame;
-  cxnSp: CTConnector;
-  pic: CTPicture;
+  sp?: CTShape;
+  grpSp?: CTGroupShape;
+  graphicFrame?: CTGraphicFrame;
+  cxnSp?: CTConnector;
+  pic?: CTPicture;
 }
 
 export interface CTConnector {
@@ -115,11 +115,11 @@ export interface CTRelSizeAnchor {
   readonly PARENT?: CTDrawing;
   from: CTMarker;
   to: CTMarker;
-  sp: CTShape;
-  grpSp: CTGroupShape;
-  graphicFrame: CTGraphicFrame;
-  cxnSp: CTConnector;
-  pic: CTPicture;
+  sp?: CTShape;
+  grpSp?: CTGroupShape;
+  graphicFrame?: CTGraphicFrame;
+  cxnSp?: CTConnector;
+  pic?: CTPicture;
 }
 
 export interface CTShape {

@@ -67,11 +67,11 @@ export interface CTAreaSer {
 export interface CTAxDataSource {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTAxDataSource';
   readonly PARENT?: CTAreaSer | CTBarSer | CTBubbleSer | CTLineSer | CTPieSer | CTRadarSer | CTScatterSer | CTSurfaceSer | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTFilteredCategoryTitle;
-  multiLvlStrRef: CTMultiLvlStrRef;
-  numRef: CTNumRef;
-  numLit: CTNumData;
-  strRef: CTStrRef;
-  strLit: CTStrData;
+  multiLvlStrRef?: CTMultiLvlStrRef;
+  numRef?: CTNumRef;
+  numLit?: CTNumData;
+  strRef?: CTStrRef;
+  strLit?: CTStrData;
 }
 
 export interface CTAxPos {
@@ -228,8 +228,8 @@ export interface CTCatAx {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   crossAx: CTUnsignedInt;
-  crosses: CTCrosses;
-  crossesAt: CTDouble;
+  crosses?: CTCrosses;
+  crossesAt?: CTDouble;
   auto?: CTBoolean;
   lblAlgn?: CTLblAlgn;
   lblOffset?: CTLblOffset;
@@ -303,7 +303,7 @@ export interface CTDLbl {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTDLbl';
   readonly PARENT?: CTDLbls | CTPivotFmt | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTCategoryFilterException | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.CTCategoryFilterException;
   idx: CTUnsignedInt;
-  delete: CTBoolean;
+  delete?: CTBoolean;
   layout?: CTLayout;
   tx?: CTTx;
   numFmt?: CTNumFmt;
@@ -330,7 +330,7 @@ export interface CTDLbls {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTDLbls';
   readonly PARENT?: CTArea3DChart | CTAreaChart | CTAreaSer | CTBar3DChart | CTBarChart | CTBarSer | CTBubbleChart | CTBubbleSer | CTDoughnutChart | CTLine3DChart | CTLineChart | CTLineSer | CTOfPieChart | CTPie3DChart | CTPieChart | CTPieSer | CTRadarChart | CTRadarSer | CTScatterChart | CTScatterSer | CTStockChart;
   dLbl?: CTDLbl[];
-  delete: CTBoolean;
+  delete?: CTBoolean;
   numFmt?: CTNumFmt;
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
@@ -389,8 +389,8 @@ export interface CTDateAx {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   crossAx: CTUnsignedInt;
-  crosses: CTCrosses;
-  crossesAt: CTDouble;
+  crosses?: CTCrosses;
+  crossesAt?: CTDouble;
   auto?: CTBoolean;
   lblOffset?: CTLblOffset;
   baseTimeUnit?: CTTimeUnit;
@@ -416,8 +416,8 @@ export interface CTDispBlanksAs {
 export interface CTDispUnits {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTDispUnits';
   readonly PARENT?: CTValAx;
-  custUnit: CTDouble;
-  builtInUnit: CTBuiltInUnit;
+  custUnit?: CTDouble;
+  builtInUnit?: CTBuiltInUnit;
   dispUnitsLbl?: CTDispUnitsLbl;
   extLst?: CTExtensionList;
 }
@@ -591,7 +591,7 @@ export interface CTLegendEntry {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTLegendEntry';
   readonly PARENT?: CTLegend;
   idx: CTUnsignedInt;
-  delete: CTBoolean;
+  delete?: CTBoolean;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   extLst?: CTExtensionList;
 }
@@ -725,8 +725,8 @@ export interface CTNumData {
 export interface CTNumDataSource {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTNumDataSource';
   readonly PARENT?: CTAreaSer | CTBarSer | CTBubbleSer | CTErrBars | CTLineSer | CTPieSer | CTRadarSer | CTScatterSer | CTSurfaceSer;
-  numRef: CTNumRef;
-  numLit: CTNumData;
+  numRef?: CTNumRef;
+  numLit?: CTNumData;
 }
 
 export interface CTNumFmt {
@@ -1058,8 +1058,8 @@ export interface CTSerAx {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   crossAx: CTUnsignedInt;
-  crosses: CTCrosses;
-  crossesAt: CTDouble;
+  crosses?: CTCrosses;
+  crossesAt?: CTDouble;
   tickLblSkip?: CTSkip;
   tickMarkSkip?: CTSkip;
   extLst?: CTExtensionList;
@@ -1068,8 +1068,8 @@ export interface CTSerAx {
 export interface CTSerTx {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTSerTx';
   readonly PARENT?: CTAreaSer | CTBarSer | CTBubbleSer | CTLineSer | CTPieSer | CTRadarSer | CTScatterSer | CTSurfaceSer;
-  strRef: CTStrRef;
-  v: string;
+  strRef?: CTStrRef;
+  v?: string;
 }
 
 export interface CTShape {
@@ -1250,8 +1250,8 @@ export interface CTTrendlineType {
 export interface CTTx {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTTx';
   readonly PARENT?: CTDLbl | CTDispUnitsLbl | CTTitle | CTTrendlineLbl | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.CTFilteredSeriesTitle;
-  strRef: CTStrRef;
-  rich: Dep_org_docx4j_dml.CTTextBody;
+  strRef?: CTStrRef;
+  rich?: Dep_org_docx4j_dml.CTTextBody;
 }
 
 export interface CTUnsignedInt {
@@ -1292,8 +1292,8 @@ export interface CTValAx {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   crossAx: CTUnsignedInt;
-  crosses: CTCrosses;
-  crossesAt: CTDouble;
+  crosses?: CTCrosses;
+  crossesAt?: CTDouble;
   crossBetween?: CTCrossBetween;
   majorUnit?: CTAxisUnit;
   minorUnit?: CTAxisUnit;

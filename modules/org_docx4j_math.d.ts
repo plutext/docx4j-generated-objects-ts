@@ -110,8 +110,8 @@ export interface CTCtrlPr {
   TYPE_NAME?: 'org_docx4j_math.CTCtrlPr';
   readonly PARENT?: CTAccPr | CTBarPr | CTBorderBoxPr | CTBoxPr | CTDPr | CTEqArrPr | CTFPr | CTFuncPr | CTGroupChrPr | CTLimLowPr | CTLimUppPr | CTMPr | CTNaryPr | CTOMathArg | CTPhantPr | CTRadPr | CTSPrePr | CTSSubPr | CTSSubSupPr | CTSSupPr;
   rPr?: Dep_org_docx4j_wml.RPr;
-  ins: Dep_org_docx4j_wml.CTRPrChange;
-  del: Dep_org_docx4j_wml.CTRPrChange;
+  ins?: Dep_org_docx4j_wml.CTRPrChange;
+  del?: Dep_org_docx4j_wml.CTRPrChange;
 }
 
 export interface CTD {
@@ -314,8 +314,8 @@ export interface CTMathPr {
   postSp?: CTTwipsMeasure;
   interSp?: CTTwipsMeasure;
   intraSp?: CTTwipsMeasure;
-  wrapIndent: CTTwipsMeasure;
-  wrapRight: CTOnOff;
+  wrapIndent?: CTTwipsMeasure;
+  wrapRight?: CTOnOff;
   intLim?: CTLimLoc;
   naryLim?: CTLimLoc;
 }

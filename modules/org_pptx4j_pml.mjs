@@ -8,11 +8,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_Background',
       propertyInfos: [{
           name: 'bgPr',
-          required: true,
           typeInfo: '.CTBackgroundProperties'
         }, {
           name: 'bgRef',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTStyleMatrixReference'
         }, {
           name: 'bwMode',
@@ -28,7 +26,6 @@ export const org_pptx4j_pml = {
       typeName: 'CT_BackgroundProperties',
       propertyInfos: [{
           name: 'noFill',
-          required: true,
           elementName: {
             localPart: 'noFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -36,7 +33,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTNoFillProperties'
         }, {
           name: 'solidFill',
-          required: true,
           elementName: {
             localPart: 'solidFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -44,7 +40,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTSolidColorFillProperties'
         }, {
           name: 'gradFill',
-          required: true,
           elementName: {
             localPart: 'gradFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -52,7 +47,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTGradientFillProperties'
         }, {
           name: 'blipFill',
-          required: true,
           elementName: {
             localPart: 'blipFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -60,7 +54,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTBlipFillProperties'
         }, {
           name: 'pattFill',
-          required: true,
           elementName: {
             localPart: 'pattFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -68,7 +61,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTPatternFillProperties'
         }, {
           name: 'grpFill',
-          required: true,
           elementName: {
             localPart: 'grpFill',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -76,7 +68,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTGroupFillProperties'
         }, {
           name: 'effectLst',
-          required: true,
           elementName: {
             localPart: 'effectLst',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -84,7 +75,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTEffectList'
         }, {
           name: 'effectDag',
-          required: true,
           elementName: {
             localPart: 'effectDag',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -656,15 +646,12 @@ export const org_pptx4j_pml = {
       typeName: 'CT_HtmlPublishProperties',
       propertyInfos: [{
           name: 'sldAll',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'sldRg',
-          required: true,
           typeInfo: '.CTIndexRange'
         }, {
           name: 'custShow',
-          required: true,
           typeInfo: '.CTCustomShowId'
         }, {
           name: 'extLst',
@@ -910,15 +897,12 @@ export const org_pptx4j_pml = {
       typeName: 'CT_OleObject',
       propertyInfos: [{
           name: 'embed',
-          required: true,
           typeInfo: '.CTOleObjectEmbed'
         }, {
           name: 'link',
-          required: true,
           typeInfo: '.CTOleObjectLink'
         }, {
           name: 'pic',
-          required: true,
           typeInfo: '.Pic'
         }, {
           name: 'imgH',
@@ -1242,27 +1226,21 @@ export const org_pptx4j_pml = {
       typeName: 'CT_ShowProperties',
       propertyInfos: [{
           name: 'present',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'browse',
-          required: true,
           typeInfo: '.CTShowInfoBrowse'
         }, {
           name: 'kiosk',
-          required: true,
           typeInfo: '.CTShowInfoKiosk'
         }, {
           name: 'sldAll',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'sldRg',
-          required: true,
           typeInfo: '.CTIndexRange'
         }, {
           name: 'custShow',
-          required: true,
           typeInfo: '.CTCustomShowId'
         }, {
           name: 'penClr',
@@ -1419,87 +1397,66 @@ export const org_pptx4j_pml = {
       typeName: 'CT_SlideTransition',
       propertyInfos: [{
           name: 'blinds',
-          required: true,
           typeInfo: '.CTOrientationTransition'
         }, {
           name: 'checker',
-          required: true,
           typeInfo: '.CTOrientationTransition'
         }, {
           name: 'circle',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'dissolve',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'comb',
-          required: true,
           typeInfo: '.CTOrientationTransition'
         }, {
           name: 'cover',
-          required: true,
           typeInfo: '.CTEightDirectionTransition'
         }, {
           name: 'cut',
-          required: true,
           typeInfo: '.CTOptionalBlackTransition'
         }, {
           name: 'diamond',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'fade',
-          required: true,
           typeInfo: '.CTOptionalBlackTransition'
         }, {
           name: 'newsflash',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'plus',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'pull',
-          required: true,
           typeInfo: '.CTEightDirectionTransition'
         }, {
           name: 'push',
-          required: true,
           typeInfo: '.CTSideDirectionTransition'
         }, {
           name: 'random',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'randomBar',
-          required: true,
           typeInfo: '.CTOrientationTransition'
         }, {
           name: 'split',
-          required: true,
           typeInfo: '.CTSplitTransition'
         }, {
           name: 'strips',
-          required: true,
           typeInfo: '.CTCornerDirectionTransition'
         }, {
           name: 'wedge',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'wheel',
-          required: true,
           typeInfo: '.CTWheelTransition'
         }, {
           name: 'wipe',
-          required: true,
           typeInfo: '.CTSideDirectionTransition'
         }, {
           name: 'zoom',
-          required: true,
           typeInfo: '.CTInOutTransition'
         }, {
           name: 'sndAc',
@@ -1595,23 +1552,18 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLAnimVariant',
       propertyInfos: [{
           name: 'boolVal',
-          required: true,
           typeInfo: '.CTTLAnimVariantBooleanVal'
         }, {
           name: 'intVal',
-          required: true,
           typeInfo: '.CTTLAnimVariantIntegerVal'
         }, {
           name: 'fltVal',
-          required: true,
           typeInfo: '.CTTLAnimVariantFloatVal'
         }, {
           name: 'strVal',
-          required: true,
           typeInfo: '.CTTLAnimVariantStringVal'
         }, {
           name: 'clrVal',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTColor'
         }]
     }, {
@@ -1998,11 +1950,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLByAnimateColorTransform',
       propertyInfos: [{
           name: 'rgb',
-          required: true,
           typeInfo: '.CTTLByRgbColorTransform'
         }, {
           name: 'hsl',
-          required: true,
           typeInfo: '.CTTLByHslColorTransform'
         }]
     }, {
@@ -2381,11 +2331,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLGraphicalObjectBuild',
       propertyInfos: [{
           name: 'bldAsOne',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'bldSub',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties'
         }, {
           name: 'grpId',
@@ -2417,11 +2365,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLIterateData',
       propertyInfos: [{
           name: 'tmAbs',
-          required: true,
           typeInfo: '.CTTLIterateIntervalTime'
         }, {
           name: 'tmPct',
-          required: true,
           typeInfo: '.CTTLIterateIntervalPercentage'
         }, {
           name: 'backwards',
@@ -2595,23 +2541,18 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLShapeTargetElement',
       propertyInfos: [{
           name: 'bg',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'subSp',
-          required: true,
           typeInfo: '.CTTLSubShapeId'
         }, {
           name: 'oleChartEl',
-          required: true,
           typeInfo: '.CTTLOleChartTargetElement'
         }, {
           name: 'txEl',
-          required: true,
           typeInfo: '.CTTLTextTargetElement'
         }, {
           name: 'graphicEl',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTAnimationElementChoice'
         }, {
           name: 'spid',
@@ -2665,11 +2606,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLTextTargetElement',
       propertyInfos: [{
           name: 'charRg',
-          required: true,
           typeInfo: '.CTIndexRange'
         }, {
           name: 'pRg',
-          required: true,
           typeInfo: '.CTIndexRange'
         }]
     }, {
@@ -2707,15 +2646,12 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLTimeCondition',
       propertyInfos: [{
           name: 'tgtEl',
-          required: true,
           typeInfo: '.CTTLTimeTargetElement'
         }, {
           name: 'tn',
-          required: true,
           typeInfo: '.CTTLTriggerTimeNodeID'
         }, {
           name: 'rtn',
-          required: true,
           typeInfo: '.CTTLTriggerRuntimeNode'
         }, {
           name: 'delay',
@@ -2796,19 +2732,15 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TLTimeTargetElement',
       propertyInfos: [{
           name: 'sldTgt',
-          required: true,
           typeInfo: '.CTEmpty'
         }, {
           name: 'sndTgt',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTEmbeddedWAVAudioFile'
         }, {
           name: 'spTgt',
-          required: true,
           typeInfo: '.CTTLShapeTargetElement'
         }, {
           name: 'inkTgt',
-          required: true,
           typeInfo: '.CTTLSubShapeId'
         }]
     }, {
@@ -2901,11 +2833,9 @@ export const org_pptx4j_pml = {
       typeName: 'CT_TransitionSoundAction',
       propertyInfos: [{
           name: 'stSnd',
-          required: true,
           typeInfo: '.CTTransitionStartSoundAction'
         }, {
           name: 'endSnd',
-          required: true,
           typeInfo: '.CTEmpty'
         }]
     }, {
@@ -3135,7 +3065,6 @@ export const org_pptx4j_pml = {
           typeInfo: '.CTPlaceholder'
         }, {
           name: 'audioCd',
-          required: true,
           elementName: {
             localPart: 'audioCd',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -3143,7 +3072,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTAudioCD'
         }, {
           name: 'wavAudioFile',
-          required: true,
           elementName: {
             localPart: 'wavAudioFile',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -3151,7 +3079,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTEmbeddedWAVAudioFile'
         }, {
           name: 'audioFile',
-          required: true,
           elementName: {
             localPart: 'audioFile',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -3159,7 +3086,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTAudioFile'
         }, {
           name: 'videoFile',
-          required: true,
           elementName: {
             localPart: 'videoFile',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
@@ -3167,7 +3093,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'org_docx4j_dml.CTVideoFile'
         }, {
           name: 'quickTimeFile',
-          required: true,
           elementName: {
             localPart: 'quickTimeFile',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'

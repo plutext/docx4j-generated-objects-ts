@@ -27,23 +27,18 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             typeInfo: '.CTEffectExtent'
           }, {
             name: 'wrapNone',
-            required: true,
             typeInfo: '.CTWrapNone'
           }, {
             name: 'wrapSquare',
-            required: true,
             typeInfo: '.CTWrapSquare'
           }, {
             name: 'wrapTight',
-            required: true,
             typeInfo: '.CTWrapTight'
           }, {
             name: 'wrapThrough',
-            required: true,
             typeInfo: '.CTWrapThrough'
           }, {
             name: 'wrapTopAndBottom',
-            required: true,
             typeInfo: '.CTWrapTopBottom'
           }, {
             name: 'docPr',
@@ -214,11 +209,9 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
         typeName: 'CT_PosH',
         propertyInfos: [{
             name: 'align',
-            required: true,
             typeInfo: '.STAlignH'
           }, {
             name: 'posOffset',
-            required: true,
             typeInfo: 'Int'
           }, {
             name: 'relativeFrom',
@@ -234,11 +227,9 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
         typeName: 'CT_PosV',
         propertyInfos: [{
             name: 'align',
-            required: true,
             typeInfo: '.STAlignV'
           }, {
             name: 'posOffset',
-            required: true,
             typeInfo: 'Int'
           }, {
             name: 'relativeFrom',

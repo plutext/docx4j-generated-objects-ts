@@ -29,11 +29,11 @@ export interface Anchor {
   positionV: CTPosV;
   extent: Dep_org_docx4j_dml.CTPositiveSize2D;
   effectExtent?: CTEffectExtent;
-  wrapNone: CTWrapNone;
-  wrapSquare: CTWrapSquare;
-  wrapTight: CTWrapTight;
-  wrapThrough: CTWrapThrough;
-  wrapTopAndBottom: CTWrapTopBottom;
+  wrapNone?: CTWrapNone;
+  wrapSquare?: CTWrapSquare;
+  wrapTight?: CTWrapTight;
+  wrapThrough?: CTWrapThrough;
+  wrapTopAndBottom?: CTWrapTopBottom;
   docPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGraphicFramePr?: Dep_org_docx4j_dml.CTNonVisualGraphicFrameProperties;
   graphic: Dep_org_docx4j_dml.Graphic;
@@ -66,16 +66,16 @@ export interface CTEffectExtent {
 export interface CTPosH {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTPosH';
   readonly PARENT?: Anchor;
-  align: STAlignH;
-  posOffset: number;
+  align?: STAlignH;
+  posOffset?: number;
   relativeFrom: STRelFromH;
 }
 
 export interface CTPosV {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTPosV';
   readonly PARENT?: Anchor;
-  align: STAlignV;
-  posOffset: number;
+  align?: STAlignV;
+  posOffset?: number;
   relativeFrom: STRelFromV;
 }
 

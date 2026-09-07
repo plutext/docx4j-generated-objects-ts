@@ -39,8 +39,8 @@ export interface CTCamera {
 export interface CTColor {
   TYPE_NAME?: 'org_docx4j_w14.CTColor';
   readonly PARENT?: CTProps3D;
-  srgbClr: CTSRgbColor;
-  schemeClr: CTSchemeColor;
+  srgbClr?: CTSRgbColor;
+  schemeClr?: CTSchemeColor;
 }
 
 export interface CTDefaultImageDpi {
@@ -52,16 +52,16 @@ export interface CTDefaultImageDpi {
 export interface CTFillTextEffect {
   TYPE_NAME?: 'org_docx4j_w14.CTFillTextEffect';
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
-  noFill: Dep_org_docx4j_wml.CTEmpty;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
+  noFill?: Dep_org_docx4j_wml.CTEmpty;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
 }
 
 export interface CTGlow {
   TYPE_NAME?: 'org_docx4j_w14.CTGlow';
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
-  srgbClr: CTSRgbColor;
-  schemeClr: CTSchemeColor;
+  srgbClr?: CTSRgbColor;
+  schemeClr?: CTSchemeColor;
   rad?: number;
 }
 
@@ -69,15 +69,15 @@ export interface CTGradientFillProperties {
   TYPE_NAME?: 'org_docx4j_w14.CTGradientFillProperties';
   readonly PARENT?: CTFillTextEffect | CTTextOutlineEffect;
   gsLst?: CTGradientStopList;
-  lin: CTLinearShadeProperties;
-  path: CTPathShadeProperties;
+  lin?: CTLinearShadeProperties;
+  path?: CTPathShadeProperties;
 }
 
 export interface CTGradientStop {
   TYPE_NAME?: 'org_docx4j_w14.CTGradientStop';
   readonly PARENT?: CTGradientStopList;
-  srgbClr: CTSRgbColor;
-  schemeClr: CTSchemeColor;
+  srgbClr?: CTSRgbColor;
+  schemeClr?: CTSchemeColor;
   pos: number;
 }
 
@@ -247,8 +247,8 @@ export interface CTSdtCheckboxSymbol {
 export interface CTShadow {
   TYPE_NAME?: 'org_docx4j_w14.CTShadow';
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
-  srgbClr: CTSRgbColor;
-  schemeClr: CTSchemeColor;
+  srgbClr?: CTSRgbColor;
+  schemeClr?: CTSchemeColor;
   algn?: STRectAlignment;
   blurRad?: number;
   dir?: number;
@@ -262,8 +262,8 @@ export interface CTShadow {
 export interface CTSolidColorFillProperties {
   TYPE_NAME?: 'org_docx4j_w14.CTSolidColorFillProperties';
   readonly PARENT?: CTFillTextEffect | CTTextOutlineEffect;
-  srgbClr: CTSRgbColor;
-  schemeClr: CTSchemeColor;
+  srgbClr?: CTSRgbColor;
+  schemeClr?: CTSchemeColor;
 }
 
 export interface CTSphereCoords {
@@ -290,13 +290,13 @@ export interface CTStylisticSets {
 export interface CTTextOutlineEffect {
   TYPE_NAME?: 'org_docx4j_w14.CTTextOutlineEffect';
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
-  noFill: Dep_org_docx4j_wml.CTEmpty;
-  solidFill: CTSolidColorFillProperties;
-  gradFill: CTGradientFillProperties;
-  prstDash: CTPresetLineDashProperties;
-  round: Dep_org_docx4j_wml.CTEmpty;
-  bevel: Dep_org_docx4j_wml.CTEmpty;
-  miter: CTLineJoinMiterProperties;
+  noFill?: Dep_org_docx4j_wml.CTEmpty;
+  solidFill?: CTSolidColorFillProperties;
+  gradFill?: CTGradientFillProperties;
+  prstDash?: CTPresetLineDashProperties;
+  round?: Dep_org_docx4j_wml.CTEmpty;
+  bevel?: Dep_org_docx4j_wml.CTEmpty;
+  miter?: CTLineJoinMiterProperties;
   algn?: STPenAlignment;
   cap?: STLineCap;
   cmpd?: STCompoundLine;

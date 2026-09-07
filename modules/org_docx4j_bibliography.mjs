@@ -77,12 +77,10 @@ export const org_docx4j_bibliography = {
       typeName: 'CT_NameOrCorporateType',
       propertyInfos: [{
           name: 'nameList',
-          required: true,
           elementName: 'NameList',
           typeInfo: '.CTNameListType'
         }, {
           name: 'corporate',
-          required: true,
           elementName: 'Corporate'
         }]
     }, {

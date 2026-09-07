@@ -202,7 +202,7 @@ export interface CTColumn {
 export interface CTColumns {
   TYPE_NAME?: 'org_docx4j_wml.CTColumns';
   readonly PARENT?: SectPr | SectPrBase;
-  col: CTColumn[];
+  col?: CTColumn[];
   equalWidth?: boolean;
   num?: number;
   sep?: boolean;
@@ -551,8 +551,8 @@ export interface CTEndnotes {
 export interface CTFFCheckBox {
   TYPE_NAME?: 'org_docx4j_wml.CTFFCheckBox';
   readonly PARENT?: CTFFData;
-  size: HpsMeasure;
-  sizeAuto: BooleanDefaultTrue;
+  size?: HpsMeasure;
+  sizeAuto?: BooleanDefaultTrue;
   _default?: BooleanDefaultTrue;
   checked?: BooleanDefaultTrue;
 }
@@ -3248,8 +3248,8 @@ export namespace Numbering {
   export interface NumPicBullet {
     TYPE_NAME?: 'org_docx4j_wml.Numbering.NumPicBullet';
     readonly PARENT?: Numbering;
-    pict: Pict;
-    drawing: Drawing;
+    pict?: Pict;
+    drawing?: Drawing;
     numPicBulletId: number;
   }
 

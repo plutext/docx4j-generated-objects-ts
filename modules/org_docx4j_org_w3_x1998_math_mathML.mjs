@@ -10,149 +10,113 @@ export const org_docx4j_org_w3_x1998_math_mathML = {
           type: 'anyAttribute'
         }, {
           name: 'abs',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'floor',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'ceiling',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'quotient',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'divide',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'rem',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'minus',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'plus',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'times',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'power',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'root',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'max',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'min',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'and',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'or',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'xor',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'not',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'exponentiale',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: 'pi',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: '_true',
-          required: true,
           elementName: 'true',
           typeInfo: '.ConstantType'
         }, {
           name: '_false',
-          required: true,
           elementName: 'false',
           typeInfo: '.ConstantType'
         }, {
           name: 'eq',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'neq',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'leq',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'lt',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'geq',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'gt',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'exp',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'ln',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'log',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'sin',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'cos',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'tan',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'arcsin',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'arccos',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'arctan',
-          required: true,
           typeInfo: '.OperatorType'
         }, {
           name: 'expressionContent',
@@ -236,41 +200,32 @@ export const org_docx4j_org_w3_x1998_math_mathML = {
           type: 'anyAttribute'
         }, {
           name: 'cn',
-          required: true,
           typeInfo: '.CnType'
         }, {
           name: 'ci',
-          required: true,
           typeInfo: '.CiType'
         }, {
           name: 'exponentiale',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: 'pi',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: '_true',
-          required: true,
           elementName: 'true',
           typeInfo: '.ConstantType'
         }, {
           name: '_false',
-          required: true,
           elementName: 'false',
           typeInfo: '.ConstantType'
         }, {
           name: 'apply',
-          required: true,
           typeInfo: '.ApplyType'
         }, {
           name: 'logbase',
-          required: true,
           typeInfo: '.QualifierType'
         }, {
           name: 'degree',
-          required: true,
           typeInfo: '.QualifierType'
         }]
     }, {
@@ -288,41 +243,32 @@ export const org_docx4j_org_w3_x1998_math_mathML = {
           type: 'anyAttribute'
         }, {
           name: 'cn',
-          required: true,
           typeInfo: '.CnType'
         }, {
           name: 'ci',
-          required: true,
           typeInfo: '.CiType'
         }, {
           name: 'exponentiale',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: 'pi',
-          required: true,
           typeInfo: '.ConstantType'
         }, {
           name: '_true',
-          required: true,
           elementName: 'true',
           typeInfo: '.ConstantType'
         }, {
           name: '_false',
-          required: true,
           elementName: 'false',
           typeInfo: '.ConstantType'
         }, {
           name: 'apply',
-          required: true,
           typeInfo: '.ApplyType'
         }, {
           name: 'logbase',
-          required: true,
           typeInfo: '.QualifierType'
         }, {
           name: 'degree',
-          required: true,
           typeInfo: '.QualifierType'
         }]
     }, {

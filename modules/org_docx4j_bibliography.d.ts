@@ -33,8 +33,8 @@ export interface CTNameListType {
 export interface CTNameOrCorporateType {
   TYPE_NAME?: 'org_docx4j_bibliography.CTNameOrCorporateType';
   readonly PARENT?: CTAuthorType;
-  nameList: CTNameListType;
-  corporate: string;
+  nameList?: CTNameListType;
+  corporate?: string;
 }
 
 export interface CTNameType {

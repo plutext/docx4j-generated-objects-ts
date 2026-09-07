@@ -438,27 +438,21 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle = 
       },
       propertyInfos: [{
           name: 'scrgbClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTScRgbColor'
         }, {
           name: 'srgbClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSRgbColor'
         }, {
           name: 'hslClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTHslColor'
         }, {
           name: 'sysClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSystemColor'
         }, {
           name: 'schemeClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSchemeColor'
         }, {
           name: 'prstClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTPresetColor'
         }, {
           name: 'styleClr',
@@ -703,27 +697,21 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle = 
       },
       propertyInfos: [{
           name: 'scrgbClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTScRgbColor'
         }, {
           name: 'srgbClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSRgbColor'
         }, {
           name: 'hslClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTHslColor'
         }, {
           name: 'sysClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSystemColor'
         }, {
           name: 'schemeClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTSchemeColor'
         }, {
           name: 'prstClr',
-          required: true,
           typeInfo: 'org_docx4j_dml.CTPresetColor'
         }, {
           name: 'styleClr',

@@ -49,8 +49,8 @@ export interface CTModel3D {
   attrSrcUrl?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x201611_main.CTPictureAttributionSourceURL;
   raster?: CTModel3DRaster;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  objViewport: CTObjectViewport;
-  winViewport: CTWindowViewport;
+  objViewport?: CTObjectViewport;
+  winViewport?: CTWindowViewport;
   ambientLight?: CTAmbientLight;
   ptLightOrSpotLightOrDirLight?: (CTPointLight | CTSpotLight | CTDirectionalLight | CTUnknownLight)[];
   embed?: string;
@@ -63,8 +63,8 @@ export interface CTModel3DCamera {
   pos: Dep_org_docx4j_dml.CTPoint3D;
   up: Dep_org_docx4j_dml.CTVector3D;
   lookAt: Dep_org_docx4j_dml.CTPoint3D;
-  orthographic: CTOrthographicProjection;
-  perspective: CTPerspectiveProjection;
+  orthographic?: CTOrthographicProjection;
+  perspective?: CTPerspectiveProjection;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
 }
 

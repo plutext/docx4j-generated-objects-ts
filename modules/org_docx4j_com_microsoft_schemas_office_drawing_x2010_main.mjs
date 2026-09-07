@@ -199,111 +199,84 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2010_main = {
       typeName: 'CT_PictureEffect',
       propertyInfos: [{
           name: 'artisticBlur',
-          required: true,
           typeInfo: '.CTPictureEffectBlur'
         }, {
           name: 'artisticCement',
-          required: true,
           typeInfo: '.CTPictureEffectCement'
         }, {
           name: 'artisticChalkSketch',
-          required: true,
           typeInfo: '.CTPictureEffectChalkSketch'
         }, {
           name: 'artisticCrisscrossEtching',
-          required: true,
           typeInfo: '.CTPictureEffectCrisscrossEtching'
         }, {
           name: 'artisticCutout',
-          required: true,
           typeInfo: '.CTPictureEffectCutout'
         }, {
           name: 'artisticFilmGrain',
-          required: true,
           typeInfo: '.CTPictureEffectFilmGrain'
         }, {
           name: 'artisticGlass',
-          required: true,
           typeInfo: '.CTPictureEffectGlass'
         }, {
           name: 'artisticGlowDiffused',
-          required: true,
           typeInfo: '.CTPictureEffectGlowDiffused'
         }, {
           name: 'artisticGlowEdges',
-          required: true,
           typeInfo: '.CTPictureEffectGlowEdges'
         }, {
           name: 'artisticLightScreen',
-          required: true,
           typeInfo: '.CTPictureEffectLightScreen'
         }, {
           name: 'artisticLineDrawing',
-          required: true,
           typeInfo: '.CTPictureEffectLineDrawing'
         }, {
           name: 'artisticMarker',
-          required: true,
           typeInfo: '.CTPictureEffectMarker'
         }, {
           name: 'artisticMosiaicBubbles',
-          required: true,
           typeInfo: '.CTPictureEffectMosiaicBubbles'
         }, {
           name: 'artisticPaintStrokes',
-          required: true,
           typeInfo: '.CTPictureEffectPaintStrokes'
         }, {
           name: 'artisticPaintBrush',
-          required: true,
           typeInfo: '.CTPictureEffectPaintBrush'
         }, {
           name: 'artisticPastelsSmooth',
-          required: true,
           typeInfo: '.CTPictureEffectPastelsSmooth'
         }, {
           name: 'artisticPencilGrayscale',
-          required: true,
           typeInfo: '.CTPictureEffectPencilGrayscale'
         }, {
           name: 'artisticPencilSketch',
-          required: true,
           typeInfo: '.CTPictureEffectPencilSketch'
         }, {
           name: 'artisticPhotocopy',
-          required: true,
           typeInfo: '.CTPictureEffectPhotocopy'
         }, {
           name: 'artisticPlasticWrap',
-          required: true,
           typeInfo: '.CTPictureEffectPlasticWrap'
         }, {
           name: 'artisticTexturizer',
-          required: true,
           typeInfo: '.CTPictureEffectTexturizer'
         }, {
           name: 'artisticWatercolorSponge',
-          required: true,
           typeInfo: '.CTPictureEffectWatercolorSponge'
         }, {
           name: 'backgroundRemoval',
-          required: true,
           typeInfo: '.CTPictureEffectBackgroundRemoval'
         }, {
           name: 'brightnessContrast',
-          required: true,
           typeInfo: '.CTPictureEffectBrightnessContrast'
         }, {
           name: 'colorTemperature',
-          required: true,
           typeInfo: '.CTPictureEffectColorTemperature'
         }, {
           name: 'saturation',
-          required: true,
           typeInfo: '.CTPictureEffectSaturation'
         }, {
           name: 'sharpenSoften',
-          required: true,
           typeInfo: '.CTPictureEffectSharpenSoften'
         }, {
           name: 'visible',

@@ -17,11 +17,9 @@ var org_docx4j_xmlPackage_Module_Factory = function () {
         typeName: 'CT_Part',
         propertyInfos: [{
             name: 'xmlData',
-            required: true,
             typeInfo: '.XmlData'
           }, {
             name: 'binaryData',
-            required: true,
             typeInfo: 'Base64Binary'
           }, {
             name: 'compression',

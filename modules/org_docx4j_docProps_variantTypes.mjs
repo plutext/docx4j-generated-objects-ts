@@ -111,139 +111,104 @@ export const org_docx4j_docProps_variantTypes = {
       typeName: 'CT_Variant',
       propertyInfos: [{
           name: 'variant',
-          required: true,
           typeInfo: '.Variant'
         }, {
           name: 'vector',
-          required: true,
           typeInfo: '.Vector'
         }, {
           name: 'array',
-          required: true,
           typeInfo: '.Array'
         }, {
           name: 'blob',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'oblob',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'empty',
-          required: true,
           typeInfo: '.Empty'
         }, {
           name: '_null',
-          required: true,
           elementName: 'null',
           typeInfo: '.Null'
         }, {
           name: 'i1',
-          required: true,
           typeInfo: 'Byte'
         }, {
           name: 'i2',
-          required: true,
           typeInfo: 'Short'
         }, {
           name: 'i4',
-          required: true,
           typeInfo: 'Int'
         }, {
           name: 'i8',
-          required: true,
           typeInfo: 'Long'
         }, {
           name: '_int',
-          required: true,
           elementName: 'int',
           typeInfo: 'Int'
         }, {
           name: 'ui1',
-          required: true,
           typeInfo: 'UnsignedByte'
         }, {
           name: 'ui2',
-          required: true,
           typeInfo: 'UnsignedShort'
         }, {
           name: 'ui4',
-          required: true,
           typeInfo: 'UnsignedInt'
         }, {
           name: 'ui8',
-          required: true,
           typeInfo: 'UnsignedLong'
         }, {
           name: 'uint',
-          required: true,
           typeInfo: 'UnsignedInt'
         }, {
           name: 'r4',
-          required: true,
           typeInfo: 'Float'
         }, {
           name: 'r8',
-          required: true,
           typeInfo: 'Double'
         }, {
           name: 'decimal',
-          required: true,
           typeInfo: 'Decimal'
         }, {
-          name: 'lpstr',
-          required: true
+          name: 'lpstr'
         }, {
-          name: 'lpwstr',
-          required: true
+          name: 'lpwstr'
         }, {
-          name: 'bstr',
-          required: true
+          name: 'bstr'
         }, {
           name: 'date',
-          required: true,
           typeInfo: 'DateTime'
         }, {
           name: 'filetime',
-          required: true,
           typeInfo: 'DateTime'
         }, {
           name: 'bool',
-          required: true,
           typeInfo: 'Boolean'
         }, {
-          name: 'cy',
-          required: true
+          name: 'cy'
         }, {
-          name: 'error',
-          required: true
+          name: 'error'
         }, {
           name: 'stream',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'ostream',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'storage',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'ostorage',
-          required: true,
           typeInfo: 'Base64Binary'
         }, {
           name: 'vstream',
-          required: true,
           typeInfo: '.Vstream'
         }, {
-          name: 'clsid',
-          required: true
+          name: 'clsid'
         }, {
           name: 'cf',
-          required: true,
           typeInfo: '.Cf'
         }]
     }, {

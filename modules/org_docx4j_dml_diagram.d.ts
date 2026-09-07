@@ -528,8 +528,8 @@ export interface CTStyleLabel {
 export interface CTTextProps {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTTextProps';
   readonly PARENT?: CTStyleLabel;
-  sp3D: Dep_org_docx4j_dml.CTShape3D;
-  flatTx: Dep_org_docx4j_dml.CTFlatText;
+  sp3D?: Dep_org_docx4j_dml.CTShape3D;
+  flatTx?: Dep_org_docx4j_dml.CTFlatText;
 }
 
 export interface CTWhen {

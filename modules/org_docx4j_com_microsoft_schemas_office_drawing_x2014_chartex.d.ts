@@ -39,8 +39,8 @@ export interface CTAggregation {
 export interface CTAxis {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxis';
   readonly PARENT?: CTPlotArea;
-  catScaling: CTCategoryAxisScaling;
-  valScaling: CTValueAxisScaling;
+  catScaling?: CTCategoryAxisScaling;
+  valScaling?: CTValueAxisScaling;
   title?: CTAxisTitle;
   units?: CTAxisUnits;
   majorGridlines?: CTGridlines;
@@ -91,8 +91,8 @@ export interface CTAxisUnitsLabel {
 export interface CTBinning {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinning';
   readonly PARENT?: CTSeriesLayoutProperties;
-  binSize: number;
-  binCount: number;
+  binSize?: number;
+  binCount?: number;
   intervalClosed?: STIntervalClosedSide;
   overflow?: string;
   underflow?: string;
@@ -710,8 +710,8 @@ export interface CTSubtotals {
 export interface CTText {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTText';
   readonly PARENT?: CTAxisTitle | CTAxisUnitsLabel | CTChartTitle | CTSeries;
-  txData: CTTextData;
-  rich: Dep_org_docx4j_dml.CTTextBody;
+  txData?: CTTextData;
+  rich?: Dep_org_docx4j_dml.CTTextBody;
 }
 
 export interface CTTextData {
@@ -745,16 +745,16 @@ export interface CTValueAxisScaling {
 export interface CTValueColorEndPosition {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTValueColorEndPosition';
   readonly PARENT?: CTValueColorPositions;
-  extremeValue: CTExtremeValueColorPosition;
-  number: CTNumberColorPosition;
-  percent: CTPercentageColorPosition;
+  extremeValue?: CTExtremeValueColorPosition;
+  number?: CTNumberColorPosition;
+  percent?: CTPercentageColorPosition;
 }
 
 export interface CTValueColorMiddlePosition {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTValueColorMiddlePosition';
   readonly PARENT?: CTValueColorPositions;
-  number: CTNumberColorPosition;
-  percent: CTPercentageColorPosition;
+  number?: CTNumberColorPosition;
+  percent?: CTPercentageColorPosition;
 }
 
 export interface CTValueColorPositions {

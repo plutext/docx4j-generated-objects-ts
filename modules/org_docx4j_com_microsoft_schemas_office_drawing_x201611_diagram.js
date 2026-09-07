@@ -11,19 +11,15 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram_Module_Facto
         },
         propertyInfos: [{
             name: 'buNone',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTTextNoBullet'
           }, {
             name: 'buAutoNum',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTTextAutonumberBullet'
           }, {
             name: 'buChar',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTTextCharBullet'
           }, {
             name: 'buBlip',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTTextBlipBullet'
           }, {
             name: 'leadZeros',

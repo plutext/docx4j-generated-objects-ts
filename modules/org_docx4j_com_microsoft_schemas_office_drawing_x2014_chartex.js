@@ -57,11 +57,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         typeName: 'CT_Axis',
         propertyInfos: [{
             name: 'catScaling',
-            required: true,
             typeInfo: '.CTCategoryAxisScaling'
           }, {
             name: 'valScaling',
-            required: true,
             typeInfo: '.CTValueAxisScaling'
           }, {
             name: 'title',
@@ -179,11 +177,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         typeName: 'CT_Binning',
         propertyInfos: [{
             name: 'binSize',
-            required: true,
             typeInfo: 'Double'
           }, {
             name: 'binCount',
-            required: true,
             typeInfo: 'UnsignedInt'
           }, {
             name: 'intervalClosed',
@@ -1773,11 +1769,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         typeName: 'CT_Text',
         propertyInfos: [{
             name: 'txData',
-            required: true,
             typeInfo: '.CTTextData'
           }, {
             name: 'rich',
-            required: true,
             typeInfo: 'org_docx4j_dml.CTTextBody'
           }]
       }, {
@@ -1852,15 +1846,12 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         typeName: 'CT_ValueColorEndPosition',
         propertyInfos: [{
             name: 'extremeValue',
-            required: true,
             typeInfo: '.CTExtremeValueColorPosition'
           }, {
             name: 'number',
-            required: true,
             typeInfo: '.CTNumberColorPosition'
           }, {
             name: 'percent',
-            required: true,
             typeInfo: '.CTPercentageColorPosition'
           }]
       }, {
@@ -1868,11 +1859,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         typeName: 'CT_ValueColorMiddlePosition',
         propertyInfos: [{
             name: 'number',
-            required: true,
             typeInfo: '.CTNumberColorPosition'
           }, {
             name: 'percent',
-            required: true,
             typeInfo: '.CTPercentageColorPosition'
           }]
       }, {
