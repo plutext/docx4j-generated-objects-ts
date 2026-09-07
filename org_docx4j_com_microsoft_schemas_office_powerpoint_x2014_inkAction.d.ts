@@ -24,9 +24,9 @@ export interface CTAction {
   readonly PARENT?: CTActionGroup | CTActions;
   property?: CTActionProperty[];
   actionDataOrActionDataGroup?: (CTActionData | CTActionDataGroup)[];
-  id?: string;
-  type: string;
   startTime: number;
+  type: string;
+  id?: string;
 }
 
 export interface CTActionData {
@@ -34,26 +34,26 @@ export interface CTActionData {
   readonly PARENT?: CTAction | CTActionDataGroup;
   transform?: Dep_org_docx4j_org_w3_x2003_inkML.CTMatrix;
   traceOrTraceView?: (Dep_org_docx4j_org_w3_x2003_inkML.TraceType | Dep_org_docx4j_org_w3_x2003_inkML.TraceViewType)[];
-  id?: string;
   name?: string;
   ref?: string;
+  id?: string;
 }
 
 export interface CTActionDataGroup {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionDataGroup';
   readonly PARENT?: CTAction;
   actionData: CTActionData[];
-  id?: string;
   name?: string;
+  id?: string;
 }
 
 export interface CTActionGroup {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionGroup';
   readonly PARENT?: CTActions;
   action: CTAction[];
-  id?: string;
-  type: string;
   startTime: number;
+  type: string;
+  id?: string;
 }
 
 export interface CTActionProperty {
@@ -67,9 +67,9 @@ export interface CTActions {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActions';
   definitions?: Dep_org_docx4j_org_w3_x2003_inkML.DefinitionsType;
   actionGroupOrAction?: (CTActionGroup | CTAction)[];
-  id?: string;
   lengthUnit: string;
   timeUnit: string;
+  id?: string;
 }
 
 export type STActionTypeReserved = 'add' | 'remove' | 'transform';

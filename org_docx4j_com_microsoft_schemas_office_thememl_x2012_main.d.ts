@@ -22,8 +22,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTThemeFamily {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_thememl_x2012_main.CTThemeFamily';
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  name: string;
   id: string;
+  name: string;
   vid: string;
 }
 

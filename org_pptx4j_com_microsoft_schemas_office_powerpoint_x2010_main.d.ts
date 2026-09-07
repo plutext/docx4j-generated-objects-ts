@@ -104,8 +104,8 @@ export interface CTMediaBookmarkList {
 
 export interface CTMediaBookmarkTarget {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaBookmarkTarget';
-  spid: number;
   bmkName: string;
+  spid: number;
 }
 
 export interface CTMediaFade {
@@ -118,30 +118,30 @@ export interface CTMediaFade {
 export interface CTMediaPlaybackEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaPlaybackEventRecord';
   readonly PARENT?: CTShowEventRecordList;
-  time: string;
   objId: number;
+  time: string;
 }
 
 export interface CTMediaSeekEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaSeekEventRecord';
   readonly PARENT?: CTShowEventRecordList;
-  time: string;
   objId: number;
   seek: string;
+  time: string;
 }
 
 export interface CTMediaTrim {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTMediaTrim';
   readonly PARENT?: CTMedia;
-  st?: string;
   end?: string;
+  st?: string;
 }
 
 export interface CTNullEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTNullEventRecord';
   readonly PARENT?: CTShowEventRecordList;
-  time: string;
   objId: number;
+  time: string;
 }
 
 export interface CTPrismTransition {
@@ -158,8 +158,8 @@ export interface CTRandomId {
 
 export interface CTRevealTransition {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTRevealTransition';
-  thruBlk?: boolean;
   dir?: STTransitionLeftRightDirectionType;
+  thruBlk?: boolean;
 }
 
 export interface CTRippleTransition {
@@ -172,8 +172,8 @@ export interface CTSection {
   readonly PARENT?: CTSectionList;
   sldIdLst: CTSectionSlideIdList;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
-  name?: string;
   id?: string;
+  name?: string;
 }
 
 export interface CTSectionList {
@@ -205,16 +205,16 @@ export interface CTShowMediaControls {
 
 export interface CTShredTransition {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTShredTransition';
-  pattern?: STTransitionShredPattern;
   dir?: Dep_org_pptx4j_pml.STTransitionInOutDirectionType;
+  pattern?: STTransitionShredPattern;
 }
 
 export interface CTTriggerEventRecord {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.CTTriggerEventRecord';
   readonly PARENT?: CTShowEventRecordList;
-  type: Dep_org_pptx4j_pml.STTLTriggerEvent;
-  time: string;
   objId: number;
+  time: string;
+  type: Dep_org_pptx4j_pml.STTLTriggerEvent;
 }
 
 export type STTransitionCenterDirectionType = 'center';

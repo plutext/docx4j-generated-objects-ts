@@ -23,8 +23,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTApplicationNonVisualDrawingProps {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing.CTApplicationNonVisualDrawingProps';
   readonly PARENT?: CTContentPart;
-  macro?: string;
   fPublished?: boolean;
+  macro?: string;
 }
 
 export interface CTContentPart {
@@ -33,8 +33,8 @@ export interface CTContentPart {
   nvPr?: CTApplicationNonVisualDrawingProps;
   xfrm?: Dep_org_docx4j_dml.CTTransform2D;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  id: string;
   bwMode?: Dep_org_docx4j_dml.STBlackWhiteMode;
+  id: string;
 }
 
 export interface CTContentPartNonVisual {

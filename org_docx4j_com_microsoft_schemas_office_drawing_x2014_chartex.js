@@ -13,12 +13,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'countryRegion',
-            attributeName: {
-              localPart: 'countryRegion'
-            },
-            type: 'attribute'
-          }, {
             name: 'adminDistrict1',
             attributeName: {
               localPart: 'adminDistrict1'
@@ -31,9 +25,15 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'postalCode',
+            name: 'countryRegion',
             attributeName: {
-              localPart: 'postalCode'
+              localPart: 'countryRegion'
+            },
+            type: 'attribute'
+          }, {
+            name: 'isoCountryCode',
+            attributeName: {
+              localPart: 'isoCountryCode'
             },
             type: 'attribute'
           }, {
@@ -43,9 +43,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'isoCountryCode',
+            name: 'postalCode',
             attributeName: {
-              localPart: 'isoCountryCode'
+              localPart: 'postalCode'
             },
             type: 'attribute'
           }]
@@ -97,19 +97,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'extLst',
             typeInfo: '.CTExtensionList'
           }, {
-            name: 'id',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
             name: 'hidden',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'hidden'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
             },
             type: 'attribute'
           }]
@@ -193,15 +193,15 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'underflow',
-            attributeName: {
-              localPart: 'underflow'
-            },
-            type: 'attribute'
-          }, {
             name: 'overflow',
             attributeName: {
               localPart: 'overflow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'underflow',
+            attributeName: {
+              localPart: 'underflow'
             },
             type: 'attribute'
           }]
@@ -293,14 +293,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'extLst',
             typeInfo: '.CTExtensionList'
           }, {
-            name: 'pos',
-            typeInfo: '.STSidePos',
-            defaultValue: 't',
-            attributeName: {
-              localPart: 'pos'
-            },
-            type: 'attribute'
-          }, {
             name: 'align',
             typeInfo: '.STPosAlign',
             defaultValue: 'ctr',
@@ -314,6 +306,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             defaultValue: false,
             attributeName: {
               localPart: 'overlay'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pos',
+            typeInfo: '.STSidePos',
+            defaultValue: 't',
+            attributeName: {
+              localPart: 'pos'
             },
             type: 'attribute'
           }]
@@ -435,17 +435,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTDataLabelVisibilities',
         typeName: 'CT_DataLabelVisibilities',
         propertyInfos: [{
-            name: 'seriesName',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'seriesName'
-            },
-            type: 'attribute'
-          }, {
             name: 'categoryName',
             typeInfo: 'Boolean',
             attributeName: {
               localPart: 'categoryName'
+            },
+            type: 'attribute'
+          }, {
+            name: 'seriesName',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'seriesName'
             },
             type: 'attribute'
           }, {
@@ -541,18 +541,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTExternalData',
         typeName: 'CT_ExternalData',
         propertyInfos: [{
+            name: 'autoUpdate',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'autoUpdate'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             attributeName: {
               localPart: 'id',
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-            },
-            type: 'attribute'
-          }, {
-            name: 'autoUpdate',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'autoUpdate'
             },
             type: 'attribute'
           }]
@@ -685,10 +685,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'copyrights',
             typeInfo: '.CTCopyrights'
           }, {
-            name: 'entityName',
+            name: 'east',
             required: true,
+            typeInfo: 'Double',
             attributeName: {
-              localPart: 'entityName'
+              localPart: 'east'
             },
             type: 'attribute'
           }, {
@@ -699,19 +700,10 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'east',
+            name: 'entityName',
             required: true,
-            typeInfo: 'Double',
             attributeName: {
-              localPart: 'east'
-            },
-            type: 'attribute'
-          }, {
-            name: 'west',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'west'
+              localPart: 'entityName'
             },
             type: 'attribute'
           }, {
@@ -730,23 +722,31 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
               localPart: 'south'
             },
             type: 'attribute'
+          }, {
+            name: 'west',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'west'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTGeoDataEntityQuery',
         typeName: 'CT_GeoDataEntityQuery',
         propertyInfos: [{
+            name: 'entityId',
+            required: true,
+            attributeName: {
+              localPart: 'entityId'
+            },
+            type: 'attribute'
+          }, {
             name: 'entityType',
             required: true,
             typeInfo: '.STEntityType',
             attributeName: {
               localPart: 'entityType'
-            },
-            type: 'attribute'
-          }, {
-            name: 'entityId',
-            required: true,
-            attributeName: {
-              localPart: 'entityId'
             },
             type: 'attribute'
           }]
@@ -801,18 +801,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTGeoDataPointToEntityQuery',
         typeName: 'CT_GeoDataPointToEntityQuery',
         propertyInfos: [{
+            name: 'entityId',
+            required: true,
+            attributeName: {
+              localPart: 'entityId'
+            },
+            type: 'attribute'
+          }, {
             name: 'entityType',
             required: true,
             typeInfo: '.STEntityType',
             attributeName: {
               localPart: 'entityType'
-            },
-            type: 'attribute'
-          }, {
-            name: 'entityId',
-            required: true,
-            attributeName: {
-              localPart: 'entityId'
             },
             type: 'attribute'
           }]
@@ -858,17 +858,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTGeoHierarchyEntity',
         typeName: 'CT_GeoHierarchyEntity',
         propertyInfos: [{
-            name: 'entityName',
-            required: true,
-            attributeName: {
-              localPart: 'entityName'
-            },
-            type: 'attribute'
-          }, {
             name: 'entityId',
             required: true,
             attributeName: {
               localPart: 'entityId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'entityName',
+            required: true,
+            attributeName: {
+              localPart: 'entityName'
             },
             type: 'attribute'
           }, {
@@ -887,20 +887,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'address',
             typeInfo: '.CTAddress'
           }, {
-            name: 'latitude',
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'latitude'
-            },
-            type: 'attribute'
-          }, {
-            name: 'longitude',
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'longitude'
-            },
-            type: 'attribute'
-          }, {
             name: 'entityName',
             required: true,
             attributeName: {
@@ -915,17 +901,25 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
               localPart: 'entityType'
             },
             type: 'attribute'
+          }, {
+            name: 'latitude',
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'latitude'
+            },
+            type: 'attribute'
+          }, {
+            name: 'longitude',
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'longitude'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTGeoLocationQuery',
         typeName: 'CT_GeoLocationQuery',
         propertyInfos: [{
-            name: 'countryRegion',
-            attributeName: {
-              localPart: 'countryRegion'
-            },
-            type: 'attribute'
-          }, {
             name: 'adminDistrict1',
             attributeName: {
               localPart: 'adminDistrict1'
@@ -938,9 +932,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'postalCode',
+            name: 'countryRegion',
             attributeName: {
-              localPart: 'postalCode'
+              localPart: 'countryRegion'
             },
             type: 'attribute'
           }, {
@@ -949,6 +943,12 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             typeInfo: '.STEntityType',
             attributeName: {
               localPart: 'entityType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'postalCode',
+            attributeName: {
+              localPart: 'postalCode'
             },
             type: 'attribute'
           }]
@@ -1027,13 +1027,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTGeoPolygon',
         typeName: 'CT_GeoPolygon',
         propertyInfos: [{
-            name: 'polygonId',
-            required: true,
-            attributeName: {
-              localPart: 'polygonId'
-            },
-            type: 'attribute'
-          }, {
             name: 'numPoints',
             required: true,
             typeInfo: 'Integer',
@@ -1046,6 +1039,13 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             required: true,
             attributeName: {
               localPart: 'pcaRings'
+            },
+            type: 'attribute'
+          }, {
+            name: 'polygonId',
+            required: true,
+            attributeName: {
+              localPart: 'polygonId'
             },
             type: 'attribute'
           }]
@@ -1065,17 +1065,10 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'geoCache',
             typeInfo: '.CTGeoCache'
           }, {
-            name: 'projectionType',
-            typeInfo: '.STGeoProjectionType',
+            name: 'attribution',
+            required: true,
             attributeName: {
-              localPart: 'projectionType'
-            },
-            type: 'attribute'
-          }, {
-            name: 'viewedRegionType',
-            typeInfo: '.STGeoMappingLevel',
-            attributeName: {
-              localPart: 'viewedRegionType'
+              localPart: 'attribution'
             },
             type: 'attribute'
           }, {
@@ -1094,10 +1087,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'attribution',
-            required: true,
+            name: 'projectionType',
+            typeInfo: '.STGeoProjectionType',
             attributeName: {
-              localPart: 'attribution'
+              localPart: 'projectionType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'viewedRegionType',
+            typeInfo: '.STGeoMappingLevel',
+            attributeName: {
+              localPart: 'viewedRegionType'
             },
             type: 'attribute'
           }]
@@ -1135,19 +1135,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'differentOddEven',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'differentOddEven'
-            },
-            type: 'attribute'
-          }, {
             name: 'differentFirst',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'differentFirst'
+            },
+            type: 'attribute'
+          }, {
+            name: 'differentOddEven',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'differentOddEven'
             },
             type: 'attribute'
           }]
@@ -1164,14 +1164,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'extLst',
             typeInfo: '.CTExtensionList'
           }, {
-            name: 'pos',
-            typeInfo: '.STSidePos',
-            defaultValue: 'r',
-            attributeName: {
-              localPart: 'pos'
-            },
-            type: 'attribute'
-          }, {
             name: 'align',
             typeInfo: '.STPosAlign',
             defaultValue: 'ctr',
@@ -1185,6 +1177,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             defaultValue: false,
             attributeName: {
               localPart: 'overlay'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pos',
+            typeInfo: '.STSidePos',
+            defaultValue: 'r',
+            attributeName: {
+              localPart: 'pos'
             },
             type: 'attribute'
           }]
@@ -1256,14 +1256,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             collection: true,
             typeInfo: '.CTNumericValue'
           }, {
-            name: 'ptCount',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'ptCount'
-            },
-            type: 'attribute'
-          }, {
             name: 'formatCode',
             attributeName: {
               localPart: 'formatCode'
@@ -1273,6 +1265,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'name',
             attributeName: {
               localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ptCount',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'ptCount'
             },
             type: 'attribute'
           }]
@@ -1296,6 +1296,30 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTPageMargins',
         typeName: 'CT_PageMargins',
         propertyInfos: [{
+            name: 'b',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }, {
+            name: 'footer',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'footer'
+            },
+            type: 'attribute'
+          }, {
+            name: 'header',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'header'
+            },
+            type: 'attribute'
+          }, {
             name: 'l',
             required: true,
             typeInfo: 'Double',
@@ -1319,64 +1343,24 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
               localPart: 't'
             },
             type: 'attribute'
-          }, {
-            name: 'b',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'b'
-            },
-            type: 'attribute'
-          }, {
-            name: 'header',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'header'
-            },
-            type: 'attribute'
-          }, {
-            name: 'footer',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'footer'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTPageSetup',
         typeName: 'CT_PageSetup',
         propertyInfos: [{
-            name: 'paperSize',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'paperSize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'firstPageNumber',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'firstPageNumber'
-            },
-            type: 'attribute'
-          }, {
-            name: 'orientation',
-            typeInfo: '.STPageOrientation',
-            defaultValue: 'default',
-            attributeName: {
-              localPart: 'orientation'
-            },
-            type: 'attribute'
-          }, {
             name: 'blackAndWhite',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'blackAndWhite'
+            },
+            type: 'attribute'
+          }, {
+            name: 'copies',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'copies'
             },
             type: 'attribute'
           }, {
@@ -1388,11 +1372,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'useFirstPageNumber',
-            typeInfo: 'Boolean',
-            defaultValue: false,
+            name: 'firstPageNumber',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
             attributeName: {
-              localPart: 'useFirstPageNumber'
+              localPart: 'firstPageNumber'
             },
             type: 'attribute'
           }, {
@@ -1404,19 +1388,35 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             },
             type: 'attribute'
           }, {
+            name: 'orientation',
+            typeInfo: '.STPageOrientation',
+            defaultValue: 'default',
+            attributeName: {
+              localPart: 'orientation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'paperSize',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'paperSize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'useFirstPageNumber',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'useFirstPageNumber'
+            },
+            type: 'attribute'
+          }, {
             name: 'verticalDpi',
             typeInfo: 'Int',
             defaultValue: 600,
             attributeName: {
               localPart: 'verticalDpi'
-            },
-            type: 'attribute'
-          }, {
-            name: 'copies',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'copies'
             },
             type: 'attribute'
           }]
@@ -1563,11 +1563,10 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'extLst',
             typeInfo: '.CTExtensionList'
           }, {
-            name: 'layoutId',
-            required: true,
-            typeInfo: '.STSeriesLayout',
+            name: 'formatIdx',
+            typeInfo: 'UnsignedInt',
             attributeName: {
-              localPart: 'layoutId'
+              localPart: 'formatIdx'
             },
             type: 'attribute'
           }, {
@@ -1576,6 +1575,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             defaultValue: false,
             attributeName: {
               localPart: 'hidden'
+            },
+            type: 'attribute'
+          }, {
+            name: 'layoutId',
+            required: true,
+            typeInfo: '.STSeriesLayout',
+            attributeName: {
+              localPart: 'layoutId'
             },
             type: 'attribute'
           }, {
@@ -1589,13 +1596,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'uniqueId',
             attributeName: {
               localPart: 'uniqueId'
-            },
-            type: 'attribute'
-          }, {
-            name: 'formatIdx',
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'formatIdx'
             },
             type: 'attribute'
           }]
@@ -1718,17 +1718,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             collection: true,
             typeInfo: '.CTStringValue'
           }, {
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
             name: 'ptCount',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'ptCount'
-            },
-            type: 'attribute'
-          }, {
-            name: 'name',
-            attributeName: {
-              localPart: 'name'
             },
             type: 'attribute'
           }]
@@ -1823,6 +1823,12 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
         localName: 'CTValueAxisScaling',
         typeName: 'CT_ValueAxisScaling',
         propertyInfos: [{
+            name: 'majorUnit',
+            attributeName: {
+              localPart: 'majorUnit'
+            },
+            type: 'attribute'
+          }, {
             name: 'max',
             attributeName: {
               localPart: 'max'
@@ -1832,12 +1838,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             name: 'min',
             attributeName: {
               localPart: 'min'
-            },
-            type: 'attribute'
-          }, {
-            name: 'majorUnit',
-            attributeName: {
-              localPart: 'majorUnit'
             },
             type: 'attribute'
           }, {

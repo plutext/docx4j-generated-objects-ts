@@ -23,14 +23,6 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main = {
           },
           type: 'attribute'
         }, {
-          name: 'returnToParent',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'returnToParent'
-          },
-          type: 'attribute'
-        }, {
           name: 'imageType',
           typeInfo: '.STZoomObjectImageType',
           defaultValue: 'preview',
@@ -39,9 +31,11 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main = {
           },
           type: 'attribute'
         }, {
-          name: 'transitionDur',
+          name: 'returnToParent',
+          typeInfo: 'Boolean',
+          defaultValue: true,
           attributeName: {
-            localPart: 'transitionDur'
+            localPart: 'returnToParent'
           },
           type: 'attribute'
         }, {
@@ -50,6 +44,12 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main = {
           defaultValue: true,
           attributeName: {
             localPart: 'showBg'
+          },
+          type: 'attribute'
+        }, {
+          name: 'transitionDur',
+          attributeName: {
+            localPart: 'transitionDur'
           },
           type: 'attribute'
         }]

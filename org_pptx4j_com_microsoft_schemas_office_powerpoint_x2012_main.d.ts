@@ -58,15 +58,15 @@ export interface CTParentCommentIdentifier {
 
 export interface CTPresenceInfo {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTPresenceInfo';
-  userId: string;
   providerId: string;
+  userId: string;
 }
 
 export interface CTPresetTransition {
   TYPE_NAME?: 'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main.CTPresetTransition';
-  prst?: string;
   invX?: boolean;
   invY?: boolean;
+  prst?: string;
 }
 
 export type ChartTrackingRefBasedElement = TypedNamedValue<CTChartTrackingRefBased>;

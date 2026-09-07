@@ -1214,19 +1214,19 @@ var org_docx4j_dml_chart_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'differentOddEven',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'differentOddEven'
-            },
-            type: 'attribute'
-          }, {
             name: 'differentFirst',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'differentFirst'
+            },
+            type: 'attribute'
+          }, {
+            name: 'differentOddEven',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'differentOddEven'
             },
             type: 'attribute'
           }]
@@ -1675,17 +1675,17 @@ var org_docx4j_dml_chart_Module_Factory = function () {
             name: 'v',
             required: true
           }, {
+            name: 'formatCode',
+            attributeName: {
+              localPart: 'formatCode'
+            },
+            type: 'attribute'
+          }, {
             name: 'idx',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'idx'
-            },
-            type: 'attribute'
-          }, {
-            name: 'formatCode',
-            attributeName: {
-              localPart: 'formatCode'
             },
             type: 'attribute'
           }]
@@ -1783,6 +1783,30 @@ var org_docx4j_dml_chart_Module_Factory = function () {
         localName: 'CTPageMargins',
         typeName: 'CT_PageMargins',
         propertyInfos: [{
+            name: 'b',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }, {
+            name: 'footer',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'footer'
+            },
+            type: 'attribute'
+          }, {
+            name: 'header',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'header'
+            },
+            type: 'attribute'
+          }, {
             name: 'l',
             required: true,
             typeInfo: 'Double',
@@ -1806,64 +1830,24 @@ var org_docx4j_dml_chart_Module_Factory = function () {
               localPart: 't'
             },
             type: 'attribute'
-          }, {
-            name: 'b',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'b'
-            },
-            type: 'attribute'
-          }, {
-            name: 'header',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'header'
-            },
-            type: 'attribute'
-          }, {
-            name: 'footer',
-            required: true,
-            typeInfo: 'Double',
-            attributeName: {
-              localPart: 'footer'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTPageSetup',
         typeName: 'CT_PageSetup',
         propertyInfos: [{
-            name: 'paperSize',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'paperSize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'firstPageNumber',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'firstPageNumber'
-            },
-            type: 'attribute'
-          }, {
-            name: 'orientation',
-            typeInfo: '.STPageSetupOrientation',
-            defaultValue: 'default',
-            attributeName: {
-              localPart: 'orientation'
-            },
-            type: 'attribute'
-          }, {
             name: 'blackAndWhite',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'blackAndWhite'
+            },
+            type: 'attribute'
+          }, {
+            name: 'copies',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'copies'
             },
             type: 'attribute'
           }, {
@@ -1875,11 +1859,11 @@ var org_docx4j_dml_chart_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'useFirstPageNumber',
-            typeInfo: 'Boolean',
-            defaultValue: false,
+            name: 'firstPageNumber',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
             attributeName: {
-              localPart: 'useFirstPageNumber'
+              localPart: 'firstPageNumber'
             },
             type: 'attribute'
           }, {
@@ -1891,19 +1875,35 @@ var org_docx4j_dml_chart_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'orientation',
+            typeInfo: '.STPageSetupOrientation',
+            defaultValue: 'default',
+            attributeName: {
+              localPart: 'orientation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'paperSize',
+            typeInfo: 'UnsignedInt',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'paperSize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'useFirstPageNumber',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'useFirstPageNumber'
+            },
+            type: 'attribute'
+          }, {
             name: 'verticalDpi',
             typeInfo: 'Int',
             defaultValue: 600,
             attributeName: {
               localPart: 'verticalDpi'
-            },
-            type: 'attribute'
-          }, {
-            name: 'copies',
-            typeInfo: 'UnsignedInt',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'copies'
             },
             type: 'attribute'
           }]

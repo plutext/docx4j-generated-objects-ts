@@ -39,17 +39,17 @@ export interface Anchor {
   graphic: Dep_org_docx4j_dml.Graphic;
   sizeRelH?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingDrawing.CTSizeRelH;
   sizeRelV?: Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingDrawing.CTSizeRelV;
-  distT?: number;
+  allowOverlap: boolean;
+  behindDoc: boolean;
   distB?: number;
   distL?: number;
   distR?: number;
-  simplePosAttr?: boolean;
-  relativeHeight: number;
-  behindDoc: boolean;
-  locked: boolean;
-  layoutInCell: boolean;
+  distT?: number;
   hidden?: boolean;
-  allowOverlap: boolean;
+  layoutInCell: boolean;
+  locked: boolean;
+  relativeHeight: number;
+  simplePosAttr?: boolean;
   anchorId?: string;
   editId?: string;
 }
@@ -57,10 +57,10 @@ export interface Anchor {
 export interface CTEffectExtent {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTEffectExtent';
   readonly PARENT?: Anchor | CTWrapSquare | CTWrapTopBottom | Inline;
-  l: number;
-  t: number;
-  r: number;
   b: number;
+  l: number;
+  r: number;
+  t: number;
 }
 
 export interface CTPosH {
@@ -96,37 +96,37 @@ export interface CTWrapSquare {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTWrapSquare';
   readonly PARENT?: Anchor;
   effectExtent?: CTEffectExtent;
-  wrapText: STWrapText;
-  distT?: number;
   distB?: number;
   distL?: number;
   distR?: number;
+  distT?: number;
+  wrapText: STWrapText;
 }
 
 export interface CTWrapThrough {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTWrapThrough';
   readonly PARENT?: Anchor;
   wrapPolygon: CTWrapPath;
-  wrapText: STWrapText;
   distL?: number;
   distR?: number;
+  wrapText: STWrapText;
 }
 
 export interface CTWrapTight {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTWrapTight';
   readonly PARENT?: Anchor;
   wrapPolygon: CTWrapPath;
-  wrapText: STWrapText;
   distL?: number;
   distR?: number;
+  wrapText: STWrapText;
 }
 
 export interface CTWrapTopBottom {
   TYPE_NAME?: 'org_docx4j_dml_wordprocessingDrawing.CTWrapTopBottom';
   readonly PARENT?: Anchor;
   effectExtent?: CTEffectExtent;
-  distT?: number;
   distB?: number;
+  distT?: number;
 }
 
 export interface Inline {
@@ -137,10 +137,10 @@ export interface Inline {
   docPr: Dep_org_docx4j_dml.CTNonVisualDrawingProps;
   cNvGraphicFramePr?: Dep_org_docx4j_dml.CTNonVisualGraphicFrameProperties;
   graphic: Dep_org_docx4j_dml.Graphic;
-  distT?: number;
   distB?: number;
   distL?: number;
   distR?: number;
+  distT?: number;
   anchorId?: string;
   editId?: string;
 }

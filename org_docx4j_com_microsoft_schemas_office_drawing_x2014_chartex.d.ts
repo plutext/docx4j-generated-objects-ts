@@ -23,12 +23,12 @@ export interface CTAddress {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAddress';
   readonly PARENT?: CTGeoLocation;
   address1?: string;
-  countryRegion?: string;
   adminDistrict1?: string;
   adminDistrict2?: string;
-  postalCode?: string;
-  locality?: string;
+  countryRegion?: string;
   isoCountryCode?: string;
+  locality?: string;
+  postalCode?: string;
 }
 
 export interface CTAggregation {
@@ -52,8 +52,8 @@ export interface CTAxis {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   extLst?: CTExtensionList;
-  id: number;
   hidden?: boolean;
+  id: number;
 }
 
 export interface CTAxisId {
@@ -94,8 +94,8 @@ export interface CTBinning {
   binSize: number;
   binCount: number;
   intervalClosed?: STIntervalClosedSide;
-  underflow?: string;
   overflow?: string;
+  underflow?: string;
 }
 
 export interface CTCategoryAxisScaling {
@@ -140,9 +140,9 @@ export interface CTChartTitle {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   extLst?: CTExtensionList;
-  pos?: STSidePos;
   align?: STPosAlign;
   overlay?: boolean;
+  pos?: STSidePos;
 }
 
 export interface CTClear {
@@ -197,8 +197,8 @@ export interface CTDataLabelHidden {
 export interface CTDataLabelVisibilities {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTDataLabelVisibilities';
   readonly PARENT?: CTDataLabel | CTDataLabels;
-  seriesName?: boolean;
   categoryName?: boolean;
+  seriesName?: boolean;
   value?: boolean;
 }
 
@@ -240,8 +240,8 @@ export interface CTExtensionList {
 export interface CTExternalData {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTExternalData';
   readonly PARENT?: CTChartData;
-  id: string;
   autoUpdate?: boolean;
+  id: string;
 }
 
 export interface CTExtremeValueColorPosition {
@@ -314,19 +314,19 @@ export interface CTGeoData {
   readonly PARENT?: CTGeoDataEntityQueryResult;
   geoPolygons?: CTGeoPolygons;
   copyrights?: CTCopyrights;
-  entityName: string;
-  entityId: string;
   east: number;
-  west: number;
+  entityId: string;
+  entityName: string;
   north: number;
   south: number;
+  west: number;
 }
 
 export interface CTGeoDataEntityQuery {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoDataEntityQuery';
   readonly PARENT?: CTGeoDataEntityQueryResult;
-  entityType: STEntityType;
   entityId: string;
+  entityType: STEntityType;
 }
 
 export interface CTGeoDataEntityQueryResult {
@@ -353,8 +353,8 @@ export interface CTGeoDataPointQuery {
 export interface CTGeoDataPointToEntityQuery {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoDataPointToEntityQuery';
   readonly PARENT?: CTGeoDataPointToEntityQueryResult;
-  entityType: STEntityType;
   entityId: string;
+  entityType: STEntityType;
 }
 
 export interface CTGeoDataPointToEntityQueryResult {
@@ -380,8 +380,8 @@ export interface CTGeoEntity {
 export interface CTGeoHierarchyEntity {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoHierarchyEntity';
   readonly PARENT?: CTGeoChildEntities;
-  entityName: string;
   entityId: string;
+  entityName: string;
   entityType: STEntityType;
 }
 
@@ -389,20 +389,20 @@ export interface CTGeoLocation {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoLocation';
   readonly PARENT?: CTGeoLocations;
   address?: CTAddress;
-  latitude?: number;
-  longitude?: number;
   entityName: string;
   entityType: STEntityType;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface CTGeoLocationQuery {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoLocationQuery';
   readonly PARENT?: CTGeoLocationQueryResult;
-  countryRegion?: string;
   adminDistrict1?: string;
   adminDistrict2?: string;
-  postalCode?: string;
+  countryRegion?: string;
   entityType: STEntityType;
+  postalCode?: string;
 }
 
 export interface CTGeoLocationQueryResult {
@@ -453,9 +453,9 @@ export interface CTGeoParentEntity {
 export interface CTGeoPolygon {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeoPolygon';
   readonly PARENT?: CTGeoPolygons;
-  polygonId: string;
   numPoints: number;
   pcaRings: string;
+  polygonId: string;
 }
 
 export interface CTGeoPolygons {
@@ -468,11 +468,11 @@ export interface CTGeography {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTGeography';
   readonly PARENT?: CTSeriesLayoutProperties;
   geoCache?: CTGeoCache;
-  projectionType?: STGeoProjectionType;
-  viewedRegionType?: STGeoMappingLevel;
+  attribution: string;
   cultureLanguage: string;
   cultureRegion: string;
-  attribution: string;
+  projectionType?: STGeoProjectionType;
+  viewedRegionType?: STGeoMappingLevel;
 }
 
 export interface CTGridlines {
@@ -492,8 +492,8 @@ export interface CTHeaderFooter {
   firstHeader?: string;
   firstFooter?: string;
   alignWithMargins?: boolean;
-  differentOddEven?: boolean;
   differentFirst?: boolean;
+  differentOddEven?: boolean;
 }
 
 export interface CTLegend {
@@ -502,9 +502,9 @@ export interface CTLegend {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   txPr?: Dep_org_docx4j_dml.CTTextBody;
   extLst?: CTExtensionList;
-  pos?: STSidePos;
   align?: STPosAlign;
   overlay?: boolean;
+  pos?: STSidePos;
 }
 
 export interface CTNumberColorPosition {
@@ -531,9 +531,9 @@ export interface CTNumericLevel {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTNumericLevel';
   readonly PARENT?: CTNumericDimension;
   pt?: CTNumericValue[];
-  ptCount: number;
   formatCode?: string;
   name?: string;
+  ptCount: number;
 }
 
 export interface CTNumericValue {
@@ -546,26 +546,26 @@ export interface CTNumericValue {
 export interface CTPageMargins {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTPageMargins';
   readonly PARENT?: CTPrintSettings;
+  b: number;
+  footer: number;
+  header: number;
   l: number;
   r: number;
   t: number;
-  b: number;
-  header: number;
-  footer: number;
 }
 
 export interface CTPageSetup {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTPageSetup';
   readonly PARENT?: CTPrintSettings;
-  paperSize?: number;
-  firstPageNumber?: number;
-  orientation?: STPageOrientation;
   blackAndWhite?: boolean;
-  draft?: boolean;
-  useFirstPageNumber?: boolean;
-  horizontalDpi?: number;
-  verticalDpi?: number;
   copies?: number;
+  draft?: boolean;
+  firstPageNumber?: number;
+  horizontalDpi?: number;
+  orientation?: STPageOrientation;
+  paperSize?: number;
+  useFirstPageNumber?: boolean;
+  verticalDpi?: number;
 }
 
 export interface CTParentLabelLayout {
@@ -636,11 +636,11 @@ export interface CTSeries {
   layoutPr?: CTSeriesLayoutProperties;
   axisId?: CTAxisId[];
   extLst?: CTExtensionList;
-  layoutId: STSeriesLayout;
+  formatIdx?: number;
   hidden?: boolean;
+  layoutId: STSeriesLayout;
   ownerIdx?: number;
   uniqueId?: string;
-  formatIdx?: number;
 }
 
 export interface CTSeriesElementVisibilities {
@@ -684,8 +684,8 @@ export interface CTStringLevel {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTStringLevel';
   readonly PARENT?: CTStringDimension;
   pt?: CTStringValue[];
-  ptCount: number;
   name?: string;
+  ptCount: number;
 }
 
 export interface CTStringValue {
@@ -736,9 +736,9 @@ export interface CTTickMarks {
 export interface CTValueAxisScaling {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTValueAxisScaling';
   readonly PARENT?: CTAxis;
+  majorUnit?: string;
   max?: string;
   min?: string;
-  majorUnit?: string;
   minorUnit?: string;
 }
 

@@ -75,10 +75,19 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             },
             typeInfo: 'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingDrawing.CTSizeRelV'
           }, {
-            name: 'distT',
-            typeInfo: 'UnsignedInt',
+            name: 'allowOverlap',
+            required: true,
+            typeInfo: 'Boolean',
             attributeName: {
-              localPart: 'distT'
+              localPart: 'allowOverlap'
+            },
+            type: 'attribute'
+          }, {
+            name: 'behindDoc',
+            required: true,
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'behindDoc'
             },
             type: 'attribute'
           }, {
@@ -103,34 +112,17 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'simplePosAttr',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'simplePos'
-            },
-            type: 'attribute'
-          }, {
-            name: 'relativeHeight',
-            required: true,
+            name: 'distT',
             typeInfo: 'UnsignedInt',
             attributeName: {
-              localPart: 'relativeHeight'
+              localPart: 'distT'
             },
             type: 'attribute'
           }, {
-            name: 'behindDoc',
-            required: true,
+            name: 'hidden',
             typeInfo: 'Boolean',
             attributeName: {
-              localPart: 'behindDoc'
-            },
-            type: 'attribute'
-          }, {
-            name: 'locked',
-            required: true,
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'locked'
+              localPart: 'hidden'
             },
             type: 'attribute'
           }, {
@@ -142,18 +134,26 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'hidden',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'hidden'
-            },
-            type: 'attribute'
-          }, {
-            name: 'allowOverlap',
+            name: 'locked',
             required: true,
             typeInfo: 'Boolean',
             attributeName: {
-              localPart: 'allowOverlap'
+              localPart: 'locked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'relativeHeight',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'relativeHeight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'simplePosAttr',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'simplePos'
             },
             type: 'attribute'
           }, {
@@ -177,19 +177,19 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
         localName: 'CTEffectExtent',
         typeName: 'CT_EffectExtent',
         propertyInfos: [{
+            name: 'b',
+            required: true,
+            typeInfo: 'Long',
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }, {
             name: 'l',
             required: true,
             typeInfo: 'Long',
             attributeName: {
               localPart: 'l'
-            },
-            type: 'attribute'
-          }, {
-            name: 't',
-            required: true,
-            typeInfo: 'Long',
-            attributeName: {
-              localPart: 't'
             },
             type: 'attribute'
           }, {
@@ -201,11 +201,11 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'b',
+            name: 't',
             required: true,
             typeInfo: 'Long',
             attributeName: {
-              localPart: 'b'
+              localPart: 't'
             },
             type: 'attribute'
           }]
@@ -280,21 +280,6 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             name: 'effectExtent',
             typeInfo: '.CTEffectExtent'
           }, {
-            name: 'wrapText',
-            required: true,
-            typeInfo: '.STWrapText',
-            attributeName: {
-              localPart: 'wrapText'
-            },
-            type: 'attribute'
-          }, {
-            name: 'distT',
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'distT'
-            },
-            type: 'attribute'
-          }, {
             name: 'distB',
             typeInfo: 'UnsignedInt',
             attributeName: {
@@ -313,6 +298,21 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'distR'
+            },
+            type: 'attribute'
+          }, {
+            name: 'distT',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'distT'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapText',
+            required: true,
+            typeInfo: '.STWrapText',
+            attributeName: {
+              localPart: 'wrapText'
             },
             type: 'attribute'
           }]
@@ -324,14 +324,6 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             required: true,
             typeInfo: '.CTWrapPath'
           }, {
-            name: 'wrapText',
-            required: true,
-            typeInfo: '.STWrapText',
-            attributeName: {
-              localPart: 'wrapText'
-            },
-            type: 'attribute'
-          }, {
             name: 'distL',
             typeInfo: 'UnsignedInt',
             attributeName: {
@@ -343,6 +335,14 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'distR'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapText',
+            required: true,
+            typeInfo: '.STWrapText',
+            attributeName: {
+              localPart: 'wrapText'
             },
             type: 'attribute'
           }]
@@ -354,14 +354,6 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             required: true,
             typeInfo: '.CTWrapPath'
           }, {
-            name: 'wrapText',
-            required: true,
-            typeInfo: '.STWrapText',
-            attributeName: {
-              localPart: 'wrapText'
-            },
-            type: 'attribute'
-          }, {
             name: 'distL',
             typeInfo: 'UnsignedInt',
             attributeName: {
@@ -375,6 +367,14 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
               localPart: 'distR'
             },
             type: 'attribute'
+          }, {
+            name: 'wrapText',
+            required: true,
+            typeInfo: '.STWrapText',
+            attributeName: {
+              localPart: 'wrapText'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTWrapTopBottom',
@@ -383,17 +383,17 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             name: 'effectExtent',
             typeInfo: '.CTEffectExtent'
           }, {
-            name: 'distT',
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'distT'
-            },
-            type: 'attribute'
-          }, {
             name: 'distB',
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'distB'
+            },
+            type: 'attribute'
+          }, {
+            name: 'distT',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'distT'
             },
             type: 'attribute'
           }]
@@ -423,13 +423,6 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             },
             typeInfo: 'org_docx4j_dml.Graphic'
           }, {
-            name: 'distT',
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'distT'
-            },
-            type: 'attribute'
-          }, {
             name: 'distB',
             typeInfo: 'UnsignedInt',
             attributeName: {
@@ -448,6 +441,13 @@ var org_docx4j_dml_wordprocessingDrawing_Module_Factory = function () {
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'distR'
+            },
+            type: 'attribute'
+          }, {
+            name: 'distT',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'distT'
             },
             type: 'attribute'
           }, {

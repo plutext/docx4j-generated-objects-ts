@@ -22,19 +22,19 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTCallout {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTCallout';
   readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
-  on?: STTrueFalse;
-  type?: string;
-  gap?: string;
-  angle?: string;
-  dropauto?: STTrueFalse;
-  drop?: string;
-  distance?: string;
-  lengthspecified?: STTrueFalse;
-  length?: string;
   accentbar?: STTrueFalse;
-  textborder?: STTrueFalse;
+  angle?: string;
+  distance?: string;
+  drop?: string;
+  dropauto?: STTrueFalse;
+  gap?: string;
+  length?: string;
+  lengthspecified?: STTrueFalse;
   minusx?: STTrueFalse;
   minusy?: STTrueFalse;
+  on?: STTrueFalse;
+  textborder?: STTrueFalse;
+  type?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -47,10 +47,10 @@ export interface CTClipPath {
 export interface CTColorMenu {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTColorMenu';
   readonly PARENT?: CTShapeDefaults;
-  strokecolor?: string;
+  extrusioncolor?: string;
   fillcolor?: string;
   shadowcolor?: string;
-  extrusioncolor?: string;
+  strokecolor?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -71,15 +71,15 @@ export interface CTDiagram {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTDiagram';
   readonly PARENT?: Dep_org_docx4j_vml.CTGroup;
   relationtable?: CTRelationTable;
-  dgmstyle?: number;
   autoformat?: STTrueFalse;
-  reverse?: STTrueFalse;
   autolayout?: STTrueFalse;
-  dgmscalex?: number;
-  dgmscaley?: number;
-  dgmfontsize?: number;
   constrainbounds?: string;
   dgmbasetextscale?: number;
+  dgmfontsize?: number;
+  dgmscalex?: number;
+  dgmscaley?: number;
+  dgmstyle?: number;
+  reverse?: STTrueFalse;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -93,38 +93,38 @@ export interface CTEntry {
 export interface CTExtrusion {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTExtrusion';
   readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
-  on?: STTrueFalse;
-  type?: STExtrusionType;
-  render?: STExtrusionRender;
-  viewpointorigin?: string;
-  viewpoint?: string;
-  plane?: STExtrusionPlane;
-  skewangle?: number;
-  skewamt?: string;
-  foredepth?: string;
-  backdepth?: string;
-  orientation?: string;
-  orientationangle?: number;
-  lockrotationcenter?: STTrueFalse;
   autorotationcenter?: STTrueFalse;
-  rotationcenter?: string;
-  rotationangle?: string;
-  colormode?: STColorMode;
+  backdepth?: string;
+  brightness?: string;
   color?: string;
-  shininess?: number;
-  specularity?: string;
+  colormode?: STColorMode;
   diffusity?: string;
-  metal?: STTrueFalse;
   edge?: string;
   facet?: string;
+  foredepth?: string;
   lightface?: STTrueFalse;
-  brightness?: string;
-  lightposition?: string;
-  lightlevel?: string;
   lightharsh?: STTrueFalse;
-  lightposition2?: string;
-  lightlevel2?: string;
   lightharsh2?: STTrueFalse;
+  lightlevel?: string;
+  lightlevel2?: string;
+  lightposition?: string;
+  lightposition2?: string;
+  lockrotationcenter?: STTrueFalse;
+  metal?: STTrueFalse;
+  on?: STTrueFalse;
+  orientation?: string;
+  orientationangle?: number;
+  plane?: STExtrusionPlane;
+  render?: STExtrusionRender;
+  rotationangle?: string;
+  rotationcenter?: string;
+  shininess?: number;
+  skewamt?: string;
+  skewangle?: number;
+  specularity?: string;
+  type?: STExtrusionType;
+  viewpoint?: string;
+  viewpointorigin?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -145,24 +145,24 @@ export interface CTIdMap {
 export interface CTInk {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTInk';
   readonly PARENT?: Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTShape;
-  i?: string;
   annotation?: STTrueFalse;
+  i?: string;
 }
 
 export interface CTLock {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTLock';
   readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
-  position?: STTrueFalse;
-  selection?: STTrueFalse;
-  grouping?: STTrueFalse;
-  ungrouping?: STTrueFalse;
-  rotation?: STTrueFalse;
-  cropping?: STTrueFalse;
-  verticies?: STTrueFalse;
   adjusthandles?: STTrueFalse;
-  text?: STTrueFalse;
   aspectratio?: STTrueFalse;
+  cropping?: STTrueFalse;
+  grouping?: STTrueFalse;
+  position?: STTrueFalse;
+  rotation?: STTrueFalse;
+  selection?: STTrueFalse;
   shapetype?: STTrueFalse;
+  text?: STTrueFalse;
+  ungrouping?: STTrueFalse;
+  verticies?: STTrueFalse;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -171,32 +171,32 @@ export interface CTOLEObject {
   linkType?: STOLELinkType;
   lockedField?: string;
   fieldCodes?: string;
-  type?: STOLEType;
-  progID?: string;
-  shapeID?: string;
   drawAspect?: STOLEDrawAspect;
   objectID?: string;
-  id?: string;
+  progID?: string;
+  shapeID?: string;
+  type?: STOLEType;
   updateMode?: STOLEUpdateMode;
+  id?: string;
 }
 
 export interface CTProxy {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTProxy';
   readonly PARENT?: CTR;
-  start?: string;
+  connectloc?: number;
   end?: string;
   idref?: string;
-  connectloc?: number;
+  start?: string;
 }
 
 export interface CTR {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTR';
   readonly PARENT?: CTRules;
   proxy?: CTProxy[];
-  id: string;
-  type?: STRType;
   how?: STHow;
+  id: string;
   idref?: string;
+  type?: STRType;
 }
 
 export interface CTRegroupTable {
@@ -209,9 +209,9 @@ export interface CTRegroupTable {
 export interface CTRelation {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTRelation';
   readonly PARENT?: CTRelationTable;
-  idsrc?: string;
-  iddest?: string;
   idcntr?: string;
+  iddest?: string;
+  idsrc?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -241,12 +241,12 @@ export interface CTShapeDefaults {
   lock?: CTLock;
   colormru?: CTColorMru;
   colormenu?: CTColorMenu;
-  spidmax?: number;
-  style?: string;
   fillToggle?: STTrueFalse;
   fillcolor?: string;
+  spidmax?: number;
   strokeToggle?: STTrueFalse;
   strokecolor?: string;
+  style?: string;
   allowincell?: STTrueFalse;
   ext?: Dep_org_docx4j_vml.STExt;
 }
@@ -262,18 +262,18 @@ export interface CTShapeLayout {
 export interface CTSignatureLine {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTSignatureLine';
   readonly PARENT?: Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
-  issignatureline?: STTrueFalse;
-  id?: string;
-  provid?: string;
-  signinginstructionsset?: STTrueFalse;
   allowcomments?: STTrueFalse;
+  id?: string;
+  issignatureline?: STTrueFalse;
+  provid?: string;
   showsigndate?: STTrueFalse;
+  signinginstructionsset?: STTrueFalse;
+  addlxml?: string;
+  signinginstructions?: string;
+  sigprovurl?: string;
   suggestedsigner?: string;
   suggestedsigner2?: string;
   suggestedsigneremail?: string;
-  signinginstructions?: string;
-  addlxml?: string;
-  sigprovurl?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
@@ -281,42 +281,42 @@ export interface CTSkew {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTSkew';
   readonly PARENT?: CTShapeDefaults | Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
   id?: string;
-  on?: STTrueFalse;
-  offset?: string;
-  origin?: string;
   matrix?: string;
+  offset?: string;
+  on?: STTrueFalse;
+  origin?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 
 export interface CTStrokeChild {
   TYPE_NAME?: 'org_docx4j_vml_officedrawing.CTStrokeChild';
   readonly PARENT?: Dep_org_docx4j_vml.CTStroke;
-  on?: STTrueFalse;
-  weight?: string;
   color?: string;
   color2?: string;
-  opacity?: string;
-  linestyle?: Dep_org_docx4j_vml.STStrokeLineStyle;
-  miterlimit?: string;
-  joinstyle?: Dep_org_docx4j_vml.STStrokeJoinStyle;
-  endcap?: Dep_org_docx4j_vml.STStrokeEndCap;
   dashstyle?: string;
-  insetpen?: STTrueFalse;
+  endarrow?: Dep_org_docx4j_vml.STStrokeArrowType;
+  endarrowlength?: Dep_org_docx4j_vml.STStrokeArrowLength;
+  endarrowwidth?: Dep_org_docx4j_vml.STStrokeArrowWidth;
+  endcap?: Dep_org_docx4j_vml.STStrokeEndCap;
   filltype?: Dep_org_docx4j_vml.STFillType;
-  src?: string;
+  imagealignshape?: STTrueFalse;
   imageaspect?: Dep_org_docx4j_vml.STImageAspect;
   imagesize?: string;
-  imagealignshape?: STTrueFalse;
+  insetpen?: STTrueFalse;
+  joinstyle?: Dep_org_docx4j_vml.STStrokeJoinStyle;
+  linestyle?: Dep_org_docx4j_vml.STStrokeLineStyle;
+  miterlimit?: string;
+  on?: STTrueFalse;
+  opacity?: string;
+  src?: string;
   startarrow?: Dep_org_docx4j_vml.STStrokeArrowType;
-  startarrowwidth?: Dep_org_docx4j_vml.STStrokeArrowWidth;
   startarrowlength?: Dep_org_docx4j_vml.STStrokeArrowLength;
-  endarrow?: Dep_org_docx4j_vml.STStrokeArrowType;
-  endarrowwidth?: Dep_org_docx4j_vml.STStrokeArrowWidth;
-  endarrowlength?: Dep_org_docx4j_vml.STStrokeArrowLength;
-  href?: string;
+  startarrowwidth?: Dep_org_docx4j_vml.STStrokeArrowWidth;
+  weight?: string;
   althref?: string;
-  title?: string;
   forcedash?: STTrueFalse;
+  href?: string;
+  title?: string;
   ext?: Dep_org_docx4j_vml.STExt;
 }
 

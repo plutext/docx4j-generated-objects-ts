@@ -49,19 +49,19 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'enabled',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'enabled'
-          },
-          type: 'attribute'
-        }, {
           name: 'angularRad',
           required: true,
           typeInfo: 'Int',
           attributeName: {
             localPart: 'angularRad'
+          },
+          type: 'attribute'
+        }, {
+          name: 'enabled',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'enabled'
           },
           type: 'attribute'
         }]
@@ -285,19 +285,19 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d = {
       localName: 'CTPositiveRatio',
       typeName: 'CT_PositiveRatio',
       propertyInfos: [{
-          name: 'n',
-          required: true,
-          typeInfo: 'UnsignedLong',
-          attributeName: {
-            localPart: 'n'
-          },
-          type: 'attribute'
-        }, {
           name: 'd',
           required: true,
           typeInfo: 'UnsignedLong',
           attributeName: {
             localPart: 'd'
+          },
+          type: 'attribute'
+        }, {
+          name: 'n',
+          required: true,
+          typeInfo: 'UnsignedLong',
+          attributeName: {
+            localPart: 'n'
           },
           type: 'attribute'
         }]

@@ -37,8 +37,8 @@ export interface CTAlgorithm {
   readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   param?: CTParameter[];
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  type: STAlgorithmType;
   rev?: number;
+  type: STAlgorithmType;
 }
 
 export interface CTAnimLvl {
@@ -68,8 +68,8 @@ export interface CTCTCategories {
 export interface CTCTCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCTCategory';
   readonly PARENT?: CTCTCategories;
-  type: string;
   pri: number;
+  type: string;
 }
 
 export interface CTCTDescription {
@@ -108,8 +108,8 @@ export interface CTCategories {
 export interface CTCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCategory';
   readonly PARENT?: CTCategories;
-  type: string;
   pri: number;
+  type: string;
 }
 
 export interface CTChildMax {
@@ -139,8 +139,8 @@ export interface CTColorTransform {
   catLst?: CTCTCategories;
   styleLbl?: CTCTStyleLabel[];
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId?: string;
   minVer?: string;
+  uniqueId?: string;
 }
 
 export interface CTColorTransformHeader {
@@ -150,9 +150,9 @@ export interface CTColorTransformHeader {
   desc: CTCTDescription[];
   catLst?: CTCTCategories;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId: string;
   minVer?: string;
   resId?: number;
+  uniqueId: string;
 }
 
 export interface CTColorTransformHeaderLst {
@@ -164,25 +164,25 @@ export interface CTColors {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTColors';
   readonly PARENT?: CTCTStyleLabel;
   egColorChoice?: (Dep_org_docx4j_dml.CTScRgbColor | Dep_org_docx4j_dml.CTSRgbColor | Dep_org_docx4j_dml.CTHslColor | Dep_org_docx4j_dml.CTSystemColor | Dep_org_docx4j_dml.CTSchemeColor | Dep_org_docx4j_dml.CTPresetColor)[];
-  meth?: STClrAppMethod;
   hueDir?: STHueDir;
+  meth?: STClrAppMethod;
 }
 
 export interface CTConstraint {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTConstraint';
   readonly PARENT?: CTConstraints;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  op?: STBoolOperator;
-  val?: number;
   fact?: number;
-  refType?: STConstraintType;
+  _for?: STConstraintRelationship;
+  forName?: string;
+  op?: STBoolOperator;
+  ptType?: STElementType;
   refFor?: STConstraintRelationship;
   refForName?: string;
   refPtType?: STElementType;
+  refType?: STConstraintType;
   type: STConstraintType;
-  _for?: STConstraintRelationship;
-  forName?: string;
-  ptType?: STElementType;
+  val?: number;
 }
 
 export interface CTConstraints {
@@ -195,15 +195,15 @@ export interface CTCxn {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTCxn';
   readonly PARENT?: CTCxnList;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  modelId: string;
-  type?: STCxnType;
-  srcId: string;
   destId: string;
-  srcOrd: number;
   destOrd: number;
+  modelId: string;
   parTransId?: string;
-  sibTransId?: string;
   presId?: string;
+  sibTransId?: string;
+  srcId: string;
+  srcOrd: number;
+  type?: STCxnType;
 }
 
 export interface CTCxnList {
@@ -239,9 +239,9 @@ export interface CTDiagramDefinition {
   clrData?: CTSampleData;
   layoutNode: CTLayoutNode;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId?: string;
-  minVer?: string;
   defStyle?: string;
+  minVer?: string;
+  uniqueId?: string;
 }
 
 export interface CTDiagramDefinitionHeader {
@@ -251,10 +251,10 @@ export interface CTDiagramDefinitionHeader {
   desc: CTDescription[];
   catLst?: CTCategories;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId: string;
-  minVer?: string;
   defStyle?: string;
+  minVer?: string;
   resId?: number;
+  uniqueId: string;
 }
 
 export interface CTDiagramDefinitionHeaderLst {
@@ -273,47 +273,47 @@ export interface CTElemPropSet {
   readonly PARENT?: CTPt;
   presLayoutVars?: CTLayoutVariablePropertySet;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
-  presAssocID?: string;
-  presName?: string;
-  presStyleLbl?: string;
-  presStyleIdx?: number;
-  presStyleCnt?: number;
-  loTypeId?: string;
-  loCatId?: string;
-  qsTypeId?: string;
-  qsCatId?: string;
-  csTypeId?: string;
-  csCatId?: string;
   coherent3DOff?: boolean;
-  phldrT?: string;
-  phldr?: boolean;
+  csCatId?: string;
+  csTypeId?: string;
   custAng?: number;
-  custFlipVert?: boolean;
   custFlipHor?: boolean;
-  custSzX?: number;
-  custSzY?: number;
-  custScaleX?: number;
-  custScaleY?: number;
-  custT?: boolean;
-  custLinFactX?: number;
-  custLinFactY?: number;
+  custFlipVert?: boolean;
   custLinFactNeighborX?: number;
   custLinFactNeighborY?: number;
-  custRadScaleRad?: number;
+  custLinFactX?: number;
+  custLinFactY?: number;
   custRadScaleInc?: number;
+  custRadScaleRad?: number;
+  custScaleX?: number;
+  custScaleY?: number;
+  custSzX?: number;
+  custSzY?: number;
+  custT?: boolean;
+  loCatId?: string;
+  loTypeId?: string;
+  phldr?: boolean;
+  phldrT?: string;
+  presAssocID?: string;
+  presName?: string;
+  presStyleCnt?: number;
+  presStyleIdx?: number;
+  presStyleLbl?: string;
+  qsCatId?: string;
+  qsTypeId?: string;
 }
 
 export interface CTForEach {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTForEach';
   readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
-  name?: string;
-  ref?: string;
   axis?: STAxisType[];
-  ptType?: STElementType[];
-  hideLastTrans?: boolean[];
-  st?: number[];
   cnt?: number[];
+  hideLastTrans?: boolean[];
+  name?: string;
+  ptType?: STElementType[];
+  ref?: string;
+  st?: number[];
   step?: number[];
 }
 
@@ -327,10 +327,10 @@ export interface CTLayoutNode {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTLayoutNode';
   readonly PARENT?: CTDiagramDefinition | CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTLayoutVariablePropertySet | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
-  name?: string;
-  styleLbl?: string;
   chOrder?: STChildOrderType;
   moveWith?: string;
+  name?: string;
+  styleLbl?: string;
 }
 
 export interface CTLayoutVariablePropertySet {
@@ -358,13 +358,13 @@ export interface CTNumericRule {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTNumericRule';
   readonly PARENT?: CTRules;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  val?: number;
   fact?: number;
-  max?: number;
-  type: STConstraintType;
   _for?: STConstraintRelationship;
   forName?: string;
+  max?: number;
   ptType?: STElementType;
+  type: STConstraintType;
+  val?: number;
 }
 
 export interface CTOrgChart {
@@ -392,10 +392,10 @@ export interface CTPresentationOf {
   readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   axis?: STAxisType[];
-  ptType?: STElementType[];
-  hideLastTrans?: boolean[];
-  st?: number[];
   cnt?: number[];
+  hideLastTrans?: boolean[];
+  ptType?: STElementType[];
+  st?: number[];
   step?: number[];
 }
 
@@ -406,9 +406,9 @@ export interface CTPt {
   spPr?: Dep_org_docx4j_dml.CTShapeProperties;
   t?: Dep_org_docx4j_dml.CTTextBody;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
+  cxnId?: string;
   modelId: string;
   type?: STPtType;
-  cxnId?: string;
 }
 
 export interface CTPtList {
@@ -419,10 +419,10 @@ export interface CTPtList {
 
 export interface CTRelIds {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTRelIds';
+  cs: string;
   dm: string;
   lo: string;
   qs: string;
-  cs: string;
 }
 
 export interface CTResizeHandles {
@@ -446,8 +446,8 @@ export interface CTSDCategories {
 export interface CTSDCategory {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTSDCategory';
   readonly PARENT?: CTSDCategories;
-  type: string;
   pri: number;
+  type: string;
 }
 
 export interface CTSDDescription {
@@ -476,13 +476,13 @@ export interface CTShape {
   readonly PARENT?: CTForEach | CTLayoutNode | CTOtherwise | CTWhen;
   adjLst?: CTAdjLst;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  rot?: number;
-  type?: string;
-  blip?: string;
-  zOrderOff?: number;
+  blipPhldr?: boolean;
   hideGeom?: boolean;
   lkTxEntry?: boolean;
-  blipPhldr?: boolean;
+  rot?: number;
+  type?: string;
+  zOrderOff?: number;
+  blip?: string;
 }
 
 export interface CTStyleDefinition {
@@ -493,8 +493,8 @@ export interface CTStyleDefinition {
   scene3D?: Dep_org_docx4j_dml.CTScene3D;
   styleLbl: CTStyleLabel[];
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId?: string;
   minVer?: string;
+  uniqueId?: string;
 }
 
 export interface CTStyleDefinitionHeader {
@@ -504,9 +504,9 @@ export interface CTStyleDefinitionHeader {
   desc: CTSDDescription[];
   catLst?: CTSDCategories;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  uniqueId: string;
   minVer?: string;
   resId?: number;
+  uniqueId: string;
 }
 
 export interface CTStyleDefinitionHeaderLst {
@@ -536,17 +536,17 @@ export interface CTWhen {
   TYPE_NAME?: 'org_docx4j_dml_diagram.CTWhen';
   readonly PARENT?: CTChoose;
   algOrShapeOrPresOf?: (CTAlgorithm | CTShape | CTPresentationOf | CTConstraints | CTRules | CTForEach | CTLayoutNode | CTChoose | Dep_org_docx4j_dml.CTOfficeArtExtensionList)[];
-  name?: string;
-  func: STFunctionType;
   arg?: string;
-  op: STFunctionOperator;
-  val: string;
   axis?: STAxisType[];
-  ptType?: STElementType[];
-  hideLastTrans?: boolean[];
-  st?: number[];
   cnt?: number[];
+  func: STFunctionType;
+  hideLastTrans?: boolean[];
+  name?: string;
+  op: STFunctionOperator;
+  ptType?: STElementType[];
+  st?: number[];
   step?: number[];
+  val: string;
 }
 
 export type STAlgorithmType = 'composite' | 'conn' | 'cycle' | 'hierChild' | 'hierRoot' | 'pyra' | 'lin' | 'sp' | 'tx' | 'snake';

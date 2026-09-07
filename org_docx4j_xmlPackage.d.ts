@@ -28,9 +28,9 @@ export interface Part {
   readonly PARENT?: Package;
   xmlData: XmlData;
   binaryData: string;
-  name: string;
-  contentType?: string;
   compression?: string;
+  contentType?: string;
+  name: string;
   padding?: number;
 }
 
@@ -39,8 +39,8 @@ export interface XmlData {
   readonly PARENT?: Part;
   any: XmlAnyElement;
   originalXmlEncoding?: string;
-  originalXmlVersion?: string;
   originalXmlStandalone?: string;
+  originalXmlVersion?: string;
 }
 
 export type PackageElement = TypedNamedValue<Package>;

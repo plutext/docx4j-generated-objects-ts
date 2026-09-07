@@ -61,8 +61,8 @@ export interface CTColorStyle {
   egColorChoice: (Dep_org_docx4j_dml.CTScRgbColor | Dep_org_docx4j_dml.CTSRgbColor | Dep_org_docx4j_dml.CTHslColor | Dep_org_docx4j_dml.CTSystemColor | Dep_org_docx4j_dml.CTSchemeColor | Dep_org_docx4j_dml.CTPresetColor)[];
   variation?: CTColorStyleVariation[];
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  meth: string;
   id?: number;
+  meth: string;
 }
 
 export interface CTColorStyleVariation {
@@ -88,8 +88,8 @@ export interface CTFontReference {
 export interface CTMarkerLayout {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTMarkerLayout';
   readonly PARENT?: CTChartStyle;
-  symbol?: STMarkerStyle;
   size?: number;
+  symbol?: STMarkerStyle;
 }
 
 export interface CTStyleColor {

@@ -317,17 +317,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle_Module_Fact
             },
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
-            name: 'meth',
-            required: true,
-            attributeName: {
-              localPart: 'meth'
-            },
-            type: 'attribute'
-          }, {
             name: 'id',
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'meth',
+            required: true,
+            attributeName: {
+              localPart: 'meth'
             },
             type: 'attribute'
           }]
@@ -492,17 +492,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle_Module_Fact
           localPart: 'CT_MarkerLayout'
         },
         propertyInfos: [{
-            name: 'symbol',
-            typeInfo: '.STMarkerStyle',
-            attributeName: {
-              localPart: 'symbol'
-            },
-            type: 'attribute'
-          }, {
             name: 'size',
             typeInfo: 'UnsignedByte',
             attributeName: {
               localPart: 'size'
+            },
+            type: 'attribute'
+          }, {
+            name: 'symbol',
+            typeInfo: '.STMarkerStyle',
+            attributeName: {
+              localPart: 'symbol'
             },
             type: 'attribute'
           }]

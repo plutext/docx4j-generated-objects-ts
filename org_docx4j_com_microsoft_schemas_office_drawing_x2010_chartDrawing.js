@@ -7,17 +7,17 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module_Fa
         localName: 'CTApplicationNonVisualDrawingProps',
         typeName: 'CT_ApplicationNonVisualDrawingProps',
         propertyInfos: [{
-            name: 'macro',
-            attributeName: {
-              localPart: 'macro'
-            },
-            type: 'attribute'
-          }, {
             name: 'fPublished',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'fPublished'
+            },
+            type: 'attribute'
+          }, {
+            name: 'macro',
+            attributeName: {
+              localPart: 'macro'
             },
             type: 'attribute'
           }]
@@ -37,19 +37,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing_Module_Fa
             name: 'extLst',
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
-            name: 'id',
-            required: true,
-            attributeName: {
-              localPart: 'id',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-            },
-            type: 'attribute'
-          }, {
             name: 'bwMode',
             typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
             defaultValue: 'auto',
             attributeName: {
               localPart: 'bwMode'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
             },
             type: 'attribute'
           }]

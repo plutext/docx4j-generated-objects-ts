@@ -534,8 +534,8 @@ export interface CTHeaderFooter {
   firstHeader?: string;
   firstFooter?: string;
   alignWithMargins?: boolean;
-  differentOddEven?: boolean;
   differentFirst?: boolean;
+  differentOddEven?: boolean;
 }
 
 export interface CTHoleSize {
@@ -748,8 +748,8 @@ export interface CTNumVal {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTNumVal';
   readonly PARENT?: CTNumData;
   v: string;
-  idx: number;
   formatCode?: string;
+  idx: number;
 }
 
 export interface CTOfPieChart {
@@ -795,26 +795,26 @@ export interface CTOverlap {
 export interface CTPageMargins {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTPageMargins';
   readonly PARENT?: CTPrintSettings;
+  b: number;
+  footer: number;
+  header: number;
   l: number;
   r: number;
   t: number;
-  b: number;
-  header: number;
-  footer: number;
 }
 
 export interface CTPageSetup {
   TYPE_NAME?: 'org_docx4j_dml_chart.CTPageSetup';
   readonly PARENT?: CTPrintSettings;
-  paperSize?: number;
-  firstPageNumber?: number;
-  orientation?: STPageSetupOrientation;
   blackAndWhite?: boolean;
-  draft?: boolean;
-  useFirstPageNumber?: boolean;
-  horizontalDpi?: number;
-  verticalDpi?: number;
   copies?: number;
+  draft?: boolean;
+  firstPageNumber?: number;
+  horizontalDpi?: number;
+  orientation?: STPageSetupOrientation;
+  paperSize?: number;
+  useFirstPageNumber?: boolean;
+  verticalDpi?: number;
 }
 
 export interface CTPeriod {

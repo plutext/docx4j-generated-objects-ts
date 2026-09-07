@@ -72,11 +72,11 @@ export interface CTCommentAuthor {
   TYPE_NAME?: 'org_pptx4j_pml.CTCommentAuthor';
   readonly PARENT?: CTCommentAuthorList;
   extLst?: CTExtensionList;
+  clrIdx: number;
   id: number;
-  name: string;
   initials: string;
   lastIdx: number;
-  clrIdx: number;
+  name: string;
 }
 
 export interface CTCommentAuthorList {
@@ -94,9 +94,9 @@ export interface CTCommonSlideViewProperties {
   readonly PARENT?: CTNotesViewProperties | CTSlideViewProperties;
   cViewPr: CTCommonViewProperties;
   guideLst?: CTGuideList;
+  showGuides?: boolean;
   snapToGrid?: boolean;
   snapToObjects?: boolean;
-  showGuides?: boolean;
 }
 
 export interface CTCommonViewProperties {
@@ -112,11 +112,11 @@ export interface CTControl {
   readonly PARENT?: CTControlList;
   extLst?: CTExtensionList;
   pic?: Pic;
+  imgH?: number;
+  imgW?: number;
   name?: string;
   showAsIcon?: boolean;
   id?: string;
-  imgW?: number;
-  imgH?: number;
 }
 
 export interface CTControlList {
@@ -137,8 +137,8 @@ export interface CTCustomShow {
   readonly PARENT?: CTCustomShowList;
   sldLst: CTSlideRelationshipList;
   extLst?: CTExtensionList;
-  name: string;
   id: number;
+  name: string;
 }
 
 export interface CTCustomShowId {
@@ -266,10 +266,10 @@ export interface CTHeaderFooter {
   TYPE_NAME?: 'org_pptx4j_pml.CTHeaderFooter';
   readonly PARENT?: HandoutMaster | NotesMaster | SldLayout | SldMaster;
   extLst?: CTExtensionListModify;
-  sldNum?: boolean;
-  hdr?: boolean;
-  ftr?: boolean;
   dt?: boolean;
+  ftr?: boolean;
+  hdr?: boolean;
+  sldNum?: boolean;
 }
 
 export interface CTHtmlPublishProperties {
@@ -293,16 +293,16 @@ export interface CTInOutTransition {
 export interface CTIndexRange {
   TYPE_NAME?: 'org_pptx4j_pml.CTIndexRange';
   readonly PARENT?: CTHtmlPublishProperties | CTShowProperties | CTTLTextTargetElement;
-  st: number;
   end: number;
+  st: number;
 }
 
 export interface CTKinsoku {
   TYPE_NAME?: 'org_pptx4j_pml.CTKinsoku';
   readonly PARENT?: Presentation;
-  lang?: string;
-  invalStChars: string;
   invalEndChars: string;
+  invalStChars: string;
+  lang?: string;
 }
 
 export interface CTModifyVerifier {
@@ -317,8 +317,8 @@ export interface CTModifyVerifier {
 export interface CTNormalViewPortion {
   TYPE_NAME?: 'org_pptx4j_pml.CTNormalViewPortion';
   readonly PARENT?: CTNormalViewProperties;
-  sz: number;
   autoAdjust?: boolean;
+  sz: number;
 }
 
 export interface CTNormalViewProperties {
@@ -327,11 +327,11 @@ export interface CTNormalViewProperties {
   restoredLeft: CTNormalViewPortion;
   restoredTop: CTNormalViewPortion;
   extLst?: CTExtensionList;
+  horzBarState?: STSplitterBarState;
+  preferSingleView?: boolean;
   showOutlineIcons?: boolean;
   snapVertSplitter?: boolean;
   vertBarState?: STSplitterBarState;
-  horzBarState?: STSplitterBarState;
-  preferSingleView?: boolean;
 }
 
 export interface CTNotesMasterIdList {
@@ -366,13 +366,13 @@ export interface CTOleObject {
   embed: CTOleObjectEmbed;
   link: CTOleObjectLink;
   pic: Pic;
-  progId?: string;
-  spid?: string;
-  name?: string;
-  showAsIcon?: boolean;
-  id?: string;
-  imgW?: number;
   imgH?: number;
+  imgW?: number;
+  name?: string;
+  progId?: string;
+  showAsIcon?: boolean;
+  spid?: string;
+  id?: string;
 }
 
 export interface CTOleObjectEmbed {
@@ -412,8 +412,8 @@ export interface CTOutlineViewProperties {
 export interface CTOutlineViewSlideEntry {
   TYPE_NAME?: 'org_pptx4j_pml.CTOutlineViewSlideEntry';
   readonly PARENT?: CTOutlineViewSlideList;
-  id: string;
   collapse?: boolean;
+  id: string;
 }
 
 export interface CTOutlineViewSlideList {
@@ -427,31 +427,31 @@ export interface CTPhotoAlbum {
   readonly PARENT?: Presentation;
   extLst?: CTExtensionList;
   bw?: boolean;
-  showCaptions?: boolean;
-  layout?: string;
   frame?: STPhotoAlbumFrameShape;
+  layout?: string;
+  showCaptions?: boolean;
 }
 
 export interface CTPlaceholder {
   TYPE_NAME?: 'org_pptx4j_pml.CTPlaceholder';
   readonly PARENT?: NvPr;
   extLst?: CTExtensionListModify;
-  type?: STPlaceholderType;
+  hasCustomPrompt?: boolean;
+  idx?: number;
   orient?: STDirection;
   sz?: STPlaceholderSize;
-  idx?: number;
-  hasCustomPrompt?: boolean;
+  type?: STPlaceholderType;
 }
 
 export interface CTPrintProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTPrintProperties';
   readonly PARENT?: PresentationPr;
   extLst?: CTExtensionList;
-  prnWhat?: STPrintWhat;
   clrMode?: STPrintColorMode;
-  hiddenSlides?: boolean;
-  scaleToFitPaper?: boolean;
   frameSlides?: boolean;
+  hiddenSlides?: boolean;
+  prnWhat?: STPrintWhat;
+  scaleToFitPaper?: boolean;
 }
 
 export interface CTRel {
@@ -484,8 +484,8 @@ export interface CTShowProperties {
   penClr?: Dep_org_docx4j_dml.CTColor;
   extLst?: CTExtensionList;
   loop?: boolean;
-  showNarration?: boolean;
   showAnimation?: boolean;
+  showNarration?: boolean;
   useTimings?: boolean;
 }
 
@@ -527,9 +527,9 @@ export interface CTSlideSorterViewProperties {
 export interface CTSlideSyncProperties {
   TYPE_NAME?: 'org_pptx4j_pml.CTSlideSyncProperties';
   extLst?: CTExtensionList;
+  clientInsertedTime: XmlCalendar;
   serverSldId: string;
   serverSldModifiedTime: XmlCalendar;
-  clientInsertedTime: XmlCalendar;
 }
 
 export interface CTSlideTiming {
@@ -566,9 +566,9 @@ export interface CTSlideTransition {
   zoom: CTInOutTransition;
   sndAc?: CTTransitionSoundAction;
   extLst?: CTExtensionListModify;
-  spd?: STTransitionSpeed;
   advClick?: boolean;
   advTm?: number;
+  spd?: STTransitionSpeed;
 }
 
 export interface CTSlideViewProperties {
@@ -587,8 +587,8 @@ export interface CTSmartTags {
 export interface CTSplitTransition {
   TYPE_NAME?: 'org_pptx4j_pml.CTSplitTransition';
   readonly PARENT?: CTSlideTransition;
-  orient?: STDirection;
   dir?: STTransitionInOutDirectionType;
+  orient?: STDirection;
 }
 
 export interface CTStringTag {
@@ -638,9 +638,9 @@ export interface CTTLAnimateBehavior {
   cBhvr: CTTLCommonBehaviorData;
   tavLst?: CTTLTimeAnimateValueList;
   by?: string;
+  calcmode?: STTLAnimateBehaviorCalcMode;
   from?: string;
   to?: string;
-  calcmode?: STTLAnimateBehaviorCalcMode;
   valueType?: STTLAnimateBehaviorValueType;
 }
 
@@ -660,9 +660,9 @@ export interface CTTLAnimateEffectBehavior {
   readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
   progress?: CTTLAnimVariant;
-  transition?: STTLAnimateEffectTransition;
   filter?: string;
   prLst?: string;
+  transition?: STTLAnimateEffectTransition;
 }
 
 export interface CTTLAnimateMotionBehavior {
@@ -676,8 +676,8 @@ export interface CTTLAnimateMotionBehavior {
   origin?: STTLAnimateMotionBehaviorOrigin;
   path?: string;
   pathEditMode?: STTLAnimateMotionPathEditMode;
-  rAng?: number;
   ptsTypes?: string;
+  rAng?: number;
 }
 
 export interface CTTLAnimateRotationBehavior {
@@ -709,8 +709,8 @@ export interface CTTLBuildDiagram {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLBuildDiagram';
   readonly PARENT?: CTBuildList;
   bld?: STTLDiagramBuildType;
-  spid: string;
   grpId: number;
+  spid: string;
   uiExpand?: boolean;
 }
 
@@ -718,14 +718,14 @@ export interface CTTLBuildParagraph {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLBuildParagraph';
   readonly PARENT?: CTBuildList;
   tmplLst?: CTTLTemplateList;
-  build?: STTLParaBuildType;
-  bldLvl?: number;
+  advAuto?: string;
   animBg?: boolean;
   autoUpdateAnimBg?: boolean;
-  rev?: boolean;
-  advAuto?: string;
-  spid: string;
+  bldLvl?: number;
+  build?: STTLParaBuildType;
   grpId: number;
+  rev?: boolean;
+  spid: string;
   uiExpand?: boolean;
 }
 
@@ -740,24 +740,24 @@ export interface CTTLByHslColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByHslColorTransform';
   readonly PARENT?: CTTLByAnimateColorTransform;
   h: number;
-  s: number;
   l: number;
+  s: number;
 }
 
 export interface CTTLByRgbColorTransform {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLByRgbColorTransform';
   readonly PARENT?: CTTLByAnimateColorTransform;
-  r: number;
-  g: number;
   b: number;
+  g: number;
+  r: number;
 }
 
 export interface CTTLCommandBehavior {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLCommandBehavior';
   readonly PARENT?: CTTimeNodeList;
   cBhvr: CTTLCommonBehaviorData;
-  type?: STTLCommandType;
   cmd?: string;
+  type?: STTLCommandType;
 }
 
 export interface CTTLCommonBehaviorData {
@@ -766,14 +766,14 @@ export interface CTTLCommonBehaviorData {
   cTn: CTTLCommonTimeNodeData;
   tgtEl: CTTLTimeTargetElement;
   attrNameLst?: CTTLBehaviorAttributeNameList;
-  additive?: STTLBehaviorAdditiveType;
   accumulate?: STTLBehaviorAccumulateType;
-  xfrmType?: STTLBehaviorTransformType;
-  from?: string;
-  to?: string;
+  additive?: STTLBehaviorAdditiveType;
   by?: string;
-  rctx?: string;
+  from?: string;
   override?: STTLBehaviorOverrideType;
+  rctx?: string;
+  to?: string;
+  xfrmType?: STTLBehaviorTransformType;
 }
 
 export interface CTTLCommonMediaNodeData {
@@ -781,10 +781,10 @@ export interface CTTLCommonMediaNodeData {
   readonly PARENT?: CTTLMediaNodeAudio | CTTLMediaNodeVideo;
   cTn: CTTLCommonTimeNodeData;
   tgtEl: CTTLTimeTargetElement;
-  vol?: number;
   mute?: boolean;
   numSld?: number;
   showWhenStopped?: boolean;
+  vol?: number;
 }
 
 export interface CTTLCommonTimeNodeData {
@@ -796,29 +796,29 @@ export interface CTTLCommonTimeNodeData {
   iterate?: CTTLIterateData;
   childTnLst?: CTTimeNodeList;
   subTnLst?: CTTimeNodeList;
-  id?: number;
-  presetID?: number;
-  presetClass?: STTLTimeNodePresetClassType;
-  presetSubtype?: number;
+  accel?: number;
+  afterEffect?: boolean;
+  autoRev?: boolean;
+  bldLvl?: number;
+  decel?: number;
+  display?: boolean;
   dur?: string;
+  evtFilter?: string;
+  fill?: STTLTimeNodeFillType;
+  grpId?: number;
+  id?: number;
+  masterRel?: STTLTimeNodeMasterRelation;
+  nodePh?: boolean;
+  nodeType?: STTLTimeNodeType;
+  presetClass?: STTLTimeNodePresetClassType;
+  presetID?: number;
+  presetSubtype?: number;
   repeatCount?: string;
   repeatDur?: string;
-  spd?: number;
-  accel?: number;
-  decel?: number;
-  autoRev?: boolean;
   restart?: STTLTimeNodeRestartType;
-  fill?: STTLTimeNodeFillType;
+  spd?: number;
   syncBehavior?: STTLTimeNodeSyncType;
   tmFilter?: string;
-  evtFilter?: string;
-  display?: boolean;
-  masterRel?: STTLTimeNodeMasterRelation;
-  bldLvl?: number;
-  grpId?: number;
-  afterEffect?: boolean;
-  nodeType?: STTLTimeNodeType;
-  nodePh?: boolean;
 }
 
 export interface CTTLGraphicalObjectBuild {
@@ -826,8 +826,8 @@ export interface CTTLGraphicalObjectBuild {
   readonly PARENT?: CTBuildList;
   bldAsOne: CTEmpty;
   bldSub: Dep_org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties;
-  spid: string;
   grpId: number;
+  spid: string;
   uiExpand?: boolean;
 }
 
@@ -836,8 +836,8 @@ export interface CTTLIterateData {
   readonly PARENT?: CTTLCommonTimeNodeData;
   tmAbs: CTTLIterateIntervalTime;
   tmPct: CTTLIterateIntervalPercentage;
-  type?: STIterateType;
   backwards?: boolean;
+  type?: STIterateType;
 }
 
 export interface CTTLIterateIntervalPercentage {
@@ -869,18 +869,18 @@ export interface CTTLMediaNodeVideo {
 export interface CTTLOleBuildChart {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLOleBuildChart';
   readonly PARENT?: CTBuildList;
-  bld?: STTLOleChartBuildType;
   animBg?: boolean;
-  spid: string;
+  bld?: STTLOleChartBuildType;
   grpId: number;
+  spid: string;
   uiExpand?: boolean;
 }
 
 export interface CTTLOleChartTargetElement {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLOleChartTargetElement';
   readonly PARENT?: CTTLShapeTargetElement;
-  type: STTLChartSubelementType;
   lvl?: number;
+  type: STTLChartSubelementType;
 }
 
 export interface CTTLPoint {
@@ -938,8 +938,8 @@ export interface CTTLTimeAnimateValue {
   TYPE_NAME?: 'org_pptx4j_pml.CTTLTimeAnimateValue';
   readonly PARENT?: CTTLTimeAnimateValueList;
   val?: CTTLAnimVariant;
-  tm?: string;
   fmla?: string;
+  tm?: string;
 }
 
 export interface CTTLTimeAnimateValueList {
@@ -954,8 +954,8 @@ export interface CTTLTimeCondition {
   tgtEl: CTTLTimeTargetElement;
   tn: CTTLTriggerTimeNodeID;
   rtn: CTTLTriggerRuntimeNode;
-  evt?: STTLTriggerEvent;
   delay?: string;
+  evt?: STTLTriggerEvent;
 }
 
 export interface CTTLTimeConditionList {
@@ -983,8 +983,8 @@ export interface CTTLTimeNodeSequence {
   prevCondLst?: CTTLTimeConditionList;
   nextCondLst?: CTTLTimeConditionList;
   concurrent?: boolean;
-  prevAc?: STTLPreviousActionType;
   nextAc?: STTLNextActionType;
+  prevAc?: STTLPreviousActionType;
 }
 
 export interface CTTLTimeTargetElement {
@@ -1082,8 +1082,8 @@ export interface Notes {
   cSld: CommonSlideData;
   clrMapOvr?: Dep_org_docx4j_dml.CTColorMappingOverride;
   extLst?: CTExtensionListModify;
-  showMasterSp?: boolean;
   showMasterPhAnim?: boolean;
+  showMasterSp?: boolean;
 }
 
 export interface NotesMaster {
@@ -1137,18 +1137,18 @@ export interface Presentation {
   defaultTextStyle?: Dep_org_docx4j_dml.CTTextListStyle;
   modifyVerifier?: CTModifyVerifier;
   extLst?: CTExtensionList;
-  serverZoom?: number;
-  firstSlideNum?: number;
-  showSpecialPlsOnTitleSld?: boolean;
-  rtl?: boolean;
-  removePersonalInfoOnSave?: boolean;
-  compatMode?: boolean;
-  strictFirstAndLastChars?: boolean;
-  embedTrueTypeFonts?: boolean;
-  saveSubsetFonts?: boolean;
   autoCompressPictures?: boolean;
   bookmarkIdSeed?: number;
+  compatMode?: boolean;
   conformance?: Dep_org_docx4j_sharedtypes.STConformanceClass;
+  embedTrueTypeFonts?: boolean;
+  firstSlideNum?: number;
+  removePersonalInfoOnSave?: boolean;
+  rtl?: boolean;
+  saveSubsetFonts?: boolean;
+  serverZoom?: number;
+  showSpecialPlsOnTitleSld?: boolean;
+  strictFirstAndLastChars?: boolean;
 }
 
 export interface PresentationPr {
@@ -1178,8 +1178,8 @@ export interface Sld {
   timing?: CTSlideTiming;
   extLst?: CTExtensionListModify;
   show?: boolean;
-  showMasterSp?: boolean;
   showMasterPhAnim?: boolean;
+  showMasterSp?: boolean;
 }
 
 export interface SldLayout {
@@ -1191,11 +1191,11 @@ export interface SldLayout {
   hf?: CTHeaderFooter;
   extLst?: CTExtensionListModify;
   matchingName?: string;
-  type?: STSlideLayoutType;
   preserve?: boolean;
-  userDrawn?: boolean;
-  showMasterSp?: boolean;
   showMasterPhAnim?: boolean;
+  showMasterSp?: boolean;
+  type?: STSlideLayoutType;
+  userDrawn?: boolean;
 }
 
 export interface SldMaster {

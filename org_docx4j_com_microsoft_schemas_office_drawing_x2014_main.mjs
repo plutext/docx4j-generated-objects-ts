@@ -6,17 +6,17 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2014_main = {
       localName: 'CTConnectableReferences',
       typeName: 'CT_ConnectableReferences',
       propertyInfos: [{
-          name: 'st',
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'st'
-          },
-          type: 'attribute'
-        }, {
           name: 'end',
           typeInfo: 'Token',
           attributeName: {
             localPart: 'end'
+          },
+          type: 'attribute'
+        }, {
+          name: 'st',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'st'
           },
           type: 'attribute'
         }]

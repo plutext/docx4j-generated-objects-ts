@@ -21,10 +21,10 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface Relationship {
   TYPE_NAME?: 'org_docx4j_relationships.Relationship';
   readonly PARENT?: Relationships;
-  targetMode?: string;
-  target: string;
-  type: string;
   id: string;
+  target: string;
+  targetMode?: string;
+  type: string;
 }
 
 export interface Relationships {

@@ -37,27 +37,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             name: 'extLst',
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
-            name: 'noGrp',
+            name: 'noAdjustHandles',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noGrp'
+              localPart: 'noAdjustHandles'
             },
             type: 'attribute'
           }, {
-            name: 'noSelect',
+            name: 'noChangeArrowheads',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noRot',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noRot'
+              localPart: 'noChangeArrowheads'
             },
             type: 'attribute'
           }, {
@@ -66,6 +58,30 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             defaultValue: false,
             attributeName: {
               localPart: 'noChangeAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noChangeShapeType',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noChangeShapeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noEditPoints',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noEditPoints'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noGrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -85,35 +101,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             },
             type: 'attribute'
           }, {
-            name: 'noEditPoints',
+            name: 'noRot',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noEditPoints'
+              localPart: 'noRot'
             },
             type: 'attribute'
           }, {
-            name: 'noAdjustHandles',
+            name: 'noSelect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noAdjustHandles'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeArrowheads',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeArrowheads'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeShapeType',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeShapeType'
+              localPart: 'noSelect'
             },
             type: 'attribute'
           }]
@@ -328,14 +328,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             collection: true,
             typeInfo: '.CTPictureEffectBackgroundRemovalBackgroundMark'
           }, {
-            name: 't',
-            required: true,
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 't'
-            },
-            type: 'attribute'
-          }, {
             name: 'b',
             required: true,
             typeInfo: 'Int',
@@ -359,6 +351,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'r'
             },
             type: 'attribute'
+          }, {
+            name: 't',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 't'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTPictureEffectBackgroundRemovalBackgroundMark',
@@ -372,19 +372,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             },
             type: 'attribute'
           }, {
-            name: 'y1',
-            required: true,
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'y1'
-            },
-            type: 'attribute'
-          }, {
             name: 'x2',
             required: true,
             typeInfo: 'Int',
             attributeName: {
               localPart: 'x2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'y1',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'y1'
             },
             type: 'attribute'
           }, {
@@ -408,19 +408,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
             },
             type: 'attribute'
           }, {
-            name: 'y1',
-            required: true,
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'y1'
-            },
-            type: 'attribute'
-          }, {
             name: 'x2',
             required: true,
             typeInfo: 'Int',
             attributeName: {
               localPart: 'x2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'y1',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'y1'
             },
             type: 'attribute'
           }, {
@@ -468,14 +468,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
         localName: 'CTPictureEffectCement',
         typeName: 'CT_PictureEffectCement',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'crackSpacing',
             typeInfo: 'Int',
             defaultValue: 24,
@@ -483,11 +475,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'crackSpacing'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectChalkSketch',
-        typeName: 'CT_PictureEffectChalkSketch',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -495,12 +483,24 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectChalkSketch',
+        typeName: 'CT_PictureEffectChalkSketch',
+        propertyInfos: [{
             name: 'pressure',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
               localPart: 'pressure'
+            },
+            type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
             },
             type: 'attribute'
           }]
@@ -520,6 +520,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
         localName: 'CTPictureEffectCrisscrossEtching',
         typeName: 'CT_PictureEffectCrisscrossEtching',
         propertyInfos: [{
+            name: 'pressure',
+            typeInfo: 'Int',
+            defaultValue: 30,
+            attributeName: {
+              localPart: 'pressure'
+            },
+            type: 'attribute'
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 75,
@@ -527,27 +535,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
-            name: 'pressure',
-            typeInfo: 'Int',
-            defaultValue: 30,
-            attributeName: {
-              localPart: 'pressure'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTPictureEffectCutout',
         typeName: 'CT_PictureEffectCutout',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'numberOfShades',
             typeInfo: 'Int',
             defaultValue: 2,
@@ -555,11 +547,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'numberOfShades'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectFilmGrain',
-        typeName: 'CT_PictureEffectFilmGrain',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -567,7 +555,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectFilmGrain',
+        typeName: 'CT_PictureEffectFilmGrain',
+        propertyInfos: [{
             name: 'grainSize',
             typeInfo: 'Int',
             defaultValue: 40,
@@ -575,11 +567,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'grainSize'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectGlass',
-        typeName: 'CT_PictureEffectGlass',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -587,12 +575,24 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectGlass',
+        typeName: 'CT_PictureEffectGlass',
+        propertyInfos: [{
             name: 'scaling',
             typeInfo: 'Int',
             defaultValue: 34,
             attributeName: {
               localPart: 'scaling'
+            },
+            type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
             },
             type: 'attribute'
           }]
@@ -600,19 +600,19 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
         localName: 'CTPictureEffectGlowDiffused',
         typeName: 'CT_PictureEffectGlowDiffused',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'intensity',
             typeInfo: 'Int',
             defaultValue: 5,
             attributeName: {
               localPart: 'intensity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
             },
             type: 'attribute'
           }]
@@ -620,6 +620,14 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
         localName: 'CTPictureEffectGlowEdges',
         typeName: 'CT_PictureEffectGlowEdges',
         propertyInfos: [{
+            name: 'smoothness',
+            typeInfo: 'Int',
+            defaultValue: 3,
+            attributeName: {
+              localPart: 'smoothness'
+            },
+            type: 'attribute'
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 15,
@@ -627,27 +635,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
-            name: 'smoothness',
-            typeInfo: 'Int',
-            defaultValue: 3,
-            attributeName: {
-              localPart: 'smoothness'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTPictureEffectLightScreen',
         typeName: 'CT_PictureEffectLightScreen',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'gridSize',
             typeInfo: 'Int',
             defaultValue: 4,
@@ -655,11 +647,27 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'gridSize'
             },
             type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTPictureEffectLineDrawing',
         typeName: 'CT_PictureEffectLineDrawing',
         propertyInfos: [{
+            name: 'pencilSize',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'pencilSize'
+            },
+            type: 'attribute'
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 25,
@@ -667,27 +675,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
-            name: 'pencilSize',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'pencilSize'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTPictureEffectMarker',
         typeName: 'CT_PictureEffectMarker',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'size',
             typeInfo: 'Int',
             defaultValue: 97,
@@ -695,11 +687,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'size'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectMosiaicBubbles',
-        typeName: 'CT_PictureEffectMosiaicBubbles',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -707,7 +695,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectMosiaicBubbles',
+        typeName: 'CT_PictureEffectMosiaicBubbles',
+        propertyInfos: [{
             name: 'pressure',
             typeInfo: 'Int',
             defaultValue: 14,
@@ -715,11 +707,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'pressure'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPaintBrush',
-        typeName: 'CT_PictureEffectPaintBrush',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -727,7 +715,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectPaintBrush',
+        typeName: 'CT_PictureEffectPaintBrush',
+        propertyInfos: [{
             name: 'brushSize',
             typeInfo: 'Int',
             defaultValue: 2,
@@ -735,11 +727,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'brushSize'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPaintStrokes',
-        typeName: 'CT_PictureEffectPaintStrokes',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -747,7 +735,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectPaintStrokes',
+        typeName: 'CT_PictureEffectPaintStrokes',
+        propertyInfos: [{
             name: 'intensity',
             typeInfo: 'Int',
             defaultValue: 5,
@@ -755,11 +747,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'intensity'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPastelsSmooth',
-        typeName: 'CT_PictureEffectPastelsSmooth',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -767,7 +755,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectPastelsSmooth',
+        typeName: 'CT_PictureEffectPastelsSmooth',
+        propertyInfos: [{
             name: 'scaling',
             typeInfo: 'Int',
             defaultValue: 34,
@@ -775,11 +767,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'scaling'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPencilGrayscale',
-        typeName: 'CT_PictureEffectPencilGrayscale',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -787,7 +775,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectPencilGrayscale',
+        typeName: 'CT_PictureEffectPencilGrayscale',
+        propertyInfos: [{
             name: 'pencilSize',
             typeInfo: 'Int',
             defaultValue: 27,
@@ -795,11 +787,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'pencilSize'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPencilSketch',
-        typeName: 'CT_PictureEffectPencilSketch',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -807,7 +795,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectPencilSketch',
+        typeName: 'CT_PictureEffectPencilSketch',
+        propertyInfos: [{
             name: 'pressure',
             typeInfo: 'Int',
             defaultValue: 22,
@@ -815,31 +807,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'pressure'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPhotocopy',
-        typeName: 'CT_PictureEffectPhotocopy',
-        propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 30,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
           }, {
-            name: 'detail',
-            typeInfo: 'Int',
-            defaultValue: 3,
-            attributeName: {
-              localPart: 'detail'
-            },
-            type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectPlasticWrap',
-        typeName: 'CT_PictureEffectPlasticWrap',
-        propertyInfos: [{
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -847,12 +815,44 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPictureEffectPhotocopy',
+        typeName: 'CT_PictureEffectPhotocopy',
+        propertyInfos: [{
+            name: 'detail',
+            typeInfo: 'Int',
+            defaultValue: 3,
+            attributeName: {
+              localPart: 'detail'
+            },
+            type: 'attribute'
           }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 30,
+            attributeName: {
+              localPart: 'trans'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTPictureEffectPlasticWrap',
+        typeName: 'CT_PictureEffectPlasticWrap',
+        propertyInfos: [{
             name: 'smoothness',
             typeInfo: 'Int',
             defaultValue: 5,
             attributeName: {
               localPart: 'smoothness'
+            },
+            type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
             },
             type: 'attribute'
           }]
@@ -884,14 +884,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
         localName: 'CTPictureEffectTexturizer',
         typeName: 'CT_PictureEffectTexturizer',
         propertyInfos: [{
-            name: 'trans',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'trans'
-            },
-            type: 'attribute'
-          }, {
             name: 'scaling',
             typeInfo: 'Int',
             defaultValue: 34,
@@ -899,11 +891,7 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'scaling'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTPictureEffectWatercolorSponge',
-        typeName: 'CT_PictureEffectWatercolorSponge',
-        propertyInfos: [{
+          }, {
             name: 'trans',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -911,12 +899,24 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
               localPart: 'trans'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTPictureEffectWatercolorSponge',
+        typeName: 'CT_PictureEffectWatercolorSponge',
+        propertyInfos: [{
             name: 'brushSize',
             typeInfo: 'Int',
             defaultValue: 2,
             attributeName: {
               localPart: 'brushSize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'trans',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'trans'
             },
             type: 'attribute'
           }]

@@ -38,16 +38,16 @@ export interface CTContentPartLocking {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTContentPartLocking';
   readonly PARENT?: CTNonVisualInkContentPartProperties;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  noGrp?: boolean;
-  noSelect?: boolean;
-  noRot?: boolean;
-  noChangeAspect?: boolean;
-  noMove?: boolean;
-  noResize?: boolean;
-  noEditPoints?: boolean;
   noAdjustHandles?: boolean;
   noChangeArrowheads?: boolean;
+  noChangeAspect?: boolean;
   noChangeShapeType?: boolean;
+  noEditPoints?: boolean;
+  noGrp?: boolean;
+  noMove?: boolean;
+  noResize?: boolean;
+  noRot?: boolean;
+  noSelect?: boolean;
 }
 
 export interface CTGvmlContentPart {
@@ -122,18 +122,18 @@ export interface CTPictureEffectBackgroundRemoval {
   readonly PARENT?: CTPictureEffect;
   foregroundMark?: CTPictureEffectBackgroundRemovalForegroundMark[];
   backgroundMark?: CTPictureEffectBackgroundRemovalBackgroundMark[];
-  t: number;
   b: number;
   l: number;
   r: number;
+  t: number;
 }
 
 export interface CTPictureEffectBackgroundRemovalBackgroundMark {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectBackgroundRemovalBackgroundMark';
   readonly PARENT?: CTPictureEffectBackgroundRemoval;
   x1: number;
-  y1: number;
   x2: number;
+  y1: number;
   y2: number;
 }
 
@@ -141,8 +141,8 @@ export interface CTPictureEffectBackgroundRemovalForegroundMark {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectBackgroundRemovalForegroundMark';
   readonly PARENT?: CTPictureEffectBackgroundRemoval;
   x1: number;
-  y1: number;
   x2: number;
+  y1: number;
   y2: number;
 }
 
@@ -162,15 +162,15 @@ export interface CTPictureEffectBrightnessContrast {
 export interface CTPictureEffectCement {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectCement';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   crackSpacing?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectChalkSketch {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectChalkSketch';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pressure?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectColorTemperature {
@@ -182,120 +182,120 @@ export interface CTPictureEffectColorTemperature {
 export interface CTPictureEffectCrisscrossEtching {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectCrisscrossEtching';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pressure?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectCutout {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectCutout';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   numberOfShades?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectFilmGrain {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectFilmGrain';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   grainSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectGlass {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectGlass';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   scaling?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectGlowDiffused {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectGlowDiffused';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   intensity?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectGlowEdges {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectGlowEdges';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   smoothness?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectLightScreen {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectLightScreen';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   gridSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectLineDrawing {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectLineDrawing';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pencilSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectMarker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectMarker';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   size?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectMosiaicBubbles {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectMosiaicBubbles';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pressure?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPaintBrush {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPaintBrush';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   brushSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPaintStrokes {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPaintStrokes';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   intensity?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPastelsSmooth {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPastelsSmooth';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   scaling?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPencilGrayscale {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPencilGrayscale';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pencilSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPencilSketch {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPencilSketch';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   pressure?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPhotocopy {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPhotocopy';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   detail?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectPlasticWrap {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectPlasticWrap';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   smoothness?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectSaturation {
@@ -313,15 +313,15 @@ export interface CTPictureEffectSharpenSoften {
 export interface CTPictureEffectTexturizer {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectTexturizer';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   scaling?: number;
+  trans?: number;
 }
 
 export interface CTPictureEffectWatercolorSponge {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTPictureEffectWatercolorSponge';
   readonly PARENT?: CTPictureEffect;
-  trans?: number;
   brushSize?: number;
+  trans?: number;
 }
 
 export interface CTPictureLayer {

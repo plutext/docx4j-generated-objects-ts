@@ -27,18 +27,18 @@ export interface CTAnchorLock {
 export interface CTBorder {
   TYPE_NAME?: 'org_docx4j_vml_wordprocessingDrawing.CTBorder';
   readonly PARENT?: Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
+  shadow?: STBorderShadow;
   type?: STBorderType;
   width?: number;
-  shadow?: STBorderShadow;
 }
 
 export interface CTWrap {
   TYPE_NAME?: 'org_docx4j_vml_wordprocessingDrawing.CTWrap';
   readonly PARENT?: Dep_org_docx4j_vml.CTArc | Dep_org_docx4j_vml.CTCurve | Dep_org_docx4j_vml.CTGroup | Dep_org_docx4j_vml.CTImage | Dep_org_docx4j_vml.CTLine | Dep_org_docx4j_vml.CTOval | Dep_org_docx4j_vml.CTPolyLine | Dep_org_docx4j_vml.CTRect | Dep_org_docx4j_vml.CTRoundRect | Dep_org_docx4j_vml.CTShape | Dep_org_docx4j_vml.CTShapetype;
-  type?: STWrapType;
-  side?: STWrapSide;
   anchorx?: STHorizontalAnchor;
   anchory?: STVerticalAnchor;
+  side?: STWrapSide;
+  type?: STWrapType;
 }
 
 export type STBorderShadow = 't' | 'true' | 'f' | 'false';

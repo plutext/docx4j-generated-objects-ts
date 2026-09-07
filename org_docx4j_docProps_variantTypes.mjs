@@ -62,6 +62,14 @@ export const org_docx4j_docProps_variantTypes = {
             }],
           type: 'elementRefs'
         }, {
+          name: 'baseType',
+          required: true,
+          values: ['variant', 'i1', 'i2', 'i4', 'int', 'ui1', 'ui2', 'ui4', 'uint', 'r4', 'r8', 'decimal', 'bstr', 'date', 'bool', 'cy', 'error'],
+          attributeName: {
+            localPart: 'baseType'
+          },
+          type: 'attribute'
+        }, {
           name: 'lBounds',
           required: true,
           typeInfo: 'Int',
@@ -75,14 +83,6 @@ export const org_docx4j_docProps_variantTypes = {
           typeInfo: 'Int',
           attributeName: {
             localPart: 'uBounds'
-          },
-          type: 'attribute'
-        }, {
-          name: 'baseType',
-          required: true,
-          values: ['variant', 'i1', 'i2', 'i4', 'int', 'ui1', 'ui2', 'ui4', 'uint', 'r4', 'r8', 'decimal', 'bstr', 'date', 'bool', 'cy', 'error'],
-          attributeName: {
-            localPart: 'baseType'
           },
           type: 'attribute'
         }]

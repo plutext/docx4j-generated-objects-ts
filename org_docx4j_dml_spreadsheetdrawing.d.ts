@@ -46,8 +46,8 @@ export interface CTConnector {
   nvCxnSpPr: CTConnectorNonVisual;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
-  macro?: string;
   fPublished?: boolean;
+  macro?: string;
 }
 
 export interface CTConnectorNonVisual {
@@ -68,8 +68,8 @@ export interface CTGraphicalObjectFrame {
   nvGraphicFramePr: CTGraphicalObjectFrameNonVisual;
   xfrm: Dep_org_docx4j_dml.CTTransform2D;
   graphic: Dep_org_docx4j_dml.Graphic;
-  macro?: string;
   fPublished?: boolean;
+  macro?: string;
 }
 
 export interface CTGraphicalObjectFrameNonVisual {
@@ -123,8 +123,8 @@ export interface CTPicture {
   blipFill: Dep_org_docx4j_dml.CTBlipFillProperties;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
-  macro?: string;
   fPublished?: boolean;
+  macro?: string;
 }
 
 export interface CTPictureNonVisual {
@@ -141,10 +141,10 @@ export interface CTShape {
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   style?: Dep_org_docx4j_dml.CTShapeStyle;
   txBody?: Dep_org_docx4j_dml.CTTextBody;
-  macro?: string;
-  textlink?: string;
   fLocksText?: boolean;
   fPublished?: boolean;
+  macro?: string;
+  textlink?: string;
 }
 
 export interface CTShapeNonVisual {

@@ -28,18 +28,18 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11_M
             name: 'extLst',
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
-            name: 'id',
-            required: true,
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
             name: 'frozen',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'frozen'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id'
             },
             type: 'attribute'
           }]
@@ -49,6 +49,13 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11_M
         propertyInfos: [{
             name: 'extLst',
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
+          }, {
+            name: 'appref',
+            required: true,
+            attributeName: {
+              localPart: 'appref'
+            },
+            type: 'attribute'
           }, {
             name: 'id',
             required: true,
@@ -61,13 +68,6 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11_M
             required: true,
             attributeName: {
               localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'appref',
-            required: true,
-            attributeName: {
-              localPart: 'appref'
             },
             type: 'attribute'
           }]
@@ -121,13 +121,6 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11_M
             },
             type: 'attribute'
           }, {
-            name: 'version',
-            required: true,
-            attributeName: {
-              localPart: 'version'
-            },
-            type: 'attribute'
-          }, {
             name: 'store',
             attributeName: {
               localPart: 'store'
@@ -137,6 +130,13 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11_M
             name: 'storeType',
             attributeName: {
               localPart: 'storeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'version',
+            required: true,
+            attributeName: {
+              localPart: 'version'
             },
             type: 'attribute'
           }]

@@ -168,18 +168,19 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
         }, {
+          name: 'clrIdx',
+          required: true,
+          typeInfo: 'UnsignedInt',
+          attributeName: {
+            localPart: 'clrIdx'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'id'
-          },
-          type: 'attribute'
-        }, {
-          name: 'name',
-          required: true,
-          attributeName: {
-            localPart: 'name'
           },
           type: 'attribute'
         }, {
@@ -198,11 +199,10 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'clrIdx',
+          name: 'name',
           required: true,
-          typeInfo: 'UnsignedInt',
           attributeName: {
-            localPart: 'clrIdx'
+            localPart: 'name'
           },
           type: 'attribute'
         }]
@@ -235,6 +235,14 @@ export const org_pptx4j_pml = {
           name: 'guideLst',
           typeInfo: '.CTGuideList'
         }, {
+          name: 'showGuides',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'showGuides'
+          },
+          type: 'attribute'
+        }, {
           name: 'snapToGrid',
           typeInfo: 'Boolean',
           defaultValue: true,
@@ -248,14 +256,6 @@ export const org_pptx4j_pml = {
           defaultValue: false,
           attributeName: {
             localPart: 'snapToObjects'
-          },
-          type: 'attribute'
-        }, {
-          name: 'showGuides',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'showGuides'
           },
           type: 'attribute'
         }]
@@ -289,6 +289,20 @@ export const org_pptx4j_pml = {
           name: 'pic',
           typeInfo: '.Pic'
         }, {
+          name: 'imgH',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'imgH'
+          },
+          type: 'attribute'
+        }, {
+          name: 'imgW',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'imgW'
+          },
+          type: 'attribute'
+        }, {
           name: 'name',
           defaultValue: '',
           attributeName: {
@@ -308,20 +322,6 @@ export const org_pptx4j_pml = {
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-          },
-          type: 'attribute'
-        }, {
-          name: 'imgW',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'imgW'
-          },
-          type: 'attribute'
-        }, {
-          name: 'imgH',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'imgH'
           },
           type: 'attribute'
         }]
@@ -365,18 +365,18 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
         }, {
-          name: 'name',
-          required: true,
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
           name: 'id',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'id'
+          },
+          type: 'attribute'
+        }, {
+          name: 'name',
+          required: true,
+          attributeName: {
+            localPart: 'name'
           },
           type: 'attribute'
         }]
@@ -619,19 +619,11 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionListModify'
         }, {
-          name: 'sldNum',
+          name: 'dt',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
-            localPart: 'sldNum'
-          },
-          type: 'attribute'
-        }, {
-          name: 'hdr',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'hdr'
+            localPart: 'dt'
           },
           type: 'attribute'
         }, {
@@ -643,11 +635,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'dt',
+          name: 'hdr',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
-            localPart: 'dt'
+            localPart: 'hdr'
+          },
+          type: 'attribute'
+        }, {
+          name: 'sldNum',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'sldNum'
           },
           type: 'attribute'
         }]
@@ -715,14 +715,6 @@ export const org_pptx4j_pml = {
       localName: 'CTIndexRange',
       typeName: 'CT_IndexRange',
       propertyInfos: [{
-          name: 'st',
-          required: true,
-          typeInfo: 'UnsignedInt',
-          attributeName: {
-            localPart: 'st'
-          },
-          type: 'attribute'
-        }, {
           name: 'end',
           required: true,
           typeInfo: 'UnsignedInt',
@@ -730,14 +722,23 @@ export const org_pptx4j_pml = {
             localPart: 'end'
           },
           type: 'attribute'
+        }, {
+          name: 'st',
+          required: true,
+          typeInfo: 'UnsignedInt',
+          attributeName: {
+            localPart: 'st'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTKinsoku',
       typeName: 'CT_Kinsoku',
       propertyInfos: [{
-          name: 'lang',
+          name: 'invalEndChars',
+          required: true,
           attributeName: {
-            localPart: 'lang'
+            localPart: 'invalEndChars'
           },
           type: 'attribute'
         }, {
@@ -748,10 +749,9 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'invalEndChars',
-          required: true,
+          name: 'lang',
           attributeName: {
-            localPart: 'invalEndChars'
+            localPart: 'lang'
           },
           type: 'attribute'
         }]
@@ -790,19 +790,19 @@ export const org_pptx4j_pml = {
       localName: 'CTNormalViewPortion',
       typeName: 'CT_NormalViewPortion',
       propertyInfos: [{
-          name: 'sz',
-          required: true,
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'sz'
-          },
-          type: 'attribute'
-        }, {
           name: 'autoAdjust',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
             localPart: 'autoAdjust'
+          },
+          type: 'attribute'
+        }, {
+          name: 'sz',
+          required: true,
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'sz'
           },
           type: 'attribute'
         }]
@@ -820,6 +820,22 @@ export const org_pptx4j_pml = {
         }, {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
+        }, {
+          name: 'horzBarState',
+          typeInfo: '.STSplitterBarState',
+          defaultValue: 'restored',
+          attributeName: {
+            localPart: 'horzBarState'
+          },
+          type: 'attribute'
+        }, {
+          name: 'preferSingleView',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'preferSingleView'
+          },
+          type: 'attribute'
         }, {
           name: 'showOutlineIcons',
           typeInfo: 'Boolean',
@@ -842,22 +858,6 @@ export const org_pptx4j_pml = {
           defaultValue: 'restored',
           attributeName: {
             localPart: 'vertBarState'
-          },
-          type: 'attribute'
-        }, {
-          name: 'horzBarState',
-          typeInfo: '.STSplitterBarState',
-          defaultValue: 'restored',
-          attributeName: {
-            localPart: 'horzBarState'
-          },
-          type: 'attribute'
-        }, {
-          name: 'preferSingleView',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'preferSingleView'
           },
           type: 'attribute'
         }]
@@ -921,16 +921,17 @@ export const org_pptx4j_pml = {
           required: true,
           typeInfo: '.Pic'
         }, {
-          name: 'progId',
+          name: 'imgH',
+          typeInfo: 'Int',
           attributeName: {
-            localPart: 'progId'
+            localPart: 'imgH'
           },
           type: 'attribute'
         }, {
-          name: 'spid',
-          typeInfo: 'Token',
+          name: 'imgW',
+          typeInfo: 'Int',
           attributeName: {
-            localPart: 'spid'
+            localPart: 'imgW'
           },
           type: 'attribute'
         }, {
@@ -938,6 +939,12 @@ export const org_pptx4j_pml = {
           defaultValue: '',
           attributeName: {
             localPart: 'name'
+          },
+          type: 'attribute'
+        }, {
+          name: 'progId',
+          attributeName: {
+            localPart: 'progId'
           },
           type: 'attribute'
         }, {
@@ -949,24 +956,17 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'spid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'spid'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-          },
-          type: 'attribute'
-        }, {
-          name: 'imgW',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'imgW'
-          },
-          type: 'attribute'
-        }, {
-          name: 'imgH',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'imgH'
           },
           type: 'attribute'
         }]
@@ -1042,19 +1042,19 @@ export const org_pptx4j_pml = {
       localName: 'CTOutlineViewSlideEntry',
       typeName: 'CT_OutlineViewSlideEntry',
       propertyInfos: [{
-          name: 'id',
-          required: true,
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-          },
-          type: 'attribute'
-        }, {
           name: 'collapse',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'collapse'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          required: true,
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
           },
           type: 'attribute'
         }]
@@ -1082,11 +1082,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'showCaptions',
-          typeInfo: 'Boolean',
-          defaultValue: false,
+          name: 'frame',
+          typeInfo: '.STPhotoAlbumFrameShape',
+          defaultValue: 'frameStyle1',
           attributeName: {
-            localPart: 'showCaptions'
+            localPart: 'frame'
           },
           type: 'attribute'
         }, {
@@ -1099,11 +1099,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'frame',
-          typeInfo: '.STPhotoAlbumFrameShape',
-          defaultValue: 'frameStyle1',
+          name: 'showCaptions',
+          typeInfo: 'Boolean',
+          defaultValue: false,
           attributeName: {
-            localPart: 'frame'
+            localPart: 'showCaptions'
           },
           type: 'attribute'
         }]
@@ -1114,11 +1114,19 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionListModify'
         }, {
-          name: 'type',
-          typeInfo: '.STPlaceholderType',
-          defaultValue: 'obj',
+          name: 'hasCustomPrompt',
+          typeInfo: 'Boolean',
+          defaultValue: false,
           attributeName: {
-            localPart: 'type'
+            localPart: 'hasCustomPrompt'
+          },
+          type: 'attribute'
+        }, {
+          name: 'idx',
+          typeInfo: 'UnsignedInt',
+          defaultValue: 0,
+          attributeName: {
+            localPart: 'idx'
           },
           type: 'attribute'
         }, {
@@ -1138,19 +1146,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'idx',
-          typeInfo: 'UnsignedInt',
-          defaultValue: 0,
+          name: 'type',
+          typeInfo: '.STPlaceholderType',
+          defaultValue: 'obj',
           attributeName: {
-            localPart: 'idx'
-          },
-          type: 'attribute'
-        }, {
-          name: 'hasCustomPrompt',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'hasCustomPrompt'
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -1161,19 +1161,19 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
         }, {
-          name: 'prnWhat',
-          typeInfo: '.STPrintWhat',
-          defaultValue: 'slides',
-          attributeName: {
-            localPart: 'prnWhat'
-          },
-          type: 'attribute'
-        }, {
           name: 'clrMode',
           typeInfo: '.STPrintColorMode',
           defaultValue: 'clr',
           attributeName: {
             localPart: 'clrMode'
+          },
+          type: 'attribute'
+        }, {
+          name: 'frameSlides',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'frameSlides'
           },
           type: 'attribute'
         }, {
@@ -1185,19 +1185,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'prnWhat',
+          typeInfo: '.STPrintWhat',
+          defaultValue: 'slides',
+          attributeName: {
+            localPart: 'prnWhat'
+          },
+          type: 'attribute'
+        }, {
           name: 'scaleToFitPaper',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'scaleToFitPaper'
-          },
-          type: 'attribute'
-        }, {
-          name: 'frameSlides',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'frameSlides'
           },
           type: 'attribute'
         }]
@@ -1279,19 +1279,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'showNarration',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'showNarration'
-          },
-          type: 'attribute'
-        }, {
           name: 'showAnimation',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
             localPart: 'showAnimation'
+          },
+          type: 'attribute'
+        }, {
+          name: 'showNarration',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'showNarration'
           },
           type: 'attribute'
         }, {
@@ -1378,6 +1378,14 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
         }, {
+          name: 'clientInsertedTime',
+          required: true,
+          typeInfo: 'DateTime',
+          attributeName: {
+            localPart: 'clientInsertedTime'
+          },
+          type: 'attribute'
+        }, {
           name: 'serverSldId',
           required: true,
           attributeName: {
@@ -1390,14 +1398,6 @@ export const org_pptx4j_pml = {
           typeInfo: 'DateTime',
           attributeName: {
             localPart: 'serverSldModifiedTime'
-          },
-          type: 'attribute'
-        }, {
-          name: 'clientInsertedTime',
-          required: true,
-          typeInfo: 'DateTime',
-          attributeName: {
-            localPart: 'clientInsertedTime'
           },
           type: 'attribute'
         }]
@@ -1508,14 +1508,6 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionListModify'
         }, {
-          name: 'spd',
-          typeInfo: '.STTransitionSpeed',
-          defaultValue: 'fast',
-          attributeName: {
-            localPart: 'spd'
-          },
-          type: 'attribute'
-        }, {
           name: 'advClick',
           typeInfo: 'Boolean',
           defaultValue: true,
@@ -1528,6 +1520,14 @@ export const org_pptx4j_pml = {
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'advTm'
+          },
+          type: 'attribute'
+        }, {
+          name: 'spd',
+          typeInfo: '.STTransitionSpeed',
+          defaultValue: 'fast',
+          attributeName: {
+            localPart: 'spd'
           },
           type: 'attribute'
         }]
@@ -1558,19 +1558,19 @@ export const org_pptx4j_pml = {
       localName: 'CTSplitTransition',
       typeName: 'CT_SplitTransition',
       propertyInfos: [{
-          name: 'orient',
-          typeInfo: '.STDirection',
-          defaultValue: 'horz',
-          attributeName: {
-            localPart: 'orient'
-          },
-          type: 'attribute'
-        }, {
           name: 'dir',
           typeInfo: '.STTransitionInOutDirectionType',
           defaultValue: 'out',
           attributeName: {
             localPart: 'dir'
+          },
+          type: 'attribute'
+        }, {
+          name: 'orient',
+          typeInfo: '.STDirection',
+          defaultValue: 'horz',
+          attributeName: {
+            localPart: 'orient'
           },
           type: 'attribute'
         }]
@@ -1678,6 +1678,13 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'calcmode',
+          typeInfo: '.STTLAnimateBehaviorCalcMode',
+          attributeName: {
+            localPart: 'calcmode'
+          },
+          type: 'attribute'
+        }, {
           name: 'from',
           attributeName: {
             localPart: 'from'
@@ -1687,13 +1694,6 @@ export const org_pptx4j_pml = {
           name: 'to',
           attributeName: {
             localPart: 'to'
-          },
-          type: 'attribute'
-        }, {
-          name: 'calcmode',
-          typeInfo: '.STTLAnimateBehaviorCalcMode',
-          attributeName: {
-            localPart: 'calcmode'
           },
           type: 'attribute'
         }, {
@@ -1746,13 +1746,6 @@ export const org_pptx4j_pml = {
           name: 'progress',
           typeInfo: '.CTTLAnimVariant'
         }, {
-          name: 'transition',
-          typeInfo: '.STTLAnimateEffectTransition',
-          attributeName: {
-            localPart: 'transition'
-          },
-          type: 'attribute'
-        }, {
           name: 'filter',
           attributeName: {
             localPart: 'filter'
@@ -1762,6 +1755,13 @@ export const org_pptx4j_pml = {
           name: 'prLst',
           attributeName: {
             localPart: 'prLst'
+          },
+          type: 'attribute'
+        }, {
+          name: 'transition',
+          typeInfo: '.STTLAnimateEffectTransition',
+          attributeName: {
+            localPart: 'transition'
           },
           type: 'attribute'
         }]
@@ -1805,16 +1805,16 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'ptsTypes',
+          attributeName: {
+            localPart: 'ptsTypes'
+          },
+          type: 'attribute'
+        }, {
           name: 'rAng',
           typeInfo: 'Int',
           attributeName: {
             localPart: 'rAng'
-          },
-          type: 'attribute'
-        }, {
-          name: 'ptsTypes',
-          attributeName: {
-            localPart: 'ptsTypes'
           },
           type: 'attribute'
         }]
@@ -1891,19 +1891,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'spid',
-          required: true,
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'spid'
-          },
-          type: 'attribute'
-        }, {
           name: 'grpId',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'grpId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'spid',
+          required: true,
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'spid'
           },
           type: 'attribute'
         }, {
@@ -1922,19 +1922,10 @@ export const org_pptx4j_pml = {
           name: 'tmplLst',
           typeInfo: '.CTTLTemplateList'
         }, {
-          name: 'build',
-          typeInfo: '.STTLParaBuildType',
-          defaultValue: 'whole',
+          name: 'advAuto',
+          defaultValue: 'indefinite',
           attributeName: {
-            localPart: 'build'
-          },
-          type: 'attribute'
-        }, {
-          name: 'bldLvl',
-          typeInfo: 'UnsignedInt',
-          defaultValue: 1,
-          attributeName: {
-            localPart: 'bldLvl'
+            localPart: 'advAuto'
           },
           type: 'attribute'
         }, {
@@ -1954,26 +1945,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'rev',
-          typeInfo: 'Boolean',
-          defaultValue: false,
+          name: 'bldLvl',
+          typeInfo: 'UnsignedInt',
+          defaultValue: 1,
           attributeName: {
-            localPart: 'rev'
+            localPart: 'bldLvl'
           },
           type: 'attribute'
         }, {
-          name: 'advAuto',
-          defaultValue: 'indefinite',
+          name: 'build',
+          typeInfo: '.STTLParaBuildType',
+          defaultValue: 'whole',
           attributeName: {
-            localPart: 'advAuto'
-          },
-          type: 'attribute'
-        }, {
-          name: 'spid',
-          required: true,
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'spid'
+            localPart: 'build'
           },
           type: 'attribute'
         }, {
@@ -1982,6 +1966,22 @@ export const org_pptx4j_pml = {
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'grpId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'rev',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'rev'
+          },
+          type: 'attribute'
+        }, {
+          name: 'spid',
+          required: true,
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'spid'
           },
           type: 'attribute'
         }, {
@@ -2017,14 +2017,6 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 's',
-          required: true,
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 's'
-          },
-          type: 'attribute'
-        }, {
           name: 'l',
           required: true,
           typeInfo: 'Int',
@@ -2032,16 +2024,24 @@ export const org_pptx4j_pml = {
             localPart: 'l'
           },
           type: 'attribute'
+        }, {
+          name: 's',
+          required: true,
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 's'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTTLByRgbColorTransform',
       typeName: 'CT_TLByRgbColorTransform',
       propertyInfos: [{
-          name: 'r',
+          name: 'b',
           required: true,
           typeInfo: 'Int',
           attributeName: {
-            localPart: 'r'
+            localPart: 'b'
           },
           type: 'attribute'
         }, {
@@ -2053,11 +2053,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'b',
+          name: 'r',
           required: true,
           typeInfo: 'Int',
           attributeName: {
-            localPart: 'b'
+            localPart: 'r'
           },
           type: 'attribute'
         }]
@@ -2069,16 +2069,16 @@ export const org_pptx4j_pml = {
           required: true,
           typeInfo: '.CTTLCommonBehaviorData'
         }, {
+          name: 'cmd',
+          attributeName: {
+            localPart: 'cmd'
+          },
+          type: 'attribute'
+        }, {
           name: 'type',
           typeInfo: '.STTLCommandType',
           attributeName: {
             localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'cmd',
-          attributeName: {
-            localPart: 'cmd'
           },
           type: 'attribute'
         }]
@@ -2097,13 +2097,6 @@ export const org_pptx4j_pml = {
           name: 'attrNameLst',
           typeInfo: '.CTTLBehaviorAttributeNameList'
         }, {
-          name: 'additive',
-          typeInfo: '.STTLBehaviorAdditiveType',
-          attributeName: {
-            localPart: 'additive'
-          },
-          type: 'attribute'
-        }, {
           name: 'accumulate',
           typeInfo: '.STTLBehaviorAccumulateType',
           attributeName: {
@@ -2111,22 +2104,10 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'xfrmType',
-          typeInfo: '.STTLBehaviorTransformType',
+          name: 'additive',
+          typeInfo: '.STTLBehaviorAdditiveType',
           attributeName: {
-            localPart: 'xfrmType'
-          },
-          type: 'attribute'
-        }, {
-          name: 'from',
-          attributeName: {
-            localPart: 'from'
-          },
-          type: 'attribute'
-        }, {
-          name: 'to',
-          attributeName: {
-            localPart: 'to'
+            localPart: 'additive'
           },
           type: 'attribute'
         }, {
@@ -2136,9 +2117,9 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'rctx',
+          name: 'from',
           attributeName: {
-            localPart: 'rctx'
+            localPart: 'from'
           },
           type: 'attribute'
         }, {
@@ -2146,6 +2127,25 @@ export const org_pptx4j_pml = {
           typeInfo: '.STTLBehaviorOverrideType',
           attributeName: {
             localPart: 'override'
+          },
+          type: 'attribute'
+        }, {
+          name: 'rctx',
+          attributeName: {
+            localPart: 'rctx'
+          },
+          type: 'attribute'
+        }, {
+          name: 'to',
+          attributeName: {
+            localPart: 'to'
+          },
+          type: 'attribute'
+        }, {
+          name: 'xfrmType',
+          typeInfo: '.STTLBehaviorTransformType',
+          attributeName: {
+            localPart: 'xfrmType'
           },
           type: 'attribute'
         }]
@@ -2160,14 +2160,6 @@ export const org_pptx4j_pml = {
           name: 'tgtEl',
           required: true,
           typeInfo: '.CTTLTimeTargetElement'
-        }, {
-          name: 'vol',
-          typeInfo: 'Int',
-          defaultValue: 50,
-          attributeName: {
-            localPart: 'vol'
-          },
-          type: 'attribute'
         }, {
           name: 'mute',
           typeInfo: 'Boolean',
@@ -2190,6 +2182,14 @@ export const org_pptx4j_pml = {
           defaultValue: true,
           attributeName: {
             localPart: 'showWhenStopped'
+          },
+          type: 'attribute'
+        }, {
+          name: 'vol',
+          typeInfo: 'Int',
+          defaultValue: 50,
+          attributeName: {
+            localPart: 'vol'
           },
           type: 'attribute'
         }]
@@ -2215,6 +2215,77 @@ export const org_pptx4j_pml = {
           name: 'subTnLst',
           typeInfo: '.CTTimeNodeList'
         }, {
+          name: 'accel',
+          typeInfo: 'Int',
+          defaultValue: 0,
+          attributeName: {
+            localPart: 'accel'
+          },
+          type: 'attribute'
+        }, {
+          name: 'afterEffect',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'afterEffect'
+          },
+          type: 'attribute'
+        }, {
+          name: 'autoRev',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'autoRev'
+          },
+          type: 'attribute'
+        }, {
+          name: 'bldLvl',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'bldLvl'
+          },
+          type: 'attribute'
+        }, {
+          name: 'decel',
+          typeInfo: 'Int',
+          defaultValue: 0,
+          attributeName: {
+            localPart: 'decel'
+          },
+          type: 'attribute'
+        }, {
+          name: 'display',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'display'
+          },
+          type: 'attribute'
+        }, {
+          name: 'dur',
+          attributeName: {
+            localPart: 'dur'
+          },
+          type: 'attribute'
+        }, {
+          name: 'evtFilter',
+          attributeName: {
+            localPart: 'evtFilter'
+          },
+          type: 'attribute'
+        }, {
+          name: 'fill',
+          typeInfo: '.STTLTimeNodeFillType',
+          attributeName: {
+            localPart: 'fill'
+          },
+          type: 'attribute'
+        }, {
+          name: 'grpId',
+          typeInfo: 'UnsignedInt',
+          attributeName: {
+            localPart: 'grpId'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           typeInfo: 'UnsignedInt',
           attributeName: {
@@ -2222,10 +2293,24 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'presetID',
-          typeInfo: 'Int',
+          name: 'masterRel',
+          typeInfo: '.STTLTimeNodeMasterRelation',
           attributeName: {
-            localPart: 'presetID'
+            localPart: 'masterRel'
+          },
+          type: 'attribute'
+        }, {
+          name: 'nodePh',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'nodePh'
+          },
+          type: 'attribute'
+        }, {
+          name: 'nodeType',
+          typeInfo: '.STTLTimeNodeType',
+          attributeName: {
+            localPart: 'nodeType'
           },
           type: 'attribute'
         }, {
@@ -2236,16 +2321,17 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'presetID',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'presetID'
+          },
+          type: 'attribute'
+        }, {
           name: 'presetSubtype',
           typeInfo: 'Int',
           attributeName: {
             localPart: 'presetSubtype'
-          },
-          type: 'attribute'
-        }, {
-          name: 'dur',
-          attributeName: {
-            localPart: 'dur'
           },
           type: 'attribute'
         }, {
@@ -2262,38 +2348,6 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'spd',
-          typeInfo: 'Int',
-          defaultValue: 100,
-          attributeName: {
-            localPart: 'spd'
-          },
-          type: 'attribute'
-        }, {
-          name: 'accel',
-          typeInfo: 'Int',
-          defaultValue: 0,
-          attributeName: {
-            localPart: 'accel'
-          },
-          type: 'attribute'
-        }, {
-          name: 'decel',
-          typeInfo: 'Int',
-          defaultValue: 0,
-          attributeName: {
-            localPart: 'decel'
-          },
-          type: 'attribute'
-        }, {
-          name: 'autoRev',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'autoRev'
-          },
-          type: 'attribute'
-        }, {
           name: 'restart',
           typeInfo: '.STTLTimeNodeRestartType',
           attributeName: {
@@ -2301,10 +2355,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'fill',
-          typeInfo: '.STTLTimeNodeFillType',
+          name: 'spd',
+          typeInfo: 'Int',
+          defaultValue: 100,
           attributeName: {
-            localPart: 'fill'
+            localPart: 'spd'
           },
           type: 'attribute'
         }, {
@@ -2320,61 +2375,6 @@ export const org_pptx4j_pml = {
             localPart: 'tmFilter'
           },
           type: 'attribute'
-        }, {
-          name: 'evtFilter',
-          attributeName: {
-            localPart: 'evtFilter'
-          },
-          type: 'attribute'
-        }, {
-          name: 'display',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'display'
-          },
-          type: 'attribute'
-        }, {
-          name: 'masterRel',
-          typeInfo: '.STTLTimeNodeMasterRelation',
-          attributeName: {
-            localPart: 'masterRel'
-          },
-          type: 'attribute'
-        }, {
-          name: 'bldLvl',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'bldLvl'
-          },
-          type: 'attribute'
-        }, {
-          name: 'grpId',
-          typeInfo: 'UnsignedInt',
-          attributeName: {
-            localPart: 'grpId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'afterEffect',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'afterEffect'
-          },
-          type: 'attribute'
-        }, {
-          name: 'nodeType',
-          typeInfo: '.STTLTimeNodeType',
-          attributeName: {
-            localPart: 'nodeType'
-          },
-          type: 'attribute'
-        }, {
-          name: 'nodePh',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'nodePh'
-          },
-          type: 'attribute'
         }]
     }, {
       localName: 'CTTLGraphicalObjectBuild',
@@ -2388,19 +2388,19 @@ export const org_pptx4j_pml = {
           required: true,
           typeInfo: 'org_docx4j_dml.CTAnimationGraphicalObjectBuildProperties'
         }, {
-          name: 'spid',
-          required: true,
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'spid'
-          },
-          type: 'attribute'
-        }, {
           name: 'grpId',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'grpId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'spid',
+          required: true,
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'spid'
           },
           type: 'attribute'
         }, {
@@ -2424,19 +2424,19 @@ export const org_pptx4j_pml = {
           required: true,
           typeInfo: '.CTTLIterateIntervalPercentage'
         }, {
-          name: 'type',
-          typeInfo: '.STIterateType',
-          defaultValue: 'el',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'backwards',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'backwards'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          typeInfo: '.STIterateType',
+          defaultValue: 'el',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -2499,14 +2499,6 @@ export const org_pptx4j_pml = {
       localName: 'CTTLOleBuildChart',
       typeName: 'CT_TLOleBuildChart',
       propertyInfos: [{
-          name: 'bld',
-          typeInfo: '.STTLOleChartBuildType',
-          defaultValue: 'allAtOnce',
-          attributeName: {
-            localPart: 'bld'
-          },
-          type: 'attribute'
-        }, {
           name: 'animBg',
           typeInfo: 'Boolean',
           defaultValue: true,
@@ -2515,11 +2507,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'spid',
-          required: true,
-          typeInfo: 'Token',
+          name: 'bld',
+          typeInfo: '.STTLOleChartBuildType',
+          defaultValue: 'allAtOnce',
           attributeName: {
-            localPart: 'spid'
+            localPart: 'bld'
           },
           type: 'attribute'
         }, {
@@ -2528,6 +2520,14 @@ export const org_pptx4j_pml = {
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'grpId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'spid',
+          required: true,
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'spid'
           },
           type: 'attribute'
         }, {
@@ -2543,19 +2543,19 @@ export const org_pptx4j_pml = {
       localName: 'CTTLOleChartTargetElement',
       typeName: 'CT_TLOleChartTargetElement',
       propertyInfos: [{
-          name: 'type',
-          required: true,
-          typeInfo: '.STTLChartSubelementType',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'lvl',
           typeInfo: 'UnsignedInt',
           defaultValue: 0,
           attributeName: {
             localPart: 'lvl'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          typeInfo: '.STTLChartSubelementType',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -2679,17 +2679,17 @@ export const org_pptx4j_pml = {
           name: 'val',
           typeInfo: '.CTTLAnimVariant'
         }, {
-          name: 'tm',
-          defaultValue: 'indefinite',
-          attributeName: {
-            localPart: 'tm'
-          },
-          type: 'attribute'
-        }, {
           name: 'fmla',
           defaultValue: '',
           attributeName: {
             localPart: 'fmla'
+          },
+          type: 'attribute'
+        }, {
+          name: 'tm',
+          defaultValue: 'indefinite',
+          attributeName: {
+            localPart: 'tm'
           },
           type: 'attribute'
         }]
@@ -2718,16 +2718,16 @@ export const org_pptx4j_pml = {
           required: true,
           typeInfo: '.CTTLTriggerRuntimeNode'
         }, {
+          name: 'delay',
+          attributeName: {
+            localPart: 'delay'
+          },
+          type: 'attribute'
+        }, {
           name: 'evt',
           typeInfo: '.STTLTriggerEvent',
           attributeName: {
             localPart: 'evt'
-          },
-          type: 'attribute'
-        }, {
-          name: 'delay',
-          attributeName: {
-            localPart: 'delay'
           },
           type: 'attribute'
         }]
@@ -2777,17 +2777,17 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'prevAc',
-          typeInfo: '.STTLPreviousActionType',
-          attributeName: {
-            localPart: 'prevAc'
-          },
-          type: 'attribute'
-        }, {
           name: 'nextAc',
           typeInfo: '.STTLNextActionType',
           attributeName: {
             localPart: 'nextAc'
+          },
+          type: 'attribute'
+        }, {
+          name: 'prevAc',
+          typeInfo: '.STTLPreviousActionType',
+          attributeName: {
+            localPart: 'prevAc'
           },
           type: 'attribute'
         }]
@@ -3090,19 +3090,19 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionListModify'
         }, {
-          name: 'showMasterSp',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'showMasterSp'
-          },
-          type: 'attribute'
-        }, {
           name: 'showMasterPhAnim',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
             localPart: 'showMasterPhAnim'
+          },
+          type: 'attribute'
+        }, {
+          name: 'showMasterSp',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'showMasterSp'
           },
           type: 'attribute'
         }]
@@ -3284,78 +3284,6 @@ export const org_pptx4j_pml = {
           name: 'extLst',
           typeInfo: '.CTExtensionList'
         }, {
-          name: 'serverZoom',
-          typeInfo: 'Int',
-          defaultValue: 50,
-          attributeName: {
-            localPart: 'serverZoom'
-          },
-          type: 'attribute'
-        }, {
-          name: 'firstSlideNum',
-          typeInfo: 'Int',
-          defaultValue: 1,
-          attributeName: {
-            localPart: 'firstSlideNum'
-          },
-          type: 'attribute'
-        }, {
-          name: 'showSpecialPlsOnTitleSld',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'showSpecialPlsOnTitleSld'
-          },
-          type: 'attribute'
-        }, {
-          name: 'rtl',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'rtl'
-          },
-          type: 'attribute'
-        }, {
-          name: 'removePersonalInfoOnSave',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'removePersonalInfoOnSave'
-          },
-          type: 'attribute'
-        }, {
-          name: 'compatMode',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'compatMode'
-          },
-          type: 'attribute'
-        }, {
-          name: 'strictFirstAndLastChars',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'strictFirstAndLastChars'
-          },
-          type: 'attribute'
-        }, {
-          name: 'embedTrueTypeFonts',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'embedTrueTypeFonts'
-          },
-          type: 'attribute'
-        }, {
-          name: 'saveSubsetFonts',
-          typeInfo: 'Boolean',
-          defaultValue: false,
-          attributeName: {
-            localPart: 'saveSubsetFonts'
-          },
-          type: 'attribute'
-        }, {
           name: 'autoCompressPictures',
           typeInfo: 'Boolean',
           defaultValue: true,
@@ -3372,10 +3300,82 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
+          name: 'compatMode',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'compatMode'
+          },
+          type: 'attribute'
+        }, {
           name: 'conformance',
           typeInfo: 'org_docx4j_sharedtypes.STConformanceClass',
           attributeName: {
             localPart: 'conformance'
+          },
+          type: 'attribute'
+        }, {
+          name: 'embedTrueTypeFonts',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'embedTrueTypeFonts'
+          },
+          type: 'attribute'
+        }, {
+          name: 'firstSlideNum',
+          typeInfo: 'Int',
+          defaultValue: 1,
+          attributeName: {
+            localPart: 'firstSlideNum'
+          },
+          type: 'attribute'
+        }, {
+          name: 'removePersonalInfoOnSave',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'removePersonalInfoOnSave'
+          },
+          type: 'attribute'
+        }, {
+          name: 'rtl',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'rtl'
+          },
+          type: 'attribute'
+        }, {
+          name: 'saveSubsetFonts',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'saveSubsetFonts'
+          },
+          type: 'attribute'
+        }, {
+          name: 'serverZoom',
+          typeInfo: 'Int',
+          defaultValue: 50,
+          attributeName: {
+            localPart: 'serverZoom'
+          },
+          type: 'attribute'
+        }, {
+          name: 'showSpecialPlsOnTitleSld',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'showSpecialPlsOnTitleSld'
+          },
+          type: 'attribute'
+        }, {
+          name: 'strictFirstAndLastChars',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'strictFirstAndLastChars'
           },
           type: 'attribute'
         }]
@@ -3560,19 +3560,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'showMasterSp',
-          typeInfo: 'Boolean',
-          defaultValue: true,
-          attributeName: {
-            localPart: 'showMasterSp'
-          },
-          type: 'attribute'
-        }, {
           name: 'showMasterPhAnim',
           typeInfo: 'Boolean',
           defaultValue: true,
           attributeName: {
             localPart: 'showMasterPhAnim'
+          },
+          type: 'attribute'
+        }, {
+          name: 'showMasterSp',
+          typeInfo: 'Boolean',
+          defaultValue: true,
+          attributeName: {
+            localPart: 'showMasterSp'
           },
           type: 'attribute'
         }]
@@ -3606,14 +3606,6 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'type',
-          typeInfo: '.STSlideLayoutType',
-          defaultValue: 'cust',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'preserve',
           typeInfo: 'Boolean',
           defaultValue: false,
@@ -3622,11 +3614,11 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'userDrawn',
+          name: 'showMasterPhAnim',
           typeInfo: 'Boolean',
-          defaultValue: false,
+          defaultValue: true,
           attributeName: {
-            localPart: 'userDrawn'
+            localPart: 'showMasterPhAnim'
           },
           type: 'attribute'
         }, {
@@ -3638,11 +3630,19 @@ export const org_pptx4j_pml = {
           },
           type: 'attribute'
         }, {
-          name: 'showMasterPhAnim',
-          typeInfo: 'Boolean',
-          defaultValue: true,
+          name: 'type',
+          typeInfo: '.STSlideLayoutType',
+          defaultValue: 'cust',
           attributeName: {
-            localPart: 'showMasterPhAnim'
+            localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
+          name: 'userDrawn',
+          typeInfo: 'Boolean',
+          defaultValue: false,
+          attributeName: {
+            localPart: 'userDrawn'
           },
           type: 'attribute'
         }]

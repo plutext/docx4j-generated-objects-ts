@@ -7,10 +7,10 @@ var org_docx4j_w16cid_Module_Factory = function () {
         localName: 'CTCommentId',
         typeName: 'CT_CommentId',
         propertyInfos: [{
-            name: 'paraId',
+            name: 'durableId',
             type: 'attribute'
           }, {
-            name: 'durableId',
+            name: 'paraId',
             type: 'attribute'
           }]
       }, {

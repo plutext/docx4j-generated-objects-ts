@@ -10,17 +10,11 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation_Module_Facto
             name: 'extLst',
             typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
           }, {
-            name: 'name',
-            defaultValue: '',
+            name: 'auto',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             attributeName: {
-              localPart: 'name'
-            },
-            type: 'attribute'
-          }, {
-            name: 'length',
-            required: true,
-            attributeName: {
-              localPart: 'length'
+              localPart: 'auto'
             },
             type: 'attribute'
           }, {
@@ -31,11 +25,24 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation_Module_Facto
             },
             type: 'attribute'
           }, {
-            name: 'auto',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'end',
+            defaultValue: '0',
             attributeName: {
-              localPart: 'auto'
+              localPart: 'end'
+            },
+            type: 'attribute'
+          }, {
+            name: 'length',
+            required: true,
+            attributeName: {
+              localPart: 'length'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'name'
             },
             type: 'attribute'
           }, {
@@ -50,13 +57,6 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation_Module_Facto
             defaultValue: '0',
             attributeName: {
               localPart: 'st'
-            },
-            type: 'attribute'
-          }, {
-            name: 'end',
-            defaultValue: '0',
-            attributeName: {
-              localPart: 'end'
             },
             type: 'attribute'
           }]

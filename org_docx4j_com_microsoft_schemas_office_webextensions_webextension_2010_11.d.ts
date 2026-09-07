@@ -28,17 +28,17 @@ export interface CTOsfWebExtension {
   bindings: CTOsfWebExtensionBindingList;
   snapshot?: Dep_org_docx4j_dml.CTBlip;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  id: string;
   frozen?: boolean;
+  id: string;
 }
 
 export interface CTOsfWebExtensionBinding {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11.CTOsfWebExtensionBinding';
   readonly PARENT?: CTOsfWebExtensionBindingList;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
+  appref: string;
   id: string;
   type: string;
-  appref: string;
 }
 
 export interface CTOsfWebExtensionBindingList {
@@ -65,9 +65,9 @@ export interface CTOsfWebExtensionReference {
   readonly PARENT?: CTOsfWebExtension | CTOsfWebExtensionReferenceList;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   id: string;
-  version: string;
   store?: string;
   storeType?: string;
+  version: string;
 }
 
 export interface CTOsfWebExtensionReferenceList {

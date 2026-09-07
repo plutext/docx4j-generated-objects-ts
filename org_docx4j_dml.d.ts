@@ -131,16 +131,16 @@ export interface CTAngle {
 export interface CTAnimationChartBuildProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTAnimationChartBuildProperties';
   readonly PARENT?: CTAnimationGraphicalObjectBuildProperties;
-  bld?: string;
   animBg?: boolean;
+  bld?: string;
 }
 
 export interface CTAnimationChartElement {
   TYPE_NAME?: 'org_docx4j_dml.CTAnimationChartElement';
   readonly PARENT?: CTAnimationElementChoice;
-  seriesIdx?: number;
-  categoryIdx?: number;
   bldStep: STChartBuildStep;
+  categoryIdx?: number;
+  seriesIdx?: number;
 }
 
 export interface CTAnimationDgmBuildProperties {
@@ -153,8 +153,8 @@ export interface CTAnimationDgmBuildProperties {
 export interface CTAnimationDgmElement {
   TYPE_NAME?: 'org_docx4j_dml.CTAnimationDgmElement';
   readonly PARENT?: CTAnimationElementChoice;
-  id?: string;
   bldStep?: STDgmBuildStep;
+  id?: string;
 }
 
 export interface CTAnimationElementChoice {
@@ -182,8 +182,8 @@ export interface CTAudioCD {
 export interface CTAudioCDTime {
   TYPE_NAME?: 'org_docx4j_dml.CTAudioCDTime';
   readonly PARENT?: CTAudioCD;
-  track: number;
   time?: number;
+  track: number;
 }
 
 export interface CTAudioFile {
@@ -231,9 +231,9 @@ export interface CTBaseStylesOverride {
 export interface CTBevel {
   TYPE_NAME?: 'org_docx4j_dml.CTBevel';
   readonly PARENT?: CTCell3D | CTShape3D;
-  w?: number;
   h?: number;
   prst?: STBevelPresetType;
+  w?: number;
 }
 
 export interface CTBiLevelEffect {
@@ -273,16 +273,16 @@ export interface CTBlipFillProperties {
 export interface CTBlurEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTBlurEffect';
   readonly PARENT?: CTBlip | CTEffectContainer | CTEffectList;
-  rad?: number;
   grow?: boolean;
+  rad?: number;
 }
 
 export interface CTCamera {
   TYPE_NAME?: 'org_docx4j_dml.CTCamera';
   readonly PARENT?: CTScene3D;
   rot?: CTSphereCoords;
-  prst: STPresetCameraType;
   fov?: number;
+  prst: STPresetCameraType;
   zoom?: number;
 }
 
@@ -330,18 +330,18 @@ export interface CTColorMapping {
   TYPE_NAME?: 'org_docx4j_dml.CTColorMapping';
   readonly PARENT?: CTClipboardStyleSheet | CTColorMappingOverride | CTColorSchemeAndMapping | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTChartSpace | Dep_org_docx4j_dml_chart.CTChartSpace | Dep_org_pptx4j_pml.HandoutMaster | Dep_org_pptx4j_pml.NotesMaster | Dep_org_pptx4j_pml.SldMaster;
   extLst?: CTOfficeArtExtensionList;
-  bg1: STColorSchemeIndex;
-  tx1: STColorSchemeIndex;
-  bg2: STColorSchemeIndex;
-  tx2: STColorSchemeIndex;
   accent1: STColorSchemeIndex;
   accent2: STColorSchemeIndex;
   accent3: STColorSchemeIndex;
   accent4: STColorSchemeIndex;
   accent5: STColorSchemeIndex;
   accent6: STColorSchemeIndex;
-  hlink: STColorSchemeIndex;
+  bg1: STColorSchemeIndex;
+  bg2: STColorSchemeIndex;
   folHlink: STColorSchemeIndex;
+  hlink: STColorSchemeIndex;
+  tx1: STColorSchemeIndex;
+  tx2: STColorSchemeIndex;
 }
 
 export interface CTColorMappingOverride {
@@ -423,16 +423,16 @@ export interface CTConnectorLocking {
   TYPE_NAME?: 'org_docx4j_dml.CTConnectorLocking';
   readonly PARENT?: CTNonVisualConnectorProperties;
   extLst?: CTOfficeArtExtensionList;
-  noGrp?: boolean;
-  noSelect?: boolean;
-  noRot?: boolean;
-  noChangeAspect?: boolean;
-  noMove?: boolean;
-  noResize?: boolean;
-  noEditPoints?: boolean;
   noAdjustHandles?: boolean;
   noChangeArrowheads?: boolean;
+  noChangeAspect?: boolean;
   noChangeShapeType?: boolean;
+  noEditPoints?: boolean;
+  noGrp?: boolean;
+  noMove?: boolean;
+  noResize?: boolean;
+  noRot?: boolean;
+  noSelect?: boolean;
 }
 
 export interface CTCustomColor {
@@ -497,8 +497,8 @@ export interface CTEffectContainer {
   TYPE_NAME?: 'org_docx4j_dml.CTEffectContainer';
   readonly PARENT?: CTAlphaModulateEffect | CTBackgroundFormatting | CTBlendEffect | CTEffectContainer | CTEffectProperties | CTEffectStyleItem | CTGroupShapeProperties | CTShapeProperties | CTTableProperties | CTTextCharacterProperties | CTWholeE2OFormatting | Dep_org_pptx4j_pml.CTBackgroundProperties;
   egEffect?: (CTEffectContainer | CTEffectReference | CTAlphaBiLevelEffect | CTAlphaCeilingEffect | CTAlphaFloorEffect | CTAlphaInverseEffect | CTAlphaModulateEffect | CTAlphaModulateFixedEffect | CTAlphaOutsetEffect | CTAlphaReplaceEffect | CTBiLevelEffect | CTBlendEffect | CTBlurEffect | CTColorChangeEffect | CTColorReplaceEffect | CTDuotoneEffect | CTFillEffect | CTFillOverlayEffect | CTGlowEffect | CTGrayscaleEffect | CTHSLEffect | CTInnerShadowEffect | CTLuminanceEffect | CTOuterShadowEffect | CTPresetShadowEffect | CTReflectionEffect | CTRelativeOffsetEffect | CTSoftEdgesEffect | CTTintEffect | CTTransformEffect)[];
-  type?: STEffectContainerType;
   name?: string;
+  type?: STEffectContainerType;
 }
 
 export interface CTEffectList {
@@ -545,9 +545,9 @@ export interface CTEffectStyleList {
 export interface CTEmbeddedWAVAudioFile {
   TYPE_NAME?: 'org_docx4j_dml.CTEmbeddedWAVAudioFile';
   readonly PARENT?: CTHyperlink | Dep_org_pptx4j_pml.CTTLTimeTargetElement | Dep_org_pptx4j_pml.CTTransitionStartSoundAction | Dep_org_pptx4j_pml.NvPr;
-  embed: string;
-  name?: string;
   builtIn?: boolean;
+  name?: string;
+  embed: string;
 }
 
 export interface CTEmptyElement {
@@ -627,8 +627,8 @@ export interface CTGammaTransform {
 export interface CTGeomGuide {
   TYPE_NAME?: 'org_docx4j_dml.CTGeomGuide';
   readonly PARENT?: CTGeomGuideList;
-  name: string;
   fmla: string;
+  name: string;
 }
 
 export interface CTGeomGuideList {
@@ -640,10 +640,10 @@ export interface CTGeomGuideList {
 export interface CTGeomRect {
   TYPE_NAME?: 'org_docx4j_dml.CTGeomRect';
   readonly PARENT?: CTCustomGeometry2D;
-  l: string;
-  t: string;
-  r: string;
   b: string;
+  l: string;
+  r: string;
+  t: string;
 }
 
 export interface CTGlowEffect {
@@ -691,12 +691,12 @@ export interface CTGraphicalObjectFrameLocking {
   TYPE_NAME?: 'org_docx4j_dml.CTGraphicalObjectFrameLocking';
   readonly PARENT?: CTNonVisualGraphicFrameProperties;
   extLst?: CTOfficeArtExtensionList;
-  noGrp?: boolean;
-  noDrilldown?: boolean;
-  noSelect?: boolean;
   noChangeAspect?: boolean;
+  noDrilldown?: boolean;
+  noGrp?: boolean;
   noMove?: boolean;
   noResize?: boolean;
+  noSelect?: boolean;
 }
 
 export interface CTGrayscaleEffect {
@@ -718,13 +718,13 @@ export interface CTGroupLocking {
   TYPE_NAME?: 'org_docx4j_dml.CTGroupLocking';
   readonly PARENT?: CTNonVisualGroupDrawingShapeProps;
   extLst?: CTOfficeArtExtensionList;
-  noGrp?: boolean;
-  noUngrp?: boolean;
-  noSelect?: boolean;
-  noRot?: boolean;
   noChangeAspect?: boolean;
+  noGrp?: boolean;
   noMove?: boolean;
   noResize?: boolean;
+  noRot?: boolean;
+  noSelect?: boolean;
+  noUngrp?: boolean;
 }
 
 export interface CTGroupShapeProperties {
@@ -751,9 +751,9 @@ export interface CTGroupTransform2D {
   ext?: CTPositiveSize2D;
   chOff?: CTPoint2D;
   chExt?: CTPositiveSize2D;
-  rot?: number;
   flipH?: boolean;
   flipV?: boolean;
+  rot?: number;
 }
 
 export interface CTGvmlConnector {
@@ -856,8 +856,8 @@ export interface CTHSLEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTHSLEffect';
   readonly PARENT?: CTBlip | CTEffectContainer;
   hue?: number;
-  sat?: number;
   lum?: number;
+  sat?: number;
 }
 
 export interface CTHslColor {
@@ -865,8 +865,8 @@ export interface CTHslColor {
   readonly PARENT?: CTAlphaInverseEffect | CTColor | CTColorMRU | CTColorReplaceEffect | CTCustomColor | CTDuotoneEffect | CTFontReference | CTGlowEffect | CTGradientStop | CTInnerShadowEffect | CTOuterShadowEffect | CTPresetShadowEffect | CTSolidColorFillProperties | CTStyleMatrixReference | CTTableStyleTextStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTColorStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTFontReference | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleReference | Dep_org_docx4j_dml_diagram.CTColors;
   egColorTransform?: (TypedNamedValue<CTPositiveFixedPercentage> | TypedNamedValue<CTComplementTransform> | TypedNamedValue<CTInverseTransform> | TypedNamedValue<CTGrayscaleTransform> | TypedNamedValue<CTFixedPercentage> | TypedNamedValue<CTPositivePercentage> | TypedNamedValue<CTPositiveFixedAngle> | TypedNamedValue<CTAngle> | TypedNamedValue<CTPercentage> | TypedNamedValue<CTGammaTransform> | TypedNamedValue<CTInverseGammaTransform>)[];
   hue: number;
-  sat: number;
   lum: number;
+  sat: number;
 }
 
 export interface CTHyperlink {
@@ -874,14 +874,14 @@ export interface CTHyperlink {
   readonly PARENT?: CTNonVisualDrawingProps | CTTextCharacterProperties;
   snd?: CTEmbeddedWAVAudioFile;
   extLst?: CTOfficeArtExtensionList;
-  id?: string;
-  invalidUrl?: string;
   action?: string;
+  endSnd?: boolean;
+  highlightClick?: boolean;
+  history?: boolean;
+  invalidUrl?: string;
   tgtFrame?: string;
   tooltip?: string;
-  history?: boolean;
-  highlightClick?: boolean;
-  endSnd?: boolean;
+  id?: string;
 }
 
 export interface CTInnerShadowEffect {
@@ -894,8 +894,8 @@ export interface CTInnerShadowEffect {
   schemeClr: CTSchemeColor;
   prstClr: CTPresetColor;
   blurRad?: number;
-  dist?: number;
   dir?: number;
+  dist?: number;
 }
 
 export interface CTInverseGammaTransform {
@@ -912,16 +912,16 @@ export interface CTLightRig {
   TYPE_NAME?: 'org_docx4j_dml.CTLightRig';
   readonly PARENT?: CTCell3D | CTScene3D;
   rot?: CTSphereCoords;
-  rig: STLightRigType;
   dir: STLightRigDirection;
+  rig: STLightRigType;
 }
 
 export interface CTLineEndProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTLineEndProperties';
   readonly PARENT?: CTLineProperties;
+  len?: STLineEndLength;
   type?: STLineEndType;
   w?: STLineEndWidth;
-  len?: STLineEndLength;
 }
 
 export interface CTLineJoinBevel {
@@ -955,10 +955,10 @@ export interface CTLineProperties {
   headEnd?: CTLineEndProperties;
   tailEnd?: CTLineEndProperties;
   extLst?: CTOfficeArtExtensionList;
-  w?: number;
+  algn?: STPenAlignment;
   cap?: STLineCap;
   cmpd?: STCompoundLine;
-  algn?: STPenAlignment;
+  w?: number;
 }
 
 export interface CTLineStyleList {
@@ -1001,10 +1001,10 @@ export interface CTNonVisualDrawingProps {
   hlinkClick?: CTHyperlink;
   hlinkHover?: CTHyperlink;
   extLst?: CTOfficeArtExtensionList;
-  id: number;
-  name: string;
   descr?: string;
   hidden?: boolean;
+  id: number;
+  name: string;
 }
 
 export interface CTNonVisualDrawingShapeProps {
@@ -1068,35 +1068,35 @@ export interface CTOuterShadowEffect {
   sysClr: CTSystemColor;
   schemeClr: CTSchemeColor;
   prstClr: CTPresetColor;
+  algn?: STRectAlignment;
   blurRad?: number;
-  dist?: number;
   dir?: number;
-  sx?: number;
-  sy?: number;
+  dist?: number;
   kx?: number;
   ky?: number;
-  algn?: STRectAlignment;
   rotWithShape?: boolean;
+  sx?: number;
+  sy?: number;
 }
 
 export interface CTPath2D {
   TYPE_NAME?: 'org_docx4j_dml.CTPath2D';
   readonly PARENT?: CTPath2DList;
   closeOrMoveToOrLnTo?: (CTPath2DClose | CTPath2DMoveTo | CTPath2DLineTo | CTPath2DArcTo | CTPath2DQuadBezierTo | CTPath2DCubicBezierTo)[];
-  w?: number;
-  h?: number;
-  fill?: STPathFillMode;
-  stroke?: boolean;
   extrusionOk?: boolean;
+  fill?: STPathFillMode;
+  h?: number;
+  stroke?: boolean;
+  w?: number;
 }
 
 export interface CTPath2DArcTo {
   TYPE_NAME?: 'org_docx4j_dml.CTPath2DArcTo';
   readonly PARENT?: CTPath2D;
-  wr: string;
   hr: string;
   stAng: string;
   swAng: string;
+  wr: string;
 }
 
 export interface CTPath2DClose {
@@ -1159,17 +1159,17 @@ export interface CTPictureLocking {
   TYPE_NAME?: 'org_docx4j_dml.CTPictureLocking';
   readonly PARENT?: CTNonVisualPictureProperties;
   extLst?: CTOfficeArtExtensionList;
-  noCrop?: boolean;
-  noGrp?: boolean;
-  noSelect?: boolean;
-  noRot?: boolean;
-  noChangeAspect?: boolean;
-  noMove?: boolean;
-  noResize?: boolean;
-  noEditPoints?: boolean;
   noAdjustHandles?: boolean;
   noChangeArrowheads?: boolean;
+  noChangeAspect?: boolean;
   noChangeShapeType?: boolean;
+  noCrop?: boolean;
+  noEditPoints?: boolean;
+  noGrp?: boolean;
+  noMove?: boolean;
+  noResize?: boolean;
+  noRot?: boolean;
+  noSelect?: boolean;
 }
 
 export interface CTPoint2D {
@@ -1191,12 +1191,12 @@ export interface CTPolarAdjustHandle {
   TYPE_NAME?: 'org_docx4j_dml.CTPolarAdjustHandle';
   readonly PARENT?: CTAdjustHandleList;
   pos: CTAdjPoint2D;
-  gdRefR?: string;
-  minR?: string;
-  maxR?: string;
   gdRefAng?: string;
-  minAng?: string;
+  gdRefR?: string;
   maxAng?: string;
+  maxR?: string;
+  minAng?: string;
+  minR?: string;
 }
 
 export interface CTPositiveFixedAngle {
@@ -1253,9 +1253,9 @@ export interface CTPresetShadowEffect {
   sysClr: CTSystemColor;
   schemeClr: CTSchemeColor;
   prstClr: CTPresetColor;
-  prst: STPresetShadowVal;
-  dist?: number;
   dir?: number;
+  dist?: number;
+  prst: STPresetShadowVal;
 }
 
 export interface CTPresetTextShape {
@@ -1275,27 +1275,27 @@ export interface CTQuickTimeFile {
 export interface CTRatio {
   TYPE_NAME?: 'org_docx4j_dml.CTRatio';
   readonly PARENT?: CTScale2D | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTScale3D;
-  n: number;
   d: number;
+  n: number;
 }
 
 export interface CTReflectionEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTReflectionEffect';
   readonly PARENT?: CTEffectContainer | CTEffectList;
+  algn?: STRectAlignment;
   blurRad?: number;
-  stA?: number;
-  stPos?: number;
+  dir?: number;
+  dist?: number;
   endA?: number;
   endPos?: number;
-  dist?: number;
-  dir?: number;
   fadeDir?: number;
-  sx?: number;
-  sy?: number;
   kx?: number;
   ky?: number;
-  algn?: STRectAlignment;
   rotWithShape?: boolean;
+  stA?: number;
+  stPos?: number;
+  sx?: number;
+  sy?: number;
 }
 
 export interface CTRegularTextRun {
@@ -1315,10 +1315,10 @@ export interface CTRelativeOffsetEffect {
 export interface CTRelativeRect {
   TYPE_NAME?: 'org_docx4j_dml.CTRelativeRect';
   readonly PARENT?: CTBlipFillProperties | CTGradientFillProperties | CTPathShadeProperties | CTStretchInfoProperties;
-  l?: number;
-  t?: number;
-  r?: number;
   b?: number;
+  l?: number;
+  r?: number;
+  t?: number;
 }
 
 export interface CTSRgbColor {
@@ -1332,9 +1332,9 @@ export interface CTScRgbColor {
   TYPE_NAME?: 'org_docx4j_dml.CTScRgbColor';
   readonly PARENT?: CTAlphaInverseEffect | CTColor | CTColorMRU | CTColorReplaceEffect | CTCustomColor | CTDuotoneEffect | CTFontReference | CTGlowEffect | CTGradientStop | CTInnerShadowEffect | CTOuterShadowEffect | CTPresetShadowEffect | CTSolidColorFillProperties | CTStyleMatrixReference | CTTableStyleTextStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTColorStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTFontReference | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleReference | Dep_org_docx4j_dml_diagram.CTColors;
   egColorTransform?: (TypedNamedValue<CTPositiveFixedPercentage> | TypedNamedValue<CTComplementTransform> | TypedNamedValue<CTInverseTransform> | TypedNamedValue<CTGrayscaleTransform> | TypedNamedValue<CTFixedPercentage> | TypedNamedValue<CTPositivePercentage> | TypedNamedValue<CTPositiveFixedAngle> | TypedNamedValue<CTAngle> | TypedNamedValue<CTPercentage> | TypedNamedValue<CTGammaTransform> | TypedNamedValue<CTInverseGammaTransform>)[];
-  r: number;
-  g: number;
   b: number;
+  g: number;
+  r: number;
 }
 
 export interface CTScale2D {
@@ -1368,27 +1368,27 @@ export interface CTShape3D {
   extrusionClr?: CTColor;
   contourClr?: CTColor;
   extLst?: CTOfficeArtExtensionList;
-  z?: number;
-  extrusionH?: number;
   contourW?: number;
+  extrusionH?: number;
   prstMaterial?: STPresetMaterialType;
+  z?: number;
 }
 
 export interface CTShapeLocking {
   TYPE_NAME?: 'org_docx4j_dml.CTShapeLocking';
   readonly PARENT?: CTNonVisualDrawingShapeProps;
   extLst?: CTOfficeArtExtensionList;
-  noTextEdit?: boolean;
-  noGrp?: boolean;
-  noSelect?: boolean;
-  noRot?: boolean;
-  noChangeAspect?: boolean;
-  noMove?: boolean;
-  noResize?: boolean;
-  noEditPoints?: boolean;
   noAdjustHandles?: boolean;
   noChangeArrowheads?: boolean;
+  noChangeAspect?: boolean;
   noChangeShapeType?: boolean;
+  noEditPoints?: boolean;
+  noGrp?: boolean;
+  noMove?: boolean;
+  noResize?: boolean;
+  noRot?: boolean;
+  noSelect?: boolean;
+  noTextEdit?: boolean;
 }
 
 export interface CTShapeProperties {
@@ -1478,8 +1478,8 @@ export interface CTSystemColor {
   TYPE_NAME?: 'org_docx4j_dml.CTSystemColor';
   readonly PARENT?: CTAlphaInverseEffect | CTColor | CTColorMRU | CTColorReplaceEffect | CTCustomColor | CTDuotoneEffect | CTFontReference | CTGlowEffect | CTGradientStop | CTInnerShadowEffect | CTOuterShadowEffect | CTPresetShadowEffect | CTSolidColorFillProperties | CTStyleMatrixReference | CTTableStyleTextStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTColorStyle | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTFontReference | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleReference | Dep_org_docx4j_dml_diagram.CTColors;
   egColorTransform?: (TypedNamedValue<CTPositiveFixedPercentage> | TypedNamedValue<CTComplementTransform> | TypedNamedValue<CTInverseTransform> | TypedNamedValue<CTGrayscaleTransform> | TypedNamedValue<CTFixedPercentage> | TypedNamedValue<CTPositivePercentage> | TypedNamedValue<CTPositiveFixedAngle> | TypedNamedValue<CTAngle> | TypedNamedValue<CTPercentage> | TypedNamedValue<CTGammaTransform> | TypedNamedValue<CTInverseGammaTransform>)[];
-  val: string;
   lastClr?: string;
+  val: string;
 }
 
 export interface CTTable {
@@ -1504,9 +1504,9 @@ export interface CTTableCell {
   txBody?: CTTextBody;
   tcPr?: CTTableCellProperties;
   extLst?: CTOfficeArtExtensionList;
-  rowSpan?: number;
   gridSpan?: number;
   hMerge?: boolean;
+  rowSpan?: number;
   vMerge?: boolean;
 }
 
@@ -1541,14 +1541,14 @@ export interface CTTableCellProperties {
   pattFill: CTPatternFillProperties;
   grpFill: CTGroupFillProperties;
   extLst?: CTOfficeArtExtensionList;
-  marL?: number;
-  marR?: number;
-  marT?: number;
-  marB?: number;
-  vert?: STTextVerticalType;
   anchor?: STTextAnchoringType;
   anchorCtr?: boolean;
   horzOverflow?: STTextHorzOverflowType;
+  marB?: number;
+  marL?: number;
+  marR?: number;
+  marT?: number;
+  vert?: STTextVerticalType;
 }
 
 export interface CTTableCol {
@@ -1585,13 +1585,13 @@ export interface CTTableProperties {
   tableStyle: CTTableStyle;
   tableStyleId: string;
   extLst?: CTOfficeArtExtensionList;
-  rtl?: boolean;
-  firstRow?: boolean;
-  firstCol?: boolean;
-  lastRow?: boolean;
-  lastCol?: boolean;
-  bandRow?: boolean;
   bandCol?: boolean;
+  bandRow?: boolean;
+  firstCol?: boolean;
+  firstRow?: boolean;
+  lastCol?: boolean;
+  lastRow?: boolean;
+  rtl?: boolean;
 }
 
 export interface CTTableRow {
@@ -1658,8 +1658,8 @@ export interface CTTableStyleTextStyle {
 export interface CTTextAutonumberBullet {
   TYPE_NAME?: 'org_docx4j_dml.CTTextAutonumberBullet';
   readonly PARENT?: CTTextParagraphProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.CTDiagramAutoBullet;
-  type: STTextAutonumberScheme;
   startAt?: number;
+  type: STTextAutonumberScheme;
 }
 
 export interface CTTextBlipBullet {
@@ -1687,25 +1687,25 @@ export interface CTTextBodyProperties {
   sp3D: CTShape3D;
   flatTx: CTFlatText;
   extLst?: CTOfficeArtExtensionList;
-  rot?: number;
-  spcFirstLastPara?: boolean;
-  vertOverflow?: STTextVertOverflowType;
-  horzOverflow?: STTextHorzOverflowType;
-  vert?: STTextVerticalType;
-  wrap?: STTextWrappingType;
-  lIns?: number;
-  tIns?: number;
-  rIns?: number;
-  bIns?: number;
-  numCol?: number;
-  spcCol?: number;
-  rtlCol?: boolean;
-  fromWordArt?: boolean;
   anchor?: STTextAnchoringType;
   anchorCtr?: boolean;
-  forceAA?: boolean;
-  upright?: boolean;
+  bIns?: number;
   compatLnSpc?: boolean;
+  forceAA?: boolean;
+  fromWordArt?: boolean;
+  horzOverflow?: STTextHorzOverflowType;
+  lIns?: number;
+  numCol?: number;
+  rIns?: number;
+  rot?: number;
+  rtlCol?: boolean;
+  spcCol?: number;
+  spcFirstLastPara?: boolean;
+  tIns?: number;
+  upright?: boolean;
+  vert?: STTextVerticalType;
+  vertOverflow?: STTextVertOverflowType;
+  wrap?: STTextWrappingType;
 }
 
 export interface CTTextBulletColorFollowText {
@@ -1765,25 +1765,25 @@ export interface CTTextCharacterProperties {
   hlinkClick?: CTHyperlink;
   hlinkMouseOver?: CTHyperlink;
   extLst?: CTOfficeArtExtensionList;
-  kumimoji?: boolean;
-  lang?: string;
   altLang?: string;
-  sz?: number;
   b?: boolean;
-  i?: boolean;
-  u?: STTextUnderlineType;
-  strike?: STTextStrikeType;
-  kern?: number;
-  cap?: STTextCapsType;
-  spc?: number;
-  normalizeH?: boolean;
   baseline?: number;
-  noProof?: boolean;
+  bmk?: string;
+  cap?: STTextCapsType;
   dirty?: boolean;
   err?: boolean;
+  i?: boolean;
+  kern?: number;
+  kumimoji?: boolean;
+  lang?: string;
+  noProof?: boolean;
+  normalizeH?: boolean;
   smtClean?: boolean;
   smtId?: number;
-  bmk?: string;
+  spc?: number;
+  strike?: STTextStrikeType;
+  sz?: number;
+  u?: STTextUnderlineType;
 }
 
 export interface CTTextField {
@@ -1863,17 +1863,17 @@ export interface CTTextParagraphProperties {
   tabLst?: CTTextTabStopList;
   defRPr?: CTTextCharacterProperties;
   extLst?: CTOfficeArtExtensionList;
-  marL?: number;
-  marR?: number;
-  lvl?: number;
-  indent?: number;
   algn?: STTextAlignType;
   defTabSz?: number;
-  rtl?: boolean;
   eaLnBrk?: boolean;
   fontAlgn?: STTextFontAlignType;
-  latinLnBrk?: boolean;
   hangingPunct?: boolean;
+  indent?: number;
+  latinLnBrk?: boolean;
+  lvl?: number;
+  marL?: number;
+  marR?: number;
+  rtl?: boolean;
 }
 
 export interface CTTextShapeAutofit {
@@ -1903,8 +1903,8 @@ export interface CTTextSpacingPoint {
 export interface CTTextTabStop {
   TYPE_NAME?: 'org_docx4j_dml.CTTextTabStop';
   readonly PARENT?: CTTextTabStopList;
-  pos?: number;
   algn?: STTextTabAlignType;
+  pos?: number;
 }
 
 export interface CTTextTabStopList {
@@ -1944,19 +1944,19 @@ export interface CTThemeableLineStyle {
 export interface CTTileInfoProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTTileInfoProperties';
   readonly PARENT?: CTBlipFillProperties;
-  tx?: number;
-  ty?: number;
+  algn?: STRectAlignment;
+  flip?: STTileFlipMode;
   sx?: number;
   sy?: number;
-  flip?: STTileFlipMode;
-  algn?: STRectAlignment;
+  tx?: number;
+  ty?: number;
 }
 
 export interface CTTintEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTTintEffect';
   readonly PARENT?: CTBlip | CTEffectContainer;
-  hue?: number;
   amt?: number;
+  hue?: number;
 }
 
 export interface CTTransform2D {
@@ -1964,18 +1964,18 @@ export interface CTTransform2D {
   readonly PARENT?: CTGvmlGraphicalObjectFrame | CTGvmlTextShape | CTShapeProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing.CTContentPart | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTGvmlContentPart | Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup.CTGraphicFrame | Dep_org_docx4j_dml_chartDrawing.CTGraphicFrame | Dep_org_docx4j_dml_diagram2008.CTShape | Dep_org_docx4j_dml_spreadsheetdrawing.CTGraphicalObjectFrame | Dep_org_docx4j_w14.CTWordContentPart | Dep_org_pptx4j_pml.CTGraphicalObjectFrame | Dep_org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing.CTContentPart;
   off?: CTPoint2D;
   ext?: CTPositiveSize2D;
-  rot?: number;
   flipH?: boolean;
   flipV?: boolean;
+  rot?: number;
 }
 
 export interface CTTransformEffect {
   TYPE_NAME?: 'org_docx4j_dml.CTTransformEffect';
   readonly PARENT?: CTEffectContainer;
-  sx?: number;
-  sy?: number;
   kx?: number;
   ky?: number;
+  sx?: number;
+  sy?: number;
   tx?: number;
   ty?: number;
 }
@@ -2008,11 +2008,11 @@ export interface CTXYAdjustHandle {
   readonly PARENT?: CTAdjustHandleList;
   pos: CTAdjPoint2D;
   gdRefX?: string;
-  minX?: string;
-  maxX?: string;
   gdRefY?: string;
-  minY?: string;
+  maxX?: string;
   maxY?: string;
+  minX?: string;
+  minY?: string;
 }
 
 export interface FontCollection {
@@ -2041,10 +2041,10 @@ export interface GraphicData {
 export interface TextFont {
   TYPE_NAME?: 'org_docx4j_dml.TextFont';
   readonly PARENT?: CTTextCharacterProperties | CTTextParagraphProperties | Dep_org_pptx4j_pml.CTEmbeddedFontListEntry | FontCollection;
-  typeface?: string;
+  charset?: number;
   panose?: string;
   pitchFamily?: number;
-  charset?: number;
+  typeface?: string;
 }
 
 export interface Theme {

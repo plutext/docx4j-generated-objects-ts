@@ -159,11 +159,9 @@ export const org_docx4j_docProps_custom = {
           },
           type: 'attribute'
         }, {
-          name: 'pid',
-          required: true,
-          typeInfo: 'Int',
+          name: 'linkTarget',
           attributeName: {
-            localPart: 'pid'
+            localPart: 'linkTarget'
           },
           type: 'attribute'
         }, {
@@ -173,9 +171,11 @@ export const org_docx4j_docProps_custom = {
           },
           type: 'attribute'
         }, {
-          name: 'linkTarget',
+          name: 'pid',
+          required: true,
+          typeInfo: 'Int',
           attributeName: {
-            localPart: 'linkTarget'
+            localPart: 'pid'
           },
           type: 'attribute'
         }]

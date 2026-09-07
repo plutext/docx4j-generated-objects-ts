@@ -6,10 +6,11 @@ var org_docx4j_relationships_Module_Factory = function () {
         localName: 'Relationship',
         typeName: null,
         propertyInfos: [{
-            name: 'targetMode',
-            values: ['External', 'Internal'],
+            name: 'id',
+            required: true,
+            typeInfo: 'ID',
             attributeName: {
-              localPart: 'TargetMode'
+              localPart: 'Id'
             },
             type: 'attribute'
           }, {
@@ -20,18 +21,17 @@ var org_docx4j_relationships_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'targetMode',
+            values: ['External', 'Internal'],
+            attributeName: {
+              localPart: 'TargetMode'
+            },
+            type: 'attribute'
+          }, {
             name: 'type',
             required: true,
             attributeName: {
               localPart: 'Type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'id',
-            required: true,
-            typeInfo: 'ID',
-            attributeName: {
-              localPart: 'Id'
             },
             type: 'attribute'
           }]

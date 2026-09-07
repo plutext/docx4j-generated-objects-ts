@@ -9,6 +9,13 @@ export const org_docx4j_vml_wordprocessingDrawing = {
       localName: 'CTBorder',
       typeName: 'CT_Border',
       propertyInfos: [{
+          name: 'shadow',
+          typeInfo: '.STBorderShadow',
+          attributeName: {
+            localPart: 'shadow'
+          },
+          type: 'attribute'
+        }, {
           name: 'type',
           typeInfo: '.STBorderType',
           attributeName: {
@@ -22,32 +29,11 @@ export const org_docx4j_vml_wordprocessingDrawing = {
             localPart: 'width'
           },
           type: 'attribute'
-        }, {
-          name: 'shadow',
-          typeInfo: '.STBorderShadow',
-          attributeName: {
-            localPart: 'shadow'
-          },
-          type: 'attribute'
         }]
     }, {
       localName: 'CTWrap',
       typeName: 'CT_Wrap',
       propertyInfos: [{
-          name: 'type',
-          typeInfo: '.STWrapType',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'side',
-          typeInfo: '.STWrapSide',
-          attributeName: {
-            localPart: 'side'
-          },
-          type: 'attribute'
-        }, {
           name: 'anchorx',
           typeInfo: '.STHorizontalAnchor',
           attributeName: {
@@ -59,6 +45,20 @@ export const org_docx4j_vml_wordprocessingDrawing = {
           typeInfo: '.STVerticalAnchor',
           attributeName: {
             localPart: 'anchory'
+          },
+          type: 'attribute'
+        }, {
+          name: 'side',
+          typeInfo: '.STWrapSide',
+          attributeName: {
+            localPart: 'side'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          typeInfo: '.STWrapType',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]

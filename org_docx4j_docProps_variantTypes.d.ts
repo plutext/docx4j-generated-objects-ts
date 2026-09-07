@@ -24,9 +24,9 @@ export interface Array {
   TYPE_NAME?: 'org_docx4j_docProps_variantTypes.Array';
   readonly PARENT?: Dep_org_docx4j_docProps_custom.Properties.Property | Variant;
   variantOrI1OrI2: (TypedNamedValue<Variant> | TypedNamedValue<number> | TypedNamedValue<string> | TypedNamedValue<boolean>)[];
+  baseType: string;
   lBounds: number;
   uBounds: number;
-  baseType: string;
 }
 
 export interface Cf {

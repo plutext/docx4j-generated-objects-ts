@@ -7,6 +7,10 @@ var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = f
         localName: 'CTAcd',
         typeName: 'CT_Acd',
         propertyInfos: [{
+            name: 'acdName',
+            required: true,
+            type: 'attribute'
+          }, {
             name: 'argValue',
             type: 'attribute'
           }, {
@@ -15,10 +19,6 @@ var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = f
           }, {
             name: 'fciIndexBasedOn',
             typeInfo: 'HexBinary',
-            type: 'attribute'
-          }, {
-            name: 'acdName',
-            required: true,
             type: 'attribute'
           }]
       }, {
@@ -94,11 +94,11 @@ var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = f
         localName: 'CTFci',
         typeName: 'CT_Fci',
         propertyInfos: [{
-            name: 'fciName',
-            type: 'attribute'
-          }, {
             name: 'fciIndex',
             typeInfo: 'HexBinary',
+            type: 'attribute'
+          }, {
+            name: 'fciName',
             type: 'attribute'
           }, {
             name: 'swArg',
@@ -179,19 +179,19 @@ var org_docx4j_com_microsoft_schemas_office_word_x2006_wordml_Module_Factory = f
         localName: 'CTMcd',
         typeName: 'CT_Mcd',
         propertyInfos: [{
-            name: 'macroName',
+            name: 'bEncrypt',
             type: 'attribute'
           }, {
-            name: 'name',
+            name: 'cmg',
+            type: 'attribute'
+          }, {
+            name: 'macroName',
             type: 'attribute'
           }, {
             name: 'menuHelp',
             type: 'attribute'
           }, {
-            name: 'bEncrypt',
-            type: 'attribute'
-          }, {
-            name: 'cmg',
+            name: 'name',
             type: 'attribute'
           }]
       }, {

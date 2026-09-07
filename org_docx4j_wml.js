@@ -135,12 +135,12 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'Br',
         typeName: null,
         propertyInfos: [{
-            name: 'type',
-            typeInfo: '.STBrType',
-            type: 'attribute'
-          }, {
             name: 'clear',
             typeInfo: '.STBrClear',
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STBrType',
             type: 'attribute'
           }]
       }, {
@@ -168,11 +168,11 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTAttr',
         typeName: 'CT_Attr',
         propertyInfos: [{
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'name',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }, {
             name: 'val',
@@ -183,11 +183,11 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTAutoCaption',
         typeName: 'CT_AutoCaption',
         propertyInfos: [{
-            name: 'name',
+            name: 'caption',
             required: true,
             type: 'attribute'
           }, {
-            name: 'caption',
+            name: 'name',
             required: true,
             type: 'attribute'
           }]
@@ -212,10 +212,10 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STThemeColor',
             type: 'attribute'
           }, {
-            name: 'themeTint',
+            name: 'themeShade',
             type: 'attribute'
           }, {
-            name: 'themeShade',
+            name: 'themeTint',
             type: 'attribute'
           }]
       }, {
@@ -244,30 +244,12 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTBorder',
         typeName: 'CT_Border',
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            typeInfo: '.STBorder',
-            type: 'attribute'
-          }, {
             name: 'color',
             type: 'attribute'
           }, {
-            name: 'themeColor',
-            typeInfo: '.STThemeColor',
-            type: 'attribute'
-          }, {
-            name: 'themeTint',
-            type: 'attribute'
-          }, {
-            name: 'themeShade',
-            type: 'attribute'
-          }, {
-            name: 'sz',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'space',
-            typeInfo: 'UnsignedLong',
+            name: 'frame',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             type: 'attribute'
           }, {
             name: 'shadow',
@@ -275,9 +257,27 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'frame',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'space',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'sz',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'themeColor',
+            typeInfo: '.STThemeColor',
+            type: 'attribute'
+          }, {
+            name: 'themeShade',
+            type: 'attribute'
+          }, {
+            name: 'themeTint',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            required: true,
+            typeInfo: '.STBorder',
             type: 'attribute'
           }]
       }, {
@@ -292,14 +292,6 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTCaption',
         typeName: 'CT_Caption',
         propertyInfos: [{
-            name: 'name',
-            required: true,
-            type: 'attribute'
-          }, {
-            name: 'pos',
-            typeInfo: '.STCaptionPos',
-            type: 'attribute'
-          }, {
             name: 'chapNum',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -309,6 +301,10 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
+            name: 'name',
+            required: true,
+            type: 'attribute'
+          }, {
             name: 'noLabel',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -316,6 +312,10 @@ var org_docx4j_wml_Module_Factory = function () {
           }, {
             name: 'numFmt',
             typeInfo: '.NumberFormat',
+            type: 'attribute'
+          }, {
+            name: 'pos',
+            typeInfo: '.STCaptionPos',
             type: 'attribute'
           }, {
             name: 'sep',
@@ -368,40 +368,24 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTColor',
         typeName: 'CT_Color',
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            type: 'attribute'
-          }, {
             name: 'themeColor',
             typeInfo: '.STThemeColor',
+            type: 'attribute'
+          }, {
+            name: 'themeShade',
             type: 'attribute'
           }, {
             name: 'themeTint',
             type: 'attribute'
           }, {
-            name: 'themeShade',
+            name: 'val',
+            required: true,
             type: 'attribute'
           }]
       }, {
         localName: 'CTColorSchemeMapping',
         typeName: 'CT_ColorSchemeMapping',
         propertyInfos: [{
-            name: 'bg1',
-            typeInfo: '.STColorSchemeIndex',
-            type: 'attribute'
-          }, {
-            name: 't1',
-            typeInfo: '.STColorSchemeIndex',
-            type: 'attribute'
-          }, {
-            name: 'bg2',
-            typeInfo: '.STColorSchemeIndex',
-            type: 'attribute'
-          }, {
-            name: 't2',
-            typeInfo: '.STColorSchemeIndex',
-            type: 'attribute'
-          }, {
             name: 'accent1',
             typeInfo: '.STColorSchemeIndex',
             type: 'attribute'
@@ -426,11 +410,27 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STColorSchemeIndex',
             type: 'attribute'
           }, {
-            name: 'hyperlink',
+            name: 'bg1',
+            typeInfo: '.STColorSchemeIndex',
+            type: 'attribute'
+          }, {
+            name: 'bg2',
             typeInfo: '.STColorSchemeIndex',
             type: 'attribute'
           }, {
             name: 'followedHyperlink',
+            typeInfo: '.STColorSchemeIndex',
+            type: 'attribute'
+          }, {
+            name: 'hyperlink',
+            typeInfo: '.STColorSchemeIndex',
+            type: 'attribute'
+          }, {
+            name: 't1',
+            typeInfo: '.STColorSchemeIndex',
+            type: 'attribute'
+          }, {
+            name: 't2',
             typeInfo: '.STColorSchemeIndex',
             type: 'attribute'
           }]
@@ -438,11 +438,11 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTColumn',
         typeName: 'CT_Column',
         propertyInfos: [{
-            name: 'w',
+            name: 'space',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'space',
+            name: 'w',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
@@ -461,10 +461,6 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'space',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
             name: 'num',
             typeInfo: 'Integer',
             type: 'attribute'
@@ -472,6 +468,10 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'sep',
             typeInfo: 'Boolean',
             defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'space',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
       }, {
@@ -695,17 +695,17 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTControl',
         typeName: 'CT_Control',
         propertyInfos: [{
-            name: 'name',
-            type: 'attribute'
-          }, {
-            name: 'shapeid',
-            type: 'attribute'
-          }, {
             name: 'id',
             attributeName: {
               localPart: 'id',
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
             },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            type: 'attribute'
+          }, {
+            name: 'shapeid',
             type: 'attribute'
           }]
       }, {
@@ -816,11 +816,11 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'element',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }]
       }, {
@@ -928,11 +928,11 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'element',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }]
       }, {
@@ -1059,11 +1059,11 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'element',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }]
       }, {
@@ -1189,11 +1189,11 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'element',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }]
       }, {
@@ -1203,11 +1203,11 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'prefixMappings',
             type: 'attribute'
           }, {
-            name: 'xpath',
+            name: 'storeItemID',
             required: true,
             type: 'attribute'
           }, {
-            name: 'storeItemID',
+            name: 'xpath',
             required: true,
             type: 'attribute'
           }]
@@ -1288,16 +1288,16 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTDocGrid',
         typeName: 'CT_DocGrid',
         propertyInfos: [{
-            name: 'type',
-            typeInfo: '.STDocGrid',
+            name: 'charSpace',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'linePitch',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'charSpace',
-            typeInfo: 'Integer',
+            name: 'type',
+            typeInfo: '.STDocGrid',
             type: 'attribute'
           }]
       }, {
@@ -1360,13 +1360,13 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTDocPartName',
         typeName: 'CT_DocPartName',
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            type: 'attribute'
-          }, {
             name: 'decorated',
             typeInfo: 'Boolean',
             defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'val',
+            required: true,
             type: 'attribute'
           }]
       }, {
@@ -1450,13 +1450,43 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTDocProtect',
         typeName: 'CT_DocProtect',
         propertyInfos: [{
-            name: 'edit',
-            typeInfo: '.STDocProtect',
+            name: 'algIdExt',
             type: 'attribute'
           }, {
-            name: 'formatting',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'algIdExtSource',
+            type: 'attribute'
+          }, {
+            name: 'cryptAlgorithmClass',
+            typeInfo: '.STAlgClass',
+            type: 'attribute'
+          }, {
+            name: 'cryptAlgorithmSid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'cryptAlgorithmType',
+            typeInfo: '.STAlgType',
+            type: 'attribute'
+          }, {
+            name: 'cryptProvider',
+            type: 'attribute'
+          }, {
+            name: 'cryptProviderType',
+            typeInfo: '.STCryptProv',
+            type: 'attribute'
+          }, {
+            name: 'cryptProviderTypeExt',
+            type: 'attribute'
+          }, {
+            name: 'cryptProviderTypeExtSource',
+            type: 'attribute'
+          }, {
+            name: 'cryptSpinCount',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'edit',
+            typeInfo: '.STDocProtect',
             type: 'attribute'
           }, {
             name: 'enforcement',
@@ -1464,39 +1494,9 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'cryptProviderType',
-            typeInfo: '.STCryptProv',
-            type: 'attribute'
-          }, {
-            name: 'cryptAlgorithmClass',
-            typeInfo: '.STAlgClass',
-            type: 'attribute'
-          }, {
-            name: 'cryptAlgorithmType',
-            typeInfo: '.STAlgType',
-            type: 'attribute'
-          }, {
-            name: 'cryptAlgorithmSid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'cryptSpinCount',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'cryptProvider',
-            type: 'attribute'
-          }, {
-            name: 'algIdExt',
-            type: 'attribute'
-          }, {
-            name: 'algIdExtSource',
-            type: 'attribute'
-          }, {
-            name: 'cryptProviderTypeExt',
-            type: 'attribute'
-          }, {
-            name: 'cryptProviderTypeExtSource',
+            name: 'formatting',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             type: 'attribute'
           }, {
             name: 'hash',
@@ -1553,10 +1553,6 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTEastAsianLayout',
         typeName: 'CT_EastAsianLayout',
         propertyInfos: [{
-            name: 'id',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
             name: 'combine',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -1564,6 +1560,10 @@ var org_docx4j_wml_Module_Factory = function () {
           }, {
             name: 'combineBrackets',
             typeInfo: '.STCombineBrackets',
+            type: 'attribute'
+          }, {
+            name: 'id',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'vert',
@@ -1833,13 +1833,13 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTFitText',
         typeName: 'CT_FitText',
         propertyInfos: [{
+            name: 'id',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
             name: 'val',
             required: true,
             typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'id',
-            typeInfo: 'Integer',
             type: 'attribute'
           }]
       }, {
@@ -1913,40 +1913,49 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTFramePr',
         typeName: 'CT_FramePr',
         propertyInfos: [{
+            name: 'anchorLock',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
             name: 'dropCap',
             typeInfo: '.STDropCap',
-            type: 'attribute'
-          }, {
-            name: 'lines',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'w',
-            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
             name: 'h',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'vSpace',
-            typeInfo: 'UnsignedLong',
+            name: 'hAnchor',
+            typeInfo: '.STHAnchor',
+            type: 'attribute'
+          }, {
+            name: 'hRule',
+            typeInfo: '.STHeightRule',
             type: 'attribute'
           }, {
             name: 'hSpace',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'wrap',
-            typeInfo: '.STWrap',
-            type: 'attribute'
-          }, {
-            name: 'hAnchor',
-            typeInfo: '.STHAnchor',
+            name: 'lines',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'vAnchor',
             typeInfo: '.STVAnchor',
+            type: 'attribute'
+          }, {
+            name: 'vSpace',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'w',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'wrap',
+            typeInfo: '.STWrap',
             type: 'attribute'
           }, {
             name: 'x',
@@ -1963,15 +1972,6 @@ var org_docx4j_wml_Module_Factory = function () {
           }, {
             name: 'yAlign',
             typeInfo: '.STYAlign',
-            type: 'attribute'
-          }, {
-            name: 'hRule',
-            typeInfo: '.STHeightRule',
-            type: 'attribute'
-          }, {
-            name: 'anchorLock',
-            typeInfo: 'Boolean',
-            defaultValue: true,
             type: 'attribute'
           }]
       }, {
@@ -2035,18 +2035,18 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTFramesetSplitbar.Color',
         typeName: null,
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            type: 'attribute'
-          }, {
             name: 'themeColor',
             typeInfo: '.STThemeColor',
+            type: 'attribute'
+          }, {
+            name: 'themeShade',
             type: 'attribute'
           }, {
             name: 'themeTint',
             type: 'attribute'
           }, {
-            name: 'themeShade',
+            name: 'val',
+            required: true,
             type: 'attribute'
           }]
       }, {
@@ -2168,13 +2168,13 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'type',
-            typeInfo: '.STFtnEdn',
-            type: 'attribute'
-          }, {
             name: 'id',
             required: true,
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STFtnEdn',
             type: 'attribute'
           }]
       }, {
@@ -2237,12 +2237,12 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTHeight',
         typeName: 'CT_Height',
         propertyInfos: [{
-            name: 'val',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
             name: 'hRule',
             typeInfo: '.STHeightRule',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
       }, {
@@ -2269,13 +2269,13 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTLanguage',
         typeName: 'CT_Language',
         propertyInfos: [{
-            name: 'val',
+            name: 'bidi',
             type: 'attribute'
           }, {
             name: 'eastAsia',
             type: 'attribute'
           }, {
-            name: 'bidi',
+            name: 'val',
             type: 'attribute'
           }]
       }, {
@@ -2286,16 +2286,16 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'start',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
             name: 'distance',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
             name: 'restart',
             typeInfo: '.STLineNumberRestart',
+            type: 'attribute'
+          }, {
+            name: 'start',
+            typeInfo: 'Integer',
             type: 'attribute'
           }]
       }, {
@@ -2664,19 +2664,19 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'control',
             typeInfo: '.CTControl'
           }, {
+            name: 'anchorId',
+            attributeName: {
+              localPart: 'anchorId',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+            },
+            type: 'attribute'
+          }, {
             name: 'dxaOrig',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
             name: 'dyaOrig',
             typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'anchorId',
-            attributeName: {
-              localPart: 'anchorId',
-              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
-            },
             type: 'attribute'
           }]
       }, {
@@ -2799,20 +2799,20 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTPageNumber',
         typeName: 'CT_PageNumber',
         propertyInfos: [{
-            name: 'fmt',
-            typeInfo: '.NumberFormat',
-            type: 'attribute'
-          }, {
-            name: 'start',
-            typeInfo: 'Integer',
+            name: 'chapSep',
+            typeInfo: '.STChapterSep',
             type: 'attribute'
           }, {
             name: 'chapStyle',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'chapSep',
-            typeInfo: '.STChapterSep',
+            name: 'fmt',
+            typeInfo: '.NumberFormat',
+            type: 'attribute'
+          }, {
+            name: 'start',
+            typeInfo: 'Integer',
             type: 'attribute'
           }]
       }, {
@@ -3044,12 +3044,12 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTPerm',
         typeName: 'CT_Perm',
         propertyInfos: [{
-            name: 'id',
-            required: true,
-            type: 'attribute'
-          }, {
             name: 'displacedByCustomXml',
             typeInfo: '.STDisplacedByCustomXml',
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
             type: 'attribute'
           }]
       }, {
@@ -3090,11 +3090,11 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTProof',
         typeName: 'CT_Proof',
         propertyInfos: [{
-            name: 'spelling',
+            name: 'grammar',
             typeInfo: '.STProof',
             type: 'attribute'
           }, {
-            name: 'grammar',
+            name: 'spelling',
             typeInfo: '.STProof',
             type: 'attribute'
           }]
@@ -3324,9 +3324,9 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Boolean',
             type: 'attribute'
           }, {
-            name: 'w',
+            name: 'fontSz',
             required: true,
-            typeInfo: 'UnsignedLong',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'h',
@@ -3334,9 +3334,9 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'fontSz',
+            name: 'w',
             required: true,
-            typeInfo: 'Integer',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
       }, {
@@ -4479,35 +4479,35 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTShd',
         typeName: 'CT_Shd',
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            typeInfo: '.STShd',
+            name: 'color',
             type: 'attribute'
           }, {
-            name: 'color',
+            name: 'fill',
             type: 'attribute'
           }, {
             name: 'themeColor',
             typeInfo: '.STThemeColor',
             type: 'attribute'
           }, {
-            name: 'themeTint',
-            type: 'attribute'
-          }, {
-            name: 'themeShade',
-            type: 'attribute'
-          }, {
-            name: 'fill',
-            type: 'attribute'
-          }, {
             name: 'themeFill',
             typeInfo: '.STThemeColor',
+            type: 'attribute'
+          }, {
+            name: 'themeFillShade',
             type: 'attribute'
           }, {
             name: 'themeFillTint',
             type: 'attribute'
           }, {
-            name: 'themeFillShade',
+            name: 'themeShade',
+            type: 'attribute'
+          }, {
+            name: 'themeTint',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            required: true,
+            typeInfo: '.STShd',
             type: 'attribute'
           }]
       }, {
@@ -4659,8 +4659,9 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'instr',
-            required: true,
+            name: 'dirty',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             type: 'attribute'
           }, {
             name: 'fldLock',
@@ -4668,9 +4669,8 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'dirty',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'instr',
+            required: true,
             type: 'attribute'
           }]
       }, {
@@ -4805,21 +4805,21 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'uri',
-            type: 'attribute'
-          }, {
             name: 'element',
             required: true,
+            type: 'attribute'
+          }, {
+            name: 'uri',
             type: 'attribute'
           }]
       }, {
         localName: 'CTSmartTagType',
         typeName: 'CT_SmartTagType',
         propertyInfos: [{
-            name: 'namespaceuri',
+            name: 'name',
             type: 'attribute'
           }, {
-            name: 'name',
+            name: 'namespaceuri',
             type: 'attribute'
           }, {
             name: 'url',
@@ -4837,11 +4837,6 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTTabStop',
         typeName: 'CT_TabStop',
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            typeInfo: '.STTabJc',
-            type: 'attribute'
-          }, {
             name: 'leader',
             typeInfo: '.STTabTlc',
             type: 'attribute'
@@ -4849,6 +4844,11 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'pos',
             required: true,
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            required: true,
+            typeInfo: '.STTabJc',
             type: 'attribute'
           }]
       }, {
@@ -4903,19 +4903,19 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTTblLook',
         typeName: 'CT_TblLook',
         propertyInfos: [{
-            name: 'firstRow',
-            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
-            type: 'attribute'
-          }, {
-            name: 'lastRow',
-            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
-            type: 'attribute'
-          }, {
             name: 'firstColumn',
             typeInfo: 'org_docx4j_sharedtypes.STOnOff',
             type: 'attribute'
           }, {
+            name: 'firstRow',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
             name: 'lastColumn',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'lastRow',
             typeInfo: 'org_docx4j_sharedtypes.STOnOff',
             type: 'attribute'
           }, {
@@ -4943,6 +4943,14 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTTblPPr',
         typeName: 'CT_TblPPr',
         propertyInfos: [{
+            name: 'bottomFromText',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'horzAnchor',
+            typeInfo: '.STHAnchor',
+            type: 'attribute'
+          }, {
             name: 'leftFromText',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
@@ -4951,27 +4959,15 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'topFromText',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'bottomFromText',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'vertAnchor',
-            typeInfo: '.STVAnchor',
-            type: 'attribute'
-          }, {
-            name: 'horzAnchor',
-            typeInfo: '.STHAnchor',
+            name: 'tblpX',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'tblpXSpec',
             typeInfo: '.STXAlign',
             type: 'attribute'
           }, {
-            name: 'tblpX',
+            name: 'tblpY',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
@@ -4979,8 +4975,12 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STYAlign',
             type: 'attribute'
           }, {
-            name: 'tblpY',
-            typeInfo: 'Integer',
+            name: 'topFromText',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'vertAnchor',
+            typeInfo: '.STVAnchor',
             type: 'attribute'
           }]
       }, {
@@ -5300,17 +5300,7 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTTrackChangesView',
         typeName: 'CT_TrackChangesView',
         propertyInfos: [{
-            name: 'markup',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
             name: 'comments',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
-            name: 'insDel',
             typeInfo: 'Boolean',
             defaultValue: true,
             type: 'attribute'
@@ -5321,6 +5311,16 @@ var org_docx4j_wml_Module_Factory = function () {
             type: 'attribute'
           }, {
             name: 'inkAnnotations',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'insDel',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'markup',
             typeInfo: 'Boolean',
             defaultValue: true,
             type: 'attribute'
@@ -5540,38 +5540,29 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTWriteProtection',
         typeName: 'CT_WriteProtection',
         propertyInfos: [{
-            name: 'recommended',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'algIdExt',
             type: 'attribute'
           }, {
-            name: 'cryptProviderType',
-            typeInfo: '.STCryptProv',
+            name: 'algIdExtSource',
             type: 'attribute'
           }, {
             name: 'cryptAlgorithmClass',
             typeInfo: '.STAlgClass',
             type: 'attribute'
           }, {
-            name: 'cryptAlgorithmType',
-            typeInfo: '.STAlgType',
-            type: 'attribute'
-          }, {
             name: 'cryptAlgorithmSid',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'cryptSpinCount',
-            typeInfo: 'Integer',
+            name: 'cryptAlgorithmType',
+            typeInfo: '.STAlgType',
             type: 'attribute'
           }, {
             name: 'cryptProvider',
             type: 'attribute'
           }, {
-            name: 'algIdExt',
-            type: 'attribute'
-          }, {
-            name: 'algIdExtSource',
+            name: 'cryptProviderType',
+            typeInfo: '.STCryptProv',
             type: 'attribute'
           }, {
             name: 'cryptProviderTypeExt',
@@ -5580,8 +5571,17 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'cryptProviderTypeExtSource',
             type: 'attribute'
           }, {
+            name: 'cryptSpinCount',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
             name: 'hash',
             typeInfo: 'Base64Binary',
+            type: 'attribute'
+          }, {
+            name: 'recommended',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             type: 'attribute'
           }, {
             name: 'salt',
@@ -5592,23 +5592,8 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTWritingStyle',
         typeName: 'CT_WritingStyle',
         propertyInfos: [{
-            name: 'lang',
+            name: 'appName',
             required: true,
-            type: 'attribute'
-          }, {
-            name: 'vendorID',
-            required: true,
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dllVersion',
-            required: true,
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'nlCheck',
-            typeInfo: 'Boolean',
-            defaultValue: true,
             type: 'attribute'
           }, {
             name: 'checkStyle',
@@ -5616,65 +5601,80 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Boolean',
             type: 'attribute'
           }, {
-            name: 'appName',
+            name: 'dllVersion',
             required: true,
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'lang',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'nlCheck',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'vendorID',
+            required: true,
+            typeInfo: 'Integer',
             type: 'attribute'
           }]
       }, {
         localName: 'CTZoom',
         typeName: 'CT_Zoom',
         propertyInfos: [{
-            name: 'val',
-            typeInfo: '.STZoom',
-            type: 'attribute'
-          }, {
             name: 'percent',
             required: true,
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            typeInfo: '.STZoom',
             type: 'attribute'
           }]
       }, {
         localName: 'Color',
         typeName: null,
         propertyInfos: [{
-            name: 'val',
-            required: true,
-            type: 'attribute'
-          }, {
             name: 'themeColor',
             typeInfo: '.STThemeColor',
+            type: 'attribute'
+          }, {
+            name: 'themeShade',
             type: 'attribute'
           }, {
             name: 'themeTint',
             type: 'attribute'
           }, {
-            name: 'themeShade',
+            name: 'val',
+            required: true,
             type: 'attribute'
           }]
       }, {
         localName: 'CommentRangeEnd',
         typeName: null,
         propertyInfos: [{
+            name: 'displacedByCustomXml',
+            typeInfo: '.STDisplacedByCustomXml',
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'displacedByCustomXml',
-            typeInfo: '.STDisplacedByCustomXml',
             type: 'attribute'
           }]
       }, {
         localName: 'CommentRangeStart',
         typeName: null,
         propertyInfos: [{
+            name: 'displacedByCustomXml',
+            typeInfo: '.STDisplacedByCustomXml',
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'displacedByCustomXml',
-            typeInfo: '.STDisplacedByCustomXml',
             type: 'attribute'
           }]
       }, {
@@ -5889,17 +5889,17 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'numberingChange',
             typeInfo: '.CTTrackChangeNumbering'
           }, {
+            name: 'dirty',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
             name: 'fldCharType',
             required: true,
             typeInfo: '.STFldCharType',
             type: 'attribute'
           }, {
             name: 'fldLock',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
-            name: 'dirty',
             typeInfo: 'Boolean',
             defaultValue: true,
             type: 'attribute'
@@ -5949,6 +5949,14 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'FontSig',
         typeName: 'CT_FontSig',
         propertyInfos: [{
+            name: 'csb0',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'csb1',
+            required: true,
+            type: 'attribute'
+          }, {
             name: 'usb0',
             required: true,
             type: 'attribute'
@@ -5962,14 +5970,6 @@ var org_docx4j_wml_Module_Factory = function () {
             type: 'attribute'
           }, {
             name: 'usb3',
-            required: true,
-            type: 'attribute'
-          }, {
-            name: 'csb0',
-            required: true,
-            type: 'attribute'
-          }, {
-            name: 'csb1',
             required: true,
             type: 'attribute'
           }]
@@ -6371,12 +6371,12 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'tplc',
-            type: 'attribute'
-          }, {
             name: 'tentative',
             typeInfo: 'Boolean',
             defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'tplc',
             type: 'attribute'
           }]
       }, {
@@ -6388,12 +6388,12 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'legacySpace',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
             name: 'legacyIndent',
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'legacySpace',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
       }, {
@@ -6418,13 +6418,13 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'Lvl.LvlText',
         typeName: null,
         propertyInfos: [{
-            name: 'val',
-            type: 'attribute'
-          }, {
             name: '_null',
             typeInfo: 'Boolean',
             defaultValue: true,
             attributeName: 'null',
+            type: 'attribute'
+          }, {
+            name: 'val',
             type: 'attribute'
           }]
       }, {
@@ -6754,21 +6754,6 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'rsidRPr',
-            type: 'attribute'
-          }, {
-            name: 'rsidR',
-            type: 'attribute'
-          }, {
-            name: 'rsidDel',
-            type: 'attribute'
-          }, {
-            name: 'rsidP',
-            type: 'attribute'
-          }, {
-            name: 'rsidRDefault',
-            type: 'attribute'
-          }, {
             name: 'paraId',
             attributeName: {
               localPart: 'paraId',
@@ -6781,6 +6766,21 @@ var org_docx4j_wml_Module_Factory = function () {
               localPart: 'textId',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
             },
+            type: 'attribute'
+          }, {
+            name: 'rsidDel',
+            type: 'attribute'
+          }, {
+            name: 'rsidP',
+            type: 'attribute'
+          }, {
+            name: 'rsidR',
+            type: 'attribute'
+          }, {
+            name: 'rsidRDefault',
+            type: 'attribute'
+          }, {
+            name: 'rsidRPr',
             type: 'attribute'
           }]
       }, {
@@ -7151,10 +7151,14 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'tgtFrame',
+            name: 'id',
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
             type: 'attribute'
           }, {
-            name: 'tooltip',
+            name: 'anchor',
             type: 'attribute'
           }, {
             name: 'docLocation',
@@ -7165,14 +7169,10 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: true,
             type: 'attribute'
           }, {
-            name: 'anchor',
+            name: 'tgtFrame',
             type: 'attribute'
           }, {
-            name: 'id',
-            attributeName: {
-              localPart: 'id',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-            },
+            name: 'tooltip',
             type: 'attribute'
           }]
       }, {
@@ -7312,6 +7312,30 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'PPrBase.Ind',
         typeName: null,
         propertyInfos: [{
+            name: 'end',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'endChars',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'firstLine',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'firstLineChars',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'hanging',
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'hangingChars',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
             name: 'left',
             typeInfo: 'Integer',
             type: 'attribute'
@@ -7333,30 +7357,6 @@ var org_docx4j_wml_Module_Factory = function () {
             type: 'attribute'
           }, {
             name: 'startChars',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'end',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'endChars',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'hanging',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'hangingChars',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'firstLine',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'firstLineChars',
             typeInfo: 'Integer',
             type: 'attribute'
           }]
@@ -7436,12 +7436,21 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'PPrBase.Spacing',
         typeName: null,
         propertyInfos: [{
-            name: 'before',
+            name: 'after',
             typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
-            name: 'beforeLines',
+            name: 'afterAutospacing',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            type: 'attribute'
+          }, {
+            name: 'afterLines',
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'before',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
             name: 'beforeAutospacing',
@@ -7449,17 +7458,8 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: false,
             type: 'attribute'
           }, {
-            name: 'after',
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'afterLines',
+            name: 'beforeLines',
             typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'afterAutospacing',
-            typeInfo: 'Boolean',
-            defaultValue: false,
             type: 'attribute'
           }, {
             name: 'line',
@@ -7852,13 +7852,13 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'rsidRPr',
-            type: 'attribute'
-          }, {
             name: 'rsidDel',
             type: 'attribute'
           }, {
             name: 'rsidR',
+            type: 'attribute'
+          }, {
+            name: 'rsidRPr',
             type: 'attribute'
           }]
       }, {
@@ -7915,14 +7915,14 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STPTabAlignment',
             type: 'attribute'
           }, {
-            name: 'relativeTo',
-            required: true,
-            typeInfo: '.STPTabRelativeTo',
-            type: 'attribute'
-          }, {
             name: 'leader',
             required: true,
             typeInfo: '.STPTabLeader',
+            type: 'attribute'
+          }, {
+            name: 'relativeTo',
+            required: true,
+            typeInfo: '.STPTabRelativeTo',
             type: 'attribute'
           }]
       }, {
@@ -7935,11 +7935,11 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'R.Sym',
         typeName: null,
         propertyInfos: [{
-            name: 'font',
-            type: 'attribute'
-          }, {
             name: '_char',
             attributeName: 'char',
+            type: 'attribute'
+          }, {
+            name: 'font',
             type: 'attribute'
           }]
       }, {
@@ -7955,36 +7955,36 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'RFonts',
         typeName: null,
         propertyInfos: [{
-            name: 'hint',
-            typeInfo: '.STHint',
-            type: 'attribute'
-          }, {
             name: 'ascii',
-            type: 'attribute'
-          }, {
-            name: 'hAnsi',
-            type: 'attribute'
-          }, {
-            name: 'eastAsia',
-            type: 'attribute'
-          }, {
-            name: 'cs',
             type: 'attribute'
           }, {
             name: 'asciiTheme',
             typeInfo: '.STTheme',
             type: 'attribute'
           }, {
-            name: 'hAnsiTheme',
+            name: 'cs',
+            type: 'attribute'
+          }, {
+            name: 'cstheme',
             typeInfo: '.STTheme',
+            type: 'attribute'
+          }, {
+            name: 'eastAsia',
             type: 'attribute'
           }, {
             name: 'eastAsiaTheme',
             typeInfo: '.STTheme',
             type: 'attribute'
           }, {
-            name: 'cstheme',
+            name: 'hAnsi',
+            type: 'attribute'
+          }, {
+            name: 'hAnsiTheme',
             typeInfo: '.STTheme',
+            type: 'attribute'
+          }, {
+            name: 'hint',
+            typeInfo: '.STHint',
             type: 'attribute'
           }]
       }, {
@@ -8207,19 +8207,19 @@ var org_docx4j_wml_Module_Factory = function () {
         typeName: 'CT_PermStart',
         baseTypeInfo: '.CTPerm',
         propertyInfos: [{
-            name: 'edGrp',
-            values: ['none', 'everyone', 'administrators', 'contributors', 'editors', 'owners', 'current'],
-            type: 'attribute'
-          }, {
-            name: 'ed',
-            type: 'attribute'
-          }, {
             name: 'colFirst',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'colLast',
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'ed',
+            type: 'attribute'
+          }, {
+            name: 'edGrp',
+            values: ['none', 'everyone', 'administrators', 'contributors', 'editors', 'owners', 'current'],
             type: 'attribute'
           }]
       }, {
@@ -9290,13 +9290,13 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'sectPrChange',
             typeInfo: '.CTSectPrChange'
           }, {
-            name: 'rsidRPr',
-            type: 'attribute'
-          }, {
             name: 'rsidDel',
             type: 'attribute'
           }, {
             name: 'rsidR',
+            type: 'attribute'
+          }, {
+            name: 'rsidRPr',
             type: 'attribute'
           }, {
             name: 'rsidSect',
@@ -9318,10 +9318,6 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'right',
             typeInfo: '.CTBorder'
           }, {
-            name: 'zOrder',
-            typeInfo: '.STPageBorderZOrder',
-            type: 'attribute'
-          }, {
             name: 'display',
             typeInfo: '.STPageBorderDisplay',
             type: 'attribute'
@@ -9329,34 +9325,18 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'offsetFrom',
             typeInfo: '.STPageBorderOffset',
             type: 'attribute'
+          }, {
+            name: 'zOrder',
+            typeInfo: '.STPageBorderZOrder',
+            type: 'attribute'
           }]
       }, {
         localName: 'SectPr.PgMar',
         typeName: null,
         propertyInfos: [{
-            name: 'top',
-            required: true,
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'right',
-            required: true,
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
             name: 'bottom',
             required: true,
             typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'left',
-            required: true,
-            typeInfo: 'UnsignedLong',
-            type: 'attribute'
-          }, {
-            name: 'header',
-            required: true,
-            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }, {
             name: 'footer',
@@ -9368,13 +9348,33 @@ var org_docx4j_wml_Module_Factory = function () {
             required: true,
             typeInfo: 'UnsignedLong',
             type: 'attribute'
+          }, {
+            name: 'header',
+            required: true,
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'left',
+            required: true,
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'right',
+            required: true,
+            typeInfo: 'UnsignedLong',
+            type: 'attribute'
+          }, {
+            name: 'top',
+            required: true,
+            typeInfo: 'Integer',
+            type: 'attribute'
           }]
       }, {
         localName: 'SectPr.PgSz',
         typeName: null,
         propertyInfos: [{
-            name: 'w',
-            typeInfo: 'UnsignedLong',
+            name: 'code',
+            typeInfo: 'Integer',
             type: 'attribute'
           }, {
             name: 'h',
@@ -9385,8 +9385,8 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STPageOrientation',
             type: 'attribute'
           }, {
-            name: 'code',
-            typeInfo: 'Integer',
+            name: 'w',
+            typeInfo: 'UnsignedLong',
             type: 'attribute'
           }]
       }, {
@@ -9465,13 +9465,13 @@ var org_docx4j_wml_Module_Factory = function () {
             },
             typeInfo: '.CTDecimalNumber'
           }, {
-            name: 'rsidRPr',
-            type: 'attribute'
-          }, {
             name: 'rsidDel',
             type: 'attribute'
           }, {
             name: 'rsidR',
+            type: 'attribute'
+          }, {
+            name: 'rsidRPr',
             type: 'attribute'
           }, {
             name: 'rsidSect',
@@ -9549,11 +9549,9 @@ var org_docx4j_wml_Module_Factory = function () {
             collection: true,
             typeInfo: '.CTTblStylePr'
           }, {
-            name: 'type',
-            values: ['paragraph', 'character', 'table', 'numbering'],
-            type: 'attribute'
-          }, {
-            name: 'styleId',
+            name: 'customStyle',
+            typeInfo: 'Boolean',
+            defaultValue: false,
             type: 'attribute'
           }, {
             name: '_default',
@@ -9562,9 +9560,11 @@ var org_docx4j_wml_Module_Factory = function () {
             attributeName: 'default',
             type: 'attribute'
           }, {
-            name: 'customStyle',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'styleId',
+            type: 'attribute'
+          }, {
+            name: 'type',
+            values: ['paragraph', 'character', 'table', 'numbering'],
             type: 'attribute'
           }]
       }, {
@@ -9642,21 +9642,11 @@ var org_docx4j_wml_Module_Factory = function () {
             collection: true,
             typeInfo: '.Styles.LatentStyles.LsdException'
           }, {
-            name: 'defLockedState',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
-            name: 'defUIPriority',
+            name: 'count',
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'defSemiHidden',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
-            name: 'defUnhideWhenUsed',
+            name: 'defLockedState',
             typeInfo: 'Boolean',
             defaultValue: true,
             type: 'attribute'
@@ -9666,19 +9656,38 @@ var org_docx4j_wml_Module_Factory = function () {
             defaultValue: false,
             type: 'attribute'
           }, {
-            name: 'count',
+            name: 'defSemiHidden',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
+            name: 'defUIPriority',
             typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'defUnhideWhenUsed',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             type: 'attribute'
           }]
       }, {
         localName: 'Styles.LatentStyles.LsdException',
         typeName: null,
         propertyInfos: [{
+            name: 'locked',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            type: 'attribute'
+          }, {
             name: 'name',
             required: true,
             type: 'attribute'
           }, {
-            name: 'locked',
+            name: 'qFormat',
+            typeInfo: 'Boolean',
+            type: 'attribute'
+          }, {
+            name: 'semiHidden',
             typeInfo: 'Boolean',
             defaultValue: true,
             type: 'attribute'
@@ -9687,18 +9696,9 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: 'Integer',
             type: 'attribute'
           }, {
-            name: 'semiHidden',
-            typeInfo: 'Boolean',
-            defaultValue: true,
-            type: 'attribute'
-          }, {
             name: 'unhideWhenUsed',
             typeInfo: 'Boolean',
             defaultValue: true,
-            type: 'attribute'
-          }, {
-            name: 'qFormat',
-            typeInfo: 'Boolean',
             type: 'attribute'
           }]
       }, {
@@ -9886,12 +9886,12 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'TblWidth',
         typeName: 'CT_TblWidth',
         propertyInfos: [{
-            name: 'w',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
             name: 'type',
             values: ['nil', 'pct', 'dxa', 'auto'],
+            type: 'attribute'
+          }, {
+            name: 'w',
+            typeInfo: 'Integer',
             type: 'attribute'
           }]
       }, {
@@ -10274,18 +10274,6 @@ var org_docx4j_wml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'rsidRPr',
-            type: 'attribute'
-          }, {
-            name: 'rsidR',
-            type: 'attribute'
-          }, {
-            name: 'rsidDel',
-            type: 'attribute'
-          }, {
-            name: 'rsidTr',
-            type: 'attribute'
-          }, {
             name: 'paraId',
             attributeName: {
               localPart: 'paraId',
@@ -10298,6 +10286,18 @@ var org_docx4j_wml_Module_Factory = function () {
               localPart: 'textId',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
             },
+            type: 'attribute'
+          }, {
+            name: 'rsidDel',
+            type: 'attribute'
+          }, {
+            name: 'rsidR',
+            type: 'attribute'
+          }, {
+            name: 'rsidRPr',
+            type: 'attribute'
+          }, {
+            name: 'rsidTr',
             type: 'attribute'
           }]
       }, {
@@ -10318,10 +10318,6 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'U',
         typeName: null,
         propertyInfos: [{
-            name: 'val',
-            typeInfo: '.UnderlineEnumeration',
-            type: 'attribute'
-          }, {
             name: 'color',
             type: 'attribute'
           }, {
@@ -10329,10 +10325,14 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.STThemeColor',
             type: 'attribute'
           }, {
+            name: 'themeShade',
+            type: 'attribute'
+          }, {
             name: 'themeTint',
             type: 'attribute'
           }, {
-            name: 'themeShade',
+            name: 'val',
+            typeInfo: '.UnderlineEnumeration',
             type: 'attribute'
           }]
       }, {

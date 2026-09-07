@@ -7,11 +7,11 @@ export const org_docx4j_w15symex = {
       localName: 'CTSymEx',
       typeName: 'CT_SymEx',
       propertyInfos: [{
-          name: 'font',
-          type: 'attribute'
-        }, {
           name: '_char',
           attributeName: 'char',
+          type: 'attribute'
+        }, {
+          name: 'font',
           type: 'attribute'
         }]
     }],

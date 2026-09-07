@@ -7,22 +7,10 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTCallout',
         typeName: 'CT_Callout',
         propertyInfos: [{
-            name: 'on',
+            name: 'accentbar',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'on'
-            },
-            type: 'attribute'
-          }, {
-            name: 'type',
-            attributeName: {
-              localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'gap',
-            attributeName: {
-              localPart: 'gap'
+              localPart: 'accentbar'
             },
             type: 'attribute'
           }, {
@@ -33,10 +21,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dropauto',
-            typeInfo: '.STTrueFalse',
+            name: 'distance',
             attributeName: {
-              localPart: 'dropauto'
+              localPart: 'distance'
             },
             type: 'attribute'
           }, {
@@ -46,17 +33,16 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'distance',
+            name: 'dropauto',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'distance'
+              localPart: 'dropauto'
             },
             type: 'attribute'
           }, {
-            name: 'lengthspecified',
-            typeInfo: '.STTrueFalse',
-            defaultValue: 'f',
+            name: 'gap',
             attributeName: {
-              localPart: 'lengthspecified'
+              localPart: 'gap'
             },
             type: 'attribute'
           }, {
@@ -66,17 +52,11 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'accentbar',
+            name: 'lengthspecified',
             typeInfo: '.STTrueFalse',
+            defaultValue: 'f',
             attributeName: {
-              localPart: 'accentbar'
-            },
-            type: 'attribute'
-          }, {
-            name: 'textborder',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'textborder'
+              localPart: 'lengthspecified'
             },
             type: 'attribute'
           }, {
@@ -91,6 +71,26 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'minusy'
+            },
+            type: 'attribute'
+          }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'textborder',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'textborder'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            attributeName: {
+              localPart: 'type'
             },
             type: 'attribute'
           }, {
@@ -118,9 +118,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTColorMenu',
         typeName: 'CT_ColorMenu',
         propertyInfos: [{
-            name: 'strokecolor',
+            name: 'extrusioncolor',
             attributeName: {
-              localPart: 'strokecolor'
+              localPart: 'extrusioncolor'
             },
             type: 'attribute'
           }, {
@@ -136,9 +136,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'extrusioncolor',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'extrusioncolor'
+              localPart: 'strokecolor'
             },
             type: 'attribute'
           }, {
@@ -187,13 +187,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             name: 'relationtable',
             typeInfo: '.CTRelationTable'
           }, {
-            name: 'dgmstyle',
-            typeInfo: 'Integer',
-            attributeName: {
-              localPart: 'dgmstyle'
-            },
-            type: 'attribute'
-          }, {
             name: 'autoformat',
             typeInfo: '.STTrueFalse',
             attributeName: {
@@ -201,17 +194,30 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'reverse',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'reverse'
-            },
-            type: 'attribute'
-          }, {
             name: 'autolayout',
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'autolayout'
+            },
+            type: 'attribute'
+          }, {
+            name: 'constrainbounds',
+            attributeName: {
+              localPart: 'constrainbounds'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmbasetextscale',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmbasetextscale'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dgmfontsize',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'dgmfontsize'
             },
             type: 'attribute'
           }, {
@@ -229,23 +235,17 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dgmfontsize',
+            name: 'dgmstyle',
             typeInfo: 'Integer',
             attributeName: {
-              localPart: 'dgmfontsize'
+              localPart: 'dgmstyle'
             },
             type: 'attribute'
           }, {
-            name: 'constrainbounds',
+            name: 'reverse',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'constrainbounds'
-            },
-            type: 'attribute'
-          }, {
-            name: 'dgmbasetextscale',
-            typeInfo: 'Integer',
-            attributeName: {
-              localPart: 'dgmbasetextscale'
+              localPart: 'reverse'
             },
             type: 'attribute'
           }, {
@@ -279,59 +279,53 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTExtrusion',
         typeName: 'CT_Extrusion',
         propertyInfos: [{
-            name: 'on',
+            name: 'autorotationcenter',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'on'
+              localPart: 'autorotationcenter'
             },
             type: 'attribute'
           }, {
-            name: 'type',
-            typeInfo: '.STExtrusionType',
-            defaultValue: 'parallel',
+            name: 'backdepth',
             attributeName: {
-              localPart: 'type'
+              localPart: 'backdepth'
             },
             type: 'attribute'
           }, {
-            name: 'render',
-            typeInfo: '.STExtrusionRender',
-            defaultValue: 'solid',
+            name: 'brightness',
             attributeName: {
-              localPart: 'render'
+              localPart: 'brightness'
             },
             type: 'attribute'
           }, {
-            name: 'viewpointorigin',
+            name: 'color',
             attributeName: {
-              localPart: 'viewpointorigin'
+              localPart: 'color'
             },
             type: 'attribute'
           }, {
-            name: 'viewpoint',
+            name: 'colormode',
+            typeInfo: '.STColorMode',
             attributeName: {
-              localPart: 'viewpoint'
+              localPart: 'colormode'
             },
             type: 'attribute'
           }, {
-            name: 'plane',
-            typeInfo: '.STExtrusionPlane',
-            defaultValue: 'XY',
+            name: 'diffusity',
             attributeName: {
-              localPart: 'plane'
+              localPart: 'diffusity'
             },
             type: 'attribute'
           }, {
-            name: 'skewangle',
-            typeInfo: 'Float',
+            name: 'edge',
             attributeName: {
-              localPart: 'skewangle'
+              localPart: 'edge'
             },
             type: 'attribute'
           }, {
-            name: 'skewamt',
+            name: 'facet',
             attributeName: {
-              localPart: 'skewamt'
+              localPart: 'facet'
             },
             type: 'attribute'
           }, {
@@ -341,9 +335,69 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'backdepth',
+            name: 'lightface',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'backdepth'
+              localPart: 'lightface'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightharsh',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lightharsh'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightharsh2',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lightharsh2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightlevel',
+            attributeName: {
+              localPart: 'lightlevel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightlevel2',
+            attributeName: {
+              localPart: 'lightlevel2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightposition',
+            attributeName: {
+              localPart: 'lightposition'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lightposition2',
+            attributeName: {
+              localPart: 'lightposition2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lockrotationcenter',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'lockrotationcenter'
+            },
+            type: 'attribute'
+          }, {
+            name: 'metal',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'metal'
+            },
+            type: 'attribute'
+          }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
             },
             type: 'attribute'
           }, {
@@ -360,23 +414,19 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'lockrotationcenter',
-            typeInfo: '.STTrueFalse',
+            name: 'plane',
+            typeInfo: '.STExtrusionPlane',
+            defaultValue: 'XY',
             attributeName: {
-              localPart: 'lockrotationcenter'
+              localPart: 'plane'
             },
             type: 'attribute'
           }, {
-            name: 'autorotationcenter',
-            typeInfo: '.STTrueFalse',
+            name: 'render',
+            typeInfo: '.STExtrusionRender',
+            defaultValue: 'solid',
             attributeName: {
-              localPart: 'autorotationcenter'
-            },
-            type: 'attribute'
-          }, {
-            name: 'rotationcenter',
-            attributeName: {
-              localPart: 'rotationcenter'
+              localPart: 'render'
             },
             type: 'attribute'
           }, {
@@ -386,16 +436,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'colormode',
-            typeInfo: '.STColorMode',
+            name: 'rotationcenter',
             attributeName: {
-              localPart: 'colormode'
-            },
-            type: 'attribute'
-          }, {
-            name: 'color',
-            attributeName: {
-              localPart: 'color'
+              localPart: 'rotationcenter'
             },
             type: 'attribute'
           }, {
@@ -406,85 +449,42 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'skewamt',
+            attributeName: {
+              localPart: 'skewamt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'skewangle',
+            typeInfo: 'Float',
+            attributeName: {
+              localPart: 'skewangle'
+            },
+            type: 'attribute'
+          }, {
             name: 'specularity',
             attributeName: {
               localPart: 'specularity'
             },
             type: 'attribute'
           }, {
-            name: 'diffusity',
+            name: 'type',
+            typeInfo: '.STExtrusionType',
+            defaultValue: 'parallel',
             attributeName: {
-              localPart: 'diffusity'
+              localPart: 'type'
             },
             type: 'attribute'
           }, {
-            name: 'metal',
-            typeInfo: '.STTrueFalse',
+            name: 'viewpoint',
             attributeName: {
-              localPart: 'metal'
+              localPart: 'viewpoint'
             },
             type: 'attribute'
           }, {
-            name: 'edge',
+            name: 'viewpointorigin',
             attributeName: {
-              localPart: 'edge'
-            },
-            type: 'attribute'
-          }, {
-            name: 'facet',
-            attributeName: {
-              localPart: 'facet'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightface',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'lightface'
-            },
-            type: 'attribute'
-          }, {
-            name: 'brightness',
-            attributeName: {
-              localPart: 'brightness'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightposition',
-            attributeName: {
-              localPart: 'lightposition'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightlevel',
-            attributeName: {
-              localPart: 'lightlevel'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightharsh',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'lightharsh'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightposition2',
-            attributeName: {
-              localPart: 'lightposition2'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightlevel2',
-            attributeName: {
-              localPart: 'lightlevel2'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lightharsh2',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'lightharsh2'
+              localPart: 'viewpointorigin'
             },
             type: 'attribute'
           }, {
@@ -537,17 +537,17 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTInk',
         typeName: 'CT_Ink',
         propertyInfos: [{
-            name: 'i',
-            typeInfo: 'Base64Binary',
-            attributeName: {
-              localPart: 'i'
-            },
-            type: 'attribute'
-          }, {
             name: 'annotation',
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'annotation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'i',
+            typeInfo: 'Base64Binary',
+            attributeName: {
+              localPart: 'i'
             },
             type: 'attribute'
           }]
@@ -555,66 +555,10 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTLock',
         typeName: 'CT_Lock',
         propertyInfos: [{
-            name: 'position',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'position'
-            },
-            type: 'attribute'
-          }, {
-            name: 'selection',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'selection'
-            },
-            type: 'attribute'
-          }, {
-            name: 'grouping',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'grouping'
-            },
-            type: 'attribute'
-          }, {
-            name: 'ungrouping',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'ungrouping'
-            },
-            type: 'attribute'
-          }, {
-            name: 'rotation',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'rotation'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cropping',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'cropping'
-            },
-            type: 'attribute'
-          }, {
-            name: 'verticies',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'verticies'
-            },
-            type: 'attribute'
-          }, {
             name: 'adjusthandles',
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'adjusthandles'
-            },
-            type: 'attribute'
-          }, {
-            name: 'text',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'text'
             },
             type: 'attribute'
           }, {
@@ -625,10 +569,66 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'cropping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'cropping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grouping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'grouping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'position',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'position'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rotation',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'rotation'
+            },
+            type: 'attribute'
+          }, {
+            name: 'selection',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'selection'
+            },
+            type: 'attribute'
+          }, {
             name: 'shapetype',
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'shapetype'
+            },
+            type: 'attribute'
+          }, {
+            name: 'text',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'text'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ungrouping',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'ungrouping'
+            },
+            type: 'attribute'
+          }, {
+            name: 'verticies',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'verticies'
             },
             type: 'attribute'
           }, {
@@ -655,10 +655,16 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             name: 'fieldCodes',
             elementName: 'FieldCodes'
           }, {
-            name: 'type',
-            typeInfo: '.STOLEType',
+            name: 'drawAspect',
+            typeInfo: '.STOLEDrawAspect',
             attributeName: {
-              localPart: 'Type'
+              localPart: 'DrawAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'objectID',
+            attributeName: {
+              localPart: 'ObjectID'
             },
             type: 'attribute'
           }, {
@@ -674,23 +680,10 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'drawAspect',
-            typeInfo: '.STOLEDrawAspect',
+            name: 'type',
+            typeInfo: '.STOLEType',
             attributeName: {
-              localPart: 'DrawAspect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'objectID',
-            attributeName: {
-              localPart: 'ObjectID'
-            },
-            type: 'attribute'
-          }, {
-            name: 'id',
-            attributeName: {
-              localPart: 'id',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+              localPart: 'Type'
             },
             type: 'attribute'
           }, {
@@ -700,16 +693,22 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
               localPart: 'UpdateMode'
             },
             type: 'attribute'
+          }, {
+            name: 'id',
+            attributeName: {
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTProxy',
         typeName: 'CT_Proxy',
         propertyInfos: [{
-            name: 'start',
-            values: ['', 't', 'f', 'true', 'false'],
-            defaultValue: 'false',
+            name: 'connectloc',
+            typeInfo: 'Int',
             attributeName: {
-              localPart: 'start'
+              localPart: 'connectloc'
             },
             type: 'attribute'
           }, {
@@ -727,10 +726,11 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'connectloc',
-            typeInfo: 'Int',
+            name: 'start',
+            values: ['', 't', 'f', 'true', 'false'],
+            defaultValue: 'false',
             attributeName: {
-              localPart: 'connectloc'
+              localPart: 'start'
             },
             type: 'attribute'
           }]
@@ -743,20 +743,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             collection: true,
             typeInfo: '.CTProxy'
           }, {
-            name: 'id',
-            required: true,
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'type',
-            typeInfo: '.STRType',
-            attributeName: {
-              localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
             name: 'how',
             typeInfo: '.STHow',
             attributeName: {
@@ -764,9 +750,23 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'id',
+            required: true,
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
             name: 'idref',
             attributeName: {
               localPart: 'idref'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STRType',
+            attributeName: {
+              localPart: 'type'
             },
             type: 'attribute'
           }]
@@ -791,9 +791,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTRelation',
         typeName: 'CT_Relation',
         propertyInfos: [{
-            name: 'idsrc',
+            name: 'idcntr',
             attributeName: {
-              localPart: 'idsrc'
+              localPart: 'idcntr'
             },
             type: 'attribute'
           }, {
@@ -803,9 +803,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'idcntr',
+            name: 'idsrc',
             attributeName: {
-              localPart: 'idcntr'
+              localPart: 'idsrc'
             },
             type: 'attribute'
           }, {
@@ -901,19 +901,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             name: 'colormenu',
             typeInfo: '.CTColorMenu'
           }, {
-            name: 'spidmax',
-            typeInfo: 'Integer',
-            attributeName: {
-              localPart: 'spidmax'
-            },
-            type: 'attribute'
-          }, {
-            name: 'style',
-            attributeName: {
-              localPart: 'style'
-            },
-            type: 'attribute'
-          }, {
             name: 'fillToggle',
             typeInfo: '.STTrueFalse',
             attributeName: {
@@ -927,6 +914,13 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'spidmax',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'spidmax'
+            },
+            type: 'attribute'
+          }, {
             name: 'strokeToggle',
             typeInfo: '.STTrueFalse',
             attributeName: {
@@ -937,6 +931,12 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             name: 'strokecolor',
             attributeName: {
               localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
             },
             type: 'attribute'
           }, {
@@ -981,10 +981,10 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTSignatureLine',
         typeName: 'CT_SignatureLine',
         propertyInfos: [{
-            name: 'issignatureline',
+            name: 'allowcomments',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'issignatureline'
+              localPart: 'allowcomments'
             },
             type: 'attribute'
           }, {
@@ -995,10 +995,24 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'issignatureline',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'issignatureline'
+            },
+            type: 'attribute'
+          }, {
             name: 'provid',
             typeInfo: 'Token',
             attributeName: {
               localPart: 'provid'
+            },
+            type: 'attribute'
+          }, {
+            name: 'showsigndate',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'showsigndate'
             },
             type: 'attribute'
           }, {
@@ -1009,17 +1023,24 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'allowcomments',
-            typeInfo: '.STTrueFalse',
+            name: 'addlxml',
             attributeName: {
-              localPart: 'allowcomments'
+              localPart: 'addlxml',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
             },
             type: 'attribute'
           }, {
-            name: 'showsigndate',
-            typeInfo: '.STTrueFalse',
+            name: 'signinginstructions',
             attributeName: {
-              localPart: 'showsigndate'
+              localPart: 'signinginstructions',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sigprovurl',
+            attributeName: {
+              localPart: 'sigprovurl',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
             },
             type: 'attribute'
           }, {
@@ -1044,27 +1065,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'signinginstructions',
-            attributeName: {
-              localPart: 'signinginstructions',
-              namespaceURI: 'urn:schemas-microsoft-com:office:office'
-            },
-            type: 'attribute'
-          }, {
-            name: 'addlxml',
-            attributeName: {
-              localPart: 'addlxml',
-              namespaceURI: 'urn:schemas-microsoft-com:office:office'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sigprovurl',
-            attributeName: {
-              localPart: 'sigprovurl',
-              namespaceURI: 'urn:schemas-microsoft-com:office:office'
-            },
-            type: 'attribute'
-          }, {
             name: 'ext',
             typeInfo: 'org_docx4j_vml.STExt',
             attributeName: {
@@ -1083,10 +1083,9 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'on',
-            typeInfo: '.STTrueFalse',
+            name: 'matrix',
             attributeName: {
-              localPart: 'on'
+              localPart: 'matrix'
             },
             type: 'attribute'
           }, {
@@ -1096,15 +1095,16 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'origin',
+            name: 'on',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'origin'
+              localPart: 'on'
             },
             type: 'attribute'
           }, {
-            name: 'matrix',
+            name: 'origin',
             attributeName: {
-              localPart: 'matrix'
+              localPart: 'origin'
             },
             type: 'attribute'
           }, {
@@ -1120,19 +1120,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
         localName: 'CTStrokeChild',
         typeName: 'CT_StrokeChild',
         propertyInfos: [{
-            name: 'on',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'on'
-            },
-            type: 'attribute'
-          }, {
-            name: 'weight',
-            attributeName: {
-              localPart: 'weight'
-            },
-            type: 'attribute'
-          }, {
             name: 'color',
             attributeName: {
               localPart: 'color'
@@ -1145,29 +1132,30 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'opacity',
+            name: 'dashstyle',
             attributeName: {
-              localPart: 'opacity'
+              localPart: 'dashstyle'
             },
             type: 'attribute'
           }, {
-            name: 'linestyle',
-            typeInfo: 'org_docx4j_vml.STStrokeLineStyle',
+            name: 'endarrow',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowType',
             attributeName: {
-              localPart: 'linestyle'
+              localPart: 'endarrow'
             },
             type: 'attribute'
           }, {
-            name: 'miterlimit',
+            name: 'endarrowlength',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowLength',
             attributeName: {
-              localPart: 'miterlimit'
+              localPart: 'endarrowlength'
             },
             type: 'attribute'
           }, {
-            name: 'joinstyle',
-            typeInfo: 'org_docx4j_vml.STStrokeJoinStyle',
+            name: 'endarrowwidth',
+            typeInfo: 'org_docx4j_vml.STStrokeArrowWidth',
             attributeName: {
-              localPart: 'joinstyle'
+              localPart: 'endarrowwidth'
             },
             type: 'attribute'
           }, {
@@ -1178,19 +1166,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dashstyle',
-            attributeName: {
-              localPart: 'dashstyle'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
             name: 'filltype',
             typeInfo: 'org_docx4j_vml.STFillType',
             attributeName: {
@@ -1198,9 +1173,10 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'src',
+            name: 'imagealignshape',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'src'
+              localPart: 'imagealignshape'
             },
             type: 'attribute'
           }, {
@@ -1217,10 +1193,49 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'imagealignshape',
+            name: 'insetpen',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'imagealignshape'
+              localPart: 'insetpen'
+            },
+            type: 'attribute'
+          }, {
+            name: 'joinstyle',
+            typeInfo: 'org_docx4j_vml.STStrokeJoinStyle',
+            attributeName: {
+              localPart: 'joinstyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'linestyle',
+            typeInfo: 'org_docx4j_vml.STStrokeLineStyle',
+            attributeName: {
+              localPart: 'linestyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'miterlimit',
+            attributeName: {
+              localPart: 'miterlimit'
+            },
+            type: 'attribute'
+          }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
             },
             type: 'attribute'
           }, {
@@ -1231,13 +1246,6 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'startarrowwidth',
-            typeInfo: 'org_docx4j_vml.STStrokeArrowWidth',
-            attributeName: {
-              localPart: 'startarrowwidth'
-            },
-            type: 'attribute'
-          }, {
             name: 'startarrowlength',
             typeInfo: 'org_docx4j_vml.STStrokeArrowLength',
             attributeName: {
@@ -1245,31 +1253,16 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'endarrow',
-            typeInfo: 'org_docx4j_vml.STStrokeArrowType',
-            attributeName: {
-              localPart: 'endarrow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'endarrowwidth',
+            name: 'startarrowwidth',
             typeInfo: 'org_docx4j_vml.STStrokeArrowWidth',
             attributeName: {
-              localPart: 'endarrowwidth'
+              localPart: 'startarrowwidth'
             },
             type: 'attribute'
           }, {
-            name: 'endarrowlength',
-            typeInfo: 'org_docx4j_vml.STStrokeArrowLength',
+            name: 'weight',
             attributeName: {
-              localPart: 'endarrowlength'
-            },
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href',
-              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+              localPart: 'weight'
             },
             type: 'attribute'
           }, {
@@ -1280,17 +1273,24 @@ var org_docx4j_vml_officedrawing_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'title',
-            attributeName: {
-              localPart: 'title',
-              namespaceURI: 'urn:schemas-microsoft-com:office:office'
-            },
-            type: 'attribute'
-          }, {
             name: 'forcedash',
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'forcedash',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'href',
+            attributeName: {
+              localPart: 'href',
+              namespaceURI: 'urn:schemas-microsoft-com:office:office'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title',
               namespaceURI: 'urn:schemas-microsoft-com:office:office'
             },
             type: 'attribute'

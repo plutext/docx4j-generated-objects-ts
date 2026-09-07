@@ -40,21 +40,6 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoo
           name: 'extLst',
           typeInfo: 'org_pptx4j_pml.CTExtensionList'
         }, {
-          name: 'sectionId',
-          required: true,
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'sectionId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'title',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'title'
-          },
-          type: 'attribute'
-        }, {
           name: 'descr',
           defaultValue: '',
           attributeName: {
@@ -91,6 +76,21 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoo
           defaultValue: 100000,
           attributeName: {
             localPart: 'scaleFactorY'
+          },
+          type: 'attribute'
+        }, {
+          name: 'sectionId',
+          required: true,
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'sectionId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'title',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'title'
           },
           type: 'attribute'
         }]

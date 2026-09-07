@@ -25,9 +25,9 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTBevel {
   TYPE_NAME?: 'org_docx4j_w14.CTBevel';
   readonly PARENT?: CTProps3D;
-  w?: number;
   h?: number;
   prst?: STBevelPresetType;
+  w?: number;
 }
 
 export interface CTCamera {
@@ -97,8 +97,8 @@ export interface CTLightRig {
   TYPE_NAME?: 'org_docx4j_w14.CTLightRig';
   readonly PARENT?: CTScene3D;
   rot?: CTSphereCoords;
-  rig: STLightRigType;
   dir: STLightRigDirection;
+  rig: STLightRigType;
 }
 
 export interface CTLineJoinMiterProperties {
@@ -176,36 +176,36 @@ export interface CTProps3D {
   bevelB?: CTBevel;
   extrusionClr?: CTColor;
   contourClr?: CTColor;
-  extrusionH?: number;
   contourW?: number;
+  extrusionH?: number;
   prstMaterial?: STPresetMaterialType;
 }
 
 export interface CTReflection {
   TYPE_NAME?: 'org_docx4j_w14.CTReflection';
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
+  algn?: STRectAlignment;
   blurRad?: number;
-  stA?: number;
-  stPos?: number;
+  dir?: number;
+  dist?: number;
   endA?: number;
   endPos?: number;
-  dist?: number;
-  dir?: number;
   fadeDir?: number;
-  sx?: number;
-  sy?: number;
   kx?: number;
   ky?: number;
-  algn?: STRectAlignment;
+  stA?: number;
+  stPos?: number;
+  sx?: number;
+  sy?: number;
 }
 
 export interface CTRelativeRect {
   TYPE_NAME?: 'org_docx4j_w14.CTRelativeRect';
   readonly PARENT?: CTPathShadeProperties;
-  l?: number;
-  t?: number;
-  r?: number;
   b?: number;
+  l?: number;
+  r?: number;
+  t?: number;
 }
 
 export interface CTSRgbColor {
@@ -249,14 +249,14 @@ export interface CTShadow {
   readonly PARENT?: Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
   srgbClr: CTSRgbColor;
   schemeClr: CTSchemeColor;
+  algn?: STRectAlignment;
   blurRad?: number;
-  dist?: number;
   dir?: number;
-  sx?: number;
-  sy?: number;
+  dist?: number;
   kx?: number;
   ky?: number;
-  algn?: STRectAlignment;
+  sx?: number;
+  sy?: number;
 }
 
 export interface CTSolidColorFillProperties {
@@ -297,10 +297,10 @@ export interface CTTextOutlineEffect {
   round: Dep_org_docx4j_wml.CTEmpty;
   bevel: Dep_org_docx4j_wml.CTEmpty;
   miter: CTLineJoinMiterProperties;
-  w?: number;
+  algn?: STPenAlignment;
   cap?: STLineCap;
   cmpd?: STCompoundLine;
-  algn?: STPenAlignment;
+  w?: number;
 }
 
 export interface CTWordContentPart {

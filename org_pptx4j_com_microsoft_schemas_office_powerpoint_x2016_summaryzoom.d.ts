@@ -43,13 +43,13 @@ export interface CTSummaryZoomObject {
   readonly PARENT?: CTSummaryZoom;
   zmPr: Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main.CTZoomObjectProperties;
   extLst?: Dep_org_pptx4j_pml.CTExtensionList;
-  sectionId: string;
-  title?: string;
   descr?: string;
   offsetFactorX?: number;
   offsetFactorY?: number;
   scaleFactorX?: number;
   scaleFactorY?: number;
+  sectionId: string;
+  title?: string;
 }
 
 export type SummaryZmElement = TypedNamedValue<CTSummaryZoom>;

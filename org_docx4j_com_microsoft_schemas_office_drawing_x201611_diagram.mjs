@@ -26,16 +26,16 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram = {
           required: true,
           typeInfo: 'org_docx4j_dml.CTTextBlipBullet'
         }, {
-          name: 'prefix',
-          attributeName: {
-            localPart: 'prefix'
-          },
-          type: 'attribute'
-        }, {
           name: 'leadZeros',
           typeInfo: 'Boolean',
           attributeName: {
             localPart: 'leadZeros'
+          },
+          type: 'attribute'
+        }, {
+          name: 'prefix',
+          attributeName: {
+            localPart: 'prefix'
           },
           type: 'attribute'
         }]

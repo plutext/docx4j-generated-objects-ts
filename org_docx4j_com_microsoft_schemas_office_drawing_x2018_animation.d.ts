@@ -24,13 +24,13 @@ export interface CTAnimationProperties {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation.CTAnimationProperties';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation_model3d.CTEmbeddedAnimation;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  name?: string;
-  length: string;
-  count?: string;
   auto?: boolean;
+  count?: string;
+  end?: string;
+  length: string;
+  name?: string;
   offset?: string;
   st?: string;
-  end?: string;
 }
 
 export type STIndefinite = 'indefinite';

@@ -37,8 +37,8 @@ export interface CTDirectionalLight {
   pos: Dep_org_docx4j_dml.CTPoint3D;
   lookAt: Dep_org_docx4j_dml.CTPoint3D;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
-  enabled?: boolean;
   angularRad: number;
+  enabled?: boolean;
 }
 
 export interface CTModel3D {
@@ -122,8 +122,8 @@ export interface CTPointLight {
 export interface CTPositiveRatio {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d.CTPositiveRatio';
   readonly PARENT?: CTAmbientLight | CTDirectionalLight | CTModel3DTransform | CTOrthographicProjection | CTPointLight | CTSpotLight;
-  n: number;
   d: number;
+  n: number;
 }
 
 export interface CTRotate3D {

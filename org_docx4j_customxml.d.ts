@@ -34,9 +34,9 @@ export namespace SchemaLibrary {
   export interface Schema {
     TYPE_NAME?: 'org_docx4j_customxml.SchemaLibrary.Schema';
     readonly PARENT?: SchemaLibrary;
-    uri?: string;
     manifestLocation?: string;
     schemaLocation?: string;
+    uri?: string;
   }
 }
 

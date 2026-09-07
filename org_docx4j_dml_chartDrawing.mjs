@@ -50,17 +50,17 @@ export const org_docx4j_dml_chartDrawing = {
           name: 'style',
           typeInfo: 'org_docx4j_dml.CTShapeStyle'
         }, {
-          name: 'macro',
-          attributeName: {
-            localPart: 'macro'
-          },
-          type: 'attribute'
-        }, {
           name: 'fPublished',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'fPublished'
+          },
+          type: 'attribute'
+        }, {
+          name: 'macro',
+          attributeName: {
+            localPart: 'macro'
           },
           type: 'attribute'
         }]
@@ -112,17 +112,17 @@ export const org_docx4j_dml_chartDrawing = {
           },
           typeInfo: 'org_docx4j_dml.Graphic'
         }, {
-          name: 'macro',
-          attributeName: {
-            localPart: 'macro'
-          },
-          type: 'attribute'
-        }, {
           name: 'fPublished',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'fPublished'
+          },
+          type: 'attribute'
+        }, {
+          name: 'macro',
+          attributeName: {
+            localPart: 'macro'
           },
           type: 'attribute'
         }]
@@ -214,18 +214,18 @@ export const org_docx4j_dml_chartDrawing = {
           name: 'style',
           typeInfo: 'org_docx4j_dml.CTShapeStyle'
         }, {
-          name: 'macro',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'macro'
-          },
-          type: 'attribute'
-        }, {
           name: 'fPublished',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'fPublished'
+          },
+          type: 'attribute'
+        }, {
+          name: 'macro',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'macro'
           },
           type: 'attribute'
         }]
@@ -291,18 +291,6 @@ export const org_docx4j_dml_chartDrawing = {
           name: 'txBody',
           typeInfo: 'org_docx4j_dml.CTTextBody'
         }, {
-          name: 'macro',
-          attributeName: {
-            localPart: 'macro'
-          },
-          type: 'attribute'
-        }, {
-          name: 'textlink',
-          attributeName: {
-            localPart: 'textlink'
-          },
-          type: 'attribute'
-        }, {
           name: 'fLocksText',
           typeInfo: 'Boolean',
           defaultValue: true,
@@ -316,6 +304,18 @@ export const org_docx4j_dml_chartDrawing = {
           defaultValue: false,
           attributeName: {
             localPart: 'fPublished'
+          },
+          type: 'attribute'
+        }, {
+          name: 'macro',
+          attributeName: {
+            localPart: 'macro'
+          },
+          type: 'attribute'
+        }, {
+          name: 'textlink',
+          attributeName: {
+            localPart: 'textlink'
           },
           type: 'attribute'
         }]

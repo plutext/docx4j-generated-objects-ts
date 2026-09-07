@@ -211,18 +211,18 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
         localName: 'CTMediaBookmarkTarget',
         typeName: 'CT_MediaBookmarkTarget',
         propertyInfos: [{
+            name: 'bmkName',
+            required: true,
+            attributeName: {
+              localPart: 'bmkName'
+            },
+            type: 'attribute'
+          }, {
             name: 'spid',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'spid'
-            },
-            type: 'attribute'
-          }, {
-            name: 'bmkName',
-            required: true,
-            attributeName: {
-              localPart: 'bmkName'
             },
             type: 'attribute'
           }]
@@ -248,13 +248,6 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
         localName: 'CTMediaPlaybackEventRecord',
         typeName: 'CT_MediaPlaybackEventRecord',
         propertyInfos: [{
-            name: 'time',
-            required: true,
-            attributeName: {
-              localPart: 'time'
-            },
-            type: 'attribute'
-          }, {
             name: 'objId',
             required: true,
             typeInfo: 'UnsignedInt',
@@ -262,18 +255,18 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
               localPart: 'objId'
             },
             type: 'attribute'
-          }]
-      }, {
-        localName: 'CTMediaSeekEventRecord',
-        typeName: 'CT_MediaSeekEventRecord',
-        propertyInfos: [{
+          }, {
             name: 'time',
             required: true,
             attributeName: {
               localPart: 'time'
             },
             type: 'attribute'
-          }, {
+          }]
+      }, {
+        localName: 'CTMediaSeekEventRecord',
+        typeName: 'CT_MediaSeekEventRecord',
+        propertyInfos: [{
             name: 'objId',
             required: true,
             typeInfo: 'UnsignedInt',
@@ -288,22 +281,29 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
               localPart: 'seek'
             },
             type: 'attribute'
+          }, {
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTMediaTrim',
         typeName: 'CT_MediaTrim',
         propertyInfos: [{
-            name: 'st',
-            defaultValue: '0',
-            attributeName: {
-              localPart: 'st'
-            },
-            type: 'attribute'
-          }, {
             name: 'end',
             defaultValue: '0',
             attributeName: {
               localPart: 'end'
+            },
+            type: 'attribute'
+          }, {
+            name: 'st',
+            defaultValue: '0',
+            attributeName: {
+              localPart: 'st'
             },
             type: 'attribute'
           }]
@@ -311,18 +311,18 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
         localName: 'CTNullEventRecord',
         typeName: 'CT_NullEventRecord',
         propertyInfos: [{
-            name: 'time',
-            required: true,
-            attributeName: {
-              localPart: 'time'
-            },
-            type: 'attribute'
-          }, {
             name: 'objId',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'objId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'time',
+            required: true,
+            attributeName: {
+              localPart: 'time'
             },
             type: 'attribute'
           }]
@@ -370,19 +370,19 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
         localName: 'CTRevealTransition',
         typeName: 'CT_RevealTransition',
         propertyInfos: [{
-            name: 'thruBlk',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'thruBlk'
-            },
-            type: 'attribute'
-          }, {
             name: 'dir',
             typeInfo: '.STTransitionLeftRightDirectionType',
             defaultValue: 'l',
             attributeName: {
               localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'thruBlk',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'thruBlk'
             },
             type: 'attribute'
           }]
@@ -408,16 +408,16 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
             name: 'extLst',
             typeInfo: 'org_pptx4j_pml.CTExtensionList'
           }, {
-            name: 'name',
-            attributeName: {
-              localPart: 'name'
-            },
-            type: 'attribute'
-          }, {
             name: 'id',
             typeInfo: 'Token',
             attributeName: {
               localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            attributeName: {
+              localPart: 'name'
             },
             type: 'attribute'
           }]
@@ -500,14 +500,6 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
         localName: 'CTShredTransition',
         typeName: 'CT_ShredTransition',
         propertyInfos: [{
-            name: 'pattern',
-            typeInfo: '.STTransitionShredPattern',
-            defaultValue: 'strip',
-            attributeName: {
-              localPart: 'pattern'
-            },
-            type: 'attribute'
-          }, {
             name: 'dir',
             typeInfo: 'org_pptx4j_pml.STTransitionInOutDirectionType',
             defaultValue: 'in',
@@ -515,16 +507,24 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
               localPart: 'dir'
             },
             type: 'attribute'
+          }, {
+            name: 'pattern',
+            typeInfo: '.STTransitionShredPattern',
+            defaultValue: 'strip',
+            attributeName: {
+              localPart: 'pattern'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTTriggerEventRecord',
         typeName: 'CT_TriggerEventRecord',
         propertyInfos: [{
-            name: 'type',
+            name: 'objId',
             required: true,
-            typeInfo: 'org_pptx4j_pml.STTLTriggerEvent',
+            typeInfo: 'UnsignedInt',
             attributeName: {
-              localPart: 'type'
+              localPart: 'objId'
             },
             type: 'attribute'
           }, {
@@ -535,11 +535,11 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main_Module_Factory
             },
             type: 'attribute'
           }, {
-            name: 'objId',
+            name: 'type',
             required: true,
-            typeInfo: 'UnsignedInt',
+            typeInfo: 'org_pptx4j_pml.STTLTriggerEvent',
             attributeName: {
-              localPart: 'objId'
+              localPart: 'type'
             },
             type: 'attribute'
           }]

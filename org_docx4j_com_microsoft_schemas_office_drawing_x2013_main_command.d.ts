@@ -25,14 +25,14 @@ export interface CTChangesData {
   readonly PARENT?: CTConnectorChanges | CTGraphicFrameChanges | CTGroupShapeChanges | CTInkChanges | CTPictureChanges | CTShapeChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentAuthorChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTCommentChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTDocumentChangesList | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTMainMasterChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideChanges | Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command.CTSlideLayoutChanges;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   actId?: number;
+  clId?: string;
   dt?: XmlCalendar;
-  v?: number;
+  email?: string;
   id?: string;
   name?: string;
-  userId?: string;
   providerId?: string;
-  clId?: string;
-  email?: string;
+  userId?: string;
+  v?: number;
 }
 
 export interface CTConnectorChanges {
@@ -46,8 +46,8 @@ export interface CTConnectorChanges {
 
 export interface CTConnectorMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTConnectorMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTConnectorMonikerList {
@@ -67,8 +67,8 @@ export interface CTGraphicFrameChanges {
 
 export interface CTGraphicFrameMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTGraphicFrameMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTGraphicFrameMonikerList {
@@ -88,8 +88,8 @@ export interface CTGroupShapeChanges {
 
 export interface CTGroupShapeMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTGroupShapeMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTGroupShapeMonikerList {
@@ -109,8 +109,8 @@ export interface CTInkChanges {
 
 export interface CTInkMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTInkMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTInkMonikerList {
@@ -130,8 +130,8 @@ export interface CTPictureChanges {
 
 export interface CTPictureMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTPictureMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTPictureMonikerList {
@@ -151,8 +151,8 @@ export interface CTShapeChanges {
 
 export interface CTShapeMoniker {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command.CTShapeMoniker';
-  id: number;
   creationId?: string;
+  id: number;
 }
 
 export interface CTShapeMonikerList {

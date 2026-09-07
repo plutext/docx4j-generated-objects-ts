@@ -10,18 +10,18 @@ export const org_docx4j_com_microsoft_schemas_office_thememl_x2012_main = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'name',
-          required: true,
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
           name: 'id',
           required: true,
           typeInfo: 'Token',
           attributeName: {
             localPart: 'id'
+          },
+          type: 'attribute'
+        }, {
+          name: 'name',
+          required: true,
+          attributeName: {
+            localPart: 'name'
           },
           type: 'attribute'
         }, {

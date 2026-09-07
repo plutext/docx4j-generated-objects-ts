@@ -159,11 +159,9 @@ var org_docx4j_docProps_custom_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'pid',
-            required: true,
-            typeInfo: 'Int',
+            name: 'linkTarget',
             attributeName: {
-              localPart: 'pid'
+              localPart: 'linkTarget'
             },
             type: 'attribute'
           }, {
@@ -173,9 +171,11 @@ var org_docx4j_docProps_custom_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'linkTarget',
+            name: 'pid',
+            required: true,
+            typeInfo: 'Int',
             attributeName: {
-              localPart: 'linkTarget'
+              localPart: 'pid'
             },
             type: 'attribute'
           }]

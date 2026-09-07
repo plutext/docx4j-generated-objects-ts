@@ -22,18 +22,18 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTPasswordKeyEncryptor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password.CTPasswordKeyEncryptor';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptor;
-  saltSize: number;
   blockSize: number;
-  keyBits: number;
-  hashSize: number;
   cipherAlgorithm: string;
   cipherChaining: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.STCipherChaining;
-  hashAlgorithm: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.STHashAlgorithm;
-  saltValue: string;
-  spinCount: number;
+  encryptedKeyValue: string;
   encryptedVerifierHashInput: string;
   encryptedVerifierHashValue: string;
-  encryptedKeyValue: string;
+  hashAlgorithm: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.STHashAlgorithm;
+  hashSize: number;
+  keyBits: number;
+  saltSize: number;
+  saltValue: string;
+  spinCount: number;
 }
 
 export type STPasswordKeyEncryptorUri = 'http://schemas.microsoft.com/office/2006/keyEncryptor/password';

@@ -23,10 +23,10 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface ActiveAreaType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.ActiveAreaType';
   readonly PARENT?: InkSourceType;
-  size?: string;
   height?: number;
-  width?: number;
+  size?: string;
   units?: string;
+  width?: number;
 }
 
 export interface AffineType {
@@ -41,25 +41,25 @@ export interface AnnotationType {
   readonly PARENT?: BrushType | InkType | TraceGroupType;
   otherAttributes?: XmlAnyAttributes;
   value?: string;
-  type?: string;
   encoding?: string;
+  type?: string;
 }
 
 export interface AnnotationXMLType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.AnnotationXMLType';
   readonly PARENT?: BrushType | InkType | TraceGroupType;
   any?: XmlAnyElement[];
-  type?: string;
   encoding?: string;
   href?: string;
+  type?: string;
 }
 
 export interface BindType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.BindType';
   readonly PARENT?: MappingType;
+  column?: string;
   source?: string;
   target?: string;
-  column?: string;
   variable?: string;
 }
 
@@ -67,8 +67,8 @@ export interface BrushPropertyType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.BrushPropertyType';
   readonly PARENT?: BrushType;
   name: string;
-  value: string;
   units?: string;
+  value: string;
 }
 
 export interface BrushType {
@@ -77,8 +77,8 @@ export interface BrushType {
   brushProperty?: BrushPropertyType[];
   annotation?: AnnotationType[];
   annotationXML?: AnnotationXMLType[];
-  id?: string;
   brushRef?: string;
+  id?: string;
 }
 
 export interface CTMatrix {
@@ -92,16 +92,16 @@ export interface CanvasTransformType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.CanvasTransformType';
   readonly PARENT?: ContextType | DefinitionsType;
   content: TypedNamedValue<MappingType>[];
-  id?: string;
   invertible?: boolean;
+  id?: string;
 }
 
 export interface CanvasType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.CanvasType';
   readonly PARENT?: ContextType | DefinitionsType;
   traceFormat?: TraceFormatType;
-  id?: string;
   traceFormatRef?: string;
+  id?: string;
 }
 
 export interface ChannelPropertiesType {
@@ -114,15 +114,15 @@ export interface ChannelType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.ChannelType';
   readonly PARENT?: IntermittentChannelsType | TraceFormatType;
   mapping?: MappingType;
-  id?: string;
-  name: string;
-  type?: string;
   _default?: string;
-  min?: number;
   max?: number;
+  min?: number;
+  name: string;
   orientation?: string;
   respectTo?: string;
+  type?: string;
   units?: string;
+  id?: string;
 }
 
 export interface ContextType {
@@ -134,14 +134,14 @@ export interface ContextType {
   inkSource?: InkSourceType;
   brush?: BrushType;
   timestamp?: TimestampType;
-  id?: string;
-  contextRef?: string;
+  brushRef?: string;
   canvasRef?: string;
   canvasTransformRef?: string;
-  traceFormatRef?: string;
+  contextRef?: string;
   inkSourceRef?: string;
-  brushRef?: string;
   timestampRef?: string;
+  traceFormatRef?: string;
+  id?: string;
 }
 
 export interface DefinitionsType {
@@ -159,12 +159,12 @@ export interface InkSourceType {
   activeArea?: ActiveAreaType;
   sourceProperty?: SourcePropertyType[];
   channelProperties?: ChannelPropertiesType;
-  id: string;
+  description?: string;
   manufacturer?: string;
   model?: string;
   serialNo?: string;
   specificationRef?: string;
-  description?: string;
+  id: string;
 }
 
 export interface InkType {
@@ -189,9 +189,9 @@ export interface MappingType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.MappingType';
   readonly PARENT?: CanvasTransformType | ChannelType | DefinitionsType | MappingType;
   content?: (TypedNamedValue<BindType> | TypedNamedValue<TableType> | TypedNamedValue<AffineType> | TypedNamedValue<Dep_org_docx4j_org_w3_x1998_math_mathML.MathType> | TypedNamedValue<MappingType> | string)[];
-  id?: string;
-  type?: string;
   mappingRef?: string;
+  type?: string;
+  id?: string;
 }
 
 export interface SampleRateType {
@@ -205,27 +205,27 @@ export interface SourcePropertyType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.SourcePropertyType';
   readonly PARENT?: InkSourceType;
   name: string;
-  value: number;
   units?: string;
+  value: number;
 }
 
 export interface TableType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.TableType';
   readonly PARENT?: MappingType;
   value?: string;
-  id?: string;
   apply?: string;
   interpolation?: string;
+  id?: string;
 }
 
 export interface TimestampType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.TimestampType';
   readonly PARENT?: ContextType | DefinitionsType;
-  id: string;
   time?: number;
-  timestampRef?: string;
-  timeString?: XmlCalendar;
   timeOffset?: number;
+  timeString?: XmlCalendar;
+  timestampRef?: string;
+  id: string;
 }
 
 export interface TraceFormatType {
@@ -240,32 +240,32 @@ export interface TraceGroupType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.TraceGroupType';
   readonly PARENT?: DefinitionsType | InkType | TraceGroupType;
   traceAndTraceGroupAndTraceView?: (TraceType | TraceGroupType | TraceViewType | AnnotationType | AnnotationXMLType)[];
-  id?: string;
-  contextRef?: string;
   brushRef?: string;
+  contextRef?: string;
+  id?: string;
 }
 
 export interface TraceType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.TraceType';
   readonly PARENT?: DefinitionsType | Dep_org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionData | InkType | TraceGroupType;
   value?: string;
-  id?: string;
-  type?: string;
-  continuation?: string;
-  priorRef?: string;
-  contextRef?: string;
   brushRef?: string;
+  contextRef?: string;
+  continuation?: string;
   duration?: number;
+  priorRef?: string;
   timeOffset?: number;
+  type?: string;
+  id?: string;
 }
 
 export interface TraceViewType {
   TYPE_NAME?: 'org_docx4j_org_w3_x2003_inkML.TraceViewType';
   readonly PARENT?: DefinitionsType | Dep_org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction.CTActionData | InkType | TraceGroupType;
-  id?: string;
-  traceDataRef?: string;
   from?: string;
   to?: string;
+  traceDataRef?: string;
+  id?: string;
 }
 
 export type BooleanStrType = 'F' | 'T';
@@ -297,8 +297,8 @@ export namespace ChannelPropertiesType {
     readonly PARENT?: ChannelPropertiesType;
     channel: string;
     name: string;
-    value: number;
     units?: string;
+    value: number;
   }
 }
 

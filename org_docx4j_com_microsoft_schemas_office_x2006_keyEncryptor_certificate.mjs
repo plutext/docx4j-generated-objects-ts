@@ -6,14 +6,6 @@ export const org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certific
       localName: 'CTCertificateKeyEncryptor',
       typeName: 'CT_CertificateKeyEncryptor',
       propertyInfos: [{
-          name: 'encryptedKeyValue',
-          required: true,
-          typeInfo: 'Base64Binary',
-          attributeName: {
-            localPart: 'encryptedKeyValue'
-          },
-          type: 'attribute'
-        }, {
           name: 'x509Certificate',
           required: true,
           typeInfo: 'Base64Binary',
@@ -27,6 +19,14 @@ export const org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certific
           typeInfo: 'Base64Binary',
           attributeName: {
             localPart: 'certVerifier'
+          },
+          type: 'attribute'
+        }, {
+          name: 'encryptedKeyValue',
+          required: true,
+          typeInfo: 'Base64Binary',
+          attributeName: {
+            localPart: 'encryptedKeyValue'
           },
           type: 'attribute'
         }]

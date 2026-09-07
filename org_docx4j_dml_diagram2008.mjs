@@ -7,15 +7,15 @@ export const org_docx4j_dml_diagram2008 = {
       localName: 'CTDataModelExtBlock',
       typeName: 'CT_DataModelExtBlock',
       propertyInfos: [{
-          name: 'relId',
-          attributeName: {
-            localPart: 'relId'
-          },
-          type: 'attribute'
-        }, {
           name: 'minVer',
           attributeName: {
             localPart: 'minVer'
+          },
+          type: 'attribute'
+        }, {
+          name: 'relId',
+          attributeName: {
+            localPart: 'relId'
           },
           type: 'attribute'
         }]

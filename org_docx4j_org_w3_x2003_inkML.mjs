@@ -6,12 +6,6 @@ export const org_docx4j_org_w3_x2003_inkML = {
       localName: 'ActiveAreaType',
       typeName: 'activeArea.type',
       propertyInfos: [{
-          name: 'size',
-          attributeName: {
-            localPart: 'size'
-          },
-          type: 'attribute'
-        }, {
           name: 'height',
           typeInfo: 'Decimal',
           attributeName: {
@@ -19,16 +13,22 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'width',
-          typeInfo: 'Decimal',
+          name: 'size',
           attributeName: {
-            localPart: 'width'
+            localPart: 'size'
           },
           type: 'attribute'
         }, {
           name: 'units',
           attributeName: {
             localPart: 'units'
+          },
+          type: 'attribute'
+        }, {
+          name: 'width',
+          typeInfo: 'Decimal',
+          attributeName: {
+            localPart: 'width'
           },
           type: 'attribute'
         }]
@@ -57,15 +57,15 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'value',
           type: 'value'
         }, {
-          name: 'type',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'encoding',
           attributeName: {
             localPart: 'encoding'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -80,12 +80,6 @@ export const org_docx4j_org_w3_x2003_inkML = {
           mixed: false,
           type: 'anyElement'
         }, {
-          name: 'type',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'encoding',
           attributeName: {
             localPart: 'encoding'
@@ -97,11 +91,23 @@ export const org_docx4j_org_w3_x2003_inkML = {
             localPart: 'href'
           },
           type: 'attribute'
+        }, {
+          name: 'type',
+          attributeName: {
+            localPart: 'type'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'BindType',
       typeName: 'bind.type',
       propertyInfos: [{
+          name: 'column',
+          attributeName: {
+            localPart: 'column'
+          },
+          type: 'attribute'
+        }, {
           name: 'source',
           attributeName: {
             localPart: 'source'
@@ -111,12 +117,6 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'target',
           attributeName: {
             localPart: 'target'
-          },
-          type: 'attribute'
-        }, {
-          name: 'column',
-          attributeName: {
-            localPart: 'column'
           },
           type: 'attribute'
         }, {
@@ -137,16 +137,16 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
+          name: 'units',
+          attributeName: {
+            localPart: 'units'
+          },
+          type: 'attribute'
+        }, {
           name: 'value',
           required: true,
           attributeName: {
             localPart: 'value'
-          },
-          type: 'attribute'
-        }, {
-          name: 'units',
-          attributeName: {
-            localPart: 'units'
           },
           type: 'attribute'
         }]
@@ -169,17 +169,17 @@ export const org_docx4j_org_w3_x2003_inkML = {
           collection: true,
           typeInfo: '.AnnotationXMLType'
         }, {
+          name: 'brushRef',
+          attributeName: {
+            localPart: 'brushRef'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           typeInfo: 'ID',
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
-          name: 'brushRef',
-          attributeName: {
-            localPart: 'brushRef'
           },
           type: 'attribute'
         }]
@@ -212,19 +212,19 @@ export const org_docx4j_org_w3_x2003_inkML = {
           typeInfo: '.MappingType',
           type: 'elementRef'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
           name: 'invertible',
           typeInfo: 'Boolean',
           defaultValue: false,
           attributeName: {
             localPart: 'invertible'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -235,17 +235,17 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'traceFormat',
           typeInfo: '.TraceFormatType'
         }, {
+          name: 'traceFormatRef',
+          attributeName: {
+            localPart: 'traceFormatRef'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           typeInfo: 'ID',
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
-          name: 'traceFormatRef',
-          attributeName: {
-            localPart: 'traceFormatRef'
           },
           type: 'attribute'
         }]
@@ -276,17 +276,17 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
+          name: 'units',
+          attributeName: {
+            localPart: 'units'
+          },
+          type: 'attribute'
+        }, {
           name: 'value',
           required: true,
           typeInfo: 'Decimal',
           attributeName: {
             localPart: 'value'
-          },
-          type: 'attribute'
-        }, {
-          name: 'units',
-          attributeName: {
-            localPart: 'units'
           },
           type: 'attribute'
         }]
@@ -297,33 +297,17 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'mapping',
           typeInfo: '.MappingType'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
-          name: 'name',
-          required: true,
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
-          name: 'type',
-          values: ['integer', 'decimal', 'double', 'boolean'],
-          defaultValue: 'decimal',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: '_default',
           defaultValue: '0',
           attributeName: {
             localPart: 'default'
+          },
+          type: 'attribute'
+        }, {
+          name: 'max',
+          typeInfo: 'Decimal',
+          attributeName: {
+            localPart: 'max'
           },
           type: 'attribute'
         }, {
@@ -334,10 +318,10 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'max',
-          typeInfo: 'Decimal',
+          name: 'name',
+          required: true,
           attributeName: {
-            localPart: 'max'
+            localPart: 'name'
           },
           type: 'attribute'
         }, {
@@ -355,9 +339,25 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
+          name: 'type',
+          values: ['integer', 'decimal', 'double', 'boolean'],
+          defaultValue: 'decimal',
+          attributeName: {
+            localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
           name: 'units',
           attributeName: {
             localPart: 'units'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -383,17 +383,9 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'timestamp',
           typeInfo: '.TimestampType'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'brushRef',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
-          name: 'contextRef',
-          attributeName: {
-            localPart: 'contextRef'
+            localPart: 'brushRef'
           },
           type: 'attribute'
         }, {
@@ -409,9 +401,9 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'traceFormatRef',
+          name: 'contextRef',
           attributeName: {
-            localPart: 'traceFormatRef'
+            localPart: 'contextRef'
           },
           type: 'attribute'
         }, {
@@ -421,15 +413,23 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'brushRef',
-          attributeName: {
-            localPart: 'brushRef'
-          },
-          type: 'attribute'
-        }, {
           name: 'timestampRef',
           attributeName: {
             localPart: 'timestampRef'
+          },
+          type: 'attribute'
+        }, {
+          name: 'traceFormatRef',
+          attributeName: {
+            localPart: 'traceFormatRef'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -501,12 +501,9 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'channelProperties',
           typeInfo: '.ChannelPropertiesType'
         }, {
-          name: 'id',
-          required: true,
-          typeInfo: 'ID',
+          name: 'description',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'description'
           },
           type: 'attribute'
         }, {
@@ -534,9 +531,12 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'description',
+          name: 'id',
+          required: true,
+          typeInfo: 'ID',
           attributeName: {
-            localPart: 'description'
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -626,11 +626,9 @@ export const org_docx4j_org_w3_x2003_inkML = {
             }],
           type: 'elementRefs'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'mappingRef',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'mappingRef'
           },
           type: 'attribute'
         }, {
@@ -642,9 +640,11 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'mappingRef',
+          name: 'id',
+          typeInfo: 'ID',
           attributeName: {
-            localPart: 'mappingRef'
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -679,17 +679,17 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
+          name: 'units',
+          attributeName: {
+            localPart: 'units'
+          },
+          type: 'attribute'
+        }, {
           name: 'value',
           required: true,
           typeInfo: 'Decimal',
           attributeName: {
             localPart: 'value'
-          },
-          type: 'attribute'
-        }, {
-          name: 'units',
-          attributeName: {
-            localPart: 'units'
           },
           type: 'attribute'
         }]
@@ -699,14 +699,6 @@ export const org_docx4j_org_w3_x2003_inkML = {
       propertyInfos: [{
           name: 'value',
           type: 'value'
-        }, {
-          name: 'id',
-          typeInfo: 'ID',
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
         }, {
           name: 'apply',
           values: ['absolute', 'relative'],
@@ -723,20 +715,19 @@ export const org_docx4j_org_w3_x2003_inkML = {
             localPart: 'interpolation'
           },
           type: 'attribute'
-        }]
-    }, {
-      localName: 'TimestampType',
-      typeName: 'timestamp.type',
-      propertyInfos: [{
+        }, {
           name: 'id',
-          required: true,
           typeInfo: 'ID',
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
-        }, {
+        }]
+    }, {
+      localName: 'TimestampType',
+      typeName: 'timestamp.type',
+      propertyInfos: [{
           name: 'time',
           typeInfo: 'UnsignedLong',
           attributeName: {
@@ -744,9 +735,11 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'timestampRef',
+          name: 'timeOffset',
+          typeInfo: 'Decimal',
+          defaultValue: 0,
           attributeName: {
-            localPart: 'timestampRef'
+            localPart: 'timeOffset'
           },
           type: 'attribute'
         }, {
@@ -757,11 +750,18 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'timeOffset',
-          typeInfo: 'Decimal',
-          defaultValue: 0,
+          name: 'timestampRef',
           attributeName: {
-            localPart: 'timeOffset'
+            localPart: 'timestampRef'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          required: true,
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -810,11 +810,9 @@ export const org_docx4j_org_w3_x2003_inkML = {
             }],
           type: 'elements'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'brushRef',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'brushRef'
           },
           type: 'attribute'
         }, {
@@ -824,9 +822,11 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'brushRef',
+          name: 'id',
+          typeInfo: 'ID',
           attributeName: {
-            localPart: 'brushRef'
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -837,19 +837,15 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'value',
           type: 'value'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'brushRef',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'brushRef'
           },
           type: 'attribute'
         }, {
-          name: 'type',
-          values: ['penDown', 'penUp', 'indeterminate'],
-          defaultValue: 'penDown',
+          name: 'contextRef',
           attributeName: {
-            localPart: 'type'
+            localPart: 'contextRef'
           },
           type: 'attribute'
         }, {
@@ -861,28 +857,16 @@ export const org_docx4j_org_w3_x2003_inkML = {
           },
           type: 'attribute'
         }, {
-          name: 'priorRef',
-          attributeName: {
-            localPart: 'priorRef'
-          },
-          type: 'attribute'
-        }, {
-          name: 'contextRef',
-          attributeName: {
-            localPart: 'contextRef'
-          },
-          type: 'attribute'
-        }, {
-          name: 'brushRef',
-          attributeName: {
-            localPart: 'brushRef'
-          },
-          type: 'attribute'
-        }, {
           name: 'duration',
           typeInfo: 'Decimal',
           attributeName: {
             localPart: 'duration'
+          },
+          type: 'attribute'
+        }, {
+          name: 'priorRef',
+          attributeName: {
+            localPart: 'priorRef'
           },
           type: 'attribute'
         }, {
@@ -892,11 +876,15 @@ export const org_docx4j_org_w3_x2003_inkML = {
             localPart: 'timeOffset'
           },
           type: 'attribute'
-        }]
-    }, {
-      localName: 'TraceViewType',
-      typeName: 'traceView.type',
-      propertyInfos: [{
+        }, {
+          name: 'type',
+          values: ['penDown', 'penUp', 'indeterminate'],
+          defaultValue: 'penDown',
+          attributeName: {
+            localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           typeInfo: 'ID',
           attributeName: {
@@ -904,13 +892,11 @@ export const org_docx4j_org_w3_x2003_inkML = {
             namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
-        }, {
-          name: 'traceDataRef',
-          attributeName: {
-            localPart: 'traceDataRef'
-          },
-          type: 'attribute'
-        }, {
+        }]
+    }, {
+      localName: 'TraceViewType',
+      typeName: 'traceView.type',
+      propertyInfos: [{
           name: 'from',
           attributeName: {
             localPart: 'from'
@@ -920,6 +906,20 @@ export const org_docx4j_org_w3_x2003_inkML = {
           name: 'to',
           attributeName: {
             localPart: 'to'
+          },
+          type: 'attribute'
+        }, {
+          name: 'traceDataRef',
+          attributeName: {
+            localPart: 'traceDataRef'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]

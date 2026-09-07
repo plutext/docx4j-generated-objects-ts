@@ -21,6 +21,22 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_taskpanes_2010_11_Modu
             },
             type: 'attribute'
           }, {
+            name: 'locked',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'locked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'row',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'row'
+            },
+            type: 'attribute'
+          }, {
             name: 'visibility',
             required: true,
             typeInfo: 'Boolean',
@@ -34,22 +50,6 @@ var org_docx4j_com_microsoft_schemas_office_webextensions_taskpanes_2010_11_Modu
             typeInfo: 'Double',
             attributeName: {
               localPart: 'width'
-            },
-            type: 'attribute'
-          }, {
-            name: 'row',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'row'
-            },
-            type: 'attribute'
-          }, {
-            name: 'locked',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'locked'
             },
             type: 'attribute'
           }]

@@ -8,15 +8,15 @@ export const org_docx4j_w15 = {
       localName: 'CTCommentEx',
       typeName: 'CT_CommentEx',
       propertyInfos: [{
+          name: 'done',
+          values: ['true', 'false', 'on', 'off', '0', '1'],
+          type: 'attribute'
+        }, {
           name: 'paraId',
           required: true,
           type: 'attribute'
         }, {
           name: 'paraIdParent',
-          type: 'attribute'
-        }, {
-          name: 'done',
-          values: ['true', 'false', 'on', 'off', '0', '1'],
           type: 'attribute'
         }]
     }, {

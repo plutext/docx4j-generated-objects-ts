@@ -15,6 +15,17 @@
 		<jsonix:output naming="standard"/>
 		<jsonix:output naming="standard" format="esm"/>
 		<jsonix:typeScript/>
+
+		<!-- Equivalents of docx4j's ModifyGeneratedSources (CR-007). Mapping names stay the defaults
+		     (package name with underscores); these elements only add customizations. -->
+		<jsonix:mapping package="org.docx4j.vml">
+			<!-- Word is sensitive to the order of these attributes on v:line: https://github.com/plutext/docx4j/issues/469 -->
+			<jsonix:propertyOrder typeInfo="CTLine">vmlId style from to</jsonix:propertyOrder>
+		</jsonix:mapping>
+		<jsonix:mapping package="org.docx4j.wml">
+			<!-- An absent w:customStyle means a built-in style, whatever the schema default says: https://github.com/plutext/docx4j/issues/641 -->
+			<jsonix:property name="Style.customStyle" defaultValue="false"/>
+		</jsonix:mapping>
 	</jaxb:bindings>
 
 </jaxb:bindings>

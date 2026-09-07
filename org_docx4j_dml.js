@@ -183,13 +183,6 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTAnimationChartBuildProperties',
         typeName: 'CT_AnimationChartBuildProperties',
         propertyInfos: [{
-            name: 'bld',
-            defaultValue: 'allAtOnce',
-            attributeName: {
-              localPart: 'bld'
-            },
-            type: 'attribute'
-          }, {
             name: 'animBg',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -197,16 +190,23 @@ var org_docx4j_dml_Module_Factory = function () {
               localPart: 'animBg'
             },
             type: 'attribute'
+          }, {
+            name: 'bld',
+            defaultValue: 'allAtOnce',
+            attributeName: {
+              localPart: 'bld'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTAnimationChartElement',
         typeName: 'CT_AnimationChartElement',
         propertyInfos: [{
-            name: 'seriesIdx',
-            typeInfo: 'Int',
-            defaultValue: -1,
+            name: 'bldStep',
+            required: true,
+            typeInfo: '.STChartBuildStep',
             attributeName: {
-              localPart: 'seriesIdx'
+              localPart: 'bldStep'
             },
             type: 'attribute'
           }, {
@@ -218,11 +218,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'bldStep',
-            required: true,
-            typeInfo: '.STChartBuildStep',
+            name: 'seriesIdx',
+            typeInfo: 'Int',
+            defaultValue: -1,
             attributeName: {
-              localPart: 'bldStep'
+              localPart: 'seriesIdx'
             },
             type: 'attribute'
           }]
@@ -249,19 +249,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTAnimationDgmElement',
         typeName: 'CT_AnimationDgmElement',
         propertyInfos: [{
-            name: 'id',
-            typeInfo: 'Token',
-            defaultValue: '{00000000-0000-0000-0000-000000000000}',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
             name: 'bldStep',
             typeInfo: '.STDgmBuildStep',
             defaultValue: 'sp',
             attributeName: {
               localPart: 'bldStep'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            typeInfo: 'Token',
+            defaultValue: '{00000000-0000-0000-0000-000000000000}',
+            attributeName: {
+              localPart: 'id'
             },
             type: 'attribute'
           }]
@@ -308,19 +308,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTAudioCDTime',
         typeName: 'CT_AudioCDTime',
         propertyInfos: [{
-            name: 'track',
-            required: true,
-            typeInfo: 'UnsignedByte',
-            attributeName: {
-              localPart: 'track'
-            },
-            type: 'attribute'
-          }, {
             name: 'time',
             typeInfo: 'UnsignedInt',
             defaultValue: 0,
             attributeName: {
               localPart: 'time'
+            },
+            type: 'attribute'
+          }, {
+            name: 'track',
+            required: true,
+            typeInfo: 'UnsignedByte',
+            attributeName: {
+              localPart: 'track'
             },
             type: 'attribute'
           }]
@@ -462,14 +462,6 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTBevel',
         typeName: 'CT_Bevel',
         propertyInfos: [{
-            name: 'w',
-            typeInfo: 'Long',
-            defaultValue: 76200,
-            attributeName: {
-              localPart: 'w'
-            },
-            type: 'attribute'
-          }, {
             name: 'h',
             typeInfo: 'Long',
             defaultValue: 76200,
@@ -483,6 +475,14 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: 'circle',
             attributeName: {
               localPart: 'prst'
+            },
+            type: 'attribute'
+          }, {
+            name: 'w',
+            typeInfo: 'Long',
+            defaultValue: 76200,
+            attributeName: {
+              localPart: 'w'
             },
             type: 'attribute'
           }]
@@ -638,19 +638,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTBlurEffect',
         typeName: 'CT_BlurEffect',
         propertyInfos: [{
-            name: 'rad',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'rad'
-            },
-            type: 'attribute'
-          }, {
             name: 'grow',
             typeInfo: 'Boolean',
             defaultValue: true,
             attributeName: {
               localPart: 'grow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rad',
+            typeInfo: 'Long',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'rad'
             },
             type: 'attribute'
           }]
@@ -661,18 +661,18 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'rot',
             typeInfo: '.CTSphereCoords'
           }, {
+            name: 'fov',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'fov'
+            },
+            type: 'attribute'
+          }, {
             name: 'prst',
             required: true,
             typeInfo: '.STPresetCameraType',
             attributeName: {
               localPart: 'prst'
-            },
-            type: 'attribute'
-          }, {
-            name: 'fov',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'fov'
             },
             type: 'attribute'
           }, {
@@ -802,38 +802,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'bg1',
-            required: true,
-            typeInfo: '.STColorSchemeIndex',
-            attributeName: {
-              localPart: 'bg1'
-            },
-            type: 'attribute'
-          }, {
-            name: 'tx1',
-            required: true,
-            typeInfo: '.STColorSchemeIndex',
-            attributeName: {
-              localPart: 'tx1'
-            },
-            type: 'attribute'
-          }, {
-            name: 'bg2',
-            required: true,
-            typeInfo: '.STColorSchemeIndex',
-            attributeName: {
-              localPart: 'bg2'
-            },
-            type: 'attribute'
-          }, {
-            name: 'tx2',
-            required: true,
-            typeInfo: '.STColorSchemeIndex',
-            attributeName: {
-              localPart: 'tx2'
-            },
-            type: 'attribute'
-          }, {
             name: 'accent1',
             required: true,
             typeInfo: '.STColorSchemeIndex',
@@ -882,11 +850,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'hlink',
+            name: 'bg1',
             required: true,
             typeInfo: '.STColorSchemeIndex',
             attributeName: {
-              localPart: 'hlink'
+              localPart: 'bg1'
+            },
+            type: 'attribute'
+          }, {
+            name: 'bg2',
+            required: true,
+            typeInfo: '.STColorSchemeIndex',
+            attributeName: {
+              localPart: 'bg2'
             },
             type: 'attribute'
           }, {
@@ -895,6 +871,30 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.STColorSchemeIndex',
             attributeName: {
               localPart: 'folHlink'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hlink',
+            required: true,
+            typeInfo: '.STColorSchemeIndex',
+            attributeName: {
+              localPart: 'hlink'
+            },
+            type: 'attribute'
+          }, {
+            name: 'tx1',
+            required: true,
+            typeInfo: '.STColorSchemeIndex',
+            attributeName: {
+              localPart: 'tx1'
+            },
+            type: 'attribute'
+          }, {
+            name: 'tx2',
+            required: true,
+            typeInfo: '.STColorSchemeIndex',
+            attributeName: {
+              localPart: 'tx2'
             },
             type: 'attribute'
           }]
@@ -1074,27 +1074,19 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'noGrp',
+            name: 'noAdjustHandles',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noGrp'
+              localPart: 'noAdjustHandles'
             },
             type: 'attribute'
           }, {
-            name: 'noSelect',
+            name: 'noChangeArrowheads',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noRot',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noRot'
+              localPart: 'noChangeArrowheads'
             },
             type: 'attribute'
           }, {
@@ -1103,6 +1095,30 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'noChangeAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noChangeShapeType',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noChangeShapeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noEditPoints',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noEditPoints'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noGrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -1122,35 +1138,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'noEditPoints',
+            name: 'noRot',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noEditPoints'
+              localPart: 'noRot'
             },
             type: 'attribute'
           }, {
-            name: 'noAdjustHandles',
+            name: 'noSelect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noAdjustHandles'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeArrowheads',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeArrowheads'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeShapeType',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeShapeType'
+              localPart: 'noSelect'
             },
             type: 'attribute'
           }]
@@ -1402,18 +1402,18 @@ var org_docx4j_dml_Module_Factory = function () {
               }],
             type: 'elements'
           }, {
+            name: 'name',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'name'
+            },
+            type: 'attribute'
+          }, {
             name: 'type',
             typeInfo: '.STEffectContainerType',
             defaultValue: 'sib',
             attributeName: {
               localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'name',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'name'
             },
             type: 'attribute'
           }]
@@ -1502,11 +1502,11 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTEmbeddedWAVAudioFile',
         typeName: 'CT_EmbeddedWAVAudioFile',
         propertyInfos: [{
-            name: 'embed',
-            required: true,
+            name: 'builtIn',
+            typeInfo: 'Boolean',
+            defaultValue: false,
             attributeName: {
-              localPart: 'embed',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+              localPart: 'builtIn'
             },
             type: 'attribute'
           }, {
@@ -1517,11 +1517,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'builtIn',
-            typeInfo: 'Boolean',
-            defaultValue: false,
+            name: 'embed',
+            required: true,
             attributeName: {
-              localPart: 'builtIn'
+              localPart: 'embed',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
             },
             type: 'attribute'
           }]
@@ -1716,18 +1716,18 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTGeomGuide',
         typeName: 'CT_GeomGuide',
         propertyInfos: [{
+            name: 'fmla',
+            required: true,
+            attributeName: {
+              localPart: 'fmla'
+            },
+            type: 'attribute'
+          }, {
             name: 'name',
             required: true,
             typeInfo: 'Token',
             attributeName: {
               localPart: 'name'
-            },
-            type: 'attribute'
-          }, {
-            name: 'fmla',
-            required: true,
-            attributeName: {
-              localPart: 'fmla'
             },
             type: 'attribute'
           }]
@@ -1744,17 +1744,17 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTGeomRect',
         typeName: 'CT_GeomRect',
         propertyInfos: [{
+            name: 'b',
+            required: true,
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }, {
             name: 'l',
             required: true,
             attributeName: {
               localPart: 'l'
-            },
-            type: 'attribute'
-          }, {
-            name: 't',
-            required: true,
-            attributeName: {
-              localPart: 't'
             },
             type: 'attribute'
           }, {
@@ -1765,10 +1765,10 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'b',
+            name: 't',
             required: true,
             attributeName: {
-              localPart: 'b'
+              localPart: 't'
             },
             type: 'attribute'
           }]
@@ -1893,11 +1893,11 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'noGrp',
+            name: 'noChangeAspect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noGrp'
+              localPart: 'noChangeAspect'
             },
             type: 'attribute'
           }, {
@@ -1909,19 +1909,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'noSelect',
+            name: 'noGrp',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeAspect',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeAspect'
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -1938,6 +1930,14 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'noResize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noSelect',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noSelect'
             },
             type: 'attribute'
           }]
@@ -1957,43 +1957,19 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'noGrp',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noGrp'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noUngrp',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noUngrp'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noSelect',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noRot',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noRot'
-            },
-            type: 'attribute'
-          }, {
             name: 'noChangeAspect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
               localPart: 'noChangeAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noGrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -2010,6 +1986,30 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'noResize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noRot',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noRot'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noSelect',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noSelect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noUngrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noUngrp'
             },
             type: 'attribute'
           }]
@@ -2082,14 +2082,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'chExt',
             typeInfo: '.CTPositiveSize2D'
           }, {
-            name: 'rot',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'rot'
-            },
-            type: 'attribute'
-          }, {
             name: 'flipH',
             typeInfo: 'Boolean',
             defaultValue: false,
@@ -2103,6 +2095,14 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'flipV'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rot',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'rot'
             },
             type: 'attribute'
           }]
@@ -2319,19 +2319,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'sat',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'sat'
-            },
-            type: 'attribute'
-          }, {
             name: 'lum',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
               localPart: 'lum'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sat',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'sat'
             },
             type: 'attribute'
           }]
@@ -2439,19 +2439,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'sat',
-            required: true,
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'sat'
-            },
-            type: 'attribute'
-          }, {
             name: 'lum',
             required: true,
             typeInfo: 'Int',
             attributeName: {
               localPart: 'lum'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sat',
+            required: true,
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'sat'
             },
             type: 'attribute'
           }]
@@ -2465,10 +2465,34 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'id',
+            name: 'action',
+            defaultValue: '',
             attributeName: {
-              localPart: 'id',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+              localPart: 'action'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endSnd',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'endSnd'
+            },
+            type: 'attribute'
+          }, {
+            name: 'highlightClick',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'highlightClick'
+            },
+            type: 'attribute'
+          }, {
+            name: 'history',
+            typeInfo: 'Boolean',
+            defaultValue: true,
+            attributeName: {
+              localPart: 'history'
             },
             type: 'attribute'
           }, {
@@ -2476,13 +2500,6 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: '',
             attributeName: {
               localPart: 'invalidUrl'
-            },
-            type: 'attribute'
-          }, {
-            name: 'action',
-            defaultValue: '',
-            attributeName: {
-              localPart: 'action'
             },
             type: 'attribute'
           }, {
@@ -2500,27 +2517,10 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'history',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'id',
             attributeName: {
-              localPart: 'history'
-            },
-            type: 'attribute'
-          }, {
-            name: 'highlightClick',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'highlightClick'
-            },
-            type: 'attribute'
-          }, {
-            name: 'endSnd',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'endSnd'
+              localPart: 'id',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
             },
             type: 'attribute'
           }]
@@ -2560,19 +2560,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dist',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'dist'
-            },
-            type: 'attribute'
-          }, {
             name: 'dir',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
               localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dist',
+            typeInfo: 'Long',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'dist'
             },
             type: 'attribute'
           }]
@@ -2589,14 +2589,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'rot',
             typeInfo: '.CTSphereCoords'
           }, {
-            name: 'rig',
-            required: true,
-            typeInfo: '.STLightRigType',
-            attributeName: {
-              localPart: 'rig'
-            },
-            type: 'attribute'
-          }, {
             name: 'dir',
             required: true,
             typeInfo: '.STLightRigDirection',
@@ -2604,11 +2596,26 @@ var org_docx4j_dml_Module_Factory = function () {
               localPart: 'dir'
             },
             type: 'attribute'
+          }, {
+            name: 'rig',
+            required: true,
+            typeInfo: '.STLightRigType',
+            attributeName: {
+              localPart: 'rig'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTLineEndProperties',
         typeName: 'CT_LineEndProperties',
         propertyInfos: [{
+            name: 'len',
+            typeInfo: '.STLineEndLength',
+            attributeName: {
+              localPart: 'len'
+            },
+            type: 'attribute'
+          }, {
             name: 'type',
             typeInfo: '.STLineEndType',
             attributeName: {
@@ -2620,13 +2627,6 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: '.STLineEndWidth',
             attributeName: {
               localPart: 'w'
-            },
-            type: 'attribute'
-          }, {
-            name: 'len',
-            typeInfo: '.STLineEndLength',
-            attributeName: {
-              localPart: 'len'
             },
             type: 'attribute'
           }]
@@ -2696,10 +2696,10 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'w',
-            typeInfo: 'Int',
+            name: 'algn',
+            typeInfo: '.STPenAlignment',
             attributeName: {
-              localPart: 'w'
+              localPart: 'algn'
             },
             type: 'attribute'
           }, {
@@ -2717,10 +2717,10 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'algn',
-            typeInfo: '.STPenAlignment',
+            name: 'w',
+            typeInfo: 'Int',
             attributeName: {
-              localPart: 'algn'
+              localPart: 'w'
             },
             type: 'attribute'
           }]
@@ -2804,21 +2804,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'id',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'name',
-            required: true,
-            attributeName: {
-              localPart: 'name'
-            },
-            type: 'attribute'
-          }, {
             name: 'descr',
             defaultValue: '',
             attributeName: {
@@ -2831,6 +2816,21 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'hidden'
+            },
+            type: 'attribute'
+          }, {
+            name: 'id',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'name',
+            required: true,
+            attributeName: {
+              localPart: 'name'
             },
             type: 'attribute'
           }]
@@ -2959,19 +2959,19 @@ var org_docx4j_dml_Module_Factory = function () {
             required: true,
             typeInfo: '.CTPresetColor'
           }, {
+            name: 'algn',
+            typeInfo: '.STRectAlignment',
+            defaultValue: 'b',
+            attributeName: {
+              localPart: 'algn'
+            },
+            type: 'attribute'
+          }, {
             name: 'blurRad',
             typeInfo: 'Long',
             defaultValue: 0,
             attributeName: {
               localPart: 'blurRad'
-            },
-            type: 'attribute'
-          }, {
-            name: 'dist',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'dist'
             },
             type: 'attribute'
           }, {
@@ -2983,19 +2983,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'sx',
-            typeInfo: 'Int',
-            defaultValue: 100000,
+            name: 'dist',
+            typeInfo: 'Long',
+            defaultValue: 0,
             attributeName: {
-              localPart: 'sx'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sy',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'sy'
+              localPart: 'dist'
             },
             type: 'attribute'
           }, {
@@ -3015,19 +3007,27 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'algn',
-            typeInfo: '.STRectAlignment',
-            defaultValue: 'b',
-            attributeName: {
-              localPart: 'algn'
-            },
-            type: 'attribute'
-          }, {
             name: 'rotWithShape',
             typeInfo: 'Boolean',
             defaultValue: true,
             attributeName: {
               localPart: 'rotWithShape'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sx',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sy',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sy'
             },
             type: 'attribute'
           }]
@@ -3059,19 +3059,11 @@ var org_docx4j_dml_Module_Factory = function () {
               }],
             type: 'elements'
           }, {
-            name: 'w',
-            typeInfo: 'Long',
-            defaultValue: 0,
+            name: 'extrusionOk',
+            typeInfo: 'Boolean',
+            defaultValue: true,
             attributeName: {
-              localPart: 'w'
-            },
-            type: 'attribute'
-          }, {
-            name: 'h',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'h'
+              localPart: 'extrusionOk'
             },
             type: 'attribute'
           }, {
@@ -3083,6 +3075,14 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'h',
+            typeInfo: 'Long',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'h'
+            },
+            type: 'attribute'
+          }, {
             name: 'stroke',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -3091,11 +3091,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'extrusionOk',
-            typeInfo: 'Boolean',
-            defaultValue: true,
+            name: 'w',
+            typeInfo: 'Long',
+            defaultValue: 0,
             attributeName: {
-              localPart: 'extrusionOk'
+              localPart: 'w'
             },
             type: 'attribute'
           }]
@@ -3103,13 +3103,6 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTPath2DArcTo',
         typeName: 'CT_Path2DArcTo',
         propertyInfos: [{
-            name: 'wr',
-            required: true,
-            attributeName: {
-              localPart: 'wR'
-            },
-            type: 'attribute'
-          }, {
             name: 'hr',
             required: true,
             attributeName: {
@@ -3128,6 +3121,13 @@ var org_docx4j_dml_Module_Factory = function () {
             required: true,
             attributeName: {
               localPart: 'swAng'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wr',
+            required: true,
+            attributeName: {
+              localPart: 'wR'
             },
             type: 'attribute'
           }]
@@ -3231,35 +3231,19 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'noCrop',
+            name: 'noAdjustHandles',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noCrop'
+              localPart: 'noAdjustHandles'
             },
             type: 'attribute'
           }, {
-            name: 'noGrp',
+            name: 'noChangeArrowheads',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noGrp'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noSelect',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noRot',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noRot'
+              localPart: 'noChangeArrowheads'
             },
             type: 'attribute'
           }, {
@@ -3268,6 +3252,38 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'noChangeAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noChangeShapeType',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noChangeShapeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noCrop',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noCrop'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noEditPoints',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noEditPoints'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noGrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -3287,35 +3303,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'noEditPoints',
+            name: 'noRot',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noEditPoints'
+              localPart: 'noRot'
             },
             type: 'attribute'
           }, {
-            name: 'noAdjustHandles',
+            name: 'noSelect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noAdjustHandles'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeArrowheads',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeArrowheads'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeShapeType',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeShapeType'
+              localPart: 'noSelect'
             },
             type: 'attribute'
           }]
@@ -3375,6 +3375,13 @@ var org_docx4j_dml_Module_Factory = function () {
             required: true,
             typeInfo: '.CTAdjPoint2D'
           }, {
+            name: 'gdRefAng',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'gdRefAng'
+            },
+            type: 'attribute'
+          }, {
             name: 'gdRefR',
             typeInfo: 'Token',
             attributeName: {
@@ -3382,9 +3389,9 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'minR',
+            name: 'maxAng',
             attributeName: {
-              localPart: 'minR'
+              localPart: 'maxAng'
             },
             type: 'attribute'
           }, {
@@ -3394,22 +3401,15 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'gdRefAng',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'gdRefAng'
-            },
-            type: 'attribute'
-          }, {
             name: 'minAng',
             attributeName: {
               localPart: 'minAng'
             },
             type: 'attribute'
           }, {
-            name: 'maxAng',
+            name: 'minR',
             attributeName: {
-              localPart: 'maxAng'
+              localPart: 'minR'
             },
             type: 'attribute'
           }]
@@ -3626,11 +3626,11 @@ var org_docx4j_dml_Module_Factory = function () {
             required: true,
             typeInfo: '.CTPresetColor'
           }, {
-            name: 'prst',
-            required: true,
-            typeInfo: '.STPresetShadowVal',
+            name: 'dir',
+            typeInfo: 'Int',
+            defaultValue: 0,
             attributeName: {
-              localPart: 'prst'
+              localPart: 'dir'
             },
             type: 'attribute'
           }, {
@@ -3642,11 +3642,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dir',
-            typeInfo: 'Int',
-            defaultValue: 0,
+            name: 'prst',
+            required: true,
+            typeInfo: '.STPresetShadowVal',
             attributeName: {
-              localPart: 'dir'
+              localPart: 'prst'
             },
             type: 'attribute'
           }]
@@ -3684,14 +3684,6 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTRatio',
         typeName: 'CT_Ratio',
         propertyInfos: [{
-            name: 'n',
-            required: true,
-            typeInfo: 'Long',
-            attributeName: {
-              localPart: 'n'
-            },
-            type: 'attribute'
-          }, {
             name: 'd',
             required: true,
             typeInfo: 'Long',
@@ -3699,11 +3691,27 @@ var org_docx4j_dml_Module_Factory = function () {
               localPart: 'd'
             },
             type: 'attribute'
+          }, {
+            name: 'n',
+            required: true,
+            typeInfo: 'Long',
+            attributeName: {
+              localPart: 'n'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTReflectionEffect',
         typeName: 'CT_ReflectionEffect',
         propertyInfos: [{
+            name: 'algn',
+            typeInfo: '.STRectAlignment',
+            defaultValue: 'b',
+            attributeName: {
+              localPart: 'algn'
+            },
+            type: 'attribute'
+          }, {
             name: 'blurRad',
             typeInfo: 'Long',
             defaultValue: 0,
@@ -3712,19 +3720,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'stA',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'stA'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stPos',
+            name: 'dir',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
-              localPart: 'stPos'
+              localPart: 'dir'
+            },
+            type: 'attribute'
+          }, {
+            name: 'dist',
+            typeInfo: 'Long',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'dist'
             },
             type: 'attribute'
           }, {
@@ -3744,43 +3752,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dist',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'dist'
-            },
-            type: 'attribute'
-          }, {
-            name: 'dir',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'dir'
-            },
-            type: 'attribute'
-          }, {
             name: 'fadeDir',
             typeInfo: 'Int',
             defaultValue: 5400000,
             attributeName: {
               localPart: 'fadeDir'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sx',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'sx'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sy',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'sy'
             },
             type: 'attribute'
           }, {
@@ -3800,19 +3776,43 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'algn',
-            typeInfo: '.STRectAlignment',
-            defaultValue: 'b',
-            attributeName: {
-              localPart: 'algn'
-            },
-            type: 'attribute'
-          }, {
             name: 'rotWithShape',
             typeInfo: 'Boolean',
             defaultValue: true,
             attributeName: {
               localPart: 'rotWithShape'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stA',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'stA'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stPos',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'stPos'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sx',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sy',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sy'
             },
             type: 'attribute'
           }]
@@ -3850,19 +3850,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTRelativeRect',
         typeName: 'CT_RelativeRect',
         propertyInfos: [{
+            name: 'b',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'b'
+            },
+            type: 'attribute'
+          }, {
             name: 'l',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
               localPart: 'l'
-            },
-            type: 'attribute'
-          }, {
-            name: 't',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 't'
             },
             type: 'attribute'
           }, {
@@ -3874,11 +3874,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'b',
+            name: 't',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
-              localPart: 'b'
+              localPart: 't'
             },
             type: 'attribute'
           }]
@@ -4081,11 +4081,11 @@ var org_docx4j_dml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'r',
+            name: 'b',
             required: true,
             typeInfo: 'Int',
             attributeName: {
-              localPart: 'r'
+              localPart: 'b'
             },
             type: 'attribute'
           }, {
@@ -4097,11 +4097,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'b',
+            name: 'r',
             required: true,
             typeInfo: 'Int',
             attributeName: {
-              localPart: 'b'
+              localPart: 'r'
             },
             type: 'attribute'
           }]
@@ -4258,11 +4258,11 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'z',
+            name: 'contourW',
             typeInfo: 'Long',
             defaultValue: 0,
             attributeName: {
-              localPart: 'z'
+              localPart: 'contourW'
             },
             type: 'attribute'
           }, {
@@ -4274,19 +4274,19 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'contourW',
-            typeInfo: 'Long',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'contourW'
-            },
-            type: 'attribute'
-          }, {
             name: 'prstMaterial',
             typeInfo: '.STPresetMaterialType',
             defaultValue: 'warmMatte',
             attributeName: {
               localPart: 'prstMaterial'
+            },
+            type: 'attribute'
+          }, {
+            name: 'z',
+            typeInfo: 'Long',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'z'
             },
             type: 'attribute'
           }]
@@ -4297,35 +4297,19 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'noTextEdit',
+            name: 'noAdjustHandles',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noTextEdit'
+              localPart: 'noAdjustHandles'
             },
             type: 'attribute'
           }, {
-            name: 'noGrp',
+            name: 'noChangeArrowheads',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noGrp'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noSelect',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noSelect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noRot',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noRot'
+              localPart: 'noChangeArrowheads'
             },
             type: 'attribute'
           }, {
@@ -4334,6 +4318,30 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'noChangeAspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noChangeShapeType',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noChangeShapeType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noEditPoints',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noEditPoints'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noGrp',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'noGrp'
             },
             type: 'attribute'
           }, {
@@ -4353,35 +4361,27 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'noEditPoints',
+            name: 'noRot',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noEditPoints'
+              localPart: 'noRot'
             },
             type: 'attribute'
           }, {
-            name: 'noAdjustHandles',
+            name: 'noSelect',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noAdjustHandles'
+              localPart: 'noSelect'
             },
             type: 'attribute'
           }, {
-            name: 'noChangeArrowheads',
+            name: 'noTextEdit',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'noChangeArrowheads'
-            },
-            type: 'attribute'
-          }, {
-            name: 'noChangeShapeType',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'noChangeShapeType'
+              localPart: 'noTextEdit'
             },
             type: 'attribute'
           }]
@@ -4707,19 +4707,19 @@ var org_docx4j_dml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
+            name: 'lastClr',
+            typeInfo: 'HexBinary',
+            attributeName: {
+              localPart: 'lastClr'
+            },
+            type: 'attribute'
+          }, {
             name: 'val',
             required: true,
             typeInfo: 'Token',
             values: ['scrollBar', 'background', 'activeCaption', 'inactiveCaption', 'menu', 'window', 'windowFrame', 'menuText', 'windowText', 'captionText', 'activeBorder', 'inactiveBorder', 'appWorkspace', 'highlight', 'highlightText', 'btnFace', 'btnShadow', 'grayText', 'btnText', 'inactiveCaptionText', 'btnHighlight', '3dDkShadow', '3dLight', 'infoText', 'infoBk', 'hotLight', 'gradientActiveCaption', 'gradientInactiveCaption', 'menuHighlight', 'menuBar'],
             attributeName: {
               localPart: 'val'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lastClr',
-            typeInfo: 'HexBinary',
-            attributeName: {
-              localPart: 'lastClr'
             },
             type: 'attribute'
           }]
@@ -4772,14 +4772,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'rowSpan',
-            typeInfo: 'Int',
-            defaultValue: 1,
-            attributeName: {
-              localPart: 'rowSpan'
-            },
-            type: 'attribute'
-          }, {
             name: 'gridSpan',
             typeInfo: 'Int',
             defaultValue: 1,
@@ -4793,6 +4785,14 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'hMerge'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rowSpan',
+            typeInfo: 'Int',
+            defaultValue: 1,
+            attributeName: {
+              localPart: 'rowSpan'
             },
             type: 'attribute'
           }, {
@@ -4889,6 +4889,38 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
+            name: 'anchor',
+            typeInfo: '.STTextAnchoringType',
+            defaultValue: 't',
+            attributeName: {
+              localPart: 'anchor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'anchorCtr',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'anchorCtr'
+            },
+            type: 'attribute'
+          }, {
+            name: 'horzOverflow',
+            typeInfo: '.STTextHorzOverflowType',
+            defaultValue: 'clip',
+            attributeName: {
+              localPart: 'horzOverflow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'marB',
+            typeInfo: 'Int',
+            defaultValue: 45720,
+            attributeName: {
+              localPart: 'marB'
+            },
+            type: 'attribute'
+          }, {
             name: 'marL',
             typeInfo: 'Int',
             defaultValue: 91440,
@@ -4913,43 +4945,11 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'marB',
-            typeInfo: 'Int',
-            defaultValue: 45720,
-            attributeName: {
-              localPart: 'marB'
-            },
-            type: 'attribute'
-          }, {
             name: 'vert',
             typeInfo: '.STTextVerticalType',
             defaultValue: 'horz',
             attributeName: {
               localPart: 'vert'
-            },
-            type: 'attribute'
-          }, {
-            name: 'anchor',
-            typeInfo: '.STTextAnchoringType',
-            defaultValue: 't',
-            attributeName: {
-              localPart: 'anchor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'anchorCtr',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'anchorCtr'
-            },
-            type: 'attribute'
-          }, {
-            name: 'horzOverflow',
-            typeInfo: '.STTextHorzOverflowType',
-            defaultValue: 'clip',
-            attributeName: {
-              localPart: 'horzOverflow'
             },
             type: 'attribute'
           }]
@@ -5034,43 +5034,11 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'rtl',
+            name: 'bandCol',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'rtl'
-            },
-            type: 'attribute'
-          }, {
-            name: 'firstRow',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'firstRow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'firstCol',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'firstCol'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lastRow',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'lastRow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lastCol',
-            typeInfo: 'Boolean',
-            defaultValue: false,
-            attributeName: {
-              localPart: 'lastCol'
+              localPart: 'bandCol'
             },
             type: 'attribute'
           }, {
@@ -5082,11 +5050,43 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'bandCol',
+            name: 'firstCol',
             typeInfo: 'Boolean',
             defaultValue: false,
             attributeName: {
-              localPart: 'bandCol'
+              localPart: 'firstCol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'firstRow',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'firstRow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lastCol',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'lastCol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lastRow',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'lastRow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rtl',
+            typeInfo: 'Boolean',
+            defaultValue: false,
+            attributeName: {
+              localPart: 'rtl'
             },
             type: 'attribute'
           }]
@@ -5268,19 +5268,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTTextAutonumberBullet',
         typeName: 'CT_TextAutonumberBullet',
         propertyInfos: [{
-            name: 'type',
-            required: true,
-            typeInfo: '.STTextAutonumberScheme',
-            attributeName: {
-              localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
             name: 'startAt',
             typeInfo: 'Int',
             defaultValue: 1,
             attributeName: {
               localPart: 'startAt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            required: true,
+            typeInfo: '.STTextAutonumberScheme',
+            attributeName: {
+              localPart: 'type'
             },
             type: 'attribute'
           }]
@@ -5343,104 +5343,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'rot',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'rot'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spcFirstLastPara',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'spcFirstLastPara'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vertOverflow',
-            typeInfo: '.STTextVertOverflowType',
-            attributeName: {
-              localPart: 'vertOverflow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'horzOverflow',
-            typeInfo: '.STTextHorzOverflowType',
-            attributeName: {
-              localPart: 'horzOverflow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vert',
-            typeInfo: '.STTextVerticalType',
-            attributeName: {
-              localPart: 'vert'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrap',
-            typeInfo: '.STTextWrappingType',
-            attributeName: {
-              localPart: 'wrap'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lIns',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'lIns'
-            },
-            type: 'attribute'
-          }, {
-            name: 'tIns',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'tIns'
-            },
-            type: 'attribute'
-          }, {
-            name: 'rIns',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'rIns'
-            },
-            type: 'attribute'
-          }, {
-            name: 'bIns',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'bIns'
-            },
-            type: 'attribute'
-          }, {
-            name: 'numCol',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'numCol'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spcCol',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'spcCol'
-            },
-            type: 'attribute'
-          }, {
-            name: 'rtlCol',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'rtlCol'
-            },
-            type: 'attribute'
-          }, {
-            name: 'fromWordArt',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'fromWordArt'
-            },
-            type: 'attribute'
-          }, {
             name: 'anchor',
             typeInfo: '.STTextAnchoringType',
             attributeName: {
@@ -5455,10 +5357,94 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'bIns',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'bIns'
+            },
+            type: 'attribute'
+          }, {
+            name: 'compatLnSpc',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'compatLnSpc'
+            },
+            type: 'attribute'
+          }, {
             name: 'forceAA',
             typeInfo: 'Boolean',
             attributeName: {
               localPart: 'forceAA'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fromWordArt',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'fromWordArt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'horzOverflow',
+            typeInfo: '.STTextHorzOverflowType',
+            attributeName: {
+              localPart: 'horzOverflow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lIns',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'lIns'
+            },
+            type: 'attribute'
+          }, {
+            name: 'numCol',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'numCol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rIns',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'rIns'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rot',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'rot'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rtlCol',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'rtlCol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spcCol',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'spcCol'
+            },
+            type: 'attribute'
+          }, {
+            name: 'spcFirstLastPara',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'spcFirstLastPara'
+            },
+            type: 'attribute'
+          }, {
+            name: 'tIns',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'tIns'
             },
             type: 'attribute'
           }, {
@@ -5470,10 +5456,24 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'compatLnSpc',
-            typeInfo: 'Boolean',
+            name: 'vert',
+            typeInfo: '.STTextVerticalType',
             attributeName: {
-              localPart: 'compatLnSpc'
+              localPart: 'vert'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vertOverflow',
+            typeInfo: '.STTextVertOverflowType',
+            attributeName: {
+              localPart: 'vertOverflow'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrap',
+            typeInfo: '.STTextWrappingType',
+            attributeName: {
+              localPart: 'wrap'
             },
             type: 'attribute'
           }]
@@ -5597,29 +5597,9 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'kumimoji',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'kumimoji'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lang',
-            attributeName: {
-              localPart: 'lang'
-            },
-            type: 'attribute'
-          }, {
             name: 'altLang',
             attributeName: {
               localPart: 'altLang'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sz',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'sz'
             },
             type: 'attribute'
           }, {
@@ -5630,55 +5610,6 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'i',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'i'
-            },
-            type: 'attribute'
-          }, {
-            name: 'u',
-            typeInfo: '.STTextUnderlineType',
-            attributeName: {
-              localPart: 'u'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strike',
-            typeInfo: '.STTextStrikeType',
-            attributeName: {
-              localPart: 'strike'
-            },
-            type: 'attribute'
-          }, {
-            name: 'kern',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'kern'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cap',
-            typeInfo: '.STTextCapsType',
-            attributeName: {
-              localPart: 'cap'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spc',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'spc'
-            },
-            type: 'attribute'
-          }, {
-            name: 'normalizeH',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'normalizeH'
-            },
-            type: 'attribute'
-          }, {
             name: 'baseline',
             typeInfo: 'Int',
             attributeName: {
@@ -5686,10 +5617,16 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'noProof',
-            typeInfo: 'Boolean',
+            name: 'bmk',
             attributeName: {
-              localPart: 'noProof'
+              localPart: 'bmk'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cap',
+            typeInfo: '.STTextCapsType',
+            attributeName: {
+              localPart: 'cap'
             },
             type: 'attribute'
           }, {
@@ -5709,6 +5646,47 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'i',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'i'
+            },
+            type: 'attribute'
+          }, {
+            name: 'kern',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'kern'
+            },
+            type: 'attribute'
+          }, {
+            name: 'kumimoji',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'kumimoji'
+            },
+            type: 'attribute'
+          }, {
+            name: 'lang',
+            attributeName: {
+              localPart: 'lang'
+            },
+            type: 'attribute'
+          }, {
+            name: 'noProof',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'noProof'
+            },
+            type: 'attribute'
+          }, {
+            name: 'normalizeH',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'normalizeH'
+            },
+            type: 'attribute'
+          }, {
             name: 'smtClean',
             typeInfo: 'Boolean',
             defaultValue: true,
@@ -5725,9 +5703,31 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'bmk',
+            name: 'spc',
+            typeInfo: 'Int',
             attributeName: {
-              localPart: 'bmk'
+              localPart: 'spc'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strike',
+            typeInfo: '.STTextStrikeType',
+            attributeName: {
+              localPart: 'strike'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sz',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'sz'
+            },
+            type: 'attribute'
+          }, {
+            name: 'u',
+            typeInfo: '.STTextUnderlineType',
+            attributeName: {
+              localPart: 'u'
             },
             type: 'attribute'
           }]
@@ -5927,34 +5927,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'extLst',
             typeInfo: '.CTOfficeArtExtensionList'
           }, {
-            name: 'marL',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'marL'
-            },
-            type: 'attribute'
-          }, {
-            name: 'marR',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'marR'
-            },
-            type: 'attribute'
-          }, {
-            name: 'lvl',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'lvl'
-            },
-            type: 'attribute'
-          }, {
-            name: 'indent',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'indent'
-            },
-            type: 'attribute'
-          }, {
             name: 'algn',
             typeInfo: '.STTextAlignType',
             attributeName: {
@@ -5966,13 +5938,6 @@ var org_docx4j_dml_Module_Factory = function () {
             typeInfo: 'Int',
             attributeName: {
               localPart: 'defTabSz'
-            },
-            type: 'attribute'
-          }, {
-            name: 'rtl',
-            typeInfo: 'Boolean',
-            attributeName: {
-              localPart: 'rtl'
             },
             type: 'attribute'
           }, {
@@ -5990,6 +5955,20 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'hangingPunct',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'hangingPunct'
+            },
+            type: 'attribute'
+          }, {
+            name: 'indent',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'indent'
+            },
+            type: 'attribute'
+          }, {
             name: 'latinLnBrk',
             typeInfo: 'Boolean',
             attributeName: {
@@ -5997,10 +5976,31 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'hangingPunct',
+            name: 'lvl',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'lvl'
+            },
+            type: 'attribute'
+          }, {
+            name: 'marL',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'marL'
+            },
+            type: 'attribute'
+          }, {
+            name: 'marR',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'marR'
+            },
+            type: 'attribute'
+          }, {
+            name: 'rtl',
             typeInfo: 'Boolean',
             attributeName: {
-              localPart: 'hangingPunct'
+              localPart: 'rtl'
             },
             type: 'attribute'
           }]
@@ -6047,17 +6047,17 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTTextTabStop',
         typeName: 'CT_TextTabStop',
         propertyInfos: [{
-            name: 'pos',
-            typeInfo: 'Int',
-            attributeName: {
-              localPart: 'pos'
-            },
-            type: 'attribute'
-          }, {
             name: 'algn',
             typeInfo: '.STTextTabAlignType',
             attributeName: {
               localPart: 'algn'
+            },
+            type: 'attribute'
+          }, {
+            name: 'pos',
+            typeInfo: 'Int',
+            attributeName: {
+              localPart: 'pos'
             },
             type: 'attribute'
           }]
@@ -6121,17 +6121,17 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTTileInfoProperties',
         typeName: 'CT_TileInfoProperties',
         propertyInfos: [{
-            name: 'tx',
-            typeInfo: 'Long',
+            name: 'algn',
+            typeInfo: '.STRectAlignment',
             attributeName: {
-              localPart: 'tx'
+              localPart: 'algn'
             },
             type: 'attribute'
           }, {
-            name: 'ty',
-            typeInfo: 'Long',
+            name: 'flip',
+            typeInfo: '.STTileFlipMode',
             attributeName: {
-              localPart: 'ty'
+              localPart: 'flip'
             },
             type: 'attribute'
           }, {
@@ -6149,17 +6149,17 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'flip',
-            typeInfo: '.STTileFlipMode',
+            name: 'tx',
+            typeInfo: 'Long',
             attributeName: {
-              localPart: 'flip'
+              localPart: 'tx'
             },
             type: 'attribute'
           }, {
-            name: 'algn',
-            typeInfo: '.STRectAlignment',
+            name: 'ty',
+            typeInfo: 'Long',
             attributeName: {
-              localPart: 'algn'
+              localPart: 'ty'
             },
             type: 'attribute'
           }]
@@ -6167,19 +6167,19 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'CTTintEffect',
         typeName: 'CT_TintEffect',
         propertyInfos: [{
-            name: 'hue',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'hue'
-            },
-            type: 'attribute'
-          }, {
             name: 'amt',
             typeInfo: 'Int',
             defaultValue: 0,
             attributeName: {
               localPart: 'amt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hue',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'hue'
             },
             type: 'attribute'
           }]
@@ -6192,14 +6192,6 @@ var org_docx4j_dml_Module_Factory = function () {
           }, {
             name: 'ext',
             typeInfo: '.CTPositiveSize2D'
-          }, {
-            name: 'rot',
-            typeInfo: 'Int',
-            defaultValue: 0,
-            attributeName: {
-              localPart: 'rot'
-            },
-            type: 'attribute'
           }, {
             name: 'flipH',
             typeInfo: 'Boolean',
@@ -6216,27 +6208,19 @@ var org_docx4j_dml_Module_Factory = function () {
               localPart: 'flipV'
             },
             type: 'attribute'
+          }, {
+            name: 'rot',
+            typeInfo: 'Int',
+            defaultValue: 0,
+            attributeName: {
+              localPart: 'rot'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTTransformEffect',
         typeName: 'CT_TransformEffect',
         propertyInfos: [{
-            name: 'sx',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'sx'
-            },
-            type: 'attribute'
-          }, {
-            name: 'sy',
-            typeInfo: 'Int',
-            defaultValue: 100000,
-            attributeName: {
-              localPart: 'sy'
-            },
-            type: 'attribute'
-          }, {
             name: 'kx',
             typeInfo: 'Int',
             defaultValue: 0,
@@ -6250,6 +6234,22 @@ var org_docx4j_dml_Module_Factory = function () {
             defaultValue: 0,
             attributeName: {
               localPart: 'ky'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sx',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sx'
+            },
+            type: 'attribute'
+          }, {
+            name: 'sy',
+            typeInfo: 'Int',
+            defaultValue: 100000,
+            attributeName: {
+              localPart: 'sy'
             },
             type: 'attribute'
           }, {
@@ -6342,9 +6342,10 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'minX',
+            name: 'gdRefY',
+            typeInfo: 'Token',
             attributeName: {
-              localPart: 'minX'
+              localPart: 'gdRefY'
             },
             type: 'attribute'
           }, {
@@ -6354,22 +6355,21 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'gdRefY',
-            typeInfo: 'Token',
+            name: 'maxY',
             attributeName: {
-              localPart: 'gdRefY'
+              localPart: 'maxY'
+            },
+            type: 'attribute'
+          }, {
+            name: 'minX',
+            attributeName: {
+              localPart: 'minX'
             },
             type: 'attribute'
           }, {
             name: 'minY',
             attributeName: {
               localPart: 'minY'
-            },
-            type: 'attribute'
-          }, {
-            name: 'maxY',
-            attributeName: {
-              localPart: 'maxY'
             },
             type: 'attribute'
           }]
@@ -6445,9 +6445,11 @@ var org_docx4j_dml_Module_Factory = function () {
         localName: 'TextFont',
         typeName: 'CT_TextFont',
         propertyInfos: [{
-            name: 'typeface',
+            name: 'charset',
+            typeInfo: 'Byte',
+            defaultValue: 1,
             attributeName: {
-              localPart: 'typeface'
+              localPart: 'charset'
             },
             type: 'attribute'
           }, {
@@ -6465,11 +6467,9 @@ var org_docx4j_dml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'charset',
-            typeInfo: 'Byte',
-            defaultValue: 1,
+            name: 'typeface',
             attributeName: {
-              localPart: 'charset'
+              localPart: 'typeface'
             },
             type: 'attribute'
           }]

@@ -113,17 +113,17 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main_Module_Factory
         localName: 'CTPresenceInfo',
         typeName: 'CT_PresenceInfo',
         propertyInfos: [{
-            name: 'userId',
-            required: true,
-            attributeName: {
-              localPart: 'userId'
-            },
-            type: 'attribute'
-          }, {
             name: 'providerId',
             required: true,
             attributeName: {
               localPart: 'providerId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'userId',
+            required: true,
+            attributeName: {
+              localPart: 'userId'
             },
             type: 'attribute'
           }]
@@ -131,12 +131,6 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main_Module_Factory
         localName: 'CTPresetTransition',
         typeName: 'CT_PresetTransition',
         propertyInfos: [{
-            name: 'prst',
-            attributeName: {
-              localPart: 'prst'
-            },
-            type: 'attribute'
-          }, {
             name: 'invX',
             typeInfo: 'Boolean',
             defaultValue: false,
@@ -150,6 +144,12 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main_Module_Factory
             defaultValue: false,
             attributeName: {
               localPart: 'invY'
+            },
+            type: 'attribute'
+          }, {
+            name: 'prst',
+            attributeName: {
+              localPart: 'prst'
             },
             type: 'attribute'
           }]

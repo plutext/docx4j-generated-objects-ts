@@ -24,11 +24,11 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
             }],
           type: 'elements'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'startTime',
+          required: true,
+          typeInfo: 'Decimal',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'startTime'
           },
           type: 'attribute'
         }, {
@@ -39,11 +39,11 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
           },
           type: 'attribute'
         }, {
-          name: 'startTime',
-          required: true,
-          typeInfo: 'Decimal',
+          name: 'id',
+          typeInfo: 'ID',
           attributeName: {
-            localPart: 'startTime'
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -72,14 +72,6 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
             }],
           type: 'elements'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
           name: 'name',
           defaultValue: 'stroke',
           attributeName: {
@@ -93,6 +85,14 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
             localPart: 'ref'
           },
           type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTActionDataGroup',
@@ -103,18 +103,18 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
           collection: true,
           typeInfo: '.CTActionData'
         }, {
+          name: 'name',
+          defaultValue: 'stroke',
+          attributeName: {
+            localPart: 'name'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           typeInfo: 'ID',
           attributeName: {
             localPart: 'id',
             namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
-          name: 'name',
-          defaultValue: 'stroke',
-          attributeName: {
-            localPart: 'name'
           },
           type: 'attribute'
         }]
@@ -127,11 +127,11 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
           collection: true,
           typeInfo: '.CTAction'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
+          name: 'startTime',
+          required: true,
+          typeInfo: 'Decimal',
           attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
+            localPart: 'startTime'
           },
           type: 'attribute'
         }, {
@@ -142,11 +142,11 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
           },
           type: 'attribute'
         }, {
-          name: 'startTime',
-          required: true,
-          typeInfo: 'Decimal',
+          name: 'id',
+          typeInfo: 'ID',
           attributeName: {
-            localPart: 'startTime'
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]
@@ -191,14 +191,6 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
             }],
           type: 'elements'
         }, {
-          name: 'id',
-          typeInfo: 'ID',
-          attributeName: {
-            localPart: 'id',
-            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
-          },
-          type: 'attribute'
-        }, {
           name: 'lengthUnit',
           required: true,
           values: ['m', 'cm', 'mm', 'in', 'pt', 'pc', 'em', 'ex', '1\/m', '1\/cm', '1\/mm', '1\/in', '1\/pt', '1\/pc', '1\/em', '1\/ex'],
@@ -212,6 +204,14 @@ export const org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction 
           values: ['s', 'ms', '1\/s', '1\/ms'],
           attributeName: {
             localPart: 'timeUnit'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'ID',
+          attributeName: {
+            localPart: 'id',
+            namespaceURI: 'http:\/\/www.w3.org\/XML\/1998\/namespace'
           },
           type: 'attribute'
         }]

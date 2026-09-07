@@ -8,16 +8,16 @@ export const org_docx4j_w14 = {
       localName: 'CTBevel',
       typeName: 'CT_Bevel',
       propertyInfos: [{
-          name: 'w',
-          typeInfo: 'Long',
-          type: 'attribute'
-        }, {
           name: 'h',
           typeInfo: 'Long',
           type: 'attribute'
         }, {
           name: 'prst',
           typeInfo: '.STBevelPresetType',
+          type: 'attribute'
+        }, {
+          name: 'w',
+          typeInfo: 'Long',
           type: 'attribute'
         }]
     }, {
@@ -141,14 +141,14 @@ export const org_docx4j_w14 = {
           name: 'rot',
           typeInfo: '.CTSphereCoords'
         }, {
-          name: 'rig',
-          required: true,
-          typeInfo: '.STLightRigType',
-          type: 'attribute'
-        }, {
           name: 'dir',
           required: true,
           typeInfo: '.STLightRigDirection',
+          type: 'attribute'
+        }, {
+          name: 'rig',
+          required: true,
+          typeInfo: '.STLightRigType',
           type: 'attribute'
         }]
     }, {
@@ -267,11 +267,11 @@ export const org_docx4j_w14 = {
           name: 'contourClr',
           typeInfo: '.CTColor'
         }, {
-          name: 'extrusionH',
+          name: 'contourW',
           typeInfo: 'Long',
           type: 'attribute'
         }, {
-          name: 'contourW',
+          name: 'extrusionH',
           typeInfo: 'Long',
           type: 'attribute'
         }, {
@@ -283,16 +283,20 @@ export const org_docx4j_w14 = {
       localName: 'CTReflection',
       typeName: 'CT_Reflection',
       propertyInfos: [{
+          name: 'algn',
+          typeInfo: '.STRectAlignment',
+          type: 'attribute'
+        }, {
           name: 'blurRad',
           typeInfo: 'Long',
           type: 'attribute'
         }, {
-          name: 'stA',
+          name: 'dir',
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'stPos',
-          typeInfo: 'Int',
+          name: 'dist',
+          typeInfo: 'Long',
           type: 'attribute'
         }, {
           name: 'endA',
@@ -303,23 +307,7 @@ export const org_docx4j_w14 = {
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'dist',
-          typeInfo: 'Long',
-          type: 'attribute'
-        }, {
-          name: 'dir',
-          typeInfo: 'Int',
-          type: 'attribute'
-        }, {
           name: 'fadeDir',
-          typeInfo: 'Int',
-          type: 'attribute'
-        }, {
-          name: 'sx',
-          typeInfo: 'Int',
-          type: 'attribute'
-        }, {
-          name: 'sy',
           typeInfo: 'Int',
           type: 'attribute'
         }, {
@@ -331,19 +319,31 @@ export const org_docx4j_w14 = {
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'algn',
-          typeInfo: '.STRectAlignment',
+          name: 'stA',
+          typeInfo: 'Int',
+          type: 'attribute'
+        }, {
+          name: 'stPos',
+          typeInfo: 'Int',
+          type: 'attribute'
+        }, {
+          name: 'sx',
+          typeInfo: 'Int',
+          type: 'attribute'
+        }, {
+          name: 'sy',
+          typeInfo: 'Int',
           type: 'attribute'
         }]
     }, {
       localName: 'CTRelativeRect',
       typeName: 'CT_RelativeRect',
       propertyInfos: [{
-          name: 'l',
+          name: 'b',
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 't',
+          name: 'l',
           typeInfo: 'Int',
           type: 'attribute'
         }, {
@@ -351,7 +351,7 @@ export const org_docx4j_w14 = {
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'b',
+          name: 't',
           typeInfo: 'Int',
           type: 'attribute'
         }]
@@ -496,11 +496,11 @@ export const org_docx4j_w14 = {
           required: true,
           typeInfo: '.CTSchemeColor'
         }, {
-          name: 'blurRad',
-          typeInfo: 'Long',
+          name: 'algn',
+          typeInfo: '.STRectAlignment',
           type: 'attribute'
         }, {
-          name: 'dist',
+          name: 'blurRad',
           typeInfo: 'Long',
           type: 'attribute'
         }, {
@@ -508,12 +508,8 @@ export const org_docx4j_w14 = {
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'sx',
-          typeInfo: 'Int',
-          type: 'attribute'
-        }, {
-          name: 'sy',
-          typeInfo: 'Int',
+          name: 'dist',
+          typeInfo: 'Long',
           type: 'attribute'
         }, {
           name: 'kx',
@@ -524,8 +520,12 @@ export const org_docx4j_w14 = {
           typeInfo: 'Int',
           type: 'attribute'
         }, {
-          name: 'algn',
-          typeInfo: '.STRectAlignment',
+          name: 'sx',
+          typeInfo: 'Int',
+          type: 'attribute'
+        }, {
+          name: 'sy',
+          typeInfo: 'Int',
           type: 'attribute'
         }]
     }, {
@@ -613,8 +613,8 @@ export const org_docx4j_w14 = {
           required: true,
           typeInfo: '.CTLineJoinMiterProperties'
         }, {
-          name: 'w',
-          typeInfo: 'Int',
+          name: 'algn',
+          typeInfo: '.STPenAlignment',
           type: 'attribute'
         }, {
           name: 'cap',
@@ -625,8 +625,8 @@ export const org_docx4j_w14 = {
           typeInfo: '.STCompoundLine',
           type: 'attribute'
         }, {
-          name: 'algn',
-          typeInfo: '.STPenAlignment',
+          name: 'w',
+          typeInfo: 'Int',
           type: 'attribute'
         }]
     }, {

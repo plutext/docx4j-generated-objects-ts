@@ -37,13 +37,13 @@ export interface CTEncryption {
 export interface CTKeyData {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyData';
   readonly PARENT?: CTEncryption;
-  saltSize: number;
   blockSize: number;
-  keyBits: number;
-  hashSize: number;
   cipherAlgorithm: string;
   cipherChaining: STCipherChaining;
   hashAlgorithm: STHashAlgorithm;
+  hashSize: number;
+  keyBits: number;
+  saltSize: number;
   saltValue: string;
 }
 

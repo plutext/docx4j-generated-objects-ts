@@ -20,8 +20,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTConnectableReferences {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_main.CTConnectableReferences';
-  st?: string;
   end?: string;
+  st?: string;
 }
 
 export interface CTCreationId {

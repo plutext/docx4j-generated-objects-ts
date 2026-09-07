@@ -48,8 +48,8 @@ export interface BooleanDefaultTrue {
 export interface Br {
   TYPE_NAME?: 'org_docx4j_wml.Br';
   readonly PARENT?: CTMathRunTrackChange | Dep_org_docx4j_math.CTR | R;
-  type?: STBrType;
   clear?: STBrClear;
+  type?: STBrType;
 }
 
 export interface CTAltChunk {
@@ -68,16 +68,16 @@ export interface CTAltChunkPr {
 export interface CTAttr {
   TYPE_NAME?: 'org_docx4j_wml.CTAttr';
   readonly PARENT?: CTCustomXmlPr | CTSmartTagPr;
-  uri?: string;
   name: string;
+  uri?: string;
   val: string;
 }
 
 export interface CTAutoCaption {
   TYPE_NAME?: 'org_docx4j_wml.CTAutoCaption';
   readonly PARENT?: CTAutoCaptions;
-  name: string;
   caption: string;
+  name: string;
 }
 
 export interface CTAutoCaptions {
@@ -91,8 +91,8 @@ export interface CTBackground extends CTPictureBase {
   readonly PARENT?: Document | GlossaryDocument;
   color?: string;
   themeColor?: STThemeColor;
-  themeTint?: string;
   themeShade?: string;
+  themeTint?: string;
 }
 
 export interface CTBookmark extends CTBookmarkRange {
@@ -111,15 +111,15 @@ export interface CTBookmarkRange extends CTMarkupRange {
 export interface CTBorder {
   TYPE_NAME?: 'org_docx4j_wml.CTBorder';
   readonly PARENT?: CTDivBdr | CTParaRPrOriginal | CTRPrChange.RPr | PPrBase.PBdr | ParaRPr | RPr | SectPr.PgBorders | TblBorders | TcPrInner.TcBorders;
-  val: STBorder;
   color?: string;
-  themeColor?: STThemeColor;
-  themeTint?: string;
-  themeShade?: string;
-  sz?: number;
-  space?: number;
-  shadow?: boolean;
   frame?: boolean;
+  shadow?: boolean;
+  space?: number;
+  sz?: number;
+  themeColor?: STThemeColor;
+  themeShade?: string;
+  themeTint?: string;
+  val: STBorder;
 }
 
 export interface CTCalendarType {
@@ -131,12 +131,12 @@ export interface CTCalendarType {
 export interface CTCaption {
   TYPE_NAME?: 'org_docx4j_wml.CTCaption';
   readonly PARENT?: CTCaptions;
-  name: string;
-  pos?: STCaptionPos;
   chapNum?: boolean;
   heading?: number;
+  name: string;
   noLabel?: boolean;
   numFmt?: NumberFormat;
+  pos?: STCaptionPos;
   sep?: STChapterSep;
 }
 
@@ -169,34 +169,34 @@ export interface CTCnf {
 export interface CTColor {
   TYPE_NAME?: 'org_docx4j_wml.CTColor';
   readonly PARENT?: SdtPr;
-  val: string;
   themeColor?: STThemeColor;
-  themeTint?: string;
   themeShade?: string;
+  themeTint?: string;
+  val: string;
 }
 
 export interface CTColorSchemeMapping {
   TYPE_NAME?: 'org_docx4j_wml.CTColorSchemeMapping';
   readonly PARENT?: CTSettings;
-  bg1?: STColorSchemeIndex;
-  t1?: STColorSchemeIndex;
-  bg2?: STColorSchemeIndex;
-  t2?: STColorSchemeIndex;
   accent1?: STColorSchemeIndex;
   accent2?: STColorSchemeIndex;
   accent3?: STColorSchemeIndex;
   accent4?: STColorSchemeIndex;
   accent5?: STColorSchemeIndex;
   accent6?: STColorSchemeIndex;
-  hyperlink?: STColorSchemeIndex;
+  bg1?: STColorSchemeIndex;
+  bg2?: STColorSchemeIndex;
   followedHyperlink?: STColorSchemeIndex;
+  hyperlink?: STColorSchemeIndex;
+  t1?: STColorSchemeIndex;
+  t2?: STColorSchemeIndex;
 }
 
 export interface CTColumn {
   TYPE_NAME?: 'org_docx4j_wml.CTColumn';
   readonly PARENT?: CTColumns;
-  w?: number;
   space?: number;
+  w?: number;
 }
 
 export interface CTColumns {
@@ -204,9 +204,9 @@ export interface CTColumns {
   readonly PARENT?: SectPr | SectPrBase;
   col: CTColumn[];
   equalWidth?: boolean;
-  space?: number;
   num?: number;
   sep?: boolean;
+  space?: number;
 }
 
 export interface CTCompat {
@@ -291,9 +291,9 @@ export interface CTCompatSetting {
 export interface CTControl {
   TYPE_NAME?: 'org_docx4j_wml.CTControl';
   readonly PARENT?: CTObject | Pict;
+  id?: string;
   name?: string;
   shapeid?: string;
-  id?: string;
 }
 
 export interface CTCustomXmlBlock {
@@ -301,8 +301,8 @@ export interface CTCustomXmlBlock {
   readonly PARENT?: Body | CTCustomXmlBlock | CTFtnEdn | CTTxbxContent | Comments.Comment | Ftr | Hdr | SdtContentBlock | Tc;
   customXmlPr?: CTCustomXmlPr;
   content?: (TypedNamedValue<CTCustomXmlBlock> | TypedNamedValue<SdtBlock> | TypedNamedValue<P> | TypedNamedValue<Tbl> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath>)[];
-  uri?: string;
   element: string;
+  uri?: string;
 }
 
 export interface CTCustomXmlCell {
@@ -310,8 +310,8 @@ export interface CTCustomXmlCell {
   readonly PARENT?: CTCustomXmlCell | CTSdtContentCell | Tr;
   customXmlPr?: CTCustomXmlPr;
   content?: (TypedNamedValue<Tc> | TypedNamedValue<CTCustomXmlCell> | TypedNamedValue<CTSdtCell> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath>)[];
-  uri?: string;
   element: string;
+  uri?: string;
 }
 
 export interface CTCustomXmlPr {
@@ -326,8 +326,8 @@ export interface CTCustomXmlRow {
   readonly PARENT?: CTCustomXmlRow | CTSdtContentRow | Tbl;
   customXmlPr?: CTCustomXmlPr;
   content?: (TypedNamedValue<Tr> | TypedNamedValue<CTCustomXmlRow> | TypedNamedValue<CTSdtRow> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath>)[];
-  uri?: string;
   element: string;
+  uri?: string;
 }
 
 export interface CTCustomXmlRun {
@@ -335,16 +335,16 @@ export interface CTCustomXmlRun {
   readonly PARENT?: CTCustomXmlRun | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange;
   customXmlPr?: CTCustomXmlPr;
   content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
-  uri?: string;
   element: string;
+  uri?: string;
 }
 
 export interface CTDataBinding {
   TYPE_NAME?: 'org_docx4j_wml.CTDataBinding';
   readonly PARENT?: SdtPr;
   prefixMappings?: string;
-  xpath: string;
   storeItemID: string;
+  xpath: string;
 }
 
 export interface CTDecimalNumber {
@@ -385,9 +385,9 @@ export interface CTDivs {
 export interface CTDocGrid {
   TYPE_NAME?: 'org_docx4j_wml.CTDocGrid';
   readonly PARENT?: SectPr | SectPrBase;
-  type?: STDocGrid;
-  linePitch?: number;
   charSpace?: number;
+  linePitch?: number;
+  type?: STDocGrid;
 }
 
 export interface CTDocPart {
@@ -425,8 +425,8 @@ export interface CTDocPartGallery {
 export interface CTDocPartName {
   TYPE_NAME?: 'org_docx4j_wml.CTDocPartName';
   readonly PARENT?: CTDocPartPr;
-  val: string;
   decorated?: boolean;
+  val: string;
 }
 
 export interface CTDocPartPr {
@@ -457,19 +457,19 @@ export interface CTDocParts {
 export interface CTDocProtect {
   TYPE_NAME?: 'org_docx4j_wml.CTDocProtect';
   readonly PARENT?: CTSettings;
-  edit?: STDocProtect;
-  formatting?: boolean;
-  enforcement?: boolean;
-  cryptProviderType?: STCryptProv;
-  cryptAlgorithmClass?: STAlgClass;
-  cryptAlgorithmType?: STAlgType;
-  cryptAlgorithmSid?: number;
-  cryptSpinCount?: number;
-  cryptProvider?: string;
   algIdExt?: string;
   algIdExtSource?: string;
+  cryptAlgorithmClass?: STAlgClass;
+  cryptAlgorithmSid?: number;
+  cryptAlgorithmType?: STAlgType;
+  cryptProvider?: string;
+  cryptProviderType?: STCryptProv;
   cryptProviderTypeExt?: string;
   cryptProviderTypeExtSource?: string;
+  cryptSpinCount?: number;
+  edit?: STDocProtect;
+  enforcement?: boolean;
+  formatting?: boolean;
   hash?: string;
   salt?: string;
 }
@@ -503,9 +503,9 @@ export interface CTDocVars {
 export interface CTEastAsianLayout {
   TYPE_NAME?: 'org_docx4j_wml.CTEastAsianLayout';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | ParaRPr | RPr;
-  id?: number;
   combine?: boolean;
   combineBrackets?: STCombineBrackets;
+  id?: number;
   vert?: boolean;
   vertCompress?: boolean;
 }
@@ -609,8 +609,8 @@ export interface CTFFTextType {
 export interface CTFitText {
   TYPE_NAME?: 'org_docx4j_wml.CTFitText';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | ParaRPr | RPr;
-  val: number;
   id?: number;
+  val: number;
 }
 
 export interface CTFootnotes {
@@ -641,21 +641,21 @@ export interface CTFrameLayout {
 export interface CTFramePr {
   TYPE_NAME?: 'org_docx4j_wml.CTFramePr';
   readonly PARENT?: PPr | PPrBase;
+  anchorLock?: boolean;
   dropCap?: STDropCap;
-  lines?: number;
-  w?: number;
   h?: number;
-  vSpace?: number;
-  hSpace?: number;
-  wrap?: STWrap;
   hAnchor?: STHAnchor;
+  hRule?: STHeightRule;
+  hSpace?: number;
+  lines?: number;
   vAnchor?: STVAnchor;
+  vSpace?: number;
+  w?: number;
+  wrap?: STWrap;
   x?: number;
   xAlign?: STXAlign;
   y?: number;
   yAlign?: STYAlign;
-  hRule?: STHeightRule;
-  anchorLock?: boolean;
 }
 
 export interface CTFrameScrollbar {
@@ -692,8 +692,8 @@ export interface CTFtnEdn {
   TYPE_NAME?: 'org_docx4j_wml.CTFtnEdn';
   readonly PARENT?: CTEndnotes | CTFootnotes;
   content?: (TypedNamedValue<CTCustomXmlBlock> | TypedNamedValue<SdtBlock> | TypedNamedValue<P> | TypedNamedValue<Tbl> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTAltChunk>)[];
-  type?: STFtnEdn;
   id: number;
+  type?: STFtnEdn;
 }
 
 export interface CTFtnEdnRef {
@@ -733,8 +733,8 @@ export interface CTGuid {
 export interface CTHeight {
   TYPE_NAME?: 'org_docx4j_wml.CTHeight';
   readonly PARENT?: CTTrPrBase | TrPr;
-  val?: number;
   hRule?: STHeightRule;
+  val?: number;
 }
 
 export interface CTKinsoku {
@@ -753,18 +753,18 @@ export interface CTLang {
 export interface CTLanguage {
   TYPE_NAME?: 'org_docx4j_wml.CTLanguage';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | CTSettings | ParaRPr | RPr;
-  val?: string;
-  eastAsia?: string;
   bidi?: string;
+  eastAsia?: string;
+  val?: string;
 }
 
 export interface CTLineNumber {
   TYPE_NAME?: 'org_docx4j_wml.CTLineNumber';
   readonly PARENT?: SectPr | SectPrBase;
   countBy?: number;
-  start?: number;
   distance?: number;
   restart?: STLineNumberRestart;
+  start?: number;
 }
 
 export interface CTLock {
@@ -883,9 +883,9 @@ export interface CTObject extends CTPictureBase {
   TYPE_NAME?: 'org_docx4j_wml.CTObject';
   readonly PARENT?: CTMathRunTrackChange | Dep_org_docx4j_math.CTR | R;
   control?: CTControl;
+  anchorId?: string;
   dxaOrig?: number;
   dyaOrig?: number;
-  anchorId?: string;
 }
 
 export interface CTOdso {
@@ -926,10 +926,10 @@ export interface CTPPrDefault {
 export interface CTPageNumber {
   TYPE_NAME?: 'org_docx4j_wml.CTPageNumber';
   readonly PARENT?: SectPr | SectPrBase;
+  chapSep?: STChapterSep;
+  chapStyle?: number;
   fmt?: NumberFormat;
   start?: number;
-  chapStyle?: number;
-  chapSep?: STChapterSep;
 }
 
 export interface CTPaperSource {
@@ -952,8 +952,8 @@ export interface CTParaRPrOriginal {
 export interface CTPerm {
   TYPE_NAME?: 'org_docx4j_wml.CTPerm' | 'org_docx4j_wml.RangePermissionStart';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Comments.Comment | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange | SdtContentBlock | Tbl | Tc | Tr;
-  id: string;
   displacedByCustomXml?: STDisplacedByCustomXml;
+  id: string;
 }
 
 export interface CTPictureBase {
@@ -977,8 +977,8 @@ export interface CTPlaceholder {
 export interface CTProof {
   TYPE_NAME?: 'org_docx4j_wml.CTProof';
   readonly PARENT?: CTSettings;
-  spelling?: STProof;
   grammar?: STProof;
+  spelling?: STProof;
 }
 
 export interface CTRPrChange extends CTTrackChange {
@@ -996,9 +996,9 @@ export interface CTReadingModeInkLockDown {
   TYPE_NAME?: 'org_docx4j_wml.CTReadingModeInkLockDown';
   readonly PARENT?: CTSettings;
   actualPg: boolean;
-  w: number;
-  h: number;
   fontSz: number;
+  h: number;
+  w: number;
 }
 
 export interface CTRecipientData {
@@ -1274,15 +1274,15 @@ export interface CTShapeDefaults {
 export interface CTShd {
   TYPE_NAME?: 'org_docx4j_wml.CTShd';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | CTTblPrBase | CTTblPrEx | CTTblPrExBase | PPr | PPrBase | ParaRPr | RPr | TblPr | TcPr | TcPrInner;
-  val: STShd;
   color?: string;
-  themeColor?: STThemeColor;
-  themeTint?: string;
-  themeShade?: string;
   fill?: string;
+  themeColor?: STThemeColor;
   themeFill?: STThemeColor;
-  themeFillTint?: string;
   themeFillShade?: string;
+  themeFillTint?: string;
+  themeShade?: string;
+  themeTint?: string;
+  val: STShd;
 }
 
 export interface CTShortHexNumber {
@@ -1308,9 +1308,9 @@ export interface CTSimpleField {
   readonly PARENT?: CTCustomXmlRun | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink;
   fldData?: Text;
   content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
-  instr: string;
-  fldLock?: boolean;
   dirty?: boolean;
+  fldLock?: boolean;
+  instr: string;
 }
 
 export interface CTSmartTagPr {
@@ -1324,15 +1324,15 @@ export interface CTSmartTagRun {
   readonly PARENT?: CTCustomXmlRun | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange;
   smartTagPr?: CTSmartTagPr;
   content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
-  uri?: string;
   element: string;
+  uri?: string;
 }
 
 export interface CTSmartTagType {
   TYPE_NAME?: 'org_docx4j_wml.CTSmartTagType';
   readonly PARENT?: CTSettings;
-  namespaceuri?: string;
   name?: string;
+  namespaceuri?: string;
   url?: string;
 }
 
@@ -1345,9 +1345,9 @@ export interface CTString {
 export interface CTTabStop {
   TYPE_NAME?: 'org_docx4j_wml.CTTabStop';
   readonly PARENT?: Tabs;
-  val: STTabJc;
   leader?: STTabTlc;
   pos: number;
+  val: STTabJc;
 }
 
 export interface CTTargetScreenSz {
@@ -1382,10 +1382,10 @@ export interface CTTblLayoutType {
 export interface CTTblLook {
   TYPE_NAME?: 'org_docx4j_wml.CTTblLook';
   readonly PARENT?: CTTblPrBase | CTTblPrEx | CTTblPrExBase | TblPr;
-  firstRow?: Dep_org_docx4j_sharedtypes.STOnOff;
-  lastRow?: Dep_org_docx4j_sharedtypes.STOnOff;
   firstColumn?: Dep_org_docx4j_sharedtypes.STOnOff;
+  firstRow?: Dep_org_docx4j_sharedtypes.STOnOff;
   lastColumn?: Dep_org_docx4j_sharedtypes.STOnOff;
+  lastRow?: Dep_org_docx4j_sharedtypes.STOnOff;
   noHBand?: Dep_org_docx4j_sharedtypes.STOnOff;
   noVBand?: Dep_org_docx4j_sharedtypes.STOnOff;
   val?: string;
@@ -1400,16 +1400,16 @@ export interface CTTblOverlap {
 export interface CTTblPPr {
   TYPE_NAME?: 'org_docx4j_wml.CTTblPPr';
   readonly PARENT?: CTTblPrBase | TblPr;
+  bottomFromText?: number;
+  horzAnchor?: STHAnchor;
   leftFromText?: number;
   rightFromText?: number;
-  topFromText?: number;
-  bottomFromText?: number;
-  vertAnchor?: STVAnchor;
-  horzAnchor?: STHAnchor;
-  tblpXSpec?: STXAlign;
   tblpX?: number;
-  tblpYSpec?: STYAlign;
+  tblpXSpec?: STXAlign;
   tblpY?: number;
+  tblpYSpec?: STYAlign;
+  topFromText?: number;
+  vertAnchor?: STVAnchor;
 }
 
 export interface CTTblPrBase {
@@ -1536,11 +1536,11 @@ export interface CTTrackChangeRange extends CTTrackChange {
 export interface CTTrackChangesView {
   TYPE_NAME?: 'org_docx4j_wml.CTTrackChangesView';
   readonly PARENT?: CTSettings;
-  markup?: boolean;
   comments?: boolean;
-  insDel?: boolean;
   formatting?: boolean;
   inkAnnotations?: boolean;
+  insDel?: boolean;
+  markup?: boolean;
 }
 
 export interface CTTwipsMeasure {
@@ -1599,60 +1599,60 @@ export interface CTWebSettings {
 export interface CTWriteProtection {
   TYPE_NAME?: 'org_docx4j_wml.CTWriteProtection';
   readonly PARENT?: CTSettings;
-  recommended?: boolean;
-  cryptProviderType?: STCryptProv;
-  cryptAlgorithmClass?: STAlgClass;
-  cryptAlgorithmType?: STAlgType;
-  cryptAlgorithmSid?: number;
-  cryptSpinCount?: number;
-  cryptProvider?: string;
   algIdExt?: string;
   algIdExtSource?: string;
+  cryptAlgorithmClass?: STAlgClass;
+  cryptAlgorithmSid?: number;
+  cryptAlgorithmType?: STAlgType;
+  cryptProvider?: string;
+  cryptProviderType?: STCryptProv;
   cryptProviderTypeExt?: string;
   cryptProviderTypeExtSource?: string;
+  cryptSpinCount?: number;
   hash?: string;
+  recommended?: boolean;
   salt?: string;
 }
 
 export interface CTWritingStyle {
   TYPE_NAME?: 'org_docx4j_wml.CTWritingStyle';
   readonly PARENT?: CTSettings;
-  lang: string;
-  vendorID: number;
-  dllVersion: number;
-  nlCheck?: boolean;
-  checkStyle: boolean;
   appName: string;
+  checkStyle: boolean;
+  dllVersion: number;
+  lang: string;
+  nlCheck?: boolean;
+  vendorID: number;
 }
 
 export interface CTZoom {
   TYPE_NAME?: 'org_docx4j_wml.CTZoom';
   readonly PARENT?: CTSettings;
-  val?: STZoom;
   percent: number;
+  val?: STZoom;
 }
 
 export interface Color {
   TYPE_NAME?: 'org_docx4j_wml.Color';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | ParaRPr | RPr;
-  val: string;
   themeColor?: STThemeColor;
-  themeTint?: string;
   themeShade?: string;
+  themeTint?: string;
+  val: string;
 }
 
 export interface CommentRangeEnd {
   TYPE_NAME?: 'org_docx4j_wml.CommentRangeEnd';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Comments.Comment | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange | SdtContentBlock | Tbl | Tc | Tr;
-  id: number;
   displacedByCustomXml?: STDisplacedByCustomXml;
+  id: number;
 }
 
 export interface CommentRangeStart {
   TYPE_NAME?: 'org_docx4j_wml.CommentRangeStart';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Comments.Comment | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange | SdtContentBlock | Tbl | Tc | Tr;
-  id: number;
   displacedByCustomXml?: STDisplacedByCustomXml;
+  id: number;
 }
 
 export interface Comments {
@@ -1693,9 +1693,9 @@ export interface FldChar {
   fldData?: Text;
   ffData?: CTFFData;
   numberingChange?: CTTrackChangeNumbering;
+  dirty?: boolean;
   fldCharType: STFldCharType;
   fldLock?: boolean;
-  dirty?: boolean;
 }
 
 export interface FontFamily {
@@ -1726,12 +1726,12 @@ export interface FontRel extends CTRel {
 export interface FontSig {
   TYPE_NAME?: 'org_docx4j_wml.FontSig';
   readonly PARENT?: Fonts.Font;
+  csb0: string;
+  csb1: string;
   usb0: string;
   usb1: string;
   usb2: string;
   usb3: string;
-  csb0: string;
-  csb1: string;
 }
 
 export interface Fonts {
@@ -1809,8 +1809,8 @@ export interface Lvl {
   pPr?: PPr;
   rPr?: RPr;
   ilvl: number;
-  tplc?: string;
   tentative?: boolean;
+  tplc?: string;
 }
 
 export interface NumFmt {
@@ -1833,13 +1833,13 @@ export interface P {
   readonly PARENT?: Body | CTCustomXmlBlock | CTFtnEdn | CTTxbxContent | Comments.Comment | Ftr | Hdr | SdtContentBlock | Tc;
   pPr?: PPr;
   content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
-  rsidRPr?: string;
-  rsidR?: string;
-  rsidDel?: string;
-  rsidP?: string;
-  rsidRDefault?: string;
   paraId?: string;
   textId?: string;
+  rsidDel?: string;
+  rsidP?: string;
+  rsidR?: string;
+  rsidRDefault?: string;
+  rsidRPr?: string;
 }
 
 export interface PPr extends PPrBase {
@@ -1975,23 +1975,23 @@ export interface R {
   readonly PARENT?: CTCustomXmlRun | CTRubyContent | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange;
   rPr?: RPr;
   content?: (TypedNamedValue<Br> | TypedNamedValue<Text> | TypedNamedValue<DelText> | TypedNamedValue<R.NoBreakHyphen> | TypedNamedValue<R.SoftHyphen> | TypedNamedValue<R.DayShort> | TypedNamedValue<R.MonthShort> | TypedNamedValue<R.YearShort> | TypedNamedValue<R.DayLong> | TypedNamedValue<R.MonthLong> | TypedNamedValue<R.YearLong> | TypedNamedValue<R.AnnotationRef> | TypedNamedValue<R.FootnoteRef> | TypedNamedValue<R.EndnoteRef> | TypedNamedValue<R.Separator> | TypedNamedValue<R.ContinuationSeparator> | TypedNamedValue<R.Sym> | TypedNamedValue<R.PgNum> | TypedNamedValue<R.Cr> | TypedNamedValue<R.Tab> | TypedNamedValue<CTObject> | TypedNamedValue<Pict> | TypedNamedValue<FldChar> | TypedNamedValue<CTRuby> | TypedNamedValue<CTFtnEdnRef> | TypedNamedValue<R.CommentReference> | TypedNamedValue<Drawing> | TypedNamedValue<R.Ptab> | TypedNamedValue<R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent>)[];
-  rsidRPr?: string;
   rsidDel?: string;
   rsidR?: string;
+  rsidRPr?: string;
 }
 
 export interface RFonts {
   TYPE_NAME?: 'org_docx4j_wml.RFonts';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | ParaRPr | RPr;
-  hint?: STHint;
   ascii?: string;
-  hAnsi?: string;
-  eastAsia?: string;
-  cs?: string;
   asciiTheme?: STTheme;
-  hAnsiTheme?: STTheme;
-  eastAsiaTheme?: STTheme;
+  cs?: string;
   cstheme?: STTheme;
+  eastAsia?: string;
+  eastAsiaTheme?: STTheme;
+  hAnsi?: string;
+  hAnsiTheme?: STTheme;
+  hint?: STHint;
 }
 
 export interface RPr {
@@ -2060,10 +2060,10 @@ export interface RStyle {
 export interface RangePermissionStart extends CTPerm {
   TYPE_NAME?: 'org_docx4j_wml.RangePermissionStart';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Comments.Comment | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange | SdtContentBlock | Tbl | Tc | Tr;
-  edGrp?: string;
-  ed?: string;
   colFirst?: number;
   colLast?: number;
+  ed?: string;
+  edGrp?: string;
 }
 
 export interface RunDel extends CTTrackChange {
@@ -2137,9 +2137,9 @@ export interface SectPr {
   printerSettings?: CTRel;
   footnoteColumns?: CTDecimalNumber;
   sectPrChange?: CTSectPrChange;
-  rsidRPr?: string;
   rsidDel?: string;
   rsidR?: string;
+  rsidRPr?: string;
   rsidSect?: string;
 }
 
@@ -2166,9 +2166,9 @@ export interface SectPrBase {
   docGrid?: CTDocGrid;
   printerSettings?: CTRel;
   footnoteColumns?: CTDecimalNumber;
-  rsidRPr?: string;
   rsidDel?: string;
   rsidR?: string;
+  rsidRPr?: string;
   rsidSect?: string;
 }
 
@@ -2197,10 +2197,10 @@ export interface Style {
   trPr?: TrPr;
   tcPr?: TcPr;
   tblStylePr?: CTTblStylePr[];
-  type?: string;
-  styleId?: string;
-  _default?: boolean;
   customStyle?: boolean;
+  _default?: boolean;
+  styleId?: string;
+  type?: string;
 }
 
 export interface Styles {
@@ -2269,8 +2269,8 @@ export interface TblPr extends CTTblPrBase {
 export interface TblWidth {
   TYPE_NAME?: 'org_docx4j_wml.TblWidth';
   readonly PARENT?: CTTblCellMar | CTTblPrBase | CTTblPrEx | CTTblPrExBase | CTTrPrBase | TblPr | TcMar | TcPr | TcPrInner | TrPr;
-  w?: number;
   type?: string;
+  w?: number;
 }
 
 export interface Tc {
@@ -2335,12 +2335,12 @@ export interface Tr {
   tblPrEx?: CTTblPrEx;
   trPr?: TrPr;
   content?: (TypedNamedValue<Tc> | TypedNamedValue<CTCustomXmlCell> | TypedNamedValue<CTSdtCell> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath>)[];
-  rsidRPr?: string;
-  rsidR?: string;
-  rsidDel?: string;
-  rsidTr?: string;
   paraId?: string;
   textId?: string;
+  rsidDel?: string;
+  rsidR?: string;
+  rsidRPr?: string;
+  rsidTr?: string;
 }
 
 export interface TrPr extends CTTrPrBase {
@@ -2354,11 +2354,11 @@ export interface TrPr extends CTTrPrBase {
 export interface U {
   TYPE_NAME?: 'org_docx4j_wml.U';
   readonly PARENT?: CTParaRPrOriginal | CTRPrChange.RPr | ParaRPr | RPr;
-  val?: UnderlineEnumeration;
   color?: string;
   themeColor?: STThemeColor;
-  themeTint?: string;
   themeShade?: string;
+  themeTint?: string;
+  val?: UnderlineEnumeration;
 }
 
 export type HdrFtrRef = 'even' | 'default' | 'first';
@@ -2515,6 +2515,18 @@ export type STZoom = 'none' | 'fullPage' | 'bestFit' | 'textFit';
 
 export type UnderlineEnumeration = 'single' | 'words' | 'double' | 'thick' | 'dotted' | 'dottedHeavy' | 'dash' | 'dashedHeavy' | 'dashLong' | 'dashLongHeavy' | 'dotDash' | 'dashDotHeavy' | 'dotDotDash' | 'dashDotDotHeavy' | 'wave' | 'wavyHeavy' | 'wavyDouble' | 'none';
 
+/** The classes customized to implement or extend the Java type org.docx4j.wml.CTCustomXmlElement (inheritance plugin). */
+export type CTCustomXmlElement = CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun;
+
+/** The classes customized to implement or extend the Java type org.docx4j.wml.ContentAccessor (inheritance plugin). */
+export type ContentAccessor = Body | CTCustomXmlRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Document | Ftr | Hdr | P | P.Hyperlink | R | Tbl | Tc | Tr;
+
+/** The classes customized to implement or extend the Java type org.docx4j.wml.SdtContent (inheritance plugin). */
+export type SdtContent = CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | SdtContentBlock;
+
+/** The classes customized to implement or extend the Java type org.docx4j.wml.SdtElement (inheritance plugin). */
+export type SdtElement = CTSdtCell | CTSdtRow | SdtBlock | SdtRun;
+
 export type BodyElement = TypedNamedValue<Body>;
 
 export type BrElement = TypedNamedValue<Br>;
@@ -2571,7 +2583,7 @@ export type RStyleElement = TypedNamedValue<RStyle>;
 
 export type RecipientsElement = TypedNamedValue<CTRecipients>;
 
-export type SdtElement = TypedNamedValue<SdtBlock>;
+export type SdtElement2 = TypedNamedValue<SdtBlock>;
 
 export type SettingsElement = TypedNamedValue<CTSettings>;
 
@@ -2590,7 +2602,7 @@ export type UElement = TypedNamedValue<U>;
 export type WebSettingsElement = TypedNamedValue<CTWebSettings>;
 
 /** Any global element of this mapping, i.e. what an unmarshaller returns. */
-export type RootElement = BodyElement | BrElement | ColorElement | CommentRangeEndElement | CommentRangeStartElement | CommentsElement | DelElement | DelTextElement | DocDefaultsElement | DocumentElement | EndnotesElement | FontsElement | FooterReferenceElement | FootnotesElement | FtrElement | GlossaryDocumentElement | HdrElement | HeaderReferenceElement | HighlightElement | IdElement | InsElement | NumberingElement | PElement | ProofErrElement | RElement | RFontsElement | RStyleElement | RecipientsElement | SdtElement | SettingsElement | StyleElement | StylesElement | TagElement | TrElement | TxbxContentElement | UElement | WebSettingsElement;
+export type RootElement = BodyElement | BrElement | ColorElement | CommentRangeEndElement | CommentRangeStartElement | CommentsElement | DelElement | DelTextElement | DocDefaultsElement | DocumentElement | EndnotesElement | FontsElement | FooterReferenceElement | FootnotesElement | FtrElement | GlossaryDocumentElement | HdrElement | HeaderReferenceElement | HighlightElement | IdElement | InsElement | NumberingElement | PElement | ProofErrElement | RElement | RFontsElement | RStyleElement | RecipientsElement | SdtElement2 | SettingsElement | StyleElement | StylesElement | TagElement | TrElement | TxbxContentElement | UElement | WebSettingsElement;
 
 export namespace CTCustomXmlPr {
   export interface Placeholder {
@@ -2696,10 +2708,10 @@ export namespace CTFramesetSplitbar {
   export interface Color {
     TYPE_NAME?: 'org_docx4j_wml.CTFramesetSplitbar.Color';
     readonly PARENT?: CTFramesetSplitbar;
-    val: string;
     themeColor?: STThemeColor;
-    themeTint?: string;
     themeShade?: string;
+    themeTint?: string;
+    val: string;
   }
 }
 
@@ -3163,8 +3175,8 @@ export namespace Lvl {
     TYPE_NAME?: 'org_docx4j_wml.Lvl.Legacy';
     readonly PARENT?: Lvl;
     legacy?: boolean;
-    legacySpace?: number;
     legacyIndent?: number;
+    legacySpace?: number;
   }
 
   export interface LvlPicBulletId {
@@ -3182,8 +3194,8 @@ export namespace Lvl {
   export interface LvlText {
     TYPE_NAME?: 'org_docx4j_wml.Lvl.LvlText';
     readonly PARENT?: Lvl;
-    val?: string;
     _null?: boolean;
+    val?: string;
   }
 
   export interface PStyle {
@@ -3311,12 +3323,12 @@ export namespace P {
     TYPE_NAME?: 'org_docx4j_wml.P.Hyperlink';
     readonly PARENT?: CTCustomXmlRun | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink;
     content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
-    tgtFrame?: string;
-    tooltip?: string;
+    id?: string;
+    anchor?: string;
     docLocation?: string;
     history?: boolean;
-    anchor?: string;
-    id?: string;
+    tgtFrame?: string;
+    tooltip?: string;
   }
 
   export type BdoElement = TypedNamedValue<P.Bdo>;
@@ -3544,18 +3556,18 @@ export namespace PPrBase {
   export interface Ind {
     TYPE_NAME?: 'org_docx4j_wml.PPrBase.Ind';
     readonly PARENT?: PPr | PPrBase;
+    end?: number;
+    endChars?: number;
+    firstLine?: number;
+    firstLineChars?: number;
+    hanging?: number;
+    hangingChars?: number;
     left?: number;
     leftChars?: number;
     right?: number;
     rightChars?: number;
     start?: number;
     startChars?: number;
-    end?: number;
-    endChars?: number;
-    hanging?: number;
-    hangingChars?: number;
-    firstLine?: number;
-    firstLineChars?: number;
   }
 
   export interface NumPr {
@@ -3593,12 +3605,12 @@ export namespace PPrBase {
   export interface Spacing {
     TYPE_NAME?: 'org_docx4j_wml.PPrBase.Spacing';
     readonly PARENT?: PPr | PPrBase;
-    before?: number;
-    beforeLines?: number;
-    beforeAutospacing?: boolean;
     after?: number;
-    afterLines?: number;
     afterAutospacing?: boolean;
+    afterLines?: number;
+    before?: number;
+    beforeAutospacing?: boolean;
+    beforeLines?: number;
     line?: number;
     lineRule?: STLineSpacingRule;
   }
@@ -3695,8 +3707,8 @@ export namespace R {
     TYPE_NAME?: 'org_docx4j_wml.R.Ptab';
     readonly PARENT?: CTMathRunTrackChange | Dep_org_docx4j_math.CTR | R;
     alignment: STPTabAlignment;
-    relativeTo: STPTabRelativeTo;
     leader: STPTabLeader;
+    relativeTo: STPTabRelativeTo;
   }
 
   export interface Separator {
@@ -3712,8 +3724,8 @@ export namespace R {
   export interface Sym {
     TYPE_NAME?: 'org_docx4j_wml.R.Sym';
     readonly PARENT?: CTMathRunTrackChange | Dep_org_docx4j_math.CTR | R;
-    font?: string;
     _char?: string;
+    font?: string;
   }
 
   export interface Tab {
@@ -3876,30 +3888,30 @@ export namespace SectPr {
     left?: CTBorder;
     bottom?: CTBorder;
     right?: CTBorder;
-    zOrder?: STPageBorderZOrder;
     display?: STPageBorderDisplay;
     offsetFrom?: STPageBorderOffset;
+    zOrder?: STPageBorderZOrder;
   }
 
   export interface PgMar {
     TYPE_NAME?: 'org_docx4j_wml.SectPr.PgMar';
     readonly PARENT?: SectPr | SectPrBase;
-    top: number;
-    right: number;
     bottom: number;
-    left: number;
-    header: number;
     footer: number;
     gutter: number;
+    header: number;
+    left: number;
+    right: number;
+    top: number;
   }
 
   export interface PgSz {
     TYPE_NAME?: 'org_docx4j_wml.SectPr.PgSz';
     readonly PARENT?: SectPr | SectPrBase;
-    w?: number;
+    code?: number;
     h?: number;
     orient?: STPageOrientation;
-    code?: number;
+    w?: number;
   }
 
   export interface Type {
@@ -3952,24 +3964,24 @@ export namespace Styles {
     TYPE_NAME?: 'org_docx4j_wml.Styles.LatentStyles';
     readonly PARENT?: Styles;
     lsdException?: Styles.LatentStyles.LsdException[];
-    defLockedState?: boolean;
-    defUIPriority?: number;
-    defSemiHidden?: boolean;
-    defUnhideWhenUsed?: boolean;
-    defQFormat?: boolean;
     count?: number;
+    defLockedState?: boolean;
+    defQFormat?: boolean;
+    defSemiHidden?: boolean;
+    defUIPriority?: number;
+    defUnhideWhenUsed?: boolean;
   }
 
   export namespace LatentStyles {
     export interface LsdException {
       TYPE_NAME?: 'org_docx4j_wml.Styles.LatentStyles.LsdException';
       readonly PARENT?: Styles.LatentStyles;
-      name: string;
       locked?: boolean;
-      uiPriority?: number;
-      semiHidden?: boolean;
-      unhideWhenUsed?: boolean;
+      name: string;
       qFormat?: boolean;
+      semiHidden?: boolean;
+      uiPriority?: number;
+      unhideWhenUsed?: boolean;
     }
   }
 }

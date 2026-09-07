@@ -7,6 +7,14 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main = {
       localName: 'CTClientRevision',
       typeName: 'CT_ClientRevision',
       propertyInfos: [{
+          name: 'dt',
+          required: true,
+          typeInfo: 'DateTime',
+          attributeName: {
+            localPart: 'dt'
+          },
+          type: 'attribute'
+        }, {
           name: 'id',
           required: true,
           attributeName: {
@@ -27,14 +35,6 @@ export const org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main = {
           defaultValue: 0,
           attributeName: {
             localPart: 'vWet'
-          },
-          type: 'attribute'
-        }, {
-          name: 'dt',
-          required: true,
-          typeInfo: 'DateTime',
-          attributeName: {
-            localPart: 'dt'
           },
           type: 'attribute'
         }]

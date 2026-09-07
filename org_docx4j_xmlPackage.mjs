@@ -24,16 +24,16 @@ export const org_docx4j_xmlPackage = {
           required: true,
           typeInfo: 'Base64Binary'
         }, {
-          name: 'name',
-          required: true,
+          name: 'compression',
+          values: ['store', 'deflateSuperFast', 'deflateFast', 'deflateNormal', 'deflateMaximum'],
+          defaultValue: 'deflateSuperFast',
           type: 'attribute'
         }, {
           name: 'contentType',
           type: 'attribute'
         }, {
-          name: 'compression',
-          values: ['store', 'deflateSuperFast', 'deflateFast', 'deflateNormal', 'deflateMaximum'],
-          defaultValue: 'deflateSuperFast',
+          name: 'name',
+          required: true,
           type: 'attribute'
         }, {
           name: 'padding',
@@ -55,12 +55,12 @@ export const org_docx4j_xmlPackage = {
           defaultValue: 'UTF-8',
           type: 'attribute'
         }, {
-          name: 'originalXmlVersion',
-          defaultValue: '1.0',
-          type: 'attribute'
-        }, {
           name: 'originalXmlStandalone',
           defaultValue: 'yes',
+          type: 'attribute'
+        }, {
+          name: 'originalXmlVersion',
+          defaultValue: '1.0',
           type: 'attribute'
         }]
     }],

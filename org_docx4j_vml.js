@@ -127,10 +127,33 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'startAngle',
-            typeInfo: 'Decimal',
+            name: 'alt',
             attributeName: {
-              localPart: 'startAngle'
+              localPart: 'alt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'chromakey',
+            attributeName: {
+              localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
             },
             type: 'attribute'
           }, {
@@ -141,28 +164,28 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'opacity',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'opacity'
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
-            name: 'stroked',
+            name: 'filled',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'stroked'
+              localPart: 'filled'
             },
             type: 'attribute'
           }, {
-            name: 'strokecolor',
+            name: 'href',
             attributeName: {
-              localPart: 'strokecolor'
+              localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'strokeweight',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'strokeweight'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
@@ -173,204 +196,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'chromakey',
+            name: 'opacity',
             attributeName: {
-              localPart: 'chromakey'
-            },
-            type: 'attribute'
-          }, {
-            name: 'filled',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'filled'
-            },
-            type: 'attribute'
-          }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
-            },
-            type: 'attribute'
-          }, {
-            name: 'clazz',
-            attributeName: {
-              localPart: 'class'
-            },
-            type: 'attribute'
-          }, {
-            name: 'title',
-            attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
@@ -381,9 +209,29 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'startAngle',
+            typeInfo: 'Decimal',
             attributeName: {
-              localPart: 'id'
+              localPart: 'startAngle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -391,6 +239,158 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'style'
             },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -400,20 +400,10 @@ var org_docx4j_vml_Module_Factory = function () {
             name: 'fill',
             typeInfo: '.CTFill'
           }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'targetscreensize',
-            values: ['544,376', '640,480', '720,512', '800,600', '1024,768', '1152,862'],
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
+            },
             type: 'attribute'
           }, {
             name: 'filled',
@@ -423,16 +413,26 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
             name: 'vmlId',
             attributeName: {
               localPart: 'id'
             },
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'targetscreensize',
+            values: ['544,376', '640,480', '720,512', '800,600', '1024,768', '1152,862'],
             type: 'attribute'
           }]
       }, {
@@ -558,9 +558,21 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'from',
+            name: 'alt',
             attributeName: {
-              localPart: 'from'
+              localPart: 'alt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'chromakey',
+            attributeName: {
+              localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
             },
             type: 'attribute'
           }, {
@@ -576,128 +588,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'to',
+            name: 'coordorigin',
             attributeName: {
-              localPart: 'to'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
-            },
-            type: 'attribute'
-          }, {
-            name: 'clazz',
-            attributeName: {
-              localPart: 'class'
-            },
-            type: 'attribute'
-          }, {
-            name: 'title',
-            attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
+              localPart: 'coordorigin'
             },
             type: 'attribute'
           }, {
@@ -707,72 +600,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'coordorigin',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
-            },
-            type: 'attribute'
-          }, {
-            name: 'print',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'print'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'style',
-            attributeName: {
-              localPart: 'style'
-            },
-            type: 'attribute'
-          }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
-            name: 'chromakey',
-            attributeName: {
-              localPart: 'chromakey'
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -783,26 +613,122 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
+            name: 'from',
             attributeName: {
-              localPart: 'fillcolor'
+              localPart: 'from'
             },
             type: 'attribute'
           }, {
-            name: 'spt',
-            typeInfo: 'Float',
+            name: 'href',
+            attributeName: {
+              localPart: 'href'
+            },
             type: 'attribute'
           }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'insetpen'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'print',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'print'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
+            },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'to',
+            attributeName: {
+              localPart: 'to'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
             name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
             typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
@@ -810,19 +736,11 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
+            name: 'clip',
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
@@ -830,7 +748,89 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
-            name: 'clip',
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
@@ -855,10 +855,73 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             typeInfo: 'org_docx4j_vml_officedrawing.CTFill'
           }, {
-            name: 'type',
-            typeInfo: '.STFillType',
+            name: 'alignshape',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'type'
+              localPart: 'alignshape'
+            },
+            type: 'attribute'
+          }, {
+            name: 'angle',
+            typeInfo: 'Decimal',
+            attributeName: {
+              localPart: 'angle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'aspect',
+            typeInfo: '.STImageAspect',
+            attributeName: {
+              localPart: 'aspect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'color',
+            attributeName: {
+              localPart: 'color'
+            },
+            type: 'attribute'
+          }, {
+            name: 'color2',
+            attributeName: {
+              localPart: 'color2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'colors',
+            attributeName: {
+              localPart: 'colors'
+            },
+            type: 'attribute'
+          }, {
+            name: 'focus',
+            attributeName: {
+              localPart: 'focus'
+            },
+            type: 'attribute'
+          }, {
+            name: 'focusposition',
+            attributeName: {
+              localPart: 'focusposition'
+            },
+            type: 'attribute'
+          }, {
+            name: 'focussize',
+            attributeName: {
+              localPart: 'focussize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'method',
+            typeInfo: '.STFillMethod',
+            attributeName: {
+              localPart: 'method'
             },
             type: 'attribute'
           }, {
@@ -869,39 +932,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'color',
-            attributeName: {
-              localPart: 'color'
-            },
-            type: 'attribute'
-          }, {
             name: 'opacity',
             attributeName: {
               localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'color2',
-            attributeName: {
-              localPart: 'color2'
-            },
-            type: 'attribute'
-          }, {
-            name: 'src',
-            attributeName: {
-              localPart: 'src'
-            },
-            type: 'attribute'
-          }, {
-            name: 'href',
-            type: 'attribute'
-          }, {
-            name: 'althref',
-            type: 'attribute'
-          }, {
-            name: 'size',
-            attributeName: {
-              localPart: 'size'
             },
             type: 'attribute'
           }, {
@@ -915,68 +948,6 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'position'
             },
-            type: 'attribute'
-          }, {
-            name: 'aspect',
-            typeInfo: '.STImageAspect',
-            attributeName: {
-              localPart: 'aspect'
-            },
-            type: 'attribute'
-          }, {
-            name: 'colors',
-            attributeName: {
-              localPart: 'colors'
-            },
-            type: 'attribute'
-          }, {
-            name: 'angle',
-            typeInfo: 'Decimal',
-            attributeName: {
-              localPart: 'angle'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alignshape',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'alignshape'
-            },
-            type: 'attribute'
-          }, {
-            name: 'focus',
-            attributeName: {
-              localPart: 'focus'
-            },
-            type: 'attribute'
-          }, {
-            name: 'focussize',
-            attributeName: {
-              localPart: 'focussize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'focusposition',
-            attributeName: {
-              localPart: 'focusposition'
-            },
-            type: 'attribute'
-          }, {
-            name: 'method',
-            typeInfo: '.STFillMethod',
-            attributeName: {
-              localPart: 'method'
-            },
-            type: 'attribute'
-          }, {
-            name: 'detectmouseclick',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'title',
-            type: 'attribute'
-          }, {
-            name: 'opacity2',
             type: 'attribute'
           }, {
             name: 'recolor',
@@ -993,6 +964,25 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'size',
+            attributeName: {
+              localPart: 'size'
+            },
+            type: 'attribute'
+          }, {
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STFillType',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             attributeName: {
               localPart: 'id',
@@ -1000,13 +990,23 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'althref',
+            type: 'attribute'
+          }, {
+            name: 'detectmouseclick',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'href',
+            type: 'attribute'
+          }, {
+            name: 'opacity2',
+            type: 'attribute'
+          }, {
             name: 'relid',
             type: 'attribute'
           }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
+            name: 'title',
             type: 'attribute'
           }]
       }, {
@@ -1180,130 +1180,9 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'editas',
-            typeInfo: '.STEditAs',
+            name: 'alt',
             attributeName: {
-              localPart: 'editas'
-            },
-            type: 'attribute'
-          }, {
-            name: 'tableproperties',
-            type: 'attribute'
-          }, {
-            name: 'tablelimits',
-            type: 'attribute'
-          }, {
-            name: 'filled',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'filled'
-            },
-            type: 'attribute'
-          }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
@@ -1313,15 +1192,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'coordorigin',
             attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
+              localPart: 'coordorigin'
             },
             type: 'attribute'
           }, {
@@ -1331,15 +1204,35 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'coordorigin',
+            name: 'editas',
+            typeInfo: '.STEditAs',
             attributeName: {
-              localPart: 'coordorigin'
+              localPart: 'editas'
             },
             type: 'attribute'
           }, {
-            name: 'wrapcoords',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'fillcolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'filled',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'filled'
+            },
+            type: 'attribute'
+          }, {
+            name: 'href',
+            attributeName: {
+              localPart: 'href'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
@@ -1350,40 +1243,129 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
             name: 'style',
             attributeName: {
               localPart: 'style'
             },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'tablelimits',
+            type: 'attribute'
+          }, {
+            name: 'tableproperties',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
         localName: 'CTH',
         typeName: 'CT_H',
         propertyInfos: [{
-            name: 'position',
-            attributeName: {
-              localPart: 'position'
-            },
-            type: 'attribute'
-          }, {
-            name: 'polar',
-            attributeName: {
-              localPart: 'polar'
-            },
-            type: 'attribute'
-          }, {
-            name: 'map',
-            attributeName: {
-              localPart: 'map'
-            },
-            type: 'attribute'
-          }, {
             name: 'invx',
             typeInfo: '.STTrueFalse',
             attributeName: {
@@ -1395,6 +1377,30 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: '.STTrueFalse',
             attributeName: {
               localPart: 'invy'
+            },
+            type: 'attribute'
+          }, {
+            name: 'map',
+            attributeName: {
+              localPart: 'map'
+            },
+            type: 'attribute'
+          }, {
+            name: 'polar',
+            attributeName: {
+              localPart: 'polar'
+            },
+            type: 'attribute'
+          }, {
+            name: 'position',
+            attributeName: {
+              localPart: 'position'
+            },
+            type: 'attribute'
+          }, {
+            name: 'radiusrange',
+            attributeName: {
+              localPart: 'radiusrange'
             },
             type: 'attribute'
           }, {
@@ -1414,12 +1420,6 @@ var org_docx4j_vml_Module_Factory = function () {
             name: 'yrange',
             attributeName: {
               localPart: 'yrange'
-            },
-            type: 'attribute'
-          }, {
-            name: 'radiusrange',
-            attributeName: {
-              localPart: 'radiusrange'
             },
             type: 'attribute'
           }]
@@ -1555,41 +1555,76 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'opacity',
+            name: 'alt',
             attributeName: {
-              localPart: 'opacity'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
-            name: 'stroked',
+            name: 'bilevel',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'stroked'
+              localPart: 'bilevel'
             },
             type: 'attribute'
           }, {
-            name: 'strokecolor',
+            name: 'blacklevel',
             attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
+              localPart: 'blacklevel'
             },
             type: 'attribute'
           }, {
             name: 'chromakey',
             attributeName: {
               localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropbottom',
+            attributeName: {
+              localPart: 'cropbottom'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropleft',
+            attributeName: {
+              localPart: 'cropleft'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropright',
+            attributeName: {
+              localPart: 'cropright'
+            },
+            type: 'attribute'
+          }, {
+            name: 'croptop',
+            attributeName: {
+              localPart: 'croptop'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -1600,252 +1635,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
-            },
-            type: 'attribute'
-          }, {
-            name: 'clazz',
-            attributeName: {
-              localPart: 'class'
-            },
-            type: 'attribute'
-          }, {
-            name: 'title',
-            attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
-            },
-            type: 'attribute'
-          }, {
-            name: 'print',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'print'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'style',
-            attributeName: {
-              localPart: 'style'
-            },
-            type: 'attribute'
-          }, {
-            name: 'src',
-            attributeName: {
-              localPart: 'src'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cropleft',
-            attributeName: {
-              localPart: 'cropleft'
-            },
-            type: 'attribute'
-          }, {
-            name: 'croptop',
-            attributeName: {
-              localPart: 'croptop'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cropright',
-            attributeName: {
-              localPart: 'cropright'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cropbottom',
-            attributeName: {
-              localPart: 'cropbottom'
-            },
-            type: 'attribute'
-          }, {
             name: 'gain',
             attributeName: {
               localPart: 'gain'
-            },
-            type: 'attribute'
-          }, {
-            name: 'blacklevel',
-            attributeName: {
-              localPart: 'blacklevel'
             },
             type: 'attribute'
           }, {
@@ -1862,20 +1654,296 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'bilevel',
+            name: 'href',
+            attributeName: {
+              localPart: 'href'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'insetpen',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'bilevel'
+              localPart: 'insetpen'
             },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'print',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'print'
+            },
+            type: 'attribute'
+          }, {
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
+            },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
         localName: 'CTImageData',
         typeName: 'CT_ImageData',
         propertyInfos: [{
+            name: 'bilevel',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'bilevel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'blacklevel',
+            attributeName: {
+              localPart: 'blacklevel'
+            },
+            type: 'attribute'
+          }, {
+            name: 'chromakey',
+            attributeName: {
+              localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropbottom',
+            attributeName: {
+              localPart: 'cropbottom'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropleft',
+            attributeName: {
+              localPart: 'cropleft'
+            },
+            type: 'attribute'
+          }, {
+            name: 'cropright',
+            attributeName: {
+              localPart: 'cropright'
+            },
+            type: 'attribute'
+          }, {
+            name: 'croptop',
+            attributeName: {
+              localPart: 'croptop'
+            },
+            type: 'attribute'
+          }, {
             name: 'embosscolor',
             attributeName: {
               localPart: 'embosscolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'gain',
+            attributeName: {
+              localPart: 'gain'
+            },
+            type: 'attribute'
+          }, {
+            name: 'gamma',
+            attributeName: {
+              localPart: 'gamma'
+            },
+            type: 'attribute'
+          }, {
+            name: 'grayscale',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'grayscale'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
@@ -1885,29 +1953,17 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'ohref',
-            attributeName: 'href',
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
+            },
             type: 'attribute'
           }, {
-            name: 'althref',
-            type: 'attribute'
-          }, {
-            name: 'title',
-            type: 'attribute'
-          }, {
-            name: 'oleid',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'detectmouseclick',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'movie',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'relid',
+            name: 'href',
+            attributeName: {
+              localPart: 'href',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+            },
             type: 'attribute'
           }, {
             name: 'id',
@@ -1924,91 +1980,59 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href',
-              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-            },
+            name: 'althref',
             type: 'attribute'
           }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
+            name: 'detectmouseclick',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
-            name: 'src',
-            attributeName: {
-              localPart: 'src'
-            },
+            name: 'ohref',
+            attributeName: 'href',
             type: 'attribute'
           }, {
-            name: 'cropleft',
-            attributeName: {
-              localPart: 'cropleft'
-            },
+            name: 'movie',
+            typeInfo: 'Float',
             type: 'attribute'
           }, {
-            name: 'croptop',
-            attributeName: {
-              localPart: 'croptop'
-            },
+            name: 'oleid',
+            typeInfo: 'Float',
             type: 'attribute'
           }, {
-            name: 'cropright',
-            attributeName: {
-              localPart: 'cropright'
-            },
+            name: 'relid',
             type: 'attribute'
           }, {
-            name: 'cropbottom',
-            attributeName: {
-              localPart: 'cropbottom'
-            },
-            type: 'attribute'
-          }, {
-            name: 'gain',
-            attributeName: {
-              localPart: 'gain'
-            },
-            type: 'attribute'
-          }, {
-            name: 'blacklevel',
-            attributeName: {
-              localPart: 'blacklevel'
-            },
-            type: 'attribute'
-          }, {
-            name: 'gamma',
-            attributeName: {
-              localPart: 'gamma'
-            },
-            type: 'attribute'
-          }, {
-            name: 'grayscale',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'grayscale'
-            },
-            type: 'attribute'
-          }, {
-            name: 'bilevel',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'bilevel'
-            },
-            type: 'attribute'
-          }, {
-            name: 'chromakey',
-            attributeName: {
-              localPart: 'chromakey'
-            },
+            name: 'title',
             type: 'attribute'
           }]
       }, {
         localName: 'CTLine',
         typeName: 'CT_Line',
         propertyInfos: [{
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
+            },
+            type: 'attribute'
+          }, {
+            name: 'from',
+            attributeName: {
+              localPart: 'from'
+            },
+            type: 'attribute'
+          }, {
+            name: 'to',
+            attributeName: {
+              localPart: 'to'
+            },
+            type: 'attribute'
+          }, {
             name: 'egShapeElements',
             minOccurs: 0,
             collection: true,
@@ -2128,116 +2152,15 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'from',
+            name: 'alt',
             attributeName: {
-              localPart: 'from'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
-            name: 'to',
+            name: 'chromakey',
             attributeName: {
-              localPart: 'to'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
-            attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
+              localPart: 'chromakey'
             },
             type: 'attribute'
           }, {
@@ -2247,15 +2170,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'coordorigin',
             attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
+              localPart: 'coordorigin'
             },
             type: 'attribute'
           }, {
@@ -2265,72 +2182,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'coordorigin',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
-            },
-            type: 'attribute'
-          }, {
-            name: 'print',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'print'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'style',
-            attributeName: {
-              localPart: 'style'
-            },
-            type: 'attribute'
-          }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
-            name: 'chromakey',
-            attributeName: {
-              localPart: 'chromakey'
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -2341,26 +2195,98 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
+            name: 'href',
             attributeName: {
-              localPart: 'fillcolor'
+              localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'spt',
-            typeInfo: 'Float',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'insetpen'
+            },
             type: 'attribute'
           }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'print',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'print'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
             name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
             typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
@@ -2368,19 +2294,11 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
             type: 'attribute'
           }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
+            name: 'clip',
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
@@ -2388,7 +2306,89 @@ var org_docx4j_vml_Module_Factory = function () {
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
-            name: 'clip',
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
             typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
@@ -2515,41 +2515,39 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'opacity',
+            name: 'alt',
             attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
             name: 'chromakey',
             attributeName: {
               localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -2560,191 +2558,28 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'href',
             attributeName: {
               localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'target',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'target'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'clazz',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'class'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'opacity',
             attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
@@ -2755,9 +2590,22 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'id'
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -2766,26 +2614,167 @@ var org_docx4j_vml_Module_Factory = function () {
               localPart: 'style'
             },
             type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
           }]
       }, {
         localName: 'CTPath',
         typeName: 'CT_Path',
         propertyInfos: [{
-            name: 'v',
+            name: 'arrowok',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'v'
-            },
-            type: 'attribute'
-          }, {
-            name: 'limo',
-            attributeName: {
-              localPart: 'limo'
-            },
-            type: 'attribute'
-          }, {
-            name: 'textboxrect',
-            attributeName: {
-              localPart: 'textboxrect'
+              localPart: 'arrowok'
             },
             type: 'attribute'
           }, {
@@ -2796,27 +2785,6 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'strokeok',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'strokeok'
-            },
-            type: 'attribute'
-          }, {
-            name: 'shadowok',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'shadowok'
-            },
-            type: 'attribute'
-          }, {
-            name: 'arrowok',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'arrowok'
-            },
-            type: 'attribute'
-          }, {
             name: 'gradientshapeok',
             typeInfo: '.STTrueFalse',
             attributeName: {
@@ -2824,10 +2792,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'textpathok',
-            typeInfo: '.STTrueFalse',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'textpathok'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
@@ -2838,24 +2805,57 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'connecttype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectType',
+            name: 'limo',
+            attributeName: {
+              localPart: 'limo'
+            },
             type: 'attribute'
           }, {
-            name: 'connectlocs',
+            name: 'shadowok',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'shadowok'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeok',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'strokeok'
+            },
+            type: 'attribute'
+          }, {
+            name: 'textboxrect',
+            attributeName: {
+              localPart: 'textboxrect'
+            },
+            type: 'attribute'
+          }, {
+            name: 'textpathok',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'textpathok'
+            },
+            type: 'attribute'
+          }, {
+            name: 'v',
+            attributeName: {
+              localPart: 'v'
+            },
             type: 'attribute'
           }, {
             name: 'connectangles',
             type: 'attribute'
           }, {
-            name: 'extrusionok',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            name: 'connectlocs',
             type: 'attribute'
           }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
+            name: 'connecttype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectType',
+            type: 'attribute'
+          }, {
+            name: 'extrusionok',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -2987,47 +2987,39 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'points',
+            name: 'alt',
             attributeName: {
-              localPart: 'points'
-            },
-            type: 'attribute'
-          }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
             name: 'chromakey',
             attributeName: {
               localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -3038,191 +3030,34 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'href',
             attributeName: {
               localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'target',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'target'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'clazz',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'class'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'opacity',
             attributeName: {
-              localPart: 'title'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
-            name: 'alt',
+            name: 'points',
             attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'points'
             },
             type: 'attribute'
           }, {
@@ -3233,9 +3068,22 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'id'
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -3243,6 +3091,158 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'style'
             },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -3368,41 +3368,39 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'opacity',
+            name: 'alt',
             attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
+              localPart: 'alt'
             },
             type: 'attribute'
           }, {
             name: 'chromakey',
             attributeName: {
               localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -3413,191 +3411,28 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'href',
             attributeName: {
               localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'target',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'target'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'clazz',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'class'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'opacity',
             attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
@@ -3608,9 +3443,22 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'id'
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -3618,6 +3466,158 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'style'
             },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -3743,47 +3743,45 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
+            name: 'alt',
+            attributeName: {
+              localPart: 'alt'
+            },
+            type: 'attribute'
+          }, {
             name: 'arcsize',
             attributeName: {
               localPart: 'arcsize'
             },
             type: 'attribute'
           }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
             name: 'chromakey',
             attributeName: {
               localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'fillcolor',
+            attributeName: {
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -3794,191 +3792,28 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'href',
             attributeName: {
               localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'target',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'target'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'clazz',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'class'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'opacity',
             attributeName: {
-              localPart: 'title'
-            },
-            type: 'attribute'
-          }, {
-            name: 'alt',
-            attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
@@ -3989,9 +3824,22 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'id'
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -4000,22 +3848,184 @@ var org_docx4j_vml_Module_Factory = function () {
               localPart: 'style'
             },
             type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
           }]
       }, {
         localName: 'CTShadow',
         typeName: 'CT_Shadow',
         propertyInfos: [{
-            name: 'on',
-            typeInfo: '.STTrueFalse',
+            name: 'color',
             attributeName: {
-              localPart: 'on'
+              localPart: 'color'
             },
             type: 'attribute'
           }, {
-            name: 'type',
-            typeInfo: '.STShadowType',
+            name: 'color2',
             attributeName: {
-              localPart: 'type'
+              localPart: 'color2'
+            },
+            type: 'attribute'
+          }, {
+            name: 'vmlId',
+            attributeName: {
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'matrix',
+            attributeName: {
+              localPart: 'matrix'
             },
             type: 'attribute'
           }, {
@@ -4026,27 +4036,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'color',
-            attributeName: {
-              localPart: 'color'
-            },
-            type: 'attribute'
-          }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
             name: 'offset',
             attributeName: {
               localPart: 'offset'
-            },
-            type: 'attribute'
-          }, {
-            name: 'color2',
-            attributeName: {
-              localPart: 'color2'
             },
             type: 'attribute'
           }, {
@@ -4056,21 +4048,29 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
             name: 'origin',
             attributeName: {
               localPart: 'origin'
             },
             type: 'attribute'
           }, {
-            name: 'matrix',
+            name: 'type',
+            typeInfo: '.STShadowType',
             attributeName: {
-              localPart: 'matrix'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
+              localPart: 'type'
             },
             type: 'attribute'
           }]
@@ -4209,8 +4209,40 @@ var org_docx4j_vml_Module_Factory = function () {
               }],
             type: 'elementRefs'
           }, {
-            name: 'gfxdata',
-            typeInfo: 'Base64Binary',
+            name: 'adj',
+            attributeName: {
+              localPart: 'adj'
+            },
+            type: 'attribute'
+          }, {
+            name: 'alt',
+            attributeName: {
+              localPart: 'alt'
+            },
+            type: 'attribute'
+          }, {
+            name: 'chromakey',
+            attributeName: {
+              localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordorigin',
+            attributeName: {
+              localPart: 'coordorigin'
+            },
+            type: 'attribute'
+          }, {
+            name: 'coordsize',
+            attributeName: {
+              localPart: 'coordsize'
+            },
             type: 'attribute'
           }, {
             name: 'equationxml',
@@ -4219,41 +4251,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'opacity',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
-            name: 'chromakey',
-            attributeName: {
-              localPart: 'chromakey'
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -4264,203 +4264,34 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
-            attributeName: {
-              localPart: 'fillcolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'path',
-            attributeName: {
-              localPart: 'path'
-            },
-            type: 'attribute'
-          }, {
-            name: 'type',
-            attributeName: {
-              localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'href',
             attributeName: {
               localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'target',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'target'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'clazz',
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'class'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'title',
+            name: 'opacity',
             attributeName: {
-              localPart: 'title'
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
-            name: 'alt',
+            name: 'path',
             attributeName: {
-              localPart: 'alt'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordsize',
-            attributeName: {
-              localPart: 'coordsize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'coordorigin',
-            attributeName: {
-              localPart: 'coordorigin'
-            },
-            type: 'attribute'
-          }, {
-            name: 'wrapcoords',
-            attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'path'
             },
             type: 'attribute'
           }, {
@@ -4471,9 +4302,22 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'strokecolor',
             attributeName: {
-              localPart: 'id'
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
             },
             type: 'attribute'
           }, {
@@ -4483,10 +4327,166 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'adj',
+            name: 'target',
             attributeName: {
-              localPart: 'adj'
+              localPart: 'target'
             },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            attributeName: {
+              localPart: 'type'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'gfxdata',
+            typeInfo: 'Base64Binary',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -4619,119 +4619,9 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             typeInfo: 'org_docx4j_vml_officedrawing.CTComplex'
           }, {
-            name: 'master',
-            type: 'attribute'
-          }, {
-            name: 'spid',
-            type: 'attribute'
-          }, {
-            name: 'oned',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'regroupid',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'doubleclicknotify',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'button',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userhidden',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bullet',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hr',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrstd',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrnoshade',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'hrpct',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'hralign',
-            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
-            defaultValue: 'left',
-            type: 'attribute'
-          }, {
-            name: 'allowincell',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'allowoverlap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'userdrawn',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'bordertopcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderleftcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderbottomcolor',
-            type: 'attribute'
-          }, {
-            name: 'borderrightcolor',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayout',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmnodekind',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'dgmlayoutmru',
-            typeInfo: 'Integer',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
-            name: 'href',
+            name: 'adj',
             attributeName: {
-              localPart: 'href'
-            },
-            type: 'attribute'
-          }, {
-            name: 'target',
-            attributeName: {
-              localPart: 'target'
-            },
-            type: 'attribute'
-          }, {
-            name: 'clazz',
-            attributeName: {
-              localPart: 'class'
-            },
-            type: 'attribute'
-          }, {
-            name: 'title',
-            attributeName: {
-              localPart: 'title'
+              localPart: 'adj'
             },
             type: 'attribute'
           }, {
@@ -4741,9 +4631,15 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'coordsize',
+            name: 'chromakey',
             attributeName: {
-              localPart: 'coordsize'
+              localPart: 'chromakey'
+            },
+            type: 'attribute'
+          }, {
+            name: 'clazz',
+            attributeName: {
+              localPart: 'class'
             },
             type: 'attribute'
           }, {
@@ -4753,66 +4649,15 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'wrapcoords',
+            name: 'coordsize',
             attributeName: {
-              localPart: 'wrapcoords'
+              localPart: 'coordsize'
             },
             type: 'attribute'
           }, {
-            name: 'print',
-            typeInfo: '.STTrueFalse',
+            name: 'fillcolor',
             attributeName: {
-              localPart: 'print'
-            },
-            type: 'attribute'
-          }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'style',
-            attributeName: {
-              localPart: 'style'
-            },
-            type: 'attribute'
-          }, {
-            name: 'opacity',
-            attributeName: {
-              localPart: 'opacity'
-            },
-            type: 'attribute'
-          }, {
-            name: 'stroked',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'stroked'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokecolor',
-            attributeName: {
-              localPart: 'strokecolor'
-            },
-            type: 'attribute'
-          }, {
-            name: 'strokeweight',
-            attributeName: {
-              localPart: 'strokeweight'
-            },
-            type: 'attribute'
-          }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
-            type: 'attribute'
-          }, {
-            name: 'chromakey',
-            attributeName: {
-              localPart: 'chromakey'
+              localPart: 'fillcolor'
             },
             type: 'attribute'
           }, {
@@ -4823,60 +4668,28 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fillcolor',
+            name: 'href',
             attributeName: {
-              localPart: 'fillcolor'
+              localPart: 'href'
             },
             type: 'attribute'
           }, {
-            name: 'spt',
-            typeInfo: 'Float',
-            type: 'attribute'
-          }, {
-            name: 'connectortype',
-            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
-            defaultValue: 'straight',
-            type: 'attribute'
-          }, {
-            name: 'bwmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwpure',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'bwnormal',
-            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'oleicon',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'ole',
-            values: ['', 't', 'f', 'true', 'false'],
-            type: 'attribute'
-          }, {
-            name: 'preferrelative',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'cliptowrap',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'clip',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'adj',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'adj'
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'insetpen',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'insetpen'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
             },
             type: 'attribute'
           }, {
@@ -4884,6 +4697,193 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'path'
             },
+            type: 'attribute'
+          }, {
+            name: 'print',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'print'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokecolor',
+            attributeName: {
+              localPart: 'strokecolor'
+            },
+            type: 'attribute'
+          }, {
+            name: 'stroked',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'stroked'
+            },
+            type: 'attribute'
+          }, {
+            name: 'strokeweight',
+            attributeName: {
+              localPart: 'strokeweight'
+            },
+            type: 'attribute'
+          }, {
+            name: 'style',
+            attributeName: {
+              localPart: 'style'
+            },
+            type: 'attribute'
+          }, {
+            name: 'target',
+            attributeName: {
+              localPart: 'target'
+            },
+            type: 'attribute'
+          }, {
+            name: 'title',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
+          }, {
+            name: 'wrapcoords',
+            attributeName: {
+              localPart: 'wrapcoords'
+            },
+            type: 'attribute'
+          }, {
+            name: 'allowincell',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'allowoverlap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'borderbottomcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderleftcolor',
+            type: 'attribute'
+          }, {
+            name: 'borderrightcolor',
+            type: 'attribute'
+          }, {
+            name: 'bordertopcolor',
+            type: 'attribute'
+          }, {
+            name: 'bullet',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'button',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'bwmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwnormal',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'bwpure',
+            typeInfo: 'org_docx4j_vml_officedrawing.STBWMode',
+            type: 'attribute'
+          }, {
+            name: 'clip',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'cliptowrap',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'connectortype',
+            typeInfo: 'org_docx4j_vml_officedrawing.STConnectorType',
+            defaultValue: 'straight',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayout',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmlayoutmru',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'dgmnodekind',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'doubleclicknotify',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hr',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hralign',
+            typeInfo: 'org_docx4j_vml_officedrawing.STHrAlign',
+            defaultValue: 'left',
+            type: 'attribute'
+          }, {
+            name: 'hrnoshade',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'hrpct',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'hrstd',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'master',
+            type: 'attribute'
+          }, {
+            name: 'ole',
+            values: ['', 't', 'f', 'true', 'false'],
+            type: 'attribute'
+          }, {
+            name: 'oleicon',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'oned',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'preferrelative',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'regroupid',
+            typeInfo: 'Integer',
+            type: 'attribute'
+          }, {
+            name: 'spid',
+            type: 'attribute'
+          }, {
+            name: 'spt',
+            typeInfo: 'Float',
+            type: 'attribute'
+          }, {
+            name: 'userdrawn',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'userhidden',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {
@@ -4925,54 +4925,42 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             typeInfo: 'org_docx4j_vml_officedrawing.CTStrokeChild'
           }, {
-            name: 'vmlId',
-            attributeName: {
-              localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'on',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'on'
-            },
-            type: 'attribute'
-          }, {
-            name: 'weight',
-            attributeName: {
-              localPart: 'weight'
-            },
-            type: 'attribute'
-          }, {
             name: 'color',
             attributeName: {
               localPart: 'color'
             },
             type: 'attribute'
           }, {
-            name: 'opacity',
+            name: 'color2',
             attributeName: {
-              localPart: 'opacity'
+              localPart: 'color2'
             },
             type: 'attribute'
           }, {
-            name: 'linestyle',
-            typeInfo: '.STStrokeLineStyle',
+            name: 'dashstyle',
             attributeName: {
-              localPart: 'linestyle'
+              localPart: 'dashstyle'
             },
             type: 'attribute'
           }, {
-            name: 'miterlimit',
+            name: 'endarrow',
+            typeInfo: '.STStrokeArrowType',
             attributeName: {
-              localPart: 'miterlimit'
+              localPart: 'endarrow'
             },
             type: 'attribute'
           }, {
-            name: 'joinstyle',
-            typeInfo: '.STStrokeJoinStyle',
+            name: 'endarrowlength',
+            typeInfo: '.STStrokeArrowLength',
             attributeName: {
-              localPart: 'joinstyle'
+              localPart: 'endarrowlength'
+            },
+            type: 'attribute'
+          }, {
+            name: 'endarrowwidth',
+            typeInfo: '.STStrokeArrowWidth',
+            attributeName: {
+              localPart: 'endarrowwidth'
             },
             type: 'attribute'
           }, {
@@ -4983,12 +4971,6 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'dashstyle',
-            attributeName: {
-              localPart: 'dashstyle'
-            },
-            type: 'attribute'
-          }, {
             name: 'filltype',
             typeInfo: '.STFillType',
             attributeName: {
@@ -4996,9 +4978,16 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'src',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'src'
+              localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'imagealignshape',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'imagealignshape'
             },
             type: 'attribute'
           }, {
@@ -5015,16 +5004,49 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'imagealignshape',
+            name: 'insetpen',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'imagealignshape'
+              localPart: 'insetpen'
             },
             type: 'attribute'
           }, {
-            name: 'color2',
+            name: 'joinstyle',
+            typeInfo: '.STStrokeJoinStyle',
             attributeName: {
-              localPart: 'color2'
+              localPart: 'joinstyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'linestyle',
+            typeInfo: '.STStrokeLineStyle',
+            attributeName: {
+              localPart: 'linestyle'
+            },
+            type: 'attribute'
+          }, {
+            name: 'miterlimit',
+            attributeName: {
+              localPart: 'miterlimit'
+            },
+            type: 'attribute'
+          }, {
+            name: 'on',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'on'
+            },
+            type: 'attribute'
+          }, {
+            name: 'opacity',
+            attributeName: {
+              localPart: 'opacity'
+            },
+            type: 'attribute'
+          }, {
+            name: 'src',
+            attributeName: {
+              localPart: 'src'
             },
             type: 'attribute'
           }, {
@@ -5035,13 +5057,6 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'startarrowwidth',
-            typeInfo: '.STStrokeArrowWidth',
-            attributeName: {
-              localPart: 'startarrowwidth'
-            },
-            type: 'attribute'
-          }, {
             name: 'startarrowlength',
             typeInfo: '.STStrokeArrowLength',
             attributeName: {
@@ -5049,38 +5064,17 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'endarrow',
-            typeInfo: '.STStrokeArrowType',
-            attributeName: {
-              localPart: 'endarrow'
-            },
-            type: 'attribute'
-          }, {
-            name: 'endarrowwidth',
+            name: 'startarrowwidth',
             typeInfo: '.STStrokeArrowWidth',
             attributeName: {
-              localPart: 'endarrowwidth'
+              localPart: 'startarrowwidth'
             },
             type: 'attribute'
           }, {
-            name: 'endarrowlength',
-            typeInfo: '.STStrokeArrowLength',
+            name: 'weight',
             attributeName: {
-              localPart: 'endarrowlength'
+              localPart: 'weight'
             },
-            type: 'attribute'
-          }, {
-            name: 'href',
-            type: 'attribute'
-          }, {
-            name: 'althref',
-            type: 'attribute'
-          }, {
-            name: 'title',
-            type: 'attribute'
-          }, {
-            name: 'forcedash',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }, {
             name: 'id',
@@ -5090,24 +5084,30 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'insetpen',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'insetpen'
-            },
+            name: 'althref',
+            type: 'attribute'
+          }, {
+            name: 'forcedash',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+            type: 'attribute'
+          }, {
+            name: 'href',
             type: 'attribute'
           }, {
             name: 'relid',
+            type: 'attribute'
+          }, {
+            name: 'title',
             type: 'attribute'
           }]
       }, {
         localName: 'CTTextPath',
         typeName: 'CT_TextPath',
         propertyInfos: [{
-            name: 'on',
+            name: 'fitpath',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'on'
+              localPart: 'fitpath'
             },
             type: 'attribute'
           }, {
@@ -5118,24 +5118,16 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'fitpath',
-            typeInfo: '.STTrueFalse',
+            name: 'vmlId',
             attributeName: {
-              localPart: 'fitpath'
+              localPart: 'id'
             },
             type: 'attribute'
           }, {
-            name: 'trim',
+            name: 'on',
             typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'trim'
-            },
-            type: 'attribute'
-          }, {
-            name: 'xscale',
-            typeInfo: '.STTrueFalse',
-            attributeName: {
-              localPart: 'xscale'
+              localPart: 'on'
             },
             type: 'attribute'
           }, {
@@ -5151,9 +5143,17 @@ var org_docx4j_vml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
-            name: 'vmlId',
+            name: 'trim',
+            typeInfo: '.STTrueFalse',
             attributeName: {
-              localPart: 'id'
+              localPart: 'trim'
+            },
+            type: 'attribute'
+          }, {
+            name: 'xscale',
+            typeInfo: '.STTrueFalse',
+            attributeName: {
+              localPart: 'xscale'
             },
             type: 'attribute'
           }]
@@ -5174,24 +5174,15 @@ var org_docx4j_vml_Module_Factory = function () {
             mixed: false,
             type: 'anyElement'
           }, {
-            name: 'inset',
-            attributeName: {
-              localPart: 'inset'
-            },
-            type: 'attribute'
-          }, {
-            name: 'singleclick',
-            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
-            type: 'attribute'
-          }, {
-            name: 'insetmode',
-            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
-            defaultValue: 'custom',
-            type: 'attribute'
-          }, {
             name: 'vmlId',
             attributeName: {
               localPart: 'id'
+            },
+            type: 'attribute'
+          }, {
+            name: 'inset',
+            attributeName: {
+              localPart: 'inset'
             },
             type: 'attribute'
           }, {
@@ -5199,6 +5190,15 @@ var org_docx4j_vml_Module_Factory = function () {
             attributeName: {
               localPart: 'style'
             },
+            type: 'attribute'
+          }, {
+            name: 'insetmode',
+            typeInfo: 'org_docx4j_vml_officedrawing.STInsetMode',
+            defaultValue: 'custom',
+            type: 'attribute'
+          }, {
+            name: 'singleclick',
+            typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
             type: 'attribute'
           }]
       }, {

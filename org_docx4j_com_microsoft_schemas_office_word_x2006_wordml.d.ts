@@ -21,10 +21,10 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTAcd {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTAcd';
   readonly PARENT?: CTAcds;
+  acdName: string;
   argValue?: string;
   fciBasedOn?: string;
   fciIndexBasedOn?: string;
-  acdName: string;
 }
 
 export interface CTAcdKeymap {
@@ -66,8 +66,8 @@ export interface CTDocEvents {
 export interface CTFci {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTFci';
   readonly PARENT?: CTKeymap;
-  fciName?: string;
   fciIndex?: string;
+  fciName?: string;
   swArg?: string;
 }
 
@@ -107,11 +107,11 @@ export interface CTMacroWll {
 export interface CTMcd {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml.CTMcd';
   readonly PARENT?: CTMcds;
-  macroName?: string;
-  name?: string;
-  menuHelp?: string;
   bEncrypt?: string;
   cmg?: string;
+  macroName?: string;
+  menuHelp?: string;
+  name?: string;
 }
 
 export interface CTMcds {

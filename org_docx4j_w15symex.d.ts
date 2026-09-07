@@ -20,8 +20,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTSymEx {
   TYPE_NAME?: 'org_docx4j_w15symex.CTSymEx';
-  font?: string;
   _char?: string;
+  font?: string;
 }
 
 export type SymExElement = TypedNamedValue<CTSymEx>;

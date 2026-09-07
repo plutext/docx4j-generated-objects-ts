@@ -14,17 +14,17 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_main = {
           },
           type: 'attribute'
         }, {
-          name: 'bwPure',
-          typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
-          attributeName: {
-            localPart: 'bwPure'
-          },
-          type: 'attribute'
-        }, {
           name: 'bwNormal',
           typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
           attributeName: {
             localPart: 'bwNormal'
+          },
+          type: 'attribute'
+        }, {
+          name: 'bwPure',
+          typeInfo: 'org_docx4j_dml.STBlackWhiteMode',
+          attributeName: {
+            localPart: 'bwPure'
           },
           type: 'attribute'
         }, {
@@ -51,12 +51,6 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_main = {
       localName: 'CTObjectPr',
       typeName: 'CT_ObjectPr',
       propertyInfos: [{
-          name: 'objectId',
-          attributeName: {
-            localPart: 'objectId'
-          },
-          type: 'attribute'
-        }, {
           name: 'isActiveX',
           typeInfo: 'Boolean',
           attributeName: {
@@ -69,36 +63,20 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_main = {
             localPart: 'linkType'
           },
           type: 'attribute'
+        }, {
+          name: 'objectId',
+          attributeName: {
+            localPart: 'objectId'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTSignatureLine',
       typeName: 'CT_SignatureLine',
       propertyInfos: [{
-          name: 'isSignatureLine',
-          typeInfo: 'Boolean',
+          name: 'addlXml',
           attributeName: {
-            localPart: 'isSignatureLine'
-          },
-          type: 'attribute'
-        }, {
-          name: 'id',
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'id'
-          },
-          type: 'attribute'
-        }, {
-          name: 'provId',
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'provId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'signingInstructionsSet',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'signingInstructionsSet'
+            localPart: 'addlXml'
           },
           type: 'attribute'
         }, {
@@ -109,10 +87,50 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_main = {
           },
           type: 'attribute'
         }, {
+          name: 'id',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'id'
+          },
+          type: 'attribute'
+        }, {
+          name: 'isSignatureLine',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'isSignatureLine'
+          },
+          type: 'attribute'
+        }, {
+          name: 'provId',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'provId'
+          },
+          type: 'attribute'
+        }, {
           name: 'showSignDate',
           typeInfo: 'Boolean',
           attributeName: {
             localPart: 'showSignDate'
+          },
+          type: 'attribute'
+        }, {
+          name: 'sigProvUrl',
+          attributeName: {
+            localPart: 'sigProvUrl'
+          },
+          type: 'attribute'
+        }, {
+          name: 'signingInstructions',
+          attributeName: {
+            localPart: 'signingInstructions'
+          },
+          type: 'attribute'
+        }, {
+          name: 'signingInstructionsSet',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'signingInstructionsSet'
           },
           type: 'attribute'
         }, {
@@ -131,24 +149,6 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2012_main = {
           name: 'suggestedSignerEmail',
           attributeName: {
             localPart: 'suggestedSignerEmail'
-          },
-          type: 'attribute'
-        }, {
-          name: 'signingInstructions',
-          attributeName: {
-            localPart: 'signingInstructions'
-          },
-          type: 'attribute'
-        }, {
-          name: 'addlXml',
-          attributeName: {
-            localPart: 'addlXml'
-          },
-          type: 'attribute'
-        }, {
-          name: 'sigProvUrl',
-          attributeName: {
-            localPart: 'sigProvUrl'
           },
           type: 'attribute'
         }]

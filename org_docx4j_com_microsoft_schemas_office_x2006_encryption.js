@@ -43,35 +43,11 @@ var org_docx4j_com_microsoft_schemas_office_x2006_encryption_Module_Factory = fu
         localName: 'CTKeyData',
         typeName: 'CT_KeyData',
         propertyInfos: [{
-            name: 'saltSize',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'saltSize'
-            },
-            type: 'attribute'
-          }, {
             name: 'blockSize',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'blockSize'
-            },
-            type: 'attribute'
-          }, {
-            name: 'keyBits',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'keyBits'
-            },
-            type: 'attribute'
-          }, {
-            name: 'hashSize',
-            required: true,
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'hashSize'
             },
             type: 'attribute'
           }, {
@@ -97,6 +73,30 @@ var org_docx4j_com_microsoft_schemas_office_x2006_encryption_Module_Factory = fu
             typeInfo: '.STHashAlgorithm',
             attributeName: {
               localPart: 'hashAlgorithm'
+            },
+            type: 'attribute'
+          }, {
+            name: 'hashSize',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'hashSize'
+            },
+            type: 'attribute'
+          }, {
+            name: 'keyBits',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'keyBits'
+            },
+            type: 'attribute'
+          }, {
+            name: 'saltSize',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'saltSize'
             },
             type: 'attribute'
           }, {

@@ -18,6 +18,7 @@ package with dots replaced by underscores (docx4j's `org.docx4j.wml` is `org_doc
 | `<module>.d.mts` | re-export so that `import ... from './<module>.mjs'` is typed |
 | `bindings.xjb` | the Jsonix customizations used (outputs and declarations for every module) |
 | `generate.sh` | regeneration script |
+| `helpers/wml.ts` | hand-written helpers carrying docx4j's highlight colour table, `isQFormat` and `isCustomStyle` rules |
 
 Mapping names, module names and `TYPE_NAME` discriminants all use the docx4j package names, so
 `org_docx4j_wml.P` is the type that docx4j calls `org.docx4j.wml.P`. Modules reference each other by
@@ -54,10 +55,31 @@ affect the Java classes XJC generates, which are discarded (XJC writes them unde
 target directory). Generation takes about five seconds. Output is deterministic (compiler CR-003), so
 regenerating with the same inputs gives a clean diff.
 
+## Relationship to docx4j's generated Java
+
+docx4j post-processes its own XJC output (`docx4j-generated-objects/ModifyGeneratedSources.java`).
+Compiler CR-007 maps each of those patches to this output; the ones with an equivalent are applied
+through `bindings.xjb`, never by editing generated files:
+
+- `v:line` attribute order `id style from to` (docx4j issue 469; Word is sensitive to it):
+  `jsonix:propertyOrder` on `CTLine`; a marshalled `v:line` comes out in that order.
+- `w:customStyle`: an absent attribute means a built-in style (docx4j issue 641); the mapping says
+  `defaultValue: false`. The runtime does not apply defaults, so read it as
+  `style.customStyle === true` (`helpers/wml.ts: isCustomStyle`).
+- docx4j's hand-written interfaces (`ContentAccessor`, `SdtElement`, `SdtContent`,
+  `CTCustomXmlElement`, the VML attribute interfaces) are union type aliases in the declarations.
+- Parent-setting setters and `ArrayListDocx4j` are covered by `PARENT` (CR-006).
+- Java-only conveniences (lazy getters, `ObjectFactory.get()`, `Id.equals`) have no equivalent;
+  the highlight colour table and the `LsdException.isQFormat()` fallback live in `helpers/wml.ts`.
+
+Attributes are emitted sorted by name (except where `jsonix:propertyOrder` says otherwise);
+elements keep schema order. This is what makes regeneration reproducible: XJC's own attribute
+order for types built from several attribute groups varies with the JVM.
+
 ## Verified
 
-- `tsc --strict` over all 188 declaration files (`moduleResolution: bundler`): no errors
-  (re-run after CR-006 added `PARENT`; the mapping files did not change).
+- `tsc --strict` over all 188 declaration files plus `helpers/wml.ts` (`moduleResolution: bundler`): no errors.
+- Regeneration is identical under `java -Xshare:off`, `-XX:+UseSerialGC` and `-Xint` (CR-007).
 - Node 18: all 94 `.mjs` modules imported into one `Jsonix.Context` (`@mitre/jsonix` 3.1.0);
   `word/document.xml` of docx4j's `legals/docx4j_IndividualContributor.docx` unmarshals to a
   `org_docx4j_wml.Document` (39 body entries, 38 paragraphs, first run text "Docx4j Project"),

@@ -17,6 +17,12 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
             },
             type: 'attribute'
           }, {
+            name: 'clId',
+            attributeName: {
+              localPart: 'clId'
+            },
+            type: 'attribute'
+          }, {
             name: 'dt',
             typeInfo: 'DateTime',
             attributeName: {
@@ -24,10 +30,9 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
             },
             type: 'attribute'
           }, {
-            name: 'v',
-            typeInfo: 'UnsignedInt',
+            name: 'email',
             attributeName: {
-              localPart: 'v'
+              localPart: 'email'
             },
             type: 'attribute'
           }, {
@@ -44,27 +49,22 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
             },
             type: 'attribute'
           }, {
-            name: 'userId',
-            attributeName: {
-              localPart: 'userId'
-            },
-            type: 'attribute'
-          }, {
             name: 'providerId',
             attributeName: {
               localPart: 'providerId'
             },
             type: 'attribute'
           }, {
-            name: 'clId',
+            name: 'userId',
             attributeName: {
-              localPart: 'clId'
+              localPart: 'userId'
             },
             type: 'attribute'
           }, {
-            name: 'email',
+            name: 'v',
+            typeInfo: 'UnsignedInt',
             attributeName: {
-              localPart: 'email'
+              localPart: 'v'
             },
             type: 'attribute'
           }]
@@ -97,18 +97,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTConnectorMoniker',
         typeName: 'CT_ConnectorMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]
@@ -152,18 +152,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTGraphicFrameMoniker',
         typeName: 'CT_GraphicFrameMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]
@@ -207,18 +207,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTGroupShapeMoniker',
         typeName: 'CT_GroupShapeMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]
@@ -262,18 +262,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTInkMoniker',
         typeName: 'CT_InkMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]
@@ -317,18 +317,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTPictureMoniker',
         typeName: 'CT_PictureMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]
@@ -372,18 +372,18 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command_Module_Fa
         localName: 'CTShapeMoniker',
         typeName: 'CT_ShapeMoniker',
         propertyInfos: [{
+            name: 'creationId',
+            typeInfo: 'Token',
+            attributeName: {
+              localPart: 'creationId'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'id'
-            },
-            type: 'attribute'
-          }, {
-            name: 'creationId',
-            typeInfo: 'Token',
-            attributeName: {
-              localPart: 'creationId'
             },
             type: 'attribute'
           }]

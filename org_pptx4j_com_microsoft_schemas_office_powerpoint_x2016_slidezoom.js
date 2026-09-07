@@ -25,18 +25,18 @@ var org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom_Module_Fa
             name: 'extLst',
             typeInfo: 'org_pptx4j_pml.CTExtensionList'
           }, {
+            name: 'cId',
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'cId'
+            },
+            type: 'attribute'
+          }, {
             name: 'sldId',
             required: true,
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'sldId'
-            },
-            type: 'attribute'
-          }, {
-            name: 'cId',
-            typeInfo: 'UnsignedInt',
-            attributeName: {
-              localPart: 'cId'
             },
             type: 'attribute'
           }]

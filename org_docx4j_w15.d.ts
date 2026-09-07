@@ -22,9 +22,9 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTCommentEx {
   TYPE_NAME?: 'org_docx4j_w15.CTCommentEx';
   readonly PARENT?: CTCommentsEx;
+  done?: string;
   paraId: string;
   paraIdParent?: string;
-  done?: string;
 }
 
 export interface CTCommentsEx {

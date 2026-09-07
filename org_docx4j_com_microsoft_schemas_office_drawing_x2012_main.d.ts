@@ -22,8 +22,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTBackgroundPr {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_main.CTBackgroundPr';
   bwMode?: Dep_org_docx4j_dml.STBlackWhiteMode;
-  bwPure?: Dep_org_docx4j_dml.STBlackWhiteMode;
   bwNormal?: Dep_org_docx4j_dml.STBlackWhiteMode;
+  bwPure?: Dep_org_docx4j_dml.STBlackWhiteMode;
   targetScreenSize?: string;
 }
 
@@ -34,25 +34,25 @@ export interface CTNonVisualGroupProps {
 
 export interface CTObjectPr {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_main.CTObjectPr';
-  objectId?: string;
   isActiveX?: boolean;
   linkType?: string;
+  objectId?: string;
 }
 
 export interface CTSignatureLine {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2012_main.CTSignatureLine';
-  isSignatureLine?: boolean;
-  id?: string;
-  provId?: string;
-  signingInstructionsSet?: boolean;
+  addlXml?: string;
   allowComments?: boolean;
+  id?: string;
+  isSignatureLine?: boolean;
+  provId?: string;
   showSignDate?: boolean;
+  sigProvUrl?: string;
+  signingInstructions?: string;
+  signingInstructionsSet?: boolean;
   suggestedSigner?: string;
   suggestedSigner2?: string;
   suggestedSignerEmail?: string;
-  signingInstructions?: string;
-  addlXml?: string;
-  sigProvUrl?: string;
 }
 
 export type BackgroundPrElement = TypedNamedValue<CTBackgroundPr>;

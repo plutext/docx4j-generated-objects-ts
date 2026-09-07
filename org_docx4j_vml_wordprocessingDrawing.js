@@ -9,6 +9,13 @@ var org_docx4j_vml_wordprocessingDrawing_Module_Factory = function () {
         localName: 'CTBorder',
         typeName: 'CT_Border',
         propertyInfos: [{
+            name: 'shadow',
+            typeInfo: '.STBorderShadow',
+            attributeName: {
+              localPart: 'shadow'
+            },
+            type: 'attribute'
+          }, {
             name: 'type',
             typeInfo: '.STBorderType',
             attributeName: {
@@ -22,32 +29,11 @@ var org_docx4j_vml_wordprocessingDrawing_Module_Factory = function () {
               localPart: 'width'
             },
             type: 'attribute'
-          }, {
-            name: 'shadow',
-            typeInfo: '.STBorderShadow',
-            attributeName: {
-              localPart: 'shadow'
-            },
-            type: 'attribute'
           }]
       }, {
         localName: 'CTWrap',
         typeName: 'CT_Wrap',
         propertyInfos: [{
-            name: 'type',
-            typeInfo: '.STWrapType',
-            attributeName: {
-              localPart: 'type'
-            },
-            type: 'attribute'
-          }, {
-            name: 'side',
-            typeInfo: '.STWrapSide',
-            attributeName: {
-              localPart: 'side'
-            },
-            type: 'attribute'
-          }, {
             name: 'anchorx',
             typeInfo: '.STHorizontalAnchor',
             attributeName: {
@@ -59,6 +45,20 @@ var org_docx4j_vml_wordprocessingDrawing_Module_Factory = function () {
             typeInfo: '.STVerticalAnchor',
             attributeName: {
               localPart: 'anchory'
+            },
+            type: 'attribute'
+          }, {
+            name: 'side',
+            typeInfo: '.STWrapSide',
+            attributeName: {
+              localPart: 'side'
+            },
+            type: 'attribute'
+          }, {
+            name: 'type',
+            typeInfo: '.STWrapType',
+            attributeName: {
+              localPart: 'type'
             },
             type: 'attribute'
           }]

@@ -26,8 +26,8 @@ export interface CTDiagramAutoBullet {
   buAutoNum: Dep_org_docx4j_dml.CTTextAutonumberBullet;
   buChar: Dep_org_docx4j_dml.CTTextCharBullet;
   buBlip: Dep_org_docx4j_dml.CTTextBlipBullet;
-  prefix?: string;
   leadZeros?: boolean;
+  prefix?: string;
 }
 
 export interface CTNumberDiagramInfo {

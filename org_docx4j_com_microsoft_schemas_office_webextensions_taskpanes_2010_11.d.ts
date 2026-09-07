@@ -26,10 +26,10 @@ export interface CTOsfTaskpane {
   webextensionref: Dep_org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11.CTWebExtensionPartRef;
   extLst?: Dep_org_docx4j_dml.CTOfficeArtExtensionList;
   dockstate: string;
+  locked?: boolean;
+  row: number;
   visibility: boolean;
   width: number;
-  row: number;
-  locked?: boolean;
 }
 
 export interface CTOsfTaskpanes {

@@ -28,10 +28,10 @@ export interface CTZoomObjectProperties {
   blipFill: Dep_org_docx4j_dml.CTBlipFillProperties;
   spPr: Dep_org_docx4j_dml.CTShapeProperties;
   id: string;
-  returnToParent?: boolean;
   imageType?: STZoomObjectImageType;
-  transitionDur?: string;
+  returnToParent?: boolean;
   showBg?: boolean;
+  transitionDur?: string;
 }
 
 export type STZoomObjectImageType = 'preview' | 'cover';

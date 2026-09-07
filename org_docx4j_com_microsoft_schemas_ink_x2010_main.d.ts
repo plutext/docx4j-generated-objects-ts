@@ -30,27 +30,27 @@ export interface CTCtxNode {
   property?: CTProperty[];
   sourceLink?: CTCtxLink[];
   destinationLink?: CTCtxLink[];
-  id?: string;
-  type: string;
-  rotatedBoundingBox?: string[];
   alignmentLevel?: number;
-  contentType?: number;
   ascender?: string[];
-  descender?: string[];
   baseline?: string[];
-  midline?: string[];
+  beginModifierType?: string;
+  centroid?: string;
+  contentType?: number;
   customRecognizerId?: string;
+  descender?: string[];
+  endModifierType?: string;
+  hotPoints?: string[];
+  id?: string;
   mathML?: string;
   mathStruct?: string;
   mathSymbol?: string;
-  beginModifierType?: string;
-  endModifierType?: string;
+  midline?: string[];
+  rotatedBoundingBox?: string[];
   rotationAngle?: number;
-  hotPoints?: string[];
-  centroid?: string;
   semanticType?: string;
-  shapeName?: string;
   shapeGeometry?: string[];
+  shapeName?: string;
+  type: string;
 }
 
 export interface CTProperty {

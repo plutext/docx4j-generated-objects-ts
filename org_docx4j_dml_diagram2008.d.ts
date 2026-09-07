@@ -21,8 +21,8 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 
 export interface CTDataModelExtBlock {
   TYPE_NAME?: 'org_docx4j_dml_diagram2008.CTDataModelExtBlock';
-  relId?: string;
   minVer?: string;
+  relId?: string;
 }
 
 export interface CTDrawing {

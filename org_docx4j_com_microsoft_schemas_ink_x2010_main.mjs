@@ -38,42 +38,11 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           collection: true,
           typeInfo: '.CTCtxLink'
         }, {
-          name: 'id',
-          typeInfo: 'Token',
-          attributeName: {
-            localPart: 'id'
-          },
-          type: 'attribute'
-        }, {
-          name: 'type',
-          required: true,
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'rotatedBoundingBox',
-          typeInfo: {
-            type: 'list'
-          },
-          attributeName: {
-            localPart: 'rotatedBoundingBox'
-          },
-          type: 'attribute'
-        }, {
           name: 'alignmentLevel',
           typeInfo: 'Int',
           defaultValue: 0,
           attributeName: {
             localPart: 'alignmentLevel'
-          },
-          type: 'attribute'
-        }, {
-          name: 'contentType',
-          typeInfo: 'Int',
-          defaultValue: 0,
-          attributeName: {
-            localPart: 'contentType'
           },
           type: 'attribute'
         }, {
@@ -86,15 +55,6 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           },
           type: 'attribute'
         }, {
-          name: 'descender',
-          typeInfo: {
-            type: 'list'
-          },
-          attributeName: {
-            localPart: 'descender'
-          },
-          type: 'attribute'
-        }, {
           name: 'baseline',
           typeInfo: {
             type: 'list'
@@ -104,12 +64,24 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           },
           type: 'attribute'
         }, {
-          name: 'midline',
-          typeInfo: {
-            type: 'list'
-          },
+          name: 'beginModifierType',
+          defaultValue: '',
           attributeName: {
-            localPart: 'midline'
+            localPart: 'beginModifierType'
+          },
+          type: 'attribute'
+        }, {
+          name: 'centroid',
+          attributeName: {
+            localPart: 'centroid'
+          },
+          type: 'attribute'
+        }, {
+          name: 'contentType',
+          typeInfo: 'Int',
+          defaultValue: 0,
+          attributeName: {
+            localPart: 'contentType'
           },
           type: 'attribute'
         }, {
@@ -117,6 +89,38 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           typeInfo: 'Token',
           attributeName: {
             localPart: 'customRecognizerId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'descender',
+          typeInfo: {
+            type: 'list'
+          },
+          attributeName: {
+            localPart: 'descender'
+          },
+          type: 'attribute'
+        }, {
+          name: 'endModifierType',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'endModifierType'
+          },
+          type: 'attribute'
+        }, {
+          name: 'hotPoints',
+          typeInfo: {
+            type: 'list'
+          },
+          attributeName: {
+            localPart: 'hotPoints'
+          },
+          type: 'attribute'
+        }, {
+          name: 'id',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'id'
           },
           type: 'attribute'
         }, {
@@ -141,17 +145,21 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           },
           type: 'attribute'
         }, {
-          name: 'beginModifierType',
-          defaultValue: '',
+          name: 'midline',
+          typeInfo: {
+            type: 'list'
+          },
           attributeName: {
-            localPart: 'beginModifierType'
+            localPart: 'midline'
           },
           type: 'attribute'
         }, {
-          name: 'endModifierType',
-          defaultValue: '',
+          name: 'rotatedBoundingBox',
+          typeInfo: {
+            type: 'list'
+          },
           attributeName: {
-            localPart: 'endModifierType'
+            localPart: 'rotatedBoundingBox'
           },
           type: 'attribute'
         }, {
@@ -163,25 +171,19 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           },
           type: 'attribute'
         }, {
-          name: 'hotPoints',
-          typeInfo: {
-            type: 'list'
-          },
-          attributeName: {
-            localPart: 'hotPoints'
-          },
-          type: 'attribute'
-        }, {
-          name: 'centroid',
-          attributeName: {
-            localPart: 'centroid'
-          },
-          type: 'attribute'
-        }, {
           name: 'semanticType',
           defaultValue: 'none',
           attributeName: {
             localPart: 'semanticType'
+          },
+          type: 'attribute'
+        }, {
+          name: 'shapeGeometry',
+          typeInfo: {
+            type: 'list'
+          },
+          attributeName: {
+            localPart: 'shapeGeometry'
           },
           type: 'attribute'
         }, {
@@ -192,12 +194,10 @@ export const org_docx4j_com_microsoft_schemas_ink_x2010_main = {
           },
           type: 'attribute'
         }, {
-          name: 'shapeGeometry',
-          typeInfo: {
-            type: 'list'
-          },
+          name: 'type',
+          required: true,
           attributeName: {
-            localPart: 'shapeGeometry'
+            localPart: 'type'
           },
           type: 'attribute'
         }]

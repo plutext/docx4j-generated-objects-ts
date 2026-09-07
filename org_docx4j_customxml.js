@@ -16,14 +16,14 @@ var org_docx4j_customxml_Module_Factory = function () {
         localName: 'SchemaLibrary.Schema',
         typeName: null,
         propertyInfos: [{
-            name: 'uri',
-            defaultValue: '',
-            type: 'attribute'
-          }, {
             name: 'manifestLocation',
             type: 'attribute'
           }, {
             name: 'schemaLocation',
+            type: 'attribute'
+          }, {
+            name: 'uri',
+            defaultValue: '',
             type: 'attribute'
           }]
       }],

@@ -22,9 +22,9 @@ export interface JsonixMapping<R = unknown> { readonly __rootElement?: R; readon
 export interface CTCertificateKeyEncryptor {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate.CTCertificateKeyEncryptor';
   readonly PARENT?: Dep_org_docx4j_com_microsoft_schemas_office_x2006_encryption.CTKeyEncryptor;
-  encryptedKeyValue: string;
   x509Certificate: string;
   certVerifier: string;
+  encryptedKeyValue: string;
 }
 
 export type STPasswordKeyEncryptorUri = 'http://schemas.microsoft.com/office/2006/keyEncryptor/certificate';

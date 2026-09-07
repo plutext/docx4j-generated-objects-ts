@@ -68,9 +68,9 @@ export namespace Properties {
     clsid: string;
     cf: Dep_org_docx4j_docProps_variantTypes.Cf;
     fmtid: string;
-    pid: number;
-    name?: string;
     linkTarget?: string;
+    name?: string;
+    pid: number;
   }
 }
 

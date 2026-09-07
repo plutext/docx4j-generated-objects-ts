@@ -44,19 +44,19 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'type',
-          required: true,
-          typeInfo: '.STAlgorithmType',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'rev',
           typeInfo: 'UnsignedInt',
           defaultValue: 0,
           attributeName: {
             localPart: 'rev'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          typeInfo: '.STAlgorithmType',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -109,18 +109,18 @@ export const org_docx4j_dml_diagram = {
       localName: 'CTCTCategory',
       typeName: 'CT_CTCategory',
       propertyInfos: [{
-          name: 'type',
-          required: true,
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'pri',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'pri'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -205,18 +205,18 @@ export const org_docx4j_dml_diagram = {
       localName: 'CTCategory',
       typeName: 'CT_Category',
       propertyInfos: [{
-          name: 'type',
-          required: true,
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'pri',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'pri'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -290,17 +290,17 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'uniqueId'
-          },
-          type: 'attribute'
-        }, {
           name: 'minVer',
           defaultValue: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/diagram',
           attributeName: {
             localPart: 'minVer'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uniqueId',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -324,13 +324,6 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
-          required: true,
-          attributeName: {
-            localPart: 'uniqueId'
-          },
-          type: 'attribute'
-        }, {
           name: 'minVer',
           defaultValue: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/diagram',
           attributeName: {
@@ -343,6 +336,13 @@ export const org_docx4j_dml_diagram = {
           defaultValue: 0,
           attributeName: {
             localPart: 'resId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uniqueId',
+          required: true,
+          attributeName: {
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -401,19 +401,19 @@ export const org_docx4j_dml_diagram = {
             }],
           type: 'elements'
         }, {
-          name: 'meth',
-          typeInfo: '.STClrAppMethod',
-          defaultValue: 'span',
-          attributeName: {
-            localPart: 'meth'
-          },
-          type: 'attribute'
-        }, {
           name: 'hueDir',
           typeInfo: '.STHueDir',
           defaultValue: 'cw',
           attributeName: {
             localPart: 'hueDir'
+          },
+          type: 'attribute'
+        }, {
+          name: 'meth',
+          typeInfo: '.STClrAppMethod',
+          defaultValue: 'span',
+          attributeName: {
+            localPart: 'meth'
           },
           type: 'attribute'
         }]
@@ -424,22 +424,6 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'op',
-          typeInfo: '.STBoolOperator',
-          defaultValue: 'none',
-          attributeName: {
-            localPart: 'op'
-          },
-          type: 'attribute'
-        }, {
-          name: 'val',
-          typeInfo: 'Double',
-          defaultValue: 0,
-          attributeName: {
-            localPart: 'val'
-          },
-          type: 'attribute'
-        }, {
           name: 'fact',
           typeInfo: 'Double',
           defaultValue: 1,
@@ -448,11 +432,34 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'refType',
-          typeInfo: '.STConstraintType',
+          name: '_for',
+          typeInfo: '.STConstraintRelationship',
+          defaultValue: 'self',
+          attributeName: {
+            localPart: 'for'
+          },
+          type: 'attribute'
+        }, {
+          name: 'forName',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'forName'
+          },
+          type: 'attribute'
+        }, {
+          name: 'op',
+          typeInfo: '.STBoolOperator',
           defaultValue: 'none',
           attributeName: {
-            localPart: 'refType'
+            localPart: 'op'
+          },
+          type: 'attribute'
+        }, {
+          name: 'ptType',
+          typeInfo: '.STElementType',
+          defaultValue: 'all',
+          attributeName: {
+            localPart: 'ptType'
           },
           type: 'attribute'
         }, {
@@ -479,6 +486,14 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'refType',
+          typeInfo: '.STConstraintType',
+          defaultValue: 'none',
+          attributeName: {
+            localPart: 'refType'
+          },
+          type: 'attribute'
+        }, {
           name: 'type',
           required: true,
           typeInfo: '.STConstraintType',
@@ -487,26 +502,11 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: '_for',
-          typeInfo: '.STConstraintRelationship',
-          defaultValue: 'self',
+          name: 'val',
+          typeInfo: 'Double',
+          defaultValue: 0,
           attributeName: {
-            localPart: 'for'
-          },
-          type: 'attribute'
-        }, {
-          name: 'forName',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'forName'
-          },
-          type: 'attribute'
-        }, {
-          name: 'ptType',
-          typeInfo: '.STElementType',
-          defaultValue: 'all',
-          attributeName: {
-            localPart: 'ptType'
+            localPart: 'val'
           },
           type: 'attribute'
         }]
@@ -526,40 +526,10 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'modelId',
-          required: true,
-          attributeName: {
-            localPart: 'modelId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'type',
-          typeInfo: '.STCxnType',
-          defaultValue: 'parOf',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'srcId',
-          required: true,
-          attributeName: {
-            localPart: 'srcId'
-          },
-          type: 'attribute'
-        }, {
           name: 'destId',
           required: true,
           attributeName: {
             localPart: 'destId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'srcOrd',
-          required: true,
-          typeInfo: 'UnsignedInt',
-          attributeName: {
-            localPart: 'srcOrd'
           },
           type: 'attribute'
         }, {
@@ -571,10 +541,24 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'modelId',
+          required: true,
+          attributeName: {
+            localPart: 'modelId'
+          },
+          type: 'attribute'
+        }, {
           name: 'parTransId',
           defaultValue: '0',
           attributeName: {
             localPart: 'parTransId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presId',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'presId'
           },
           type: 'attribute'
         }, {
@@ -585,10 +569,26 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'presId',
-          defaultValue: '',
+          name: 'srcId',
+          required: true,
           attributeName: {
-            localPart: 'presId'
+            localPart: 'srcId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'srcOrd',
+          required: true,
+          typeInfo: 'UnsignedInt',
+          attributeName: {
+            localPart: 'srcOrd'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          typeInfo: '.STCxnType',
+          defaultValue: 'parOf',
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -672,10 +672,10 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
+          name: 'defStyle',
           defaultValue: '',
           attributeName: {
-            localPart: 'uniqueId'
+            localPart: 'defStyle'
           },
           type: 'attribute'
         }, {
@@ -686,10 +686,10 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'defStyle',
+          name: 'uniqueId',
           defaultValue: '',
           attributeName: {
-            localPart: 'defStyle'
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -713,10 +713,10 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
-          required: true,
+          name: 'defStyle',
+          defaultValue: '',
           attributeName: {
-            localPart: 'uniqueId'
+            localPart: 'defStyle'
           },
           type: 'attribute'
         }, {
@@ -727,18 +727,18 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'defStyle',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'defStyle'
-          },
-          type: 'attribute'
-        }, {
           name: 'resId',
           typeInfo: 'Int',
           defaultValue: 0,
           attributeName: {
             localPart: 'resId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uniqueId',
+          required: true,
+          attributeName: {
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -773,65 +773,10 @@ export const org_docx4j_dml_diagram = {
           name: 'style',
           typeInfo: 'org_docx4j_dml.CTShapeStyle'
         }, {
-          name: 'presAssocID',
+          name: 'coherent3DOff',
+          typeInfo: 'Boolean',
           attributeName: {
-            localPart: 'presAssocID'
-          },
-          type: 'attribute'
-        }, {
-          name: 'presName',
-          attributeName: {
-            localPart: 'presName'
-          },
-          type: 'attribute'
-        }, {
-          name: 'presStyleLbl',
-          attributeName: {
-            localPart: 'presStyleLbl'
-          },
-          type: 'attribute'
-        }, {
-          name: 'presStyleIdx',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'presStyleIdx'
-          },
-          type: 'attribute'
-        }, {
-          name: 'presStyleCnt',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'presStyleCnt'
-          },
-          type: 'attribute'
-        }, {
-          name: 'loTypeId',
-          attributeName: {
-            localPart: 'loTypeId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'loCatId',
-          attributeName: {
-            localPart: 'loCatId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'qsTypeId',
-          attributeName: {
-            localPart: 'qsTypeId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'qsCatId',
-          attributeName: {
-            localPart: 'qsCatId'
-          },
-          type: 'attribute'
-        }, {
-          name: 'csTypeId',
-          attributeName: {
-            localPart: 'csTypeId'
+            localPart: 'coherent3DOff'
           },
           type: 'attribute'
         }, {
@@ -841,23 +786,9 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'coherent3DOff',
-          typeInfo: 'Boolean',
+          name: 'csTypeId',
           attributeName: {
-            localPart: 'coherent3DOff'
-          },
-          type: 'attribute'
-        }, {
-          name: 'phldrT',
-          attributeName: {
-            localPart: 'phldrT'
-          },
-          type: 'attribute'
-        }, {
-          name: 'phldr',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'phldr'
+            localPart: 'csTypeId'
           },
           type: 'attribute'
         }, {
@@ -868,13 +799,6 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'custFlipVert',
-          typeInfo: 'Boolean',
-          attributeName: {
-            localPart: 'custFlipVert'
-          },
-          type: 'attribute'
-        }, {
           name: 'custFlipHor',
           typeInfo: 'Boolean',
           attributeName: {
@@ -882,52 +806,10 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'custSzX',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custSzX'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custSzY',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custSzY'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custScaleX',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custScaleX'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custScaleY',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custScaleY'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custT',
+          name: 'custFlipVert',
           typeInfo: 'Boolean',
           attributeName: {
-            localPart: 'custT'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custLinFactX',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custLinFactX'
-          },
-          type: 'attribute'
-        }, {
-          name: 'custLinFactY',
-          typeInfo: 'Int',
-          attributeName: {
-            localPart: 'custLinFactY'
+            localPart: 'custFlipVert'
           },
           type: 'attribute'
         }, {
@@ -945,10 +827,17 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'custRadScaleRad',
+          name: 'custLinFactX',
           typeInfo: 'Int',
           attributeName: {
-            localPart: 'custRadScaleRad'
+            localPart: 'custLinFactX'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custLinFactY',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custLinFactY'
           },
           type: 'attribute'
         }, {
@@ -956,6 +845,117 @@ export const org_docx4j_dml_diagram = {
           typeInfo: 'Int',
           attributeName: {
             localPart: 'custRadScaleInc'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custRadScaleRad',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custRadScaleRad'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custScaleX',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custScaleX'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custScaleY',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custScaleY'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custSzX',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custSzX'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custSzY',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'custSzY'
+          },
+          type: 'attribute'
+        }, {
+          name: 'custT',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'custT'
+          },
+          type: 'attribute'
+        }, {
+          name: 'loCatId',
+          attributeName: {
+            localPart: 'loCatId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'loTypeId',
+          attributeName: {
+            localPart: 'loTypeId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'phldr',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'phldr'
+          },
+          type: 'attribute'
+        }, {
+          name: 'phldrT',
+          attributeName: {
+            localPart: 'phldrT'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presAssocID',
+          attributeName: {
+            localPart: 'presAssocID'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presName',
+          attributeName: {
+            localPart: 'presName'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presStyleCnt',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'presStyleCnt'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presStyleIdx',
+          typeInfo: 'Int',
+          attributeName: {
+            localPart: 'presStyleIdx'
+          },
+          type: 'attribute'
+        }, {
+          name: 'presStyleLbl',
+          attributeName: {
+            localPart: 'presStyleLbl'
+          },
+          type: 'attribute'
+        }, {
+          name: 'qsCatId',
+          attributeName: {
+            localPart: 'qsCatId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'qsTypeId',
+          attributeName: {
+            localPart: 'qsTypeId'
           },
           type: 'attribute'
         }]
@@ -996,20 +996,6 @@ export const org_docx4j_dml_diagram = {
             }],
           type: 'elements'
         }, {
-          name: 'name',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
-          name: 'ref',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'ref'
-          },
-          type: 'attribute'
-        }, {
           name: 'axis',
           typeInfo: {
             type: 'list',
@@ -1020,13 +1006,13 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'ptType',
+          name: 'cnt',
           typeInfo: {
             type: 'list',
-            baseTypeInfo: '.STElementType'
+            baseTypeInfo: 'UnsignedInt'
           },
           attributeName: {
-            localPart: 'ptType'
+            localPart: 'cnt'
           },
           type: 'attribute'
         }, {
@@ -1040,6 +1026,30 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'name',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'name'
+          },
+          type: 'attribute'
+        }, {
+          name: 'ptType',
+          typeInfo: {
+            type: 'list',
+            baseTypeInfo: '.STElementType'
+          },
+          attributeName: {
+            localPart: 'ptType'
+          },
+          type: 'attribute'
+        }, {
+          name: 'ref',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'ref'
+          },
+          type: 'attribute'
+        }, {
           name: 'st',
           typeInfo: {
             type: 'list',
@@ -1047,16 +1057,6 @@ export const org_docx4j_dml_diagram = {
           },
           attributeName: {
             localPart: 'st'
-          },
-          type: 'attribute'
-        }, {
-          name: 'cnt',
-          typeInfo: {
-            type: 'list',
-            baseTypeInfo: 'UnsignedInt'
-          },
-          attributeName: {
-            localPart: 'cnt'
           },
           type: 'attribute'
         }, {
@@ -1122,20 +1122,6 @@ export const org_docx4j_dml_diagram = {
             }],
           type: 'elements'
         }, {
-          name: 'name',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
-          name: 'styleLbl',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'styleLbl'
-          },
-          type: 'attribute'
-        }, {
           name: 'chOrder',
           typeInfo: '.STChildOrderType',
           defaultValue: 'b',
@@ -1148,6 +1134,20 @@ export const org_docx4j_dml_diagram = {
           defaultValue: '',
           attributeName: {
             localPart: 'moveWith'
+          },
+          type: 'attribute'
+        }, {
+          name: 'name',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'name'
+          },
+          type: 'attribute'
+        }, {
+          name: 'styleLbl',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'styleLbl'
           },
           type: 'attribute'
         }]
@@ -1207,35 +1207,11 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'val',
-          typeInfo: 'Double',
-          defaultValue: NaN,
-          attributeName: {
-            localPart: 'val'
-          },
-          type: 'attribute'
-        }, {
           name: 'fact',
           typeInfo: 'Double',
           defaultValue: NaN,
           attributeName: {
             localPart: 'fact'
-          },
-          type: 'attribute'
-        }, {
-          name: 'max',
-          typeInfo: 'Double',
-          defaultValue: NaN,
-          attributeName: {
-            localPart: 'max'
-          },
-          type: 'attribute'
-        }, {
-          name: 'type',
-          required: true,
-          typeInfo: '.STConstraintType',
-          attributeName: {
-            localPart: 'type'
           },
           type: 'attribute'
         }, {
@@ -1254,11 +1230,35 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'max',
+          typeInfo: 'Double',
+          defaultValue: NaN,
+          attributeName: {
+            localPart: 'max'
+          },
+          type: 'attribute'
+        }, {
           name: 'ptType',
           typeInfo: '.STElementType',
           defaultValue: 'all',
           attributeName: {
             localPart: 'ptType'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          typeInfo: '.STConstraintType',
+          attributeName: {
+            localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
+          name: 'val',
+          typeInfo: 'Double',
+          defaultValue: NaN,
+          attributeName: {
+            localPart: 'val'
           },
           type: 'attribute'
         }]
@@ -1354,13 +1354,13 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'ptType',
+          name: 'cnt',
           typeInfo: {
             type: 'list',
-            baseTypeInfo: '.STElementType'
+            baseTypeInfo: 'UnsignedInt'
           },
           attributeName: {
-            localPart: 'ptType'
+            localPart: 'cnt'
           },
           type: 'attribute'
         }, {
@@ -1374,6 +1374,16 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'ptType',
+          typeInfo: {
+            type: 'list',
+            baseTypeInfo: '.STElementType'
+          },
+          attributeName: {
+            localPart: 'ptType'
+          },
+          type: 'attribute'
+        }, {
           name: 'st',
           typeInfo: {
             type: 'list',
@@ -1381,16 +1391,6 @@ export const org_docx4j_dml_diagram = {
           },
           attributeName: {
             localPart: 'st'
-          },
-          type: 'attribute'
-        }, {
-          name: 'cnt',
-          typeInfo: {
-            type: 'list',
-            baseTypeInfo: 'UnsignedInt'
-          },
-          attributeName: {
-            localPart: 'cnt'
           },
           type: 'attribute'
         }, {
@@ -1420,6 +1420,13 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
+          name: 'cxnId',
+          defaultValue: '0',
+          attributeName: {
+            localPart: 'cxnId'
+          },
+          type: 'attribute'
+        }, {
           name: 'modelId',
           required: true,
           attributeName: {
@@ -1432,13 +1439,6 @@ export const org_docx4j_dml_diagram = {
           defaultValue: 'node',
           attributeName: {
             localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'cxnId',
-          defaultValue: '0',
-          attributeName: {
-            localPart: 'cxnId'
           },
           type: 'attribute'
         }]
@@ -1455,6 +1455,15 @@ export const org_docx4j_dml_diagram = {
       localName: 'CTRelIds',
       typeName: 'CT_RelIds',
       propertyInfos: [{
+          name: 'cs',
+          required: true,
+          defaultValue: '',
+          attributeName: {
+            localPart: 'cs',
+            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
+          },
+          type: 'attribute'
+        }, {
           name: 'dm',
           required: true,
           defaultValue: '',
@@ -1478,15 +1487,6 @@ export const org_docx4j_dml_diagram = {
           defaultValue: '',
           attributeName: {
             localPart: 'qs',
-            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-          },
-          type: 'attribute'
-        }, {
-          name: 'cs',
-          required: true,
-          defaultValue: '',
-          attributeName: {
-            localPart: 'cs',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
           },
           type: 'attribute'
@@ -1525,18 +1525,18 @@ export const org_docx4j_dml_diagram = {
       localName: 'CTSDCategory',
       typeName: 'CT_SDCategory',
       propertyInfos: [{
-          name: 'type',
-          required: true,
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
           name: 'pri',
           required: true,
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'pri'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          required: true,
+          attributeName: {
+            localPart: 'type'
           },
           type: 'attribute'
         }]
@@ -1601,34 +1601,11 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'rot',
-          typeInfo: 'Double',
-          defaultValue: 0,
+          name: 'blipPhldr',
+          typeInfo: 'Boolean',
+          defaultValue: false,
           attributeName: {
-            localPart: 'rot'
-          },
-          type: 'attribute'
-        }, {
-          name: 'type',
-          defaultValue: 'none',
-          attributeName: {
-            localPart: 'type'
-          },
-          type: 'attribute'
-        }, {
-          name: 'blip',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'blip',
-            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
-          },
-          type: 'attribute'
-        }, {
-          name: 'zOrderOff',
-          typeInfo: 'Int',
-          defaultValue: 0,
-          attributeName: {
-            localPart: 'zOrderOff'
+            localPart: 'blipPhldr'
           },
           type: 'attribute'
         }, {
@@ -1648,11 +1625,34 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'blipPhldr',
-          typeInfo: 'Boolean',
-          defaultValue: false,
+          name: 'rot',
+          typeInfo: 'Double',
+          defaultValue: 0,
           attributeName: {
-            localPart: 'blipPhldr'
+            localPart: 'rot'
+          },
+          type: 'attribute'
+        }, {
+          name: 'type',
+          defaultValue: 'none',
+          attributeName: {
+            localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
+          name: 'zOrderOff',
+          typeInfo: 'Int',
+          defaultValue: 0,
+          attributeName: {
+            localPart: 'zOrderOff'
+          },
+          type: 'attribute'
+        }, {
+          name: 'blip',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'blip',
+            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/relationships'
           },
           type: 'attribute'
         }]
@@ -1685,17 +1685,17 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'uniqueId'
-          },
-          type: 'attribute'
-        }, {
           name: 'minVer',
           defaultValue: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/diagram',
           attributeName: {
             localPart: 'minVer'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uniqueId',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -1719,13 +1719,6 @@ export const org_docx4j_dml_diagram = {
           name: 'extLst',
           typeInfo: 'org_docx4j_dml.CTOfficeArtExtensionList'
         }, {
-          name: 'uniqueId',
-          required: true,
-          attributeName: {
-            localPart: 'uniqueId'
-          },
-          type: 'attribute'
-        }, {
           name: 'minVer',
           defaultValue: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/diagram',
           attributeName: {
@@ -1738,6 +1731,13 @@ export const org_docx4j_dml_diagram = {
           defaultValue: 0,
           attributeName: {
             localPart: 'resId'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uniqueId',
+          required: true,
+          attributeName: {
+            localPart: 'uniqueId'
           },
           type: 'attribute'
         }]
@@ -1835,40 +1835,10 @@ export const org_docx4j_dml_diagram = {
             }],
           type: 'elements'
         }, {
-          name: 'name',
-          defaultValue: '',
-          attributeName: {
-            localPart: 'name'
-          },
-          type: 'attribute'
-        }, {
-          name: 'func',
-          required: true,
-          typeInfo: '.STFunctionType',
-          attributeName: {
-            localPart: 'func'
-          },
-          type: 'attribute'
-        }, {
           name: 'arg',
           defaultValue: 'none',
           attributeName: {
             localPart: 'arg'
-          },
-          type: 'attribute'
-        }, {
-          name: 'op',
-          required: true,
-          typeInfo: '.STFunctionOperator',
-          attributeName: {
-            localPart: 'op'
-          },
-          type: 'attribute'
-        }, {
-          name: 'val',
-          required: true,
-          attributeName: {
-            localPart: 'val'
           },
           type: 'attribute'
         }, {
@@ -1882,13 +1852,21 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'ptType',
+          name: 'cnt',
           typeInfo: {
             type: 'list',
-            baseTypeInfo: '.STElementType'
+            baseTypeInfo: 'UnsignedInt'
           },
           attributeName: {
-            localPart: 'ptType'
+            localPart: 'cnt'
+          },
+          type: 'attribute'
+        }, {
+          name: 'func',
+          required: true,
+          typeInfo: '.STFunctionType',
+          attributeName: {
+            localPart: 'func'
           },
           type: 'attribute'
         }, {
@@ -1902,6 +1880,31 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
+          name: 'name',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'name'
+          },
+          type: 'attribute'
+        }, {
+          name: 'op',
+          required: true,
+          typeInfo: '.STFunctionOperator',
+          attributeName: {
+            localPart: 'op'
+          },
+          type: 'attribute'
+        }, {
+          name: 'ptType',
+          typeInfo: {
+            type: 'list',
+            baseTypeInfo: '.STElementType'
+          },
+          attributeName: {
+            localPart: 'ptType'
+          },
+          type: 'attribute'
+        }, {
           name: 'st',
           typeInfo: {
             type: 'list',
@@ -1912,16 +1915,6 @@ export const org_docx4j_dml_diagram = {
           },
           type: 'attribute'
         }, {
-          name: 'cnt',
-          typeInfo: {
-            type: 'list',
-            baseTypeInfo: 'UnsignedInt'
-          },
-          attributeName: {
-            localPart: 'cnt'
-          },
-          type: 'attribute'
-        }, {
           name: 'step',
           typeInfo: {
             type: 'list',
@@ -1929,6 +1922,13 @@ export const org_docx4j_dml_diagram = {
           },
           attributeName: {
             localPart: 'step'
+          },
+          type: 'attribute'
+        }, {
+          name: 'val',
+          required: true,
+          attributeName: {
+            localPart: 'val'
           },
           type: 'attribute'
         }]
