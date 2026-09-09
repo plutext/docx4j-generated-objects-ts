@@ -23,15 +23,29 @@ npm install --no-save typescript@5.6.3 ../jsonix/nodejs/scripts
 # (afterwards: npm install)
 
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index.mjs, index.d.mts, helpers/wml.mjs, .d.mts)
-npm run typecheck   # tsc --strict over modules/*.d.ts, modules/*.d.mts, src/, test/ (lib includes dom: the runtime typings need Node/Document)
+npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
 npm test            # build, then node test/smoke.mjs
+node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
 
-`test/smoke.mjs` unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
-`PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
-`v:line` attribute order `id style from to`, and that mappings load via `require()` (directly and
-by package self-reference) and via `import()` through `./modules/*`.
+`prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
+18, 20 and 22, installing the runtime from a checkout of `plutext/jsonix` at `./.runtime`
+(git-ignored); once the runtime is on npm that step and the `--no-save` install go away.
+
+There are two tests and no test framework:
+
+- `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
+  `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
+  `v:line` attribute order `id style from to`, that mappings load via `require()` (directly and
+  by package self-reference) and via `import()` through `./modules/*`, and the package round trip
+  (`unmarshalPackage` types the known parts, `marshalPackage` leaves its input untouched).
+- `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
+  minimal Office JS stubs. Change a README example and this file together.
+
+`typecheck` has `skipLibCheck: false` and includes every generated `.d.ts`, so it is also the check
+that a regeneration's declarations compile; `lib` includes `dom` because the runtime typings need
+`Node`/`Document`.
 
 ## Layout and rules
 
@@ -46,14 +60,30 @@ by package self-reference) and via `import()` through `./modules/*`.
   (`import` → `.mjs`, `require` → `.js`, `types` → `.d.ts`). Keep them stable.
 - The facade builds one `Jsonix.Context` over all modules lazily (`getContext`, first use) with
   `parentPointers: true`; modules depend on each other, so the context is all-or-nothing.
+  `resetContext()` drops the cached context so the next `getContext(options)` rebuilds it with
+  those options. The facade is asynchronous because modules load via dynamic `import()`.
   `unmarshalPackage` / `marshalPackage` handle flat OPC packages (Office JS `getOoxml()`): parts are
   `xsd:any processContents="skip"`, hence DOM by the schema, and are converted to typed elements
   where the model knows the root element (and back to DOM on marshal, without modifying the input).
-  README examples are compile-checked in `test/readme-examples.ts` against minimal Office JS stubs.
-  `MODULE_NAMES` in `src/index.mts` is maintained by hand when modules appear or disappear; the
-  smoke fails on a stale list (a mapping references a missing dependency).
+  `MODULE_NAMES` in `src/index.mts` is maintained by hand when modules appear or disappear
+  (`generate.sh` does not write it); the smoke fails on a stale list (a mapping references a
+  missing dependency).
 - `src/` and `test/` import from `../modules/...` and `../dist/...`; `dist/` is git-ignored and
-  built by `npm run build` (also on `prepublishOnly`).
+  built by `npm run build`.
+
+## Change requests
+
+`docs/change-requests/` holds numbered proposals (`CR-NNN-<slug>.md`, indexed with status in its
+`README.md`) for the hand-written part of this package only: the facade, the layout, the tests.
+Proposals for the generated `modules/` go to the compiler repository's `docs/change-requests/`,
+for the runtime to `plutext/jsonix`. Each CR names its docx4j counterpart, what it depends on,
+the tests it adds, and the consumers it affects (`docx4j-core-ts` files CRs against this package).
+Check the index before changing facade behaviour: a CR may already specify it. CR-001
+(implemented 2026-09-10) makes docx4j's prefix table (`NAMESPACE_PREFIXES`) the context default;
+the facade's marshal functions derive a per-root table (a `Relationships` root takes the default
+namespace, since the runtime allows one default) and strip unused root `xmlns` declarations,
+keeping what `mc:Ignorable` names. Marshal through the facade, not `createMarshaller()` directly,
+to get that output.
 
 ## What the declarations promise
 
@@ -72,3 +102,4 @@ split) and in `plutext/jsonix`'s `jsonix-CR-001`/`002`.
   `generate.sh`.
 - `../jsonix`: the `@docx4j/jsonix` runtime (`nodejs/scripts`), typings in `types/main.d.ts`.
 - `../docx4j`: the schemas (`xsd/ROOT.xsd`) and the Java model this package mirrors.
+- `../docx4j-core-ts`: the engine (`@docx4j/core-ts`), the main consumer of the facade.

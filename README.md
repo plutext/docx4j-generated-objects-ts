@@ -155,6 +155,14 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `marshalPackage` handle flat OPC packages with typed parts; `Jsonix` is re-exported. The facade is
   asynchronous because the modules are loaded with dynamic `import()`; for a synchronous setup
   import the modules you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.
+- **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
+  (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
+  Word writes it. The facade's marshal functions declare on the root element the namespaces the
+  tree uses plus every prefix the root's `mc:Ignorable` names, and nothing else; a `Relationships`
+  root uses the default namespace, as docx4j's relationships part mapper. To add or change
+  prefixes, pass a table before the context is first used:
+  `getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, 'urn:my-ns': 'my' } })`. A table
+  passed to `getContext` replaces the default (spread it to extend it).
 - **94 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export

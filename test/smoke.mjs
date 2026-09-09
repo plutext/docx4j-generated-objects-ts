@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, getContext, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, getContext, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -64,4 +64,26 @@ assert.match(packaged, /<w:t>HELLO<\/w:t>/);
 assert.equal(docPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_wml.Document', 'marshalPackage does not modify its input');
 const roundTripped = await unmarshalPackage(packaged);
 assert.equal(unwrap(roundTripped.value.part.find((p) => p.name === '/word/document.xml').xmlData.any).body.content.length, 2);
-console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip OK');
+
+// CR-001: docx4j's prefixes; the root declares what the tree uses and what mc:Ignorable names, nothing else.
+const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+const W14 = 'http://schemas.microsoft.com/office/word/2010/wordml';
+const W15 = 'http://schemas.microsoft.com/office/word/2012/wordml';
+const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
+const RELS = 'http://schemas.openxmlformats.org/package/2006/relationships';
+const declarations = (xml) => Object.fromEntries([...xml.slice(0, xml.indexOf('>')).matchAll(/ xmlns(?::([^=]+))?="([^"]*)"/g)].map((m) => [m[1] ?? '', m[2]]));
+const ignorable = await marshalString(await unmarshalString(
+  `<w:document xmlns:w="${W}" xmlns:w14="${W14}" xmlns:mc="${MC}" mc:Ignorable="w14 w15"><w:body><w:p w14:paraId="1"><w:r><w:t xml:space="preserve"> x</w:t></w:r></w:p></w:body></w:document>`,
+));
+assert.deepEqual(declarations(ignorable), { w: W, mc: MC, w14: W14, w15: W15 }, 'conventional prefixes; w15 declared because mc:Ignorable names it; nothing unused; no xmlns:xml');
+assert.match(ignorable, /<w:p w14:paraId="1"><w:r><w:t xml:space="preserve"> x<\/w:t>/);
+const relationships = await marshalString(await unmarshalString(`<Relationships xmlns="${RELS}"><Relationship Id="rId1" Type="http://x" Target="styles.xml"/></Relationships>`));
+assert.deepEqual(declarations(relationships), { '': RELS }, 'a Relationships root uses the default namespace');
+assert.match(relationships, /^<Relationships [^>]*><Relationship Id="rId1" Target="styles.xml" Type="http:\/\/x"\/><\/Relationships>$/, 'children unprefixed, nothing redeclared');
+assert.deepEqual(declarations(packaged), { pkg: 'http://schemas.microsoft.com/office/2006/xmlPackage' }, 'a package root declares only pkg; each part declares its own');
+resetContext();
+await getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, [W14]: 'wx14' } });
+assert.match(await marshalString(await unmarshalString(`<w:document xmlns:w="${W}" xmlns:w14="${W14}"><w:body><w:p w14:paraId="1"/></w:body></w:document>`)), /xmlns:wx14="[^"]*"[^>]*><w:body><w:p wx14:paraId="1"\/>/, 'a table passed to getContext replaces the default');
+resetContext();
+
+console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip, namespace prefixes OK');
