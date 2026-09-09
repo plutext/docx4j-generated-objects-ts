@@ -4,12 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`@docx4j/docx4j-ts`: Office Open XML as typed JavaScript. `modules/` holds 94 Jsonix mappings
+`@docx4j/generated-objects-ts`: Office Open XML as typed JavaScript. `modules/` holds 94 Jsonix mappings
 (UMD `.js`, ES module `.mjs`) with TypeScript declarations (`.d.ts`, `.d.mts`), **generated** by
 [jsonix-schema-compiler](https://github.com/plutext/jsonix-schema-compiler) from
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
 code: a facade with docx4j's names (`index.mts`) and `helpers/wml.mts`. The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.2.0+.
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.2.0+. This is the counterpart of docx4j's
+`docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
+(OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
+repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
+anything needing parts or relationships belongs there.
 
 ## Commands
 
@@ -33,7 +37,7 @@ by package self-reference) and via `import()` through `./modules/*`.
 
 - `modules/` is generated output plus a reference copy of `bindings.xjb`. **Never edit it by hand.**
   Regenerate from the compiler repository (`OfficeOpenXML/generate.sh ../docx4j/xsd/ROOT.xsd
-  ../docx4j-ts`, see `generate.md`); the output is deterministic, so a regeneration with unchanged
+  ../docx4j-generated-objects-ts`, see `generate.md`); the output is deterministic, so a regeneration with unchanged
   inputs is an empty diff. Commits that regenerate cite the compiler and docx4j commits used.
 - `package.json` deliberately has **no `"type": "module"`**: the UMD `.js` mappings must stay
   CommonJS-loadable; ES modules are marked by `.mjs`/`.mts`. Adding it breaks `require()` of every

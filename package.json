@@ -1,5 +1,5 @@
 {
-  "name": "@docx4j/docx4j-ts",
+  "name": "@docx4j/generated-objects-ts",
   "version": "0.1.0",
   "description": "Office Open XML (WordprocessingML, DrawingML, PresentationML, SpreadsheetML, VML, ...) as typed JavaScript: Jsonix mappings and TypeScript declarations generated from docx4j's schemas, with a docx4j-style facade.",
   "main": "./dist/index.mjs",
@@ -46,11 +46,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plutext/docx4j-ts.git"
+    "url": "git+https://github.com/plutext/docx4j-generated-objects-ts.git"
   },
-  "homepage": "https://github.com/plutext/docx4j-ts",
+  "homepage": "https://github.com/plutext/docx4j-generated-objects-ts",
   "bugs": {
-    "url": "https://github.com/plutext/docx4j-ts/issues"
+    "url": "https://github.com/plutext/docx4j-generated-objects-ts/issues"
   },
   "license": "Apache-2.0",
   "dependencies": {

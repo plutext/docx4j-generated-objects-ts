@@ -1,4 +1,4 @@
-// The facade of @docx4j/docx4j-ts: docx4j's names over the Jsonix runtime and the generated
+// The facade of @docx4j/generated-objects-ts: docx4j's names over the Jsonix runtime and the generated
 // Office Open XML mappings in ../modules. Hand-written; MODULE_NAMES is regenerated with the mappings.
 import { Jsonix } from '@docx4j/jsonix';
 export { Jsonix };

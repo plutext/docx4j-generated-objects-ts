@@ -18,7 +18,7 @@ assert.equal(tbl.TYPE_NAME, 'org_docx4j_wml.Tbl');
 assert.equal(p.PARENT, doc.body);
 const run = unwrap(p.content[0]);
 assert.equal(run.TYPE_NAME, 'org_docx4j_wml.R');
-assert.equal(unwrap(run.content[0]).value, 'Hello, docx4j-ts');
+assert.equal(unwrap(run.content[0]).value, 'Hello, generated-objects-ts');
 assert.equal(highlightHexValue(run.rPr.highlight), '#FFFF00');
 assert.equal(isCustomStyle({}), false);
 
@@ -40,8 +40,8 @@ assert.match(line, /line id="l1" style="x" from="0,0" to="1,1"/);
 // The UMD mappings stay CommonJS-loadable (no "type": "module" in package.json), also by package self-reference.
 const require = createRequire(import.meta.url);
 assert.equal(require('../modules/org_docx4j_wml.js').org_docx4j_wml.name, 'org_docx4j_wml');
-assert.equal(require('@docx4j/docx4j-ts/modules/org_docx4j_wml').org_docx4j_wml.name, 'org_docx4j_wml');
-const { org_docx4j_wml } = await import('@docx4j/docx4j-ts/modules/org_docx4j_wml');
+assert.equal(require('@docx4j/generated-objects-ts/modules/org_docx4j_wml').org_docx4j_wml.name, 'org_docx4j_wml');
+const { org_docx4j_wml } = await import('@docx4j/generated-objects-ts/modules/org_docx4j_wml');
 assert.equal(org_docx4j_wml.name, 'org_docx4j_wml');
 // Flat OPC package as Office JS getOoxml() returns it: the w:document inside pkg:xmlData is typed.
 const flat = `<?xml version="1.0" standalone="yes"?><pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">
@@ -64,4 +64,4 @@ assert.match(packaged, /<w:t>HELLO<\/w:t>/);
 assert.equal(docPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_wml.Document', 'marshalPackage does not modify its input');
 const roundTripped = await unmarshalPackage(packaged);
 assert.equal(unwrap(roundTripped.value.part.find((p) => p.name === '/word/document.xml').xmlData.any).body.content.length, 2);
-console.log('docx4j-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip OK');
+console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip OK');
