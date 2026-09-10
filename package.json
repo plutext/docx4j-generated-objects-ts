@@ -17,6 +17,14 @@
       "types": "./modules/*.d.ts",
       "import": "./modules/*.mjs",
       "require": "./modules/*.js"
+    },
+    "./factory/*": {
+      "types": "./modules/*.factory.d.mts",
+      "import": "./modules/*.factory.mjs"
+    },
+    "./el/*": {
+      "types": "./modules/*.el.d.mts",
+      "import": "./modules/*.el.mjs"
     }
   },
   "files": [

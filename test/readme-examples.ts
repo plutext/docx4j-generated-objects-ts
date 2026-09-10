@@ -63,3 +63,15 @@ export async function readPart(part: Word.CustomXmlPart): Promise<void> {
   const element = await unmarshalString(xml.value);
   part.setXml(await marshalString(element));
 }
+
+// Building content with the factories (CR-010)
+import { createP, createR, createText, createRElement, createRT } from '../modules/org_docx4j_wml.factory.mjs';
+import * as el from '../modules/org_docx4j_wml.el.mjs';
+export const built: P = createP({
+  pPr: { pStyle: { val: 'Heading1' } },
+  content: [createRElement(createR({ rPr: { b: {} }, content: [createRT(createText({ value: 'Hello' }))] }))],
+});
+export const same = el.p({ pPr: { pStyle: { val: 'Heading1' } }, content: [el.r({ rPr: { b: {} }, content: [el.t({ value: 'Hello' })] })] });
+export const sameValue: P = same.value;
+// @ts-expect-error a run holds Text, not P
+createRT(createP());

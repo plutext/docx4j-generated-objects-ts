@@ -49,6 +49,9 @@ that a regeneration's declarations compile; `lib` includes `dom` because the run
 
 ## Layout and rules
 
+- `modules/<Module>.factory.{mjs,d.mts}` and `<Module>.el.{mjs,d.mts}` are the generated element
+  factories (compiler CR-010: docx4j's `ObjectFactory` names, `createRT`, `createPElement`,
+  `el.p`), public as `./factory/*` and `./el/*`. They are generated with the modules.
 - `modules/` is generated output plus a reference copy of `bindings.xjb`. **Never edit it by hand.**
   Regenerate from the compiler repository (`OfficeOpenXML/generate.sh ../docx4j/xsd/ROOT.xsd
   ../docx4j-generated-objects-ts`, see `generate.md`); the output is deterministic, so a regeneration with unchanged

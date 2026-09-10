@@ -99,6 +99,32 @@ const paragraph: P = {
 const xml = await marshalString({ name: { namespaceURI: W, localPart: 'p' }, value: paragraph });
 ```
 
+### Building content with the factories
+
+Each module also ships docx4j's `ObjectFactory` (compiler CR-010), generated from the same model:
+`factory/<module>` has a creator per class (`createP(init?)`, which sets `TYPE_NAME`) and a wrapper
+per element declaration with XJC's names (`createRT(value)` for `w:t` in a run,
+`createPElement(value)` for the global `w:p`), and `el/<module>` has one wrapper per element name
+of the module's namespace. Both are ES modules of named exports, so a bundle keeps only what a
+program uses.
+
+```ts
+import { createP, createR, createText, createRElement, createRT } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
+import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
+
+const paragraph = createP({
+  pPr: { pStyle: { val: 'Heading1' } },
+  content: [createRElement(createR({ rPr: { b: {} }, content: [createRT(createText({ value: 'Hello' }))] }))],
+});
+const same = el.p({ pPr: { pStyle: { val: 'Heading1' } }, content: [el.r({ rPr: { b: {} }, content: [el.t({ value: 'Hello' })] })] });
+// createRT(createP())          -> compile error: a run holds Text, not P
+```
+
+A wrapper sets `TYPE_NAME` on a literal value when the declaration determines the type; `el.sdt`
+and `el.customXml`, one element name with four types by scope, leave it to the caller (the scoped
+`createSdtPrAlias`-style wrappers are the precise form). A creator's `init` is partial, so a
+literal (above) remains the stricter form: it is what checks required properties at compile time.
+
 ### Navigating with `TYPE_NAME` and `PARENT`
 
 ```ts

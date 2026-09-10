@@ -87,3 +87,26 @@ assert.match(await marshalString(await unmarshalString(`<w:document xmlns:w="${W
 resetContext();
 
 console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip, namespace prefixes OK');
+
+// Element factories (compiler CR-010): docx4j's ObjectFactory names, TYPE_NAME on wrapped literals,
+// the same XML as a literal, and the public subpaths ./factory/* and ./el/*.
+{
+  const { createP, createR, createText, createRElement, createRT, createPElement, createSdtPrAlias, createSdtPrAliasElement } = await import('@docx4j/generated-objects-ts/factory/org_docx4j_wml');
+  const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
+  const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const viaFactory = createPElement(createP({ content: [createRElement(createR({ content: [createRT(createText({ value: 'Hello' }))] }))] }));
+  const viaEl = el.p({ content: [el.r({ content: [el.t({ value: 'Hello' })] })] });
+  const literal = { name: { namespaceURI: W, localPart: 'p' }, value: { content: [{ name: { namespaceURI: W, localPart: 'r' }, value: { content: [{ name: { namespaceURI: W, localPart: 't' }, value: { value: 'Hello' } }] } }] } };
+  const expected = await marshalString(literal);
+  assert.equal(await marshalString(viaFactory), expected);
+  assert.equal(await marshalString(viaEl), expected);
+  assert.equal(viaFactory.value.TYPE_NAME, 'org_docx4j_wml.P');
+  assert.equal(viaEl.value.TYPE_NAME, 'org_docx4j_wml.P', 'el.p sets TYPE_NAME on a literal');
+  assert.equal(viaEl.value.content[0].value.content[0].value.TYPE_NAME, 'org_docx4j_wml.Text');
+  assert.equal(el.sdt({}).value.TYPE_NAME, undefined, 'el.sdt has four types by scope and leaves TYPE_NAME alone');
+  assert.equal(el.sdt({}).name.localPart, 'sdt');
+  assert.equal(createSdtPrAliasElement(createSdtPrAlias({ val: 'x' })).value.TYPE_NAME, 'org_docx4j_wml.SdtPr.Alias');
+  assert.equal(typeof el.object, 'function', 'a reserved-word element name is exported with `as`');
+  assert.equal(el.r({}).name.namespaceURI, W, 'el.r is w:r; m:r (a foreign namespace declared in WML scopes) is not in el');
+  console.log('factories: ObjectFactory names, TYPE_NAME and marshalling agree with literals');
+}
