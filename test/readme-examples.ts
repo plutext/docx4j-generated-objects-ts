@@ -75,3 +75,13 @@ export const same = el.p({ pPr: { pStyle: { val: 'Heading1' } }, content: [el.r(
 export const sameValue: P = same.value;
 // @ts-expect-error a run holds Text, not P
 createRT(createP());
+
+// Fragments, text sugar and traversal (CR-002)
+import { wml, p, r, tbl, textOf, find } from '../src/builders/wml.mjs';
+export async function fragments(): Promise<[string, number, P]> {
+  const [heading, table] = await wml`
+    <w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr>${r('Report', { bold: true })}</w:p>
+    ${tbl([['Item', 'Qty'], ['Widget', '3']], { style: 'TableGrid' })}`;
+  const para = p('Hello', { style: 'Heading1', italic: true, highlightColor: '#FFFF00' });
+  return [textOf(heading!), find(table!, 'org_docx4j_wml.Tc').length, para.value];
+}

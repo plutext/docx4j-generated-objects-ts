@@ -1,6 +1,6 @@
 # CR-002: `builders/wml`: XML fragments, text sugar and tree traversal for WordprocessingML
 
-**Status:** Proposed 2026-09-10
+**Status:** Implemented 2026-09-10 (`src/builders/wml.mts`, exported as `./builders/wml`)
 **Depends on:** compiler CR-010 (the generated `factory/*` and `el/*`, landed 2026-09-10), CR-001
 (the prefix table, `NAMESPACE_PREFIXES`)
 **Requested by:** `plutext/docx4j-core-ts` CR-002 (the content API), whose phase A this is; that

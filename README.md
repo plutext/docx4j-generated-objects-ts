@@ -125,6 +125,34 @@ and `el.customXml`, one element name with four types by scope, leave it to the c
 `createSdtPrAlias`-style wrappers are the precise form). A creator's `init` is partial, so a
 literal (above) remains the stricter form: it is what checks required properties at compile time.
 
+### Fragments, text sugar and traversal (`builders/wml`)
+
+`builders/wml` is the counterpart of docx4j-core's `XmlUtils.unmarshalString`, `TextUtils` and
+`TraversalUtil` (CR-002): things that need only the object model.
+
+```ts
+import { wml, p, r, tbl, textOf, find } from '@docx4j/generated-objects-ts/builders/wml';
+
+const [heading, table] = await wml`
+  <w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr>${r('Report', { bold: true })}</w:p>
+  ${tbl([['Item', 'Qty'], ['Widget', '3']], { style: 'TableGrid' })}`;
+const para = p('Hello', { style: 'Heading1', italic: true, highlightColor: '#FFFF00' });
+textOf(heading);                          // 'Report'
+find(table, 'org_docx4j_wml.Tc').length;  // 4
+```
+
+`wml` parses sibling elements as written inside `document.xml`, with docx4j's namespace
+declarations added, and returns them typed: the fragment is wrapped in the container docx4j would
+put it in (`w:body`, `w:p`, `w:tbl`, ...; a content control by its content), since the runtime
+unmarshals global elements only, so `w:r`, `w:tr` or `w:t` fragments work too. In the tagged form
+a typed element marshals in place, a string is escaped as text and `wml.raw(xml)` is inserted
+verbatim; the plain form `wml(xml, { wrapper, preprocess })` takes options. `p`, `r`, `t`, `br`,
+`tab` and `tbl` build content over `el`; run options use the names of Office JS `Word.Font`
+(`bold`, `name`, `size`, `highlightColor`, ...) through `applyRunOptions` / `readRunOptions`, the
+one mapping to `w:rPr` that `@docx4j/core-ts`'s `Font` view shares. `textOf` reads the text back;
+`walk`, `find` and `linkParents` are `TraversalUtil`, `ClassFinder` and what the unmarshaller does
+for `PARENT`.
+
 ### Navigating with `TYPE_NAME` and `PARENT`
 
 ```ts
@@ -195,6 +223,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.
 - **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
   `isCustomStyle`.
+- **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
+  the run mapping, `textOf`, `walk` / `find` / `linkParents` (CR-002).
 - `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).
 

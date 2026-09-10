@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 (UMD `.js`, ES module `.mjs`) with TypeScript declarations (`.d.ts`, `.d.mts`), **generated** by
 [jsonix-schema-compiler](https://github.com/plutext/jsonix-schema-compiler) from
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
-code: a facade with docx4j's names (`index.mts`) and `helpers/wml.mts`. The runtime is
+code: a facade with docx4j's names (`index.mts`), `helpers/wml.mts` (per-type docx4j decisions,
+compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
+`textOf`, traversal; imports the helpers, never the reverse). The runtime is
 [`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.2.0+. This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
@@ -22,7 +24,7 @@ anything needing parts or relationships belongs there.
 npm install --no-save typescript@5.6.3 ../jsonix/nodejs/scripts
 # (afterwards: npm install)
 
-npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index.mjs, index.d.mts, helpers/wml.mjs, .d.mts)
+npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
 npm test            # build, then node test/smoke.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
@@ -40,6 +42,9 @@ There are two tests and no test framework:
   `v:line` attribute order `id style from to`, that mappings load via `require()` (directly and
   by package self-reference) and via `import()` through `./modules/*`, and the package round trip
   (`unmarshalPackage` types the known parts, `marshalPackage` leaves its input untouched).
+  CR-002's block checks `builders/wml`: every wrapper row, the content control inference (nested,
+  forced), the tagged form, the sugar, the run mapping round trip, `textOf`, `walk` / `find` /
+  `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 
@@ -59,7 +64,7 @@ that a regeneration's declarations compile; `lib` includes `dom` because the run
 - `package.json` deliberately has **no `"type": "module"`**: the UMD `.js` mappings must stay
   CommonJS-loadable; ES modules are marked by `.mjs`/`.mts`. Adding it breaks `require()` of every
   mapping (ERR_REQUIRE_ESM).
-- Public paths are the `exports` map only: `.` (facade), `./helpers/wml`, `./modules/*`
+- Public paths are the `exports` map only: `.` (facade), `./helpers/wml`, `./builders/wml`, `./modules/*`
   (`import` → `.mjs`, `require` → `.js`, `types` → `.d.ts`). Keep them stable.
 - The facade builds one `Jsonix.Context` over all modules lazily (`getContext`, first use) with
   `parentPointers: true`; modules depend on each other, so the context is all-or-nothing.

@@ -13,6 +13,10 @@
       "types": "./dist/helpers/wml.d.mts",
       "import": "./dist/helpers/wml.mjs"
     },
+    "./builders/wml": {
+      "types": "./dist/builders/wml.d.mts",
+      "import": "./dist/builders/wml.mjs"
+    },
     "./modules/*": {
       "types": "./modules/*.d.ts",
       "import": "./modules/*.mjs",
