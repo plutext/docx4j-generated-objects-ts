@@ -20,7 +20,7 @@ anything needing parts or relationships belongs there.
 ## Commands
 
 ```
-npm install         # typescript and the @docx4j/jsonix runtime (^3.2.0) from npm
+npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
 npm test            # build, then node test/smoke.mjs
@@ -29,7 +29,7 @@ npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package
 ```
 
 `prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
-18, 20 and 22, after `npm install`.
+18, 20 and 22, after `npm ci`; `npm update` then a lockfile commit picks up newer dependency versions.
 Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted
 publishing, tag = `package.json` version); see `RELEASING.md`.
 

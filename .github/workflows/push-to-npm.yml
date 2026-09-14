@@ -1,8 +1,7 @@
 name: Publish @docx4j/generated-objects-ts to NPM
 
 # Mirrors plutext/jsonix's and plutext/jsonix-schema-compiler's push-to-npm.yml (trusted publishing, no
-# token). Differences: no lockfile is committed, so `npm install` rather than `npm ci`; publishing a
-# tarball skips prepublishOnly, so typecheck and test (which builds dist/) run as steps; the release tag
+# token). Differences: publishing a tarball skips prepublishOnly, so typecheck and test (which builds dist/) run as steps; the release tag
 # must match package.json's version. See RELEASING.md.
 
 on:
@@ -29,7 +28,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Install Project Dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Check release tag matches the package version
         id: version

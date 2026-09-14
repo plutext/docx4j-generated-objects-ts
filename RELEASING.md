@@ -12,7 +12,7 @@ the GitHub repository allowed to publish it: organization or user `plutext`, rep
 breaks publishing until the npmjs.com setting is changed to match.
 
 A trusted publisher is configured on an existing package, so the **first** version is published by hand
-(`npm publish --access public` from a clean checkout, after `npm install`; `prepublishOnly` runs typecheck
+(`npm publish --access public` from a clean checkout, after `npm ci`; `prepublishOnly` runs typecheck
 and test), and the trusted publisher is added on npmjs.com afterwards.
 
 npm versions cannot be reused once published (even after an unpublish): a problem found after
@@ -21,6 +21,13 @@ publishing ships as the next patch version.
 The package ships `dist/` (built from `src/`), the generated `modules/`, `README.md`, `LICENSE` and
 `NOTICE`; its only runtime dependency is `@docx4j/jsonix`. The compiler is not a dependency: `modules/`
 is generated from the sibling checkout (see `generate.md`) and committed.
+
+## Dependencies
+
+`package-lock.json` is committed and CI (`test.yml`, `push-to-npm.yml`) installs with `npm ci`, so a release
+build uses exactly the tested versions. It does not reach consumers (npm does not publish it); they
+resolve `package.json`'s ranges. To pick up newer versions within those ranges (a new `@docx4j/jsonix` or
+`@xmldom/xmldom`), run `npm update`, then typecheck and test, and commit the lockfile.
 
 ## Steps
 
@@ -31,8 +38,8 @@ is generated from the sibling checkout (see `generate.md`) and committed.
 # 2. Set the version (no tag or commit yet)
 npm version 0.1.1 --no-git-tag-version
 
-# 3. From a clean node_modules, check against the registry runtime and inspect the package
-rm -rf node_modules dist && npm install
+# 3. From a clean node_modules, check against the locked dependencies and inspect the package
+rm -rf node_modules dist && npm ci
 npm run typecheck && npm test
 npm pack --dry-run
 
@@ -45,7 +52,7 @@ git push origin main 0.1.1
 gh release create 0.1.1 --title "0.1.1" --notes "..."
 ```
 
-Publishing the release runs `push-to-npm.yml`, which installs, fails unless the release tag equals
+Publishing the release runs `push-to-npm.yml`, which installs with `npm ci`, fails unless the release tag equals
 `package.json`'s version, runs typecheck and test, checks the tree is unchanged, and runs `npm pack` and
 `npm publish` (with provenance, via OIDC).
 
