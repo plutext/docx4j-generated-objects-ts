@@ -8,7 +8,12 @@
 Publishing uses npm **trusted publishing**: no npm token is stored anywhere. The settings of the npm
 package `@docx4j/generated-objects-ts` (npmjs.com, scope `@docx4j`) name the publisher GitHub Actions and
 the GitHub repository allowed to publish it: organization or user `plutext`, repository
-`docx4j-generated-objects-ts`, workflow `push-to-npm.yml`, no environment. Renaming the workflow file
+`docx4j-generated-objects-ts`, workflow `push-to-npm.yml`, no environment, with **Allow npm publish**
+ticked. Without that permission the run gets its OIDC token and signs provenance, then `npm publish`
+fails with `E403 ... OIDC permission denied for this action` (as the first 0.1.1 run did; ticking it and
+re-running the failed job published the same version). The "Publishing access" setting (2FA, tokens)
+does not affect trusted publishing; "Require two-factor authentication and disallow bypass 2fa tokens"
+leaves CI, or a manual publish with a 2FA code, as the ways to publish. Renaming the workflow file
 breaks publishing until the npmjs.com setting is changed to match.
 
 A trusted publisher is configured on an existing package, so the first version (0.1.0) is published by
@@ -43,7 +48,8 @@ npm login                          # an npm account with publish rights on the @
 npm publish --access public        # prepublishOnly runs typecheck and test again
 ```
 
-Then, on npmjs.com, add the trusted publisher to the package's settings (as above). Do **not** create a
+Then, on npmjs.com, add the trusted publisher to the package's settings (as above, including **Allow npm
+publish**). Do **not** create a
 GitHub release for 0.1.0: it would run `push-to-npm.yml`, which fails because 0.1.0 is already
 published. Every later version follows "Steps".
 
