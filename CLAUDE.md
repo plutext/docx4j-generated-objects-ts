@@ -20,10 +20,7 @@ anything needing parts or relationships belongs there.
 ## Commands
 
 ```
-# Until @docx4j/jsonix 3.2.0 is on npm, install the runtime from a sibling checkout of plutext/jsonix
-npm install --no-save typescript@5.6.3 ../jsonix/nodejs/scripts
-# (afterwards: npm install)
-
+npm install         # typescript and the @docx4j/jsonix runtime (^3.2.0) from npm
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
 npm test            # build, then node test/smoke.mjs
@@ -32,8 +29,7 @@ npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package
 ```
 
 `prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
-18, 20 and 22, installing the runtime from a checkout of `plutext/jsonix` at `./.runtime`
-(git-ignored); once the runtime is on npm that step and the `--no-save` install go away.
+18, 20 and 22, after `npm install`.
 
 There are two tests and no test framework:
 
