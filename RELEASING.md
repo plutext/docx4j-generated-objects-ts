@@ -11,9 +11,8 @@ the GitHub repository allowed to publish it: organization or user `plutext`, rep
 `docx4j-generated-objects-ts`, workflow `push-to-npm.yml`, no environment. Renaming the workflow file
 breaks publishing until the npmjs.com setting is changed to match.
 
-A trusted publisher is configured on an existing package, so the **first** version is published by hand
-(`npm publish --access public` from a clean checkout, after `npm ci`; `prepublishOnly` runs typecheck
-and test), and the trusted publisher is added on npmjs.com afterwards.
+A trusted publisher is configured on an existing package, so the first version (0.1.0) is published by
+hand; see "First release" below.
 
 npm versions cannot be reused once published (even after an unpublish): a problem found after
 publishing ships as the next patch version.
@@ -29,13 +28,33 @@ build uses exactly the tested versions. It does not reach consumers (npm does no
 resolve `package.json`'s ranges. To pick up newer versions within those ranges (a new `@docx4j/jsonix` or
 `@xmldom/xmldom`), run `npm update`, then typecheck and test, and commit the lockfile.
 
+## First release (0.1.0)
+
+`package.json` already carries 0.1.0, so there is no version change. From the repository root, on a
+clean `main` whose CI (`test.yml`) has passed:
+
+```bash
+rm -rf node_modules dist && npm ci
+npm run typecheck && npm test
+npm pack --dry-run
+git tag -a 0.1.0 -m "Version 0.1.0"
+git push origin main 0.1.0
+npm login                          # an npm account with publish rights on the @docx4j scope
+npm publish --access public        # prepublishOnly runs typecheck and test again
+```
+
+Then, on npmjs.com, add the trusted publisher to the package's settings (as above). Do **not** create a
+GitHub release for 0.1.0: it would run `push-to-npm.yml`, which fails because 0.1.0 is already
+published. Every later version follows "Steps".
+
 ## Steps
 
 ```bash
 # 1. If modules/ is to be regenerated for the release, do it first and commit it citing the compiler
 #    and docx4j commits (see generate.md); a regeneration with unchanged inputs is an empty diff.
 
-# 2. Set the version (no tag or commit yet)
+# 2. Set the version, the next one after the latest on npm (npm view @docx4j/generated-objects-ts version);
+#    no tag or commit yet
 npm version 0.1.1 --no-git-tag-version
 
 # 3. From a clean node_modules, check against the locked dependencies and inspect the package
