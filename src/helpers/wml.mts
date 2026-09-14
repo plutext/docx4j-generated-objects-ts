@@ -3,7 +3,7 @@
 // the w:highlight colour table (Highlight.setVal / getHexVal), the LsdException.isQFormat()
 // fallback to the latent styles' defQFormat (needs parent pointers, jsonix-CR-002), and the
 // Style.isCustomStyle() rule (docx4j issue 641). Compiled to dist/helpers/wml.mjs by `npm run build`.
-import type { Highlight, Style, Styles } from '../../modules/org_docx4j_wml';
+import type { Highlight, Style, Styles } from '../../modules/org_docx4j_wml.mjs';
 
 /** w:highlight names and their sRGB values, as in docx4j (darkYellow uses gold). */
 export const HIGHLIGHT_COLORS: ReadonlyArray<readonly [name: string, hex: string]> = [

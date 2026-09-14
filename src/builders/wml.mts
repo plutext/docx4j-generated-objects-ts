@@ -10,7 +10,7 @@
 // Compiled to dist/builders/wml.mjs by `npm run build`.
 import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../index.mjs';
 import type { TypedNamedValue } from '../index.mjs';
-import type * as M from '../../modules/org_docx4j_wml';
+import type * as M from '../../modules/org_docx4j_wml.mjs';
 import * as el from '../../modules/org_docx4j_wml.el.mjs';
 import { highlightHexValue, highlightNameForColor } from '../helpers/wml.mjs';
 
