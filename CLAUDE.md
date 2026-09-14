@@ -30,6 +30,8 @@ npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package
 
 `prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
 18, 20 and 22, after `npm install`.
+Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted
+publishing, tag = `package.json` version); see `RELEASING.md`.
 
 There are two tests and no test framework:
 
