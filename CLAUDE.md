@@ -23,7 +23,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, then node test/smoke.mjs
+npm test            # build, then the nodenext consumer check, then node test/smoke.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -33,7 +33,7 @@ npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package
 Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted
 publishing, tag = `package.json` version); see `RELEASING.md`.
 
-There are two tests and no test framework:
+There are three tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -45,6 +45,13 @@ There are two tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
+- `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
+  path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
+  consumer does. The repository's tsconfigs use `bundler`, which accepts extensionless relative
+  imports in the emitted declarations; `nodenext` rejects them, and with `skipLibCheck` they
+  silently become `any` (0.1.0 shipped that in `helpers/wml` and `builders/wml`). Import `modules/`
+  from `src/` with the `.mjs` extension. Its `@ts-expect-error` lines go unused, and fail, if those types
+  resolve to `any`.
 
 `typecheck` has `skipLibCheck: false` and includes every generated `.d.ts`, so it is also the check
 that a regeneration's declarations compile; `lib` includes `dom` because the runtime typings need
