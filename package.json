@@ -1,6 +1,6 @@
 {
   "name": "@docx4j/generated-objects-ts",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Office Open XML (WordprocessingML, DrawingML, PresentationML, SpreadsheetML, VML, ...) as typed JavaScript: Jsonix mappings and TypeScript declarations generated from docx4j's schemas, with a docx4j-style facade.",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",

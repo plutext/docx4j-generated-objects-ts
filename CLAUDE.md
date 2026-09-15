@@ -116,3 +116,18 @@ split) and in `plutext/jsonix`'s `jsonix-CR-001`/`002`.
 - `../jsonix`: the `@docx4j/jsonix` runtime (`nodejs/scripts`), typings in `types/main.d.ts`.
 - `../docx4j`: the schemas (`xsd/ROOT.xsd`) and the Java model this package mirrors.
 - `../docx4j-core-ts`: the engine (`@docx4j/core-ts`), the main consumer of the facade.
+
+## Portfolio task registry
+
+This repository's change requests are indexed, with their dependencies on work in the other
+docx4j repositories, in `../docx4j-portfolio/tasks.yaml` (ids `<repo>/<CR>[.<phase>]`; this
+repository's key is `objects-ts`).
+
+- When a CR's status changes (a phase lands; a CR is proposed, deferred or abandoned) or its
+  dependencies change, update the matching entry in `tasks.yaml` in the same session (`status`,
+  `depends_on`; add an entry for a new CR or phase).
+- Then run `python3 ../docx4j-portfolio/scripts/tasks.py check`. It reports `CHANGED` for each CR
+  whose Status line was edited; once the registry entry agrees, run `tasks.py accept` (and
+  `tasks.py graph` if dependencies changed).
+- Before starting a CR or phase, check `python3 ../docx4j-portfolio/scripts/tasks.py blocked`: it
+  may be waiting on work in another repository.
