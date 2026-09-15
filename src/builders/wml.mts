@@ -125,7 +125,7 @@ export async function wmlOne<T = unknown>(first: string | TemplateStringsArray, 
 }
 
 function parseXml(text: string): Document {
-  return (Jsonix as unknown as { DOM: { parse(text: string): Document } }).DOM.parse(text);
+  return Jsonix.DOM.parse(text);
 }
 
 function firstElementChild(node: Node, after?: globalThis.Element): globalThis.Element | undefined {

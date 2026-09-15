@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 code: a facade with docx4j's names (`index.mts`), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.2.0+. This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.2.1+. This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;

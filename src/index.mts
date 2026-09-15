@@ -1,5 +1,6 @@
 // The facade of @docx4j/generated-objects-ts: docx4j's names over the Jsonix runtime and the generated
-// Office Open XML mappings in ../modules. Hand-written; MODULE_NAMES is regenerated with the mappings.
+// Office Open XML mappings in ../modules. Hand-written, MODULE_NAMES included: generate.sh does not write
+// it, so add or remove names when modules appear or disappear (the smoke test fails on a stale list).
 import { Jsonix } from '@docx4j/jsonix';
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
@@ -299,7 +300,7 @@ function isNode(value: unknown): value is Node {
  * one namespace to the default prefix.
  */
 function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedValue): Record<string, string> {
-  const table: Record<string, string> = { ...(context as unknown as { namespacePrefixes: Record<string, string> }).namespacePrefixes };
+  const table: Record<string, string> = { ...context.namespacePrefixes };
   if (root.name.namespaceURI === RELATIONSHIPS_NS) {
     table[RELATIONSHIPS_NS] = '';
     if (table[SML_NS] === '') table[SML_NS] = 's';
@@ -312,7 +313,7 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * the tree uses (CR-001 section 3): the runtime declares every entry of the table on the root
  * element, used or not. The context is not modified: the marshaller sees the table through a
  * derived object, the runtime's `namespacePrefixes` field being the documented option (jsonix-CR-003
- * is the runtime fix; when it lands this reduces to createMarshaller().marshalDocument).
+ * part 2, deferred to 3.3.0, is the runtime fix; when it lands this reduces to createMarshaller().marshalDocument).
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue): Document {
   const derived = Object.create(context, { namespacePrefixes: { value: namespacePrefixesFor(context, element) } }) as Jsonix.Context;
@@ -321,9 +322,9 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
   return doc;
 }
 
-/** The runtime's serializer (xmldom in Node, XMLSerializer in browsers); not in its typings. */
+/** The runtime's serializer (xmldom in Node, XMLSerializer in browsers). */
 function serialize(doc: Document): string {
-  return (Jsonix as unknown as { DOM: { serialize(node: Node): string } }).DOM.serialize(doc);
+  return Jsonix.DOM.serialize(doc);
 }
 
 function prefixOfDeclaration(attr: Attr): string | undefined {
