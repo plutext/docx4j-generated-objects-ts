@@ -123,7 +123,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, rPrToElements, rPrFromElements, walkAll, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, rPrToElements, rPrFromElements, walkAll, sdt, W15_NAMESPACE, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -249,6 +249,13 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   }
   assert.equal(sdtProperty(blockSdt.value.sdtPr, 'tag').value.val, 'a-tag');
   assert.equal(sdtProperty(blockSdt.value.sdtPr, 'nope'), undefined);
+  // Word writes a repeating section's binding as w15:dataBinding, so sdtProperty takes a list or '*'.
+  const [boundSdt] = await wml('<w:sdt><w:sdtPr><w:id w:val="9"/><w15:dataBinding w:xpath="/root[1]/a[1]" w:storeItemID="{GUID}"/></w:sdtPr><w:sdtContent><w:p/></w:sdtContent></w:sdt>');
+  const boundPr = boundSdt.value.sdtPr;
+  assert.equal(sdtProperty(boundPr, 'dataBinding'), undefined, 'the wml default does not see the w15 twin');
+  assert.equal(sdtProperty(boundPr, 'dataBinding', W15_NAMESPACE)?.value.xpath, '/root[1]/a[1]');
+  assert.equal(sdtProperty(boundPr, 'dataBinding', [W, W15_NAMESPACE])?.value.storeItemID, '{GUID}', 'an array looks in both');
+  assert.equal(sdtProperty(boundPr, 'dataBinding', '*')?.value.xpath, '/root[1]/a[1]', "'*' is any namespace");
   assert.ok(nextSdtId(blockSdt) !== 7 && Number.isInteger(nextSdtId(blockSdt)), 'nextSdtId avoids the ids in the tree');
   assert.equal(textOf(blockSdt), 'inside', 'textOf reads a control built by sdt');
 

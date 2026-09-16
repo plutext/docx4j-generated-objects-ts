@@ -88,7 +88,7 @@ export interface SdtOptions { kind?: SdtKind; id?: number; tag?: string; title?:
 export function sdtPr(options?: SdtOptions): M.SdtPr;
 export function sdt(content: Element[], options?: SdtOptions): Element<M.SdtBlock | M.SdtRun | M.CTSdtRow | M.CTSdtCell>;
 export function nextSdtId(root: unknown): number;
-export function sdtProperty<T = unknown>(sdtPr: M.SdtPr | undefined, localPart: string, namespaceURI?: string): Element<T> | undefined;
+export function sdtProperty<T = unknown>(sdtPr: M.SdtPr | undefined, localPart: string, namespaceURI?: string | readonly string[]): Element<T> | undefined;   // '*' for any
 export function sdtKindOf(sdtPr: M.SdtPr | undefined): SdtKind | 'Unknown';
 ```
 
@@ -106,6 +106,14 @@ export function sdtKindOf(sdtPr: M.SdtPr | undefined): SdtKind | 'Unknown';
 - `sdtProperty` finds a `w:sdtPr` child by name (default namespace wml; w14 and w15 for the
   checkbox, appearance, repeating section). `sdtKindOf` is the inverse of the kind element
   (`docPartObj` and `docPartList` are both `BuildingBlockGallery`).
+- **Namespaces (2026-09-16, reported by core-ts after the 0.1.4 swap).** Some children exist in more
+  than one namespace: Word 2013 and later write the binding of a repeating section, or of a
+  container-bound rich-text control, as `w15:dataBinding` rather than `w:dataBinding` (the same
+  `w:CT_DataBinding` type and attributes; 3 of the 20 bindings in docx4j's `invoice2013.docx`). A
+  reader that assumed wml lost them, so `sdtProperty`'s third parameter now takes a namespace, an
+  array of them, or `'*'` for any, with wml still the default; `W14_NAMESPACE` and `W15_NAMESPACE`
+  are exported for the call. `sdtKindOf` already reads w15's repeating section, and its
+  documentation now points at this.
 
 ### 3.2 Inline pictures
 

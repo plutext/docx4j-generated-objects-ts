@@ -649,12 +649,30 @@ export function nextSdtId(root: unknown): number {
 /**
  * A `w:sdtPr` child by element name (`tag`, `alias`, `id`, `dataBinding`, w14's `checkbox`,
  * w15's `appearance`, ...): the model keeps them as one choice list, as docx4j does.
+ *
+ * `namespaceURI` is wml by default, an array to look in several namespaces, or `'*'` for any.
+ * Word writes some children in more than one namespace: the binding of a repeating section or of
+ * a container-bound rich-text control is `w15:dataBinding` (same `w:CT_DataBinding` type, same
+ * `xpath` / `storeItemID`), so a reader of bindings wants
+ * `sdtProperty(pr, 'dataBinding', [W_NS, W15_NS])` or `'*'`. In docx4j's `invoice2013.docx` 3 of
+ * the 20 bindings are w15 (reported by `@docx4j/core-ts`, 2026-09-16).
  */
-export function sdtProperty<T = unknown>(pr: M.SdtPr | undefined, localPart: string, namespaceURI: string = W_NS): Element<T> | undefined {
-  return (pr?.rPrOrAliasOrLock ?? []).find((item) => item.name.localPart === localPart && item.name.namespaceURI === namespaceURI) as Element<T> | undefined;
+export function sdtProperty<T = unknown>(pr: M.SdtPr | undefined, localPart: string, namespaceURI: string | readonly string[] = W_NS): Element<T> | undefined {
+  const wanted = namespaceURI === '*' ? undefined : new Set(typeof namespaceURI === 'string' ? [namespaceURI] : namespaceURI);
+  return (pr?.rPrOrAliasOrLock ?? []).find(
+    (item) => item.name.localPart === localPart && (wanted === undefined || wanted.has(item.name.namespaceURI)),
+  ) as Element<T> | undefined;
 }
 
-/** The kind Word reports for a control, from the kind element in its `w:sdtPr`; rich text when untyped. */
+/** The Word 2010 and 2012 namespaces, for `sdtProperty`'s second look (`w14:checkbox`, `w15:dataBinding`). */
+export const W14_NAMESPACE = 'http://schemas.microsoft.com/office/word/2010/wordml';
+export const W15_NAMESPACE = 'http://schemas.microsoft.com/office/word/2012/wordml';
+
+/**
+ * The kind Word reports for a control, from the kind element in its `w:sdtPr`; rich text when
+ * untyped. w15's `repeatingSection` and `repeatingSectionItem` count, as Word reports them; note
+ * that a binding may be `w15:dataBinding` rather than `w:dataBinding` (see `sdtProperty`).
+ */
 export function sdtKindOf(pr: M.SdtPr | undefined): SdtKind {
   for (const item of pr?.rPrOrAliasOrLock ?? []) {
     const kind = KIND_BY_ELEMENT[item.name.localPart];
