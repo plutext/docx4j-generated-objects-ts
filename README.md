@@ -150,6 +150,8 @@ verbatim; the plain form `wml(xml, { wrapper, preprocess })` takes options. `p`,
 `tab` and `tbl` build content over `el`; run options use the names of Office JS `Word.Font`
 (`bold`, `name`, `size`, `highlightColor`, ...) through `applyRunOptions` / `readRunOptions`, the
 one mapping to `w:rPr` that `@docx4j/core-ts`'s `Font` view shares. `textOf` reads the text back;
+`runItemsOf` gives a holder's run-level list under whichever property name the model uses
+(`w:ins`, `w:del`, `w:moveFrom`, `w:moveTo`, a run-level content control);
 `walk`, `find` and `linkParents` are `TraversalUtil`, `ClassFinder` and what the unmarshaller does
 for `PARENT`.
 
@@ -224,7 +226,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 - **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
   `isCustomStyle`.
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
-  the run mapping, `textOf`, `walk` / `find` / `linkParents` (CR-002).
+  the run mapping, `textOf`, `runItemsOf`, `walk` / `find` / `linkParents` (CR-002, CR-003).
 - `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).
 

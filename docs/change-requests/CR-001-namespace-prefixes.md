@@ -220,7 +220,9 @@ declarations and `pkg:package` declares only `pkg`, as Word writes it. The `xml`
 declared. This gives the output docx4j gives. (The walk uses `childNodes`, not
 `firstElementChild`: `@xmldom/xmldom` 0.9 does not implement the latter.)
 
-Proper fix, in the runtime (to be filed as jsonix-CR-003): `namespacePrefixes` becomes a
+Proper fix, in the runtime (filed as jsonix-CR-003, whose part 2 is deferred to 3.3.0; its part 1,
+the `Jsonix.DOM` and `Context.namespacePrefixes` typings, shipped in 3.2.1 and removed this
+package's casts): `namespacePrefixes` becomes a
 preference only (declared where first used); a new marshaller option, say
 `declareNamespaces: string[]`, lists the URIs to declare on the root regardless; and `xml` is
 seeded as already declared. When that lands, the interim stripping becomes a no-op and can go.

@@ -47,7 +47,9 @@ assert.equal(org_docx4j_wml.name, 'org_docx4j_wml');
 const flat = `<?xml version="1.0" standalone="yes"?><pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">
 <pkg:part pkg:name="/_rels/.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml"><pkg:xmlData>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships></pkg:xmlData></pkg:part>
-<pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${xml.replace(/^<\?xml[^>]*>\s*/, '')}</pkg:xmlData></pkg:part></pkg:package>`;
+<pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${xml.replace(/^<\?xml[^>]*>\s*/, '')}</pkg:xmlData></pkg:part>
+<pkg:part pkg:name="/word/commentsExtensible.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.commentsExtensible+xml"><pkg:xmlData>
+<w16cex:commentsExtensible xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="w16cex"><w16cex:commentExtensible w16cex:durableId="1A2B3C4D" w16cex:dateUtc="2026-09-16T10:30:00Z"/></w16cex:commentsExtensible></pkg:xmlData></pkg:part></pkg:package>`;
 const raw = await unmarshalString(flat);
 assert.equal(raw.value.TYPE_NAME, 'org_docx4j_xmlPackage.Package');
 assert.equal(typeof raw.value.part[1].xmlData.any.nodeType, 'number', 'the schema says skip: plain unmarshalling yields DOM');
@@ -58,6 +60,13 @@ assert.equal(docPart.xmlData.any.value.body.content[0].value.TYPE_NAME, 'org_doc
 const relsPart = pkgElement.value.part.find((p) => p.name === '/_rels/.rels');
 assert.equal(relsPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_relationships.Relationships');
 unwrap(docPart.xmlData.any.value.body.content[0]).content[0].value.content[0].value.value = 'HELLO';
+// The w16cex module (docx4j CR-018): word/commentsExtensible.xml is typed like any known root element.
+const cexPart = pkgElement.value.part.find((p) => p.name === '/word/commentsExtensible.xml');
+assert.equal(cexPart.xmlData.any.value.TYPE_NAME, 'org_docx4j_w16cex.CTCommentsExtensible', 'unmarshalPackage types a w16cex part');
+assert.equal(cexPart.xmlData.any.value.commentExtensible[0].durableId, '1A2B3C4D');
+assert.equal(cexPart.xmlData.any.value.commentExtensible[0].dateUtc.year, 2026, 'dateUtc is a calendar');
+assert.equal(cexPart.xmlData.any.value.ignorable, 'w16cex', 'mc:Ignorable on the w16cex root (CR-018)');
+
 const packaged = await marshalPackage(pkgElement);
 assert.match(packaged, /pkg:package/);
 assert.match(packaged, /<w:t>HELLO<\/w:t>/);
