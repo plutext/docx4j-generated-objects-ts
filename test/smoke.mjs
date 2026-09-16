@@ -123,7 +123,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -226,5 +226,31 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   const [sdtRun] = await wml('<w:sdt><w:sdtPr><w:id w:val="1"/></w:sdtPr><w:sdtContent><w:r><w:t>in a control</w:t></w:r></w:sdtContent></w:sdt>', { wrapper: 'p' });
   assert.equal(runItemsOf(sdtRun.value).length, 1, 'runItemsOf: a run-level content control reads through sdtContent');
   assert.equal(runItemsOf({}), undefined, 'runItemsOf: no run list');
+  // CR-003 section 3.1: content controls in the four forms, their kind elements, and the readers.
+  const blockSdt = sdt([p('inside')], { kind: 'PlainText', tag: 'a-tag', title: 'A title', id: 7 });
+  assert.equal(blockSdt.value.TYPE_NAME, 'org_docx4j_wml.SdtBlock', 'paragraph content gives the block form');
+  assert.equal(blockSdt.value.sdtContent.TYPE_NAME, 'org_docx4j_wml.SdtContentBlock');
+  assert.equal(await marshalString(blockSdt),
+    `<w:sdt xmlns:w="${W}"><w:sdtPr><w:alias w:val="A title"/><w:tag w:val="a-tag"/><w:id w:val="7"/><w:text/></w:sdtPr><w:sdtContent><w:p><w:r><w:t>inside</w:t></w:r></w:p></w:sdtContent></w:sdt>`,
+    'w:sdtPr writes alias, tag, id then the kind element');
+  assert.equal(sdt([r('x')], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.SdtRun', 'a run gives the run form');
+  const [aRow] = await wml('<w:tr><w:tc><w:p/></w:tc></w:tr>');
+  assert.equal(sdt([aRow], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.CTSdtRow', 'a w:tr gives the row form');
+  const [aCell] = await wml('<w:tc><w:p/></w:tc>');
+  assert.equal(sdt([aCell], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.CTSdtCell', 'a w:tc gives the cell form');
+  assert.equal(sdt([r('x')], { id: 1, form: 'block' }).value.TYPE_NAME, 'org_docx4j_wml.SdtBlock', 'form overrides the inference');
+  assert.throws(() => sdt([r('x')], { kind: 'RepeatingSection' }), /block-level control/);
+  const checkbox = sdt([r('x')], { kind: 'CheckBox', id: 2 });
+  assert.equal(sdtProperty(checkbox.value.sdtPr, 'checkbox', W14).value.checked.val, false, 'w14:checked is a boolean since 0.1.3');
+  assert.equal(sdtKindOf(checkbox.value.sdtPr), 'CheckBox');
+  assert.equal(sdtKindOf(sdt([p('x')], { id: 3 }).value.sdtPr), 'RichText', 'an untyped control is rich text');
+  for (const kind of ['PlainText', 'Picture', 'BuildingBlockGallery', 'ComboBox', 'DropDownList', 'DatePicker', 'RepeatingSection', 'RepeatingSectionItem', 'Group', 'Citation', 'Bibliography', 'Equation']) {
+    assert.equal(sdtKindOf(sdtPr({ kind })), kind, `sdtKindOf round trip: ${kind}`);
+  }
+  assert.equal(sdtProperty(blockSdt.value.sdtPr, 'tag').value.val, 'a-tag');
+  assert.equal(sdtProperty(blockSdt.value.sdtPr, 'nope'), undefined);
+  assert.ok(nextSdtId(blockSdt) !== 7 && Number.isInteger(nextSdtId(blockSdt)), 'nextSdtId avoids the ids in the tree');
+  assert.equal(textOf(blockSdt), 'inside', 'textOf reads a control built by sdt');
+
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
 }

@@ -65,6 +65,8 @@ as Word writes it. docx4j: `XmlUtils.deepCopy` into a `PPrBase` built by hand.
 
 ### 3.1 Content controls
 
+**Implemented 2026-09-16** (`sdt`, `sdtPr`, `nextSdtId`, `sdtProperty`, `sdtKindOf`).
+
 ```ts
 export type SdtKind = 'RichText' | 'PlainText' | 'Picture' | 'BuildingBlockGallery' | 'CheckBox' | 'ComboBox'
   | 'DropDownList' | 'DatePicker' | 'RepeatingSection' | 'RepeatingSectionItem' | 'Group' | 'Citation' | 'Bibliography' | 'Equation';
@@ -181,7 +183,8 @@ only for what neither form types (DOM held by `xs:any`).
   core-ts asked for (2026-09-16), by the size of the copy each removes: `sdt` / `sdtPr` /
   `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
   `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
-  then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1).
+  then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1), and section
+  3.1 (content controls) is implemented.
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
   No deadline: core-ts's `toApiScript` fallback works with marshalled XML.
 

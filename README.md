@@ -226,7 +226,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 - **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
   `isCustomStyle`.
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
-  the run mapping, `textOf`, `runItemsOf`, `walk` / `find` / `linkParents` (CR-002, CR-003).
+  the run mapping, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for content controls, `textOf`,
+  `runItemsOf`, `walk` / `find` / `linkParents` (CR-002, CR-003).
 - `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).
 

@@ -5,6 +5,8 @@
 //   - text sugar over `el` (`p`, `r`, `t`, `br`, `tab`, `tbl`) and `textOf` the other way, with the
 //     one name-to-w:rPr mapping (`RunOptions`, `applyRunOptions` / `readRunOptions`) that core-ts's
 //     Font view shares;
+//   - content controls (CR-003): `sdt` in its four forms with a typed `w:sdtPr`, and the readers
+//     `sdtProperty` / `sdtKindOf`;
 //   - traversal: `walk`, `find`, `linkParents`.
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
@@ -12,6 +14,8 @@ import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../ind
 import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
 import * as el from '../../modules/org_docx4j_wml.el.mjs';
+import * as w14el from '../../modules/org_docx4j_w14.el.mjs';
+import * as w15el from '../../modules/org_docx4j_w15.el.mjs';
 import { highlightHexValue, highlightNameForColor } from '../helpers/wml.mjs';
 
 /** A `{ name, value }` pair as content arrays hold them. */
@@ -484,6 +488,146 @@ function blockTexts(container: object, out: string[]): void {
   if (tn === 'org_docx4j_wml.R') { out.push(runText(container as M.R)); return; }
   if (tn !== undefined && RUN_CONTAINERS.has(tn)) { out.push(inlineText(container)); return; }
   for (const item of childValues(container)) blockTexts(item, out);
+}
+
+/** Office JS `Word.ContentControlType`, as Word reports a control from its `w:sdtPr` (CR-003 section 3.1). */
+export type SdtKind = 'RichText' | 'PlainText' | 'Picture' | 'BuildingBlockGallery' | 'CheckBox' | 'ComboBox'
+  | 'DropDownList' | 'DatePicker' | 'RepeatingSection' | 'RepeatingSectionItem' | 'Group' | 'Citation' | 'Bibliography' | 'Equation';
+
+/** Which of the four `w:sdt` forms: the model types each differently (SdtBlock, SdtRun, CTSdtRow, CTSdtCell). */
+export type SdtForm = 'block' | 'run' | 'row' | 'cell';
+
+export interface SdtOptions {
+  /** The kind element in `w:sdtPr`; rich text is the untyped control, as Word writes it. */
+  kind?: SdtKind;
+  /** `w:id`; a random 31-bit id when absent (`nextSdtId` gives one free in a tree). */
+  id?: number;
+  /** `w:tag`. */
+  tag?: string;
+  /** `w:alias`, which Word shows as the title. */
+  title?: string;
+  /** Overrides the form inferred from the content. */
+  form?: SdtForm;
+}
+
+const CHECKBOX_FONT = 'MS Gothic';
+
+/** The `w:sdtPr` child that types a control, by the kind Word reports; none for rich text. */
+function kindElement(kind: SdtKind): Element | undefined {
+  switch (kind) {
+    case 'RichText': return undefined;
+    case 'PlainText': return el.text({});
+    case 'Picture': return el.picture({});
+    case 'BuildingBlockGallery': return el.docPartObj({});
+    case 'CheckBox': return w14el.checkbox({ checked: { val: false }, checkedState: { val: '2612', font: CHECKBOX_FONT }, uncheckedState: { val: '2610', font: CHECKBOX_FONT } }) as Element;
+    case 'ComboBox': return el.comboBox({});
+    case 'DropDownList': return el.dropDownList({});
+    case 'DatePicker': return el.date({ dateFormat: { val: 'd/MM/yyyy' }, storeMappedDataAs: { val: 'dateTime' } });
+    case 'RepeatingSection': return w15el.repeatingSection({}) as Element;
+    case 'RepeatingSectionItem': return w15el.repeatingSectionItem({}) as Element;
+    case 'Group': return el.group({});
+    case 'Citation': return el.citation({});
+    case 'Bibliography': return el.bibliography({});
+    case 'Equation': return el.equation({});
+  }
+}
+
+/** The kind element's local name back to the kind Word reports (docPartList is a gallery too). */
+const KIND_BY_ELEMENT: Readonly<Record<string, SdtKind>> = {
+  text: 'PlainText', richText: 'RichText', picture: 'Picture', docPartObj: 'BuildingBlockGallery', docPartList: 'BuildingBlockGallery',
+  checkbox: 'CheckBox', comboBox: 'ComboBox', dropDownList: 'DropDownList', date: 'DatePicker',
+  repeatingSection: 'RepeatingSection', repeatingSectionItem: 'RepeatingSectionItem', group: 'Group',
+  citation: 'Citation', bibliography: 'Bibliography', equation: 'Equation',
+};
+
+/** Run-level items a `w:sdt` can wrap; `w:tr` and `w:tc` give the row and cell forms, everything else block. */
+function formOf(content: Element[]): SdtForm {
+  const first = content.find((item) => isElement(item));
+  const name = first?.name.localPart;
+  if (name === undefined) return 'block';
+  if (name === 'tr') return 'row';
+  if (name === 'tc') return 'cell';
+  if (RUN_LEVEL.has(name) || RUN_CONTENT.has(name)) return 'run';
+  return 'block';
+}
+
+/**
+ * A `w:sdtPr`: `w:alias`, `w:tag`, `w:id` and the kind element, in that order (docx4j's
+ * `org.docx4j.model.sdt` writes the same; core-ts's `insertContentControl` used to build it).
+ */
+export function sdtPr(options: SdtOptions = {}): M.SdtPr {
+  const items: Element[] = [];
+  if (options.title !== undefined) items.push(el.alias({ val: options.title }));
+  if (options.tag !== undefined) items.push(el.tag({ val: options.tag }));
+  items.push(el.id({ val: options.id ?? randomSdtId() }));
+  const typed = options.kind === undefined ? undefined : kindElement(options.kind);
+  if (typed) items.push(typed);
+  return { TYPE_NAME: 'org_docx4j_wml.SdtPr', rPrOrAliasOrLock: items as M.SdtPr['rPrOrAliasOrLock'] };
+}
+
+const SDT_CONTENT_TYPE: Record<SdtForm, [sdt: string, content: string]> = {
+  block: ['org_docx4j_wml.SdtBlock', 'org_docx4j_wml.SdtContentBlock'],
+  run: ['org_docx4j_wml.SdtRun', 'org_docx4j_wml.CTSdtContentRun'],
+  row: ['org_docx4j_wml.CTSdtRow', 'org_docx4j_wml.CTSdtContentRow'],
+  cell: ['org_docx4j_wml.CTSdtCell', 'org_docx4j_wml.CTSdtContentCell'],
+};
+
+/**
+ * A content control wrapping `content`. The form follows the content (`w:tr` a row, `w:tc` a cell,
+ * runs and run content a run, everything else block) unless `form` says otherwise; `w:sdt` is one
+ * element name with four types, so the value's `TYPE_NAME` is what tells them apart.
+ * A repeating section is block-level, as in Word, and throws in the run form.
+ */
+export function sdt(content: Element[], options: SdtOptions = {}): Element<M.SdtBlock | M.SdtRun | M.CTSdtRow | M.CTSdtCell> {
+  const form = options.form ?? formOf(content);
+  if (options.kind === 'RepeatingSection' && form === 'run') {
+    throw new Error('A repeating section is a block-level control; wrap paragraphs or a table, or pass form');
+  }
+  const [sdtType, contentType] = SDT_CONTENT_TYPE[form];
+  const value = {
+    TYPE_NAME: sdtType,
+    sdtPr: sdtPr(options),
+    sdtContent: { TYPE_NAME: contentType, content },
+  } as unknown as M.SdtBlock | M.SdtRun | M.CTSdtRow | M.CTSdtCell;
+  const element = el.sdt(value);
+  linkParents(value, undefined);
+  return element;
+}
+
+function randomSdtId(): number {
+  return 1 + Math.floor(Math.random() * 0x3fffffff);
+}
+
+/** A free `w:id` for a new control: unique among the ids of the controls under `root`, as Word's are. */
+export function nextSdtId(root: unknown): number {
+  const used = new Set<number>();
+  for (const pr of find<M.SdtPr>(root, 'org_docx4j_wml.SdtPr')) {
+    for (const item of pr.rPrOrAliasOrLock ?? []) {
+      if (item.name.localPart !== 'id') continue;
+      const val = (item.value as { val?: number }).val;
+      if (typeof val === 'number') used.add(val);
+    }
+  }
+  let id = randomSdtId();
+  while (used.has(id)) id = randomSdtId();
+  return id;
+}
+
+/**
+ * A `w:sdtPr` child by element name (`tag`, `alias`, `id`, `dataBinding`, w14's `checkbox`,
+ * w15's `appearance`, ...): the model keeps them as one choice list, as docx4j does.
+ */
+export function sdtProperty<T = unknown>(pr: M.SdtPr | undefined, localPart: string, namespaceURI: string = W_NS): Element<T> | undefined {
+  return (pr?.rPrOrAliasOrLock ?? []).find((item) => item.name.localPart === localPart && item.name.namespaceURI === namespaceURI) as Element<T> | undefined;
+}
+
+/** The kind Word reports for a control, from the kind element in its `w:sdtPr`; rich text when untyped. */
+export function sdtKindOf(pr: M.SdtPr | undefined): SdtKind {
+  for (const item of pr?.rPrOrAliasOrLock ?? []) {
+    const kind = KIND_BY_ELEMENT[item.name.localPart];
+    if (kind) return kind;
+  }
+  return 'RichText';
 }
 
 /**
