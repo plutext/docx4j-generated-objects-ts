@@ -8,7 +8,8 @@
 //   - content controls (CR-003): `sdt` in its four forms with a typed `w:sdtPr`, and the readers
 //     `sdtProperty` / `sdtKindOf`; rows and cells (`tr`, `tc`) and `inlinePicture`, docx4j's
 //     createImageInline over the generated dml factories;
-//   - traversal: `walk`, `find`, `linkParents`.
+//   - run properties as the element list `w:rPrChange/w:rPr` keeps (`rPrToElements` / `rPrFromElements`);
+//   - traversal: `walk`, `walkAll` (DOM in `xs:any` properties too), `find`, `linkParents`.
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
 import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../index.mjs';
@@ -16,6 +17,7 @@ import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
 import type * as Dml from '../../modules/org_docx4j_dml.mjs';
 import * as el from '../../modules/org_docx4j_wml.el.mjs';
+import * as wmlFactory from '../../modules/org_docx4j_wml.factory.mjs';
 import * as w14el from '../../modules/org_docx4j_w14.el.mjs';
 import * as w15el from '../../modules/org_docx4j_w15.el.mjs';
 import * as picEl from '../../modules/org_docx4j_dml_picture.el.mjs';
@@ -760,6 +762,81 @@ export function runItemsOf(value: object): Element[] | undefined {
 }
 
 /**
+ * `w:rPr`'s properties in `EG_RPrBase` order (the declaration order of `RPr` up to `oMath`, then
+ * the w14 effects), each with the generated wrapper that writes it inside `w:rPrChange/w:rPr`:
+ * the scoped `createCTRPrChangeRPr*` where XJC generated one, the module's `el` wrapper for the
+ * five wml elements that have none (they are global elements), and w14's `el` for `w14:shadow`
+ * (`shadow14` here, since `shadow` is wml's boolean). A property with no wrapper is not in the
+ * group and is skipped, `rPrChange` among them: a recorded original has no original of its own.
+ */
+const RPR_ELEMENTS: ReadonlyArray<readonly [property: string, wrap: (value: never) => Element]> = [
+  ['rStyle', el.rStyle], ['rFonts', el.rFonts],
+  ['b', wmlFactory.createCTRPrChangeRPrB], ['bCs', wmlFactory.createCTRPrChangeRPrBCs],
+  ['i', wmlFactory.createCTRPrChangeRPrI], ['iCs', wmlFactory.createCTRPrChangeRPrICs],
+  ['caps', wmlFactory.createCTRPrChangeRPrCaps], ['smallCaps', wmlFactory.createCTRPrChangeRPrSmallCaps],
+  ['strike', wmlFactory.createCTRPrChangeRPrStrike], ['dstrike', wmlFactory.createCTRPrChangeRPrDstrike],
+  ['outline', wmlFactory.createCTRPrChangeRPrOutline], ['shadow', wmlFactory.createCTRPrChangeRPrShadow],
+  ['emboss', wmlFactory.createCTRPrChangeRPrEmboss], ['imprint', wmlFactory.createCTRPrChangeRPrImprint],
+  ['noProof', wmlFactory.createCTRPrChangeRPrNoProof], ['snapToGrid', wmlFactory.createCTRPrChangeRPrSnapToGrid],
+  ['vanish', wmlFactory.createCTRPrChangeRPrVanish], ['webHidden', wmlFactory.createCTRPrChangeRPrWebHidden],
+  ['color', el.color], ['spacing', wmlFactory.createCTRPrChangeRPrSpacing], ['w', wmlFactory.createCTRPrChangeRPrW],
+  ['kern', wmlFactory.createCTRPrChangeRPrKern], ['position', wmlFactory.createCTRPrChangeRPrPosition],
+  ['sz', wmlFactory.createCTRPrChangeRPrSz], ['szCs', wmlFactory.createCTRPrChangeRPrSzCs],
+  ['highlight', el.highlight], ['u', el.u], ['effect', wmlFactory.createCTRPrChangeRPrEffect],
+  ['bdr', wmlFactory.createCTRPrChangeRPrBdr], ['shd', wmlFactory.createCTRPrChangeRPrShd],
+  ['fitText', wmlFactory.createCTRPrChangeRPrFitText], ['vertAlign', wmlFactory.createCTRPrChangeRPrVertAlign],
+  ['rtl', wmlFactory.createCTRPrChangeRPrRtl], ['cs', wmlFactory.createCTRPrChangeRPrCs],
+  ['em', wmlFactory.createCTRPrChangeRPrEm], ['lang', wmlFactory.createCTRPrChangeRPrLang],
+  ['eastAsianLayout', wmlFactory.createCTRPrChangeRPrEastAsianLayout],
+  ['specVanish', wmlFactory.createCTRPrChangeRPrSpecVanish], ['oMath', wmlFactory.createCTRPrChangeRPrOMath],
+  ['glow', wmlFactory.createCTRPrChangeRPrGlow], ['shadow14', w14el.shadow],
+  ['reflection', wmlFactory.createCTRPrChangeRPrReflection], ['textOutline', wmlFactory.createCTRPrChangeRPrTextOutline],
+  ['textFill', wmlFactory.createCTRPrChangeRPrTextFill], ['scene3D', wmlFactory.createCTRPrChangeRPrScene3D],
+  ['props3D', wmlFactory.createCTRPrChangeRPrProps3D], ['ligatures', wmlFactory.createCTRPrChangeRPrLigatures],
+  ['numForm', wmlFactory.createCTRPrChangeRPrNumForm], ['numSpacing', wmlFactory.createCTRPrChangeRPrNumSpacing],
+  ['stylisticSets', wmlFactory.createCTRPrChangeRPrStylisticSets], ['cntxtAlts', wmlFactory.createCTRPrChangeRPrCntxtAlts],
+] as ReadonlyArray<readonly [string, (value: never) => Element]>;
+
+/**
+ * `w:rPr`'s named properties as the element list `w:rPrChange/w:rPr` keeps (`CTRPrChange.RPr`,
+ * an `EG_RPrBase` list), in schema order, through the generated wrappers, the w14 effects
+ * included. `w:rPrChange` itself is not carried over (a recorded original has no original).
+ */
+export function rPrToElements(rPr: M.RPr | undefined): NonNullable<M.CTRPrChange.RPr['egrPrBase']> {
+  const out: Element[] = [];
+  const source = rPr as unknown as Record<string, unknown> | undefined;
+  if (!source) return out as NonNullable<M.CTRPrChange.RPr['egrPrBase']>;
+  for (const [property, wrap] of RPR_ELEMENTS) {
+    const value = source[property];
+    if (value === undefined) continue;
+    out.push((wrap as (v: unknown) => Element)(Jsonix.Util.deepCopy(value, undefined)));
+  }
+  return out as NonNullable<M.CTRPrChange.RPr['egrPrBase']>;
+}
+
+/** The `w:rPr` property an element of the group belongs to: the w14 names differ from the element names. */
+function propertyOf(item: Element): string {
+  const name = item.name.localPart;
+  if (item.name.namespaceURI !== W14_NS) return name;
+  if (name === 'shadow') return 'shadow14';
+  if (name === 'scene3d') return 'scene3D';
+  if (name === 'props3d') return 'props3D';
+  return name;
+}
+
+const W14_NS = 'http://schemas.microsoft.com/office/word/2010/wordml';
+
+/** The inverse: the element list back to `w:rPr`'s named properties (docx4j's reject of a formatting change). */
+export function rPrFromElements(list: M.CTRPrChange.RPr | M.CTRPrChange.RPr['egrPrBase'] | undefined): M.RPr {
+  const items = Array.isArray(list) ? list : list?.egrPrBase ?? [];
+  const rPr = { TYPE_NAME: 'org_docx4j_wml.RPr' } as M.RPr;
+  const target = rPr as unknown as Record<string, unknown>;
+  for (const item of items) target[propertyOf(item)] = Jsonix.Util.deepCopy(item.value, undefined);
+  linkParents(rPr, undefined);
+  return rPr;
+}
+
+/**
  * docx4j TraversalUtil: depth first over every typed object under `root`. `{ name, value }` pairs
  * and arrays are descended, not visited; QNames, calendars and DOM nodes are not entered. The
  * visitor gets the object, its parent object and the key (property name or array index) it was
@@ -790,6 +867,41 @@ export function find<T = unknown>(root: unknown, typeName: string): T[] {
     if ((v as { TYPE_NAME?: string }).TYPE_NAME === typeName) out.push(v as T);
   });
   return out;
+}
+
+/**
+ * `walk`, plus the DOM elements held by `xs:any` properties, which `walk` does not enter (a flat
+ * OPC part, an `a:extLst` extension): `domVisitor` gets each such element and every element under
+ * it, walked with `childNodes` (xmldom has no `firstElementChild`). Use it to rewrite references
+ * wherever they are, such as an SVG twin's `r:embed` in an extension (CR-003 section 3.6).
+ */
+export function walkAll(
+  root: unknown,
+  visitor: (value: object, parent: object | undefined, key: string | number) => boolean | void,
+  domVisitor: (node: globalThis.Element, owner: object | undefined, key: string | number) => void,
+): void {
+  walk(root, (value, parent, key) => {
+    const result = visitor(value, parent, key);
+    if (result === false) return false;
+    for (const [property, held] of Object.entries(value)) {
+      for (const node of (Array.isArray(held) ? held : [held])) {
+        if (!isDomElement(node)) continue;
+        walkDomElements(node, (element) => domVisitor(element, value, property));
+      }
+    }
+    return undefined;
+  });
+}
+
+function isDomElement(value: unknown): value is globalThis.Element {
+  return typeof value === 'object' && value !== null && (value as Node).nodeType === 1;
+}
+
+function walkDomElements(node: globalThis.Element, visit: (element: globalThis.Element) => void): void {
+  visit(node);
+  for (let child = node.firstChild; child; child = child.nextSibling) {
+    if (child.nodeType === 1) walkDomElements(child as globalThis.Element, visit);
+  }
 }
 
 /** Sets PARENT (non-enumerable, writable, configurable: as the unmarshaller does) on `value` and, recursively, on its typed descendants. */

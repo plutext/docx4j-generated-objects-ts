@@ -207,7 +207,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 
 - **The facade** (`src/index.mts`, built to `dist/`): `getContext()` builds one `Jsonix.Context` over all 96 modules,
   lazily on first use, with `parentPointers: true`; `unmarshalString`, `marshalString`, `unmarshalNode`,
-  `marshalNode`, `unwrap` and `deepCopy` are docx4j's `XmlUtils` names over it; `unmarshalPackage` /
+  `marshalNode`, `unwrap` and `deepCopy` are docx4j's `XmlUtils` names over it, with `deepCopyAs`
+  for a copy typed as a base type (`w:pPrChange` holds a `PPrBase`, not a `PPr`); `unmarshalPackage` /
   `marshalPackage` handle flat OPC packages with typed parts; `Jsonix` is re-exported. The facade is
   asynchronous because the modules are loaded with dynamic `import()`; for a synchronous setup
   import the modules you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.
@@ -227,7 +228,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `isCustomStyle`.
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
   the run mapping, `tr` / `tc`, `inlinePicture`, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for
-  content controls, `textOf`,
+  content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `textOf`,
   `runItemsOf`, `walk` / `find` / `linkParents` (CR-002, CR-003).
 - `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).

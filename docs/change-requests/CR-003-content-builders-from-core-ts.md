@@ -49,6 +49,11 @@ Gaps that are not tree helpers are routed elsewhere (section 7).
 
 ## 2. `deepCopyAs` (facade)
 
+**Implemented 2026-09-16.** It is `async`, since the check needs the context: the target must be the
+value's own type or one of its bases, and the copy keeps only what that type declares. The property
+names come from the context's mapping model (`TypeInfo.properties`), which the runtime's typings do
+not declare, so the facade casts for it: a candidate for a later jsonix typings CR, as `Jsonix.DOM` was.
+
 ```ts
 export function deepCopyAs<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): T;
 ```
@@ -140,6 +145,8 @@ inserted text, and `w:moveFrom` is skipped as `w:del` is.
 
 ### 3.5 Run properties as an element list
 
+**Implemented 2026-09-16** (`rPrToElements`, `rPrFromElements`).
+
 ```ts
 export function rPrToElements(rPr: M.RPr): NonNullable<M.CTRPrChange.RPr['egrPrBase']>;
 export function rPrFromElements(list: M.CTRPrChange.RPr | M.CTRPrChange.RPr['egrPrBase'] | undefined): M.RPr;
@@ -154,6 +161,8 @@ the inverse and ignores `w:rPrChange` itself. The same pair serves `w:pPr/w:rPr`
 `CTParaRPrOriginal` in a later revision if core-ts needs it.
 
 ### 3.6 Walking into DOM
+
+**Implemented 2026-09-16** (`walkAll`).
 
 ```ts
 export function walkAll(root: unknown, visitor: (value: object, parent: object | undefined, key: string | number) => boolean | void,
@@ -188,7 +197,7 @@ only for what neither form types (DOM held by `xs:any`).
   `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
   `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
   then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1), and section
-  3.1 (content controls), 3.2 (inline pictures) and 3.3 (rows and cells) are implemented.
+  **phase A is complete as of 2026-09-16**: sections 2, 3.1 to 3.6 are all implemented.
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
   No deadline: core-ts's `toApiScript` fallback works with marshalled XML.
 

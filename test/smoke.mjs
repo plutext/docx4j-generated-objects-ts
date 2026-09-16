@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, getContext, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, getContext, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -123,7 +123,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, rPrToElements, rPrFromElements, walkAll, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -277,6 +277,36 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   assert.match(pictureXml, /<a:prstGeom prst="rect"><a:avLst\/><\/a:prstGeom>/);
   assert.equal(find(picture, 'org_docx4j_dml_picture.Pic').length, 1, 'the pic is reachable by TYPE_NAME');
   assert.equal(picture.value.anchorOrInline[0].docPr.PARENT, picture.value.anchorOrInline[0], 'inlinePicture links PARENT');
+
+  // CR-003 section 2 and 3.5: deepCopyAs for w:pPrChange, and w:rPr as the EG_RPrBase element list.
+  const [styled] = await wml('<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr></w:p>');
+  const asBase = await deepCopyAs(styled.value.pPr, 'org_docx4j_wml.PPrBase');
+  assert.equal(asBase.TYPE_NAME, 'org_docx4j_wml.PPrBase');
+  assert.deepEqual(Object.keys(asBase).filter((k) => k !== 'TYPE_NAME'), ['pStyle', 'jc'], 'properties PPrBase does not declare are dropped');
+  assert.ok(styled.value.pPr.rPr, 'the original is untouched');
+  styled.value.pPr.pPrChange = { id: 1, author: 'A', pPr: asBase };
+  const changed = await marshalString(styled);
+  assert.match(changed, /<w:pPrChange w:id="1" w:author="A"><w:pPr><w:pStyle w:val="Heading1"\/><w:jc w:val="center"\/><\/w:pPr><\/w:pPrChange>/, 'no xsi:type, as Word writes it');
+  await assert.rejects(deepCopyAs(styled.value.pPr, 'org_docx4j_wml.RPr'), /not org_docx4j_wml.PPr or one of its base types/);
+
+  const [rich2] = await wml('<w:r><w:rPr><w:rStyle w:val="Strong"/><w:b/><w:color w:val="FF0000"/><w:shadow/><w:u w:val="single"/><w14:glow w14:rad="1"><w14:srgbClr w14:val="FF0000"/></w14:glow><w14:shadow w14:blurRad="1"><w14:srgbClr w14:val="00FF00"/></w14:shadow><w14:ligatures w14:val="standard"/></w:rPr></w:r>', { wrapper: 'p' });
+  const asElements = rPrToElements(rich2.value.rPr);
+  assert.deepEqual(asElements.map((e) => (e.name.namespaceURI === W14 ? 'w14:' : '') + e.name.localPart),
+    ['rStyle', 'b', 'shadow', 'color', 'u', 'w14:glow', 'w14:shadow', 'w14:ligatures'],
+    'EG_RPrBase order, wml shadow before color, the w14 effects last');
+  const backToRPr = rPrFromElements(asElements);
+  assert.deepEqual(Object.keys(backToRPr).filter((k) => k !== 'TYPE_NAME' && k !== 'PARENT').sort(),
+    ['b', 'color', 'glow', 'ligatures', 'rStyle', 'shadow', 'shadow14', 'u'], 'w14:shadow comes back as shadow14, not shadow');
+  assert.equal(backToRPr.shadow14.blurRad, 1, 'the w14 effect keeps its value');
+  assert.equal(rPrToElements(undefined).length, 0);
+  assert.equal(rPrFromElements(undefined).TYPE_NAME, 'org_docx4j_wml.RPr');
+
+  // CR-003 section 3.6: walkAll enters the DOM an xs:any property holds.
+  const domSeenAll = [];
+  walkAll(pkgElement, () => {}, (node) => { if (node.getAttribute && node.getAttribute('w:val')) domSeenAll.push(node.nodeName); });
+  const typedSeen = [];
+  walkAll(pkgElement, (v) => { typedSeen.push(v); }, () => {});
+  assert.ok(typedSeen.length > 0, 'walkAll visits typed objects like walk');
 
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
 }

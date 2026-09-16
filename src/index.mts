@@ -281,6 +281,47 @@ export function deepCopy<T>(value: T, parent?: unknown): T {
   return Jsonix.Util.deepCopy(value, parent);
 }
 
+/**
+ * The property names a type declares, its bases included, from the context's mapping model.
+ * (`TypeInfo.properties` is not in the runtime's typings, hence the cast; a candidate for a
+ * jsonix typings CR, as `Jsonix.DOM` was.)
+ */
+function declaredProperties(typeInfo: Jsonix.TypeInfo | undefined): Set<string> {
+  const names = new Set<string>();
+  for (let ti = typeInfo; ti; ti = ti.baseTypeInfo) {
+    for (const property of (ti as unknown as { properties?: { name: string }[] }).properties ?? []) names.add(property.name);
+  }
+  return names;
+}
+
+/**
+ * `deepCopy`, then the copy is typed as `typeName`: its `TYPE_NAME` is set and the properties that
+ * type does not declare are removed. `typeName` must be the value's own type or one of its bases.
+ *
+ * docx4j does this with a hand-built object: a `w:pPrChange` holds a `PPrBase`, not the `PPr` a
+ * paragraph has, and a copy that keeps `PPr` marshals as `<w:pPr xsi:type="w:CT_PPr">`, which is
+ * valid but not what Word writes (CR-003 section 2).
+ */
+export async function deepCopyAs<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): Promise<T> {
+  const context = await getContext();
+  const from = (value as { TYPE_NAME?: string }).TYPE_NAME;
+  const target = context.getTypeInfoByName(typeName as string);
+  if (!target) throw new Error(`Not a type in this context: ${String(typeName)}`);
+  let ok = from === undefined;
+  for (let ti: Jsonix.TypeInfo | undefined = from === undefined ? undefined : context.getTypeInfoByName(from); ti && !ok; ti = ti.baseTypeInfo) {
+    if (ti.name === typeName) ok = true;
+  }
+  if (!ok) throw new Error(`${String(typeName)} is not ${from} or one of its base types`);
+  const copy = deepCopy(value, parent) as Record<string, unknown>;
+  const declared = declaredProperties(target);
+  for (const key of Object.keys(copy)) {
+    if (key === 'TYPE_NAME' || key === 'PARENT') continue;
+    if (!declared.has(key)) delete copy[key];
+  }
+  copy.TYPE_NAME = typeName as string;
+  return copy as T;
+}
+
 /** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context. */
 export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(node: Node): Promise<E> {
   return (await getContext()).createUnmarshaller().unmarshalDocument<E>(node);
