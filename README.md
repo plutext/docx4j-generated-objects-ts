@@ -208,7 +208,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 - **The facade** (`src/index.mts`, built to `dist/`): `getContext()` builds one `Jsonix.Context` over all 96 modules,
   lazily on first use, with `parentPointers: true`; `unmarshalString`, `marshalString`, `unmarshalNode`,
   `marshalNode`, `unwrap` and `deepCopy` are docx4j's `XmlUtils` names over it, with `deepCopyAs`
-  for a copy typed as a base type (`w:pPrChange` holds a `PPrBase`, not a `PPr`); `unmarshalPackage` /
+  for a copy typed as a base type (`w:pPrChange` holds a `PPrBase`, not a `PPr`) and
+  `deepCopyAsSync` / `getContextSync` where a caller cannot await; `unmarshalPackage` /
   `marshalPackage` handle flat OPC packages with typed parts; `Jsonix` is re-exported. The facade is
   asynchronous because the modules are loaded with dynamic `import()`; for a synchronous setup
   import the modules you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.

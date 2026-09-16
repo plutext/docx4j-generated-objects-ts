@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, getContext, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -288,6 +288,11 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   const changed = await marshalString(styled);
   assert.match(changed, /<w:pPrChange w:id="1" w:author="A"><w:pPr><w:pStyle w:val="Heading1"\/><w:jc w:val="center"\/><\/w:pPr><\/w:pPrChange>/, 'no xsi:type, as Word writes it');
   await assert.rejects(deepCopyAs(styled.value.pPr, 'org_docx4j_wml.RPr'), /not org_docx4j_wml.PPr or one of its base types/);
+  // core-ts records a w:pPrChange inside synchronous Office JS-shaped setters, so both forms exist.
+  const syncCopy = deepCopyAsSync(styled.value.pPr, 'org_docx4j_wml.PPrBase');
+  assert.deepEqual(Object.keys(syncCopy), Object.keys(asBase), 'deepCopyAsSync agrees with the async form');
+  assert.throws(() => deepCopyAsSync(styled.value.pPr, 'org_docx4j_wml.RPr'), /not org_docx4j_wml.PPr or one of its base types/);
+  assert.ok(getContextSync(), 'the context is built by now');
 
   const [rich2] = await wml('<w:r><w:rPr><w:rStyle w:val="Strong"/><w:b/><w:color w:val="FF0000"/><w:shadow/><w:u w:val="single"/><w14:glow w14:rad="1"><w14:srgbClr w14:val="FF0000"/></w14:glow><w14:shadow w14:blurRad="1"><w14:srgbClr w14:val="00FF00"/></w14:shadow><w14:ligatures w14:val="standard"/></w:rPr></w:r>', { wrapper: 'p' });
   const asElements = rPrToElements(rich2.value.rPr);

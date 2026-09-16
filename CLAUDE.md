@@ -75,7 +75,8 @@ that a regeneration's declarations compile; `lib` includes `dom` because the run
 - The facade builds one `Jsonix.Context` over all modules lazily (`getContext`, first use) with
   `parentPointers: true`; modules depend on each other, so the context is all-or-nothing.
   `resetContext()` drops the cached context so the next `getContext(options)` rebuilds it with
-  those options. The facade is asynchronous because modules load via dynamic `import()`.
+  those options; `getContextSync()` returns the built context or throws, for `deepCopyAsSync` and
+  other callers that cannot await (CR-003 section 2). The facade is asynchronous because modules load via dynamic `import()`.
   `unmarshalPackage` / `marshalPackage` handle flat OPC packages (Office JS `getOoxml()`): parts are
   `xsd:any processContents="skip"`, hence DOM by the schema, and are converted to typed elements
   where the model knows the root element (and back to DOM on marshal, without modifying the input).

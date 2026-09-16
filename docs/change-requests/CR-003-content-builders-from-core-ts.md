@@ -49,13 +49,20 @@ Gaps that are not tree helpers are routed elsewhere (section 7).
 
 ## 2. `deepCopyAs` (facade)
 
-**Implemented 2026-09-16.** It is `async`, since the check needs the context: the target must be the
+**Implemented 2026-09-16**, in two forms. `deepCopyAs` is `async`, since the check needs the context;
+`deepCopyAsSync` does the same for a caller that cannot await and knows the context is built, over a
+new `getContextSync()` that returns the built context or throws. core-ts asked for it before the
+release (2026-09-16): its `ChangeTracker.recordPPrChange` records a `w:pPrChange` inside the
+synchronous property setters of its Office JS-shaped views (`alignment`, `indents`, `style`, ...),
+which cannot become asynchronous without breaking the shape Office JS promises. The check itself: the target must be the
 value's own type or one of its bases, and the copy keeps only what that type declares. The property
 names come from the context's mapping model (`TypeInfo.properties`), which the runtime's typings do
 not declare, so the facade casts for it: a candidate for a later jsonix typings CR, as `Jsonix.DOM` was.
 
 ```ts
-export function deepCopyAs<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): T;
+export function deepCopyAs<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): Promise<T>;
+export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): T;
+export function getContextSync(): Jsonix.Context;   // the built context, or throws
 ```
 
 `deepCopy`, then the copy's `TYPE_NAME` is set to `typeName` and the copy's own properties that the

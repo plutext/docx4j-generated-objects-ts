@@ -240,6 +240,7 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
 });
 
 let contextPromise: Promise<Jsonix.Context> | undefined;
+let builtContext: Jsonix.Context | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
@@ -250,7 +251,10 @@ let contextPromise: Promise<Jsonix.Context> | undefined;
 export function getContext(options?: Jsonix.ContextOptions): Promise<Jsonix.Context> {
   if (contextPromise === undefined) {
     contextPromise = Promise.all(MODULE_NAMES.map((name) => import(`../modules/${name}.mjs`))).then(
-      (modules) => new Jsonix.Context(modules.flatMap((m) => Object.values(m) as Jsonix.Mapping[]), { parentPointers: true, namespacePrefixes: NAMESPACE_PREFIXES, ...options }),
+      (modules) => {
+        builtContext = new Jsonix.Context(modules.flatMap((m) => Object.values(m) as Jsonix.Mapping[]), { parentPointers: true, namespacePrefixes: NAMESPACE_PREFIXES, ...options });
+        return builtContext;
+      },
     );
   }
   return contextPromise;
@@ -259,6 +263,19 @@ export function getContext(options?: Jsonix.ContextOptions): Promise<Jsonix.Cont
 /** Forgets the shared context, so that the next call to getContext builds a new one (e.g. with other options). */
 export function resetContext(): void {
   contextPromise = undefined;
+  builtContext = undefined;
+}
+
+/**
+ * The context, for a caller that cannot await: it must already be built, which it is once anything
+ * has been unmarshalled or marshalled through the facade. Throws otherwise, since building it loads
+ * the modules and that is asynchronous. `getContext()` is the form to prefer.
+ */
+export function getContextSync(): Jsonix.Context {
+  if (builtContext === undefined) {
+    throw new Error('The context is not built yet: await getContext() (or any unmarshal/marshal) once first');
+  }
+  return builtContext;
 }
 
 /** docx4j XmlUtils.unmarshalString: parse XML into a typed element, e.g. unmarshalString<DocumentElement>(xml). */
@@ -300,10 +317,21 @@ function declaredProperties(typeInfo: Jsonix.TypeInfo | undefined): Set<string> 
  *
  * docx4j does this with a hand-built object: a `w:pPrChange` holds a `PPrBase`, not the `PPr` a
  * paragraph has, and a copy that keeps `PPr` marshals as `<w:pPr xsi:type="w:CT_PPr">`, which is
- * valid but not what Word writes (CR-003 section 2).
+ * valid but not what Word writes (CR-003 section 2). `deepCopyAsSync` is the same for a caller
+ * that cannot await and knows the context is built.
  */
 export async function deepCopyAs<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): Promise<T> {
-  const context = await getContext();
+  await getContext();
+  return deepCopyAsSync<T>(value, typeName, parent);
+}
+
+/**
+ * `deepCopyAs` for a caller that cannot await (`@docx4j/core-ts`'s `recordPPrChange` runs inside
+ * the synchronous property setters of its Office JS-shaped views). The context must already be
+ * built, as it is once the document has been unmarshalled; otherwise this throws.
+ */
+export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, typeName: NonNullable<T['TYPE_NAME']>, parent?: unknown): T {
+  const context = getContextSync();
   const from = (value as { TYPE_NAME?: string }).TYPE_NAME;
   const target = context.getTypeInfoByName(typeName as string);
   if (!target) throw new Error(`Not a type in this context: ${String(typeName)}`);
