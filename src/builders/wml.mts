@@ -6,16 +6,26 @@
 //     one name-to-w:rPr mapping (`RunOptions`, `applyRunOptions` / `readRunOptions`) that core-ts's
 //     Font view shares;
 //   - content controls (CR-003): `sdt` in its four forms with a typed `w:sdtPr`, and the readers
-//     `sdtProperty` / `sdtKindOf`;
+//     `sdtProperty` / `sdtKindOf`; rows and cells (`tr`, `tc`) and `inlinePicture`, docx4j's
+//     createImageInline over the generated dml factories;
 //   - traversal: `walk`, `find`, `linkParents`.
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
 import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../index.mjs';
 import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
+import type * as Dml from '../../modules/org_docx4j_dml.mjs';
 import * as el from '../../modules/org_docx4j_wml.el.mjs';
 import * as w14el from '../../modules/org_docx4j_w14.el.mjs';
 import * as w15el from '../../modules/org_docx4j_w15.el.mjs';
+import * as picEl from '../../modules/org_docx4j_dml_picture.el.mjs';
+import { createInline, createCTEffectExtent } from '../../modules/org_docx4j_dml_wordprocessingDrawing.factory.mjs';
+import { createPic, createCTPictureNonVisual } from '../../modules/org_docx4j_dml_picture.factory.mjs';
+import {
+  createCTPositiveSize2D, createCTNonVisualDrawingProps, createCTNonVisualGraphicFrameProperties, createCTGraphicalObjectFrameLocking,
+  createGraphic, createGraphicData, createCTBlip, createCTBlipFillProperties, createCTStretchInfoProperties, createCTRelativeRect,
+  createCTShapeProperties, createCTTransform2D, createCTPoint2D, createCTPresetGeometry2D, createCTGeomGuideList, createCTNonVisualPictureProperties,
+} from '../../modules/org_docx4j_dml.factory.mjs';
 import { highlightHexValue, highlightNameForColor } from '../helpers/wml.mjs';
 
 /** A `{ name, value }` pair as content arrays hold them. */
@@ -405,6 +415,29 @@ export interface TableOptions {
   width?: number;
 }
 
+export interface CellOptions {
+  /** The cell width in twips (`w:tcW`, type dxa); none when absent. */
+  width?: number;
+}
+
+/** A table cell: a string is one paragraph, an empty cell still gets the `w:p` Word requires. */
+export function tc(blocks: string | Element[], opts: CellOptions = {}): Element<M.Tc> {
+  const content = typeof blocks === 'string' ? [p(blocks)] : (blocks.length > 0 ? blocks : [el.p({})]);
+  const value: M.Tc = { content: content as M.Tc['content'] };
+  if (opts.width !== undefined) value.tcPr = { tcW: { w: opts.width, type: 'dxa' } };
+  return el.tc(value);
+}
+
+/** A table row of cells; a string cell is one paragraph, and `widths` (twips) sets each `w:tcW`. */
+export function tr(cells: (string | Element<M.Tc>)[], opts: { widths?: number[] } = {}): Element<M.Tr> {
+  return el.tr({
+    content: cells.map((cell, i) => {
+      const width = opts.widths?.[i];
+      return typeof cell === 'string' || !isElement(cell) ? tc(cell as string, width === undefined ? {} : { width }) : cell;
+    }) as M.Tr['content'],
+  });
+}
+
 /** A table of text cells: one paragraph per cell, a grid from the widths or equal columns. */
 export function tbl(rows: string[][], opts: TableOptions = {}): Element<M.Tbl> {
   const columns = Math.max(1, opts.widths?.length ?? 0, ...rows.map((row) => row.length));
@@ -417,9 +450,7 @@ export function tbl(rows: string[][], opts: TableOptions = {}): Element<M.Tbl> {
   const value: M.Tbl = {
     tblPr,
     tblGrid: { gridCol: widths.map((w) => ({ w })) },
-    content: rows.map((row) => el.tr({
-      content: Array.from({ length: columns }, (_, i) => el.tc({ tcPr: { tcW: { w: widths[i]!, type: 'dxa' } }, content: [p(row[i] ?? '')] })),
-    })),
+    content: rows.map((row) => tr(Array.from({ length: columns }, (_, i) => tc(row[i] ?? '', { width: widths[i]! })))) as M.Tbl['content'],
   };
   return el.tbl(value);
 }
@@ -629,6 +660,61 @@ export function sdtKindOf(pr: M.SdtPr | undefined): SdtKind {
   }
   return 'RichText';
 }
+
+export interface InlinePictureOptions {
+  /** The extent in EMU (914400 per inch): the width. */
+  cx: number;
+  /** The extent in EMU: the height. */
+  cy: number;
+  /** `wp:docPr/@id`, unique in the document. */
+  id: number;
+  /** `wp:docPr/@name`, what Word shows in the selection pane. */
+  name: string;
+  /** `wp:docPr/@descr`: Office JS `InlinePicture.altTextDescription`. */
+  descr?: string;
+  /** `wp:docPr/@title`: Office JS `altTextTitle` (the attribute docx4j CR-018 added). */
+  title?: string;
+}
+
+/**
+ * A `w:drawing` holding one `wp:inline` for an image part, as docx4j's
+ * `BinaryPartAbstractImage.createImageInline` writes it: the blip's `r:embed` is `relId`, the
+ * extents are in EMU, the frame locks the aspect ratio and the shape is a stretched `rect` preset.
+ * The image part and its relationship belong to the package, so `relId` is a plain string here
+ * (core-ts's `addImage` makes the part, then calls this).
+ */
+export function inlinePicture(relId: string, options: InlinePictureOptions): Element<M.Drawing> {
+  const { cx, cy, id, name, descr, title } = options;
+  const extent = (): Dml.CTPositiveSize2D => createCTPositiveSize2D({ cx, cy });
+  const docProps = (): Dml.CTNonVisualDrawingProps => createCTNonVisualDrawingProps({
+    id, name, ...(descr === undefined ? {} : { descr }), ...(title === undefined ? {} : { title }),
+  });
+  const picture = createPic({
+    nvPicPr: createCTPictureNonVisual({ cNvPr: docProps(), cNvPicPr: createCTNonVisualPictureProperties({}) }),
+    blipFill: createCTBlipFillProperties({
+      blip: createCTBlip({ embed: relId }),
+      stretch: createCTStretchInfoProperties({ fillRect: createCTRelativeRect({}) }),
+    }),
+    spPr: createCTShapeProperties({
+      xfrm: createCTTransform2D({ off: createCTPoint2D({ x: 0, y: 0 }), ext: extent() }),
+      prstGeom: createCTPresetGeometry2D({ prst: 'rect', avLst: createCTGeomGuideList({}) }),
+    }),
+  });
+  const inline = createInline({
+    distT: 0, distB: 0, distL: 0, distR: 0,
+    extent: extent(),
+    effectExtent: createCTEffectExtent({ l: 0, t: 0, r: 0, b: 0 }),
+    docPr: docProps(),
+    cNvGraphicFramePr: createCTNonVisualGraphicFrameProperties({ graphicFrameLocks: createCTGraphicalObjectFrameLocking({ noChangeAspect: true }) }),
+    graphic: createGraphic({ graphicData: createGraphicData({ uri: PIC_NS, any: [picEl.pic(picture)] }) }),
+  });
+  const drawing = el.drawing({ anchorOrInline: [inline] });
+  linkParents(drawing.value, undefined);
+  return drawing;
+}
+
+/** The graphic data uri of a DrawingML picture. */
+const PIC_NS = 'http://schemas.openxmlformats.org/drawingml/2006/picture';
 
 /**
  * docx4j TextUtils: the text of a run, a paragraph or a block container (cell, table, body,

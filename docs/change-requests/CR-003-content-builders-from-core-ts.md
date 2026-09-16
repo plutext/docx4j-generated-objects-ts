@@ -97,6 +97,8 @@ export function sdtKindOf(sdtPr: M.SdtPr | undefined): SdtKind | 'Unknown';
 
 ### 3.2 Inline pictures
 
+**Implemented 2026-09-16** (`inlinePicture`, with `title`).
+
 ```ts
 export interface InlinePictureOptions { cx: number; cy: number; id: number; name: string; descr?: string; title?: string }
 export function inlinePicture(relId: string, options: InlinePictureOptions): Element<M.Drawing>;
@@ -109,6 +111,8 @@ creating the image part and the relationship stays in core-ts. `title` sits besi
 docx4j CR-018 added to `wp:docPr` (section 7).
 
 ### 3.3 Rows and cells
+
+**Implemented 2026-09-16** (`tr`, `tc`; `tbl` rebuilt over them, output byte-identical).
 
 ```ts
 export interface CellOptions { width?: number }
@@ -184,7 +188,7 @@ only for what neither form types (DOM held by `xs:any`).
   `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
   `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
   then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1), and section
-  3.1 (content controls) is implemented.
+  3.1 (content controls), 3.2 (inline pictures) and 3.3 (rows and cells) are implemented.
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
   No deadline: core-ts's `toApiScript` fallback works with marshalled XML.
 

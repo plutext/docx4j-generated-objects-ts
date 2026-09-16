@@ -123,7 +123,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, sdt, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -251,6 +251,32 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   assert.equal(sdtProperty(blockSdt.value.sdtPr, 'nope'), undefined);
   assert.ok(nextSdtId(blockSdt) !== 7 && Number.isInteger(nextSdtId(blockSdt)), 'nextSdtId avoids the ids in the tree');
   assert.equal(textOf(blockSdt), 'inside', 'textOf reads a control built by sdt');
+
+  // CR-003 sections 3.2 and 3.3: rows and cells (tbl rebuilt over them), and the inline picture
+  // docx4j's createImageInline writes. Attributes are emitted sorted by name (see "What the
+  // declarations promise"), and a standalone w:tc / w:tbl / w:drawing root carries xsi:type.
+  assert.equal(await marshalString(tc('a', { width: 1000 })),
+    `<w:tc xmlns:w="${W}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="w:CT_Tc"><w:tcPr><w:tcW w:type="dxa" w:w="1000"/></w:tcPr><w:p><w:r><w:t>a</w:t></w:r></w:p></w:tc>`);
+  assert.equal(await marshalString(tc([])),
+    `<w:tc xmlns:w="${W}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="w:CT_Tc"><w:p/></w:tc>`,
+    'an empty cell still gets the w:p Word requires, and nothing else');
+  assert.equal(await marshalString(tr(['a', 'b'], { widths: [100, 200] })),
+    `<w:tr xmlns:w="${W}"><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="100"/></w:tcPr><w:p><w:r><w:t>a</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="200"/></w:tcPr><w:p><w:r><w:t>b</w:t></w:r></w:p></w:tc></w:tr>`);
+  assert.equal(textOf(tr([tc('x'), 'y'])), 'x\ny', 'tr takes built cells and strings');
+  assert.match(await marshalString(tbl([['Item', 'Qty'], ['Widget', '3']], { style: 'TableGrid' })),
+    /<w:tblPr><w:tblStyle w:val="TableGrid"\/><w:tblW w:type="dxa" w:w="9026"\/><\/w:tblPr><w:tblGrid><w:gridCol w:w="4513"\/><w:gridCol w:w="4513"\/><\/w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="4513"\/>/,
+    'tbl over tr/tc writes the grid it always did');
+
+  const picture = inlinePicture('rId9', { cx: 914400, cy: 457200, id: 3, name: 'image1.png', descr: 'alt', title: 'Title' });
+  const pictureXml = await marshalString(picture);
+  assert.match(pictureXml, /<wp:inline distB="0" distL="0" distR="0" distT="0"><wp:extent cx="914400" cy="457200"\/>/);
+  assert.match(pictureXml, /<wp:docPr descr="alt" id="3" name="image1.png" title="Title"\/>/, 'docPr carries descr and the title docx4j CR-018 added');
+  assert.match(pictureXml, /<a:graphicFrameLocks noChangeAspect="true"\/>/);
+  assert.match(pictureXml, /<a:graphicData uri="http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/picture"><pic:pic>/);
+  assert.match(pictureXml, /<a:blip r:embed="rId9"\/><a:stretch><a:fillRect\/><\/a:stretch>/);
+  assert.match(pictureXml, /<a:prstGeom prst="rect"><a:avLst\/><\/a:prstGeom>/);
+  assert.equal(find(picture, 'org_docx4j_dml_picture.Pic').length, 1, 'the pic is reachable by TYPE_NAME');
+  assert.equal(picture.value.anchorOrInline[0].docPr.PARENT, picture.value.anchorOrInline[0], 'inlinePicture links PARENT');
 
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
 }
