@@ -126,9 +126,11 @@ export function runItemsOf(value: object): Element[] | undefined;
 
 The run-level list a holder keeps, under docx4j's property names: `content` for most,
 `customXmlOrSmartTagOrSdt` for `w:ins` and `w:del`, `accOrBarOrBox` for `w:moveFrom` and `w:moveTo`
-(`RunTrackChange`), `sdtContent.content` for a run-level control. `textOf`'s internal child lookup
-uses it (done 2026-09-16), which fixes the dropped `w:moveTo` text (section 1): moved-to text is read like inserted
-text; `w:moveFrom` follows `w:del` (skipped), as `textOf` treats deletions today.
+(`RunTrackChange`), `sdtContent.content` for a run-level control. `runItemsOf` is purely structural: it returns whatever list the
+holder keeps and skips no kind, so a caller can read the original of a revision (core-ts's
+`{ view: 'original' }` needs `w:moveFrom` and `w:del`). The filtering stays in `textOf`, whose own
+child lookup learned `accOrBarOrBox` at the same time (done 2026-09-16): moved-to text is read like
+inserted text, and `w:moveFrom` is skipped as `w:del` is.
 
 ### 3.5 Run properties as an element list
 
@@ -175,8 +177,13 @@ only for what neither form types (DOM held by `xs:any`).
 
 ## 4. Phases
 
-- **A**: sections 2 and 3.1 to 3.6. Ports of running code; core-ts deletes its copies.
+- **A**: sections 2 and 3.1 to 3.6. Ports of running code; core-ts deletes its copies. In the order
+  core-ts asked for (2026-09-16), by the size of the copy each removes: `sdt` / `sdtPr` /
+  `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
+  `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
+  then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1).
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
+  No deadline: core-ts's `toApiScript` fallback works with marshalled XML.
 
 ## 5. Layout and exports
 
