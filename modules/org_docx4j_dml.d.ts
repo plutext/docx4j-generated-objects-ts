@@ -1005,6 +1005,7 @@ export interface CTNonVisualDrawingProps {
   hidden?: boolean;
   id: number;
   name: string;
+  title?: string;
 }
 
 export interface CTNonVisualDrawingShapeProps {

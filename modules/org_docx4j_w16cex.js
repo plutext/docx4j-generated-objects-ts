@@ -1,0 +1,66 @@
+var org_docx4j_w16cex_Module_Factory = function () {
+  var org_docx4j_w16cex = {
+    name: 'org_docx4j_w16cex',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2018\/wordml\/cex',
+    defaultAttributeNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2018\/wordml\/cex',
+    dependencies: ['org_docx4j_w16'],
+    typeInfos: [{
+        localName: 'CTCommentExtensible',
+        typeName: 'CT_CommentExtensible',
+        propertyInfos: [{
+            name: 'extLst',
+            typeInfo: 'org_docx4j_w16.CTExtensionList'
+          }, {
+            name: 'dateUtc',
+            typeInfo: 'DateTime',
+            type: 'attribute'
+          }, {
+            name: 'durableId',
+            required: true,
+            type: 'attribute'
+          }, {
+            name: 'intelligentPlaceholder',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTCommentsExtensible',
+        typeName: 'CT_CommentsExtensible',
+        propertyInfos: [{
+            name: 'commentExtensible',
+            minOccurs: 0,
+            collection: true,
+            typeInfo: '.CTCommentExtensible'
+          }, {
+            name: 'extLst',
+            typeInfo: 'org_docx4j_w16.CTExtensionList'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
+          }]
+      }],
+    elementInfos: [{
+        typeInfo: '.CTCommentsExtensible',
+        elementName: 'commentsExtensible'
+      }]
+  };
+  return {
+    org_docx4j_w16cex: org_docx4j_w16cex
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_docx4j_w16cex_Module_Factory);
+}
+else {
+  var org_docx4j_w16cex_Module = org_docx4j_w16cex_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_docx4j_w16cex = org_docx4j_w16cex_Module.org_docx4j_w16cex;
+  }
+  else {
+    var org_docx4j_w16cex = org_docx4j_w16cex_Module.org_docx4j_w16cex;
+  }
+}

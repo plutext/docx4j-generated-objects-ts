@@ -82,6 +82,8 @@ export const MODULE_NAMES = [
   'org_docx4j_w14',
   'org_docx4j_w15',
   'org_docx4j_w15symex',
+  'org_docx4j_w16',
+  'org_docx4j_w16cex',
   'org_docx4j_w16cid',
   'org_docx4j_wml',
   'org_docx4j_xmlPackage',
@@ -241,7 +243,7 @@ let contextPromise: Promise<Jsonix.Context> | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
- * loaded lazily; 94 modules are several megabytes). Parent pointers are on by default, as in
+ * loaded lazily; 96 modules are several megabytes). Parent pointers are on by default, as in
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
  * change that or anything else.
  */

@@ -2726,6 +2726,13 @@ var org_docx4j_dml_Module_Factory = function () {
               localPart: 'name'
             },
             type: 'attribute'
+          }, {
+            name: 'title',
+            defaultValue: '',
+            attributeName: {
+              localPart: 'title'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTNonVisualDrawingShapeProps',

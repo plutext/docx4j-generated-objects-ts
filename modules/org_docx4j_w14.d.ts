@@ -135,7 +135,7 @@ export interface CTNumSpacing {
 export interface CTOnOff {
   TYPE_NAME?: 'org_docx4j_w14.CTOnOff';
   readonly PARENT?: CTSdtCheckbox | Dep_org_docx4j_wml.CTParaRPrOriginal | Dep_org_docx4j_wml.CTRPrChange.RPr | Dep_org_docx4j_wml.CTSettings | Dep_org_docx4j_wml.ParaRPr | Dep_org_docx4j_wml.RPr;
-  val?: string;
+  val?: boolean;
 }
 
 export interface CTPathShadeProperties {

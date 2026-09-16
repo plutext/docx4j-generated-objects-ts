@@ -2726,6 +2726,13 @@ export const org_docx4j_dml = {
             localPart: 'name'
           },
           type: 'attribute'
+        }, {
+          name: 'title',
+          defaultValue: '',
+          attributeName: {
+            localPart: 'title'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTNonVisualDrawingShapeProps',

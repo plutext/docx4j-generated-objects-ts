@@ -30,6 +30,7 @@ export interface CTCommentEx {
 export interface CTCommentsEx {
   TYPE_NAME?: 'org_docx4j_w15.CTCommentsEx';
   commentEx?: CTCommentEx[];
+  ignorable?: string;
 }
 
 export interface CTGuid {
@@ -41,6 +42,7 @@ export interface CTGuid {
 export interface CTPeople {
   TYPE_NAME?: 'org_docx4j_w15.CTPeople';
   person?: CTPerson[];
+  ignorable?: string;
 }
 
 export interface CTPerson {
@@ -48,7 +50,7 @@ export interface CTPerson {
   readonly PARENT?: CTPeople;
   presenceInfo?: CTPresenceInfo;
   author: string;
-  contact: string;
+  contact?: string;
 }
 
 export interface CTPresenceInfo {

@@ -191,7 +191,8 @@ export const org_docx4j_w14 = {
       typeName: 'CT_OnOff',
       propertyInfos: [{
           name: 'val',
-          values: ['true', 'false', '0', '1'],
+          typeInfo: 'Boolean',
+          defaultValue: true,
           type: 'attribute'
         }]
     }, {

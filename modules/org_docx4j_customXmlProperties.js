@@ -7,6 +7,9 @@ var org_docx4j_customXmlProperties_Module_Factory = function () {
         localName: 'DatastoreItem',
         typeName: null,
         propertyInfos: [{
+            name: 'otherAttributes',
+            type: 'anyAttribute'
+          }, {
             name: 'schemaRefs',
             typeInfo: '.SchemaRefs'
           }, {

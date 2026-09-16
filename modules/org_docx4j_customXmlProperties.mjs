@@ -7,6 +7,9 @@ export const org_docx4j_customXmlProperties = {
       localName: 'DatastoreItem',
       typeName: null,
       propertyInfos: [{
+          name: 'otherAttributes',
+          type: 'anyAttribute'
+        }, {
           name: 'schemaRefs',
           typeInfo: '.SchemaRefs'
         }, {

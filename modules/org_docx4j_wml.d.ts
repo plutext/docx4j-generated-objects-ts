@@ -1658,6 +1658,7 @@ export interface CommentRangeStart {
 export interface Comments {
   TYPE_NAME?: 'org_docx4j_wml.Comments';
   comment?: Comments.Comment[];
+  ignorable?: string;
 }
 
 export interface DelText {

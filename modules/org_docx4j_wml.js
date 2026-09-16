@@ -5683,6 +5683,13 @@ var org_docx4j_wml_Module_Factory = function () {
             minOccurs: 0,
             collection: true,
             typeInfo: '.Comments.Comment'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'Comments.Comment',
