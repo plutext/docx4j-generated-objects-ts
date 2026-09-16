@@ -427,17 +427,20 @@ const RUN_CONTAINERS = new Set([
   'org_docx4j_wml.CTSimpleField',
 ]);
 
-/** The child values of a container, under whichever property the model gives them (docx4j's names: content, customXmlOrSmartTagOrSdt, footnote, ...); element pairs unwrapped. */
+/** The child values of a container, under whichever property the model gives them (docx4j's names: content, customXmlOrSmartTagOrSdt, accOrBarOrBox, footnote, ...); element pairs unwrapped, w:moveFrom dropped (its runs are not the document's text, as w:del's are not). */
 function childValues(v: object): object[] {
   const o = v as Record<string, unknown>;
   if ((o.TYPE_NAME === 'org_docx4j_wml.SdtRun' || o.TYPE_NAME === 'org_docx4j_wml.SdtBlock' || o.TYPE_NAME === 'org_docx4j_wml.CTSdtRow' || o.TYPE_NAME === 'org_docx4j_wml.CTSdtCell') && typeof o.sdtContent === 'object' && o.sdtContent !== null) {
     return childValues(o.sdtContent);
   }
   if (o.TYPE_NAME === 'org_docx4j_wml.Document' && typeof o.body === 'object' && o.body !== null) return childValues(o.body);
-  for (const key of ['content', 'customXmlOrSmartTagOrSdt', 'footnote', 'endnote', 'comment']) {
+  for (const key of ['content', 'customXmlOrSmartTagOrSdt', 'accOrBarOrBox', 'footnote', 'endnote', 'comment']) {
     const list = o[key];
     if (Array.isArray(list)) {
-      return list.map((item: unknown) => (isElement(item) ? item.value : item)).filter((item): item is object => typeof item === 'object' && item !== null);
+      return list
+        .filter((item: unknown) => !(isElement(item) && item.name.localPart === 'moveFrom'))
+        .map((item: unknown) => (isElement(item) ? item.value : item))
+        .filter((item): item is object => typeof item === 'object' && item !== null);
     }
   }
   return [];
@@ -487,7 +490,8 @@ function blockTexts(container: object, out: string[]): void {
  * docx4j TextUtils: the text of a run, a paragraph or a block container (cell, table, body,
  * header, footer, content control, document). w:t, w:tab (\t), w:br and w:cr (\n),
  * w:noBreakHyphen, w:softHyphen and w:sym contribute; runs inside hyperlinks, content controls,
- * fields and insertions are read; deletions are skipped; paragraphs are joined with \n.
+ * fields, insertions and moved-to runs are read; deletions and w:moveFrom are skipped; paragraphs
+ * are joined with \n.
  */
 export function textOf(value: Element | object): string {
   const v = isElement(value) ? value.value : value;
@@ -508,6 +512,21 @@ function isQName(value: object): boolean {
 function isLeaf(value: object): boolean {
   return isQName(value) || typeof (value as Node).nodeType === 'number' || value instanceof Date
     || typeof (value as { year?: unknown }).year === 'number' && !('TYPE_NAME' in value);
+}
+
+/**
+ * The run-level items a holder keeps, under the model's own property names (CR-003 section 3.4):
+ * `content` for most, `customXmlOrSmartTagOrSdt` for w:ins and w:del, `accOrBarOrBox` for
+ * w:moveFrom and w:moveTo (docx4j's names for those choice groups), and `sdtContent`'s list for a
+ * run-level content control. Undefined when the value holds no run list.
+ */
+export function runItemsOf(value: object): Element[] | undefined {
+  const v = value as { content?: Element[]; customXmlOrSmartTagOrSdt?: Element[]; accOrBarOrBox?: Element[]; sdtContent?: object };
+  if (Array.isArray(v.content)) return v.content;
+  if (Array.isArray(v.customXmlOrSmartTagOrSdt)) return v.customXmlOrSmartTagOrSdt;
+  if (Array.isArray(v.accOrBarOrBox)) return v.accOrBarOrBox;
+  if (v.sdtContent) return runItemsOf(v.sdtContent);
+  return undefined;
 }
 
 /**

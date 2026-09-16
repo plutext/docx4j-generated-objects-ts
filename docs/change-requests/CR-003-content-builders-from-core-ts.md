@@ -31,7 +31,9 @@ A bug found while checking, in the published 0.1.2:
 - **`textOf` drops text inside `w:moveTo` (and `w:moveFrom`).** `RunTrackChange` keeps its runs under
   `accOrBarOrBox`, which `textOf`'s child lookup does not read: for
   `<w:r><w:t>kept </w:t></w:r><w:moveTo><w:r><w:t>moved</w:t></w:r></w:moveTo><w:ins><w:r><w:t> inserted</w:t></w:r></w:ins>`
-  it returns `"kept  inserted"`. Section 3.4 fixes it; it can ship as a patch ahead of the rest.
+  it returns `"kept  inserted"`. **Fixed 2026-09-16** ahead of the rest of this CR, with the
+  `runItemsOf` of section 3.4: `textOf` now reads `w:moveTo` and skips `w:moveFrom`, and
+  `runItemsOf` is exported. That part of phase A is therefore done; the rest is unimplemented.
 
 Two corrections to the core-ts notes, checked 2026-09-16 against 0.1.2:
 
@@ -125,7 +127,7 @@ export function runItemsOf(value: object): Element[] | undefined;
 The run-level list a holder keeps, under docx4j's property names: `content` for most,
 `customXmlOrSmartTagOrSdt` for `w:ins` and `w:del`, `accOrBarOrBox` for `w:moveFrom` and `w:moveTo`
 (`RunTrackChange`), `sdtContent.content` for a run-level control. `textOf`'s internal child lookup
-uses it, which fixes the dropped `w:moveTo` text (section 1): moved-to text is read like inserted
+uses it (done 2026-09-16), which fixes the dropped `w:moveTo` text (section 1): moved-to text is read like inserted
 text; `w:moveFrom` follows `w:del` (skipped), as `textOf` treats deletions today.
 
 ### 3.5 Run properties as an element list

@@ -114,7 +114,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, textOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -206,5 +206,16 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   const domSeen = [];
   walk(pkgElement, (v) => { domSeen.push(v.nodeType === undefined ? 'typed' : 'DOM'); });
   assert.ok(domSeen.length > 0 && !domSeen.includes('DOM'), 'walk does not enter DOM nodes');
+  // CR-003 section 3.4: run lists live under three property names; w:moveTo is the document's text, w:moveFrom is not.
+  const [moved] = await wml('<w:p><w:r><w:t xml:space="preserve">kept </w:t></w:r><w:moveTo w:id="1" w:author="A" w:date="2026-01-01T00:00:00Z"><w:r><w:t>moved</w:t></w:r></w:moveTo><w:moveFrom w:id="2" w:author="A" w:date="2026-01-01T00:00:00Z"><w:r><w:t>gone</w:t></w:r></w:moveFrom><w:ins w:id="3" w:author="A" w:date="2026-01-01T00:00:00Z"><w:r><w:t xml:space="preserve"> inserted</w:t></w:r></w:ins></w:p>');
+  assert.equal(textOf(moved), 'kept moved inserted', 'textOf reads w:moveTo (accOrBarOrBox) and skips w:moveFrom');
+  const [moveTo, moveFrom, ins] = moved.value.content.slice(1);
+  assert.equal(runItemsOf(moveTo.value).length, 1, 'runItemsOf: w:moveTo keeps its runs under accOrBarOrBox');
+  assert.equal(runItemsOf(moveFrom.value).length, 1, 'runItemsOf: w:moveFrom too');
+  assert.equal(runItemsOf(ins.value).length, 1, 'runItemsOf: w:ins keeps its runs under customXmlOrSmartTagOrSdt');
+  assert.equal(runItemsOf(moved.value)[0].name.localPart, 'r', 'runItemsOf: a paragraph uses content');
+  const [sdtRun] = await wml('<w:sdt><w:sdtPr><w:id w:val="1"/></w:sdtPr><w:sdtContent><w:r><w:t>in a control</w:t></w:r></w:sdtContent></w:sdt>', { wrapper: 'p' });
+  assert.equal(runItemsOf(sdtRun.value).length, 1, 'runItemsOf: a run-level content control reads through sdtContent');
+  assert.equal(runItemsOf({}), undefined, 'runItemsOf: no run list');
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
 }
