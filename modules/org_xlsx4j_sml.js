@@ -15240,7 +15240,6 @@ var org_xlsx4j_sml_Module_Factory = function () {
             typeInfo: '.WorkbookPr'
           }, {
             name: 'alternateContent',
-            required: true,
             elementName: {
               localPart: 'AlternateContent',
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'

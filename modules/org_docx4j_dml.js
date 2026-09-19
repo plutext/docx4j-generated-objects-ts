@@ -5675,6 +5675,12 @@ var org_docx4j_dml_Module_Factory = function () {
               }, {
                 elementName: 'fld',
                 typeInfo: '.CTTextField'
+              }, {
+                elementName: {
+                  localPart: 'm',
+                  namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2010\/main'
+                },
+                typeInfo: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTTextMath'
               }],
             type: 'elements'
           }, {

@@ -3,7 +3,7 @@ export const org_docx4j_wml = {
   name: 'org_docx4j_wml',
   defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main',
   defaultAttributeNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main',
-  dependencies: ['org_docx4j_customxml', 'org_docx4j_math', 'org_docx4j_sharedtypes', 'org_docx4j_w14', 'org_docx4j_w15'],
+  dependencies: ['org_docx4j_customxml', 'org_docx4j_math', 'org_docx4j_mce', 'org_docx4j_sharedtypes', 'org_docx4j_w14', 'org_docx4j_w15'],
   typeInfos: [{
       localName: 'Body',
       typeName: 'CT_Body',
@@ -1177,6 +1177,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
@@ -3882,6 +3888,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
             }, {
@@ -4646,6 +4658,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
             }, {
@@ -4791,6 +4809,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
@@ -6629,6 +6653,13 @@ export const org_docx4j_wml = {
           name: 'drawing',
           typeInfo: '.Drawing'
         }, {
+          name: 'alternateContent',
+          elementName: {
+            localPart: 'AlternateContent',
+            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+          },
+          typeInfo: 'org_docx4j_mce.AlternateContent'
+        }, {
           name: 'numPicBulletId',
           required: true,
           typeInfo: 'Integer',
@@ -6745,6 +6776,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
@@ -6895,6 +6932,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
             }, {
@@ -7019,6 +7062,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'
             }, {
@@ -7142,6 +7191,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'fldSimple',
               typeInfo: '.CTSimpleField'

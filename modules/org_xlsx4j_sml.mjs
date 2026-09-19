@@ -15240,7 +15240,6 @@ export const org_xlsx4j_sml = {
           typeInfo: '.WorkbookPr'
         }, {
           name: 'alternateContent',
-          required: true,
           elementName: {
             localPart: 'AlternateContent',
             namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'

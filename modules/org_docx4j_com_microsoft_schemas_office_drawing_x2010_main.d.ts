@@ -338,6 +338,8 @@ export interface CTShadowObscured {
 
 export interface CTTextMath {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.CTTextMath';
+  readonly PARENT?: Dep_org_docx4j_dml.CTTextParagraph;
+  any?: XmlAnyElement;
 }
 
 export interface CTUseLocalDpi {

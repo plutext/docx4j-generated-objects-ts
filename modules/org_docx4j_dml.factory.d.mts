@@ -17,9 +17,9 @@ import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart
 import type * as Dep_org_docx4j_dml_diagram2008 from './org_docx4j_dml_diagram2008.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.js';
+import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_main from './org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.js';
 import type * as Dep_org_docx4j_dml_wordprocessingDrawing from './org_docx4j_dml_wordprocessingDrawing.js';
 import type * as Dep_org_docx4j_w14 from './org_docx4j_w14.js';
-import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_main from './org_docx4j_com_microsoft_schemas_office_drawing_x2010_main.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing from './org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing.js';
 import type * as Dep_org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing from './org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing.js';
 import type * as Dep_org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main from './org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main.js';

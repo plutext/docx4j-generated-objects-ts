@@ -3884,7 +3884,7 @@ export interface Workbook {
   fileVersion?: FileVersion;
   fileSharing?: CTFileSharing;
   workbookPr?: WorkbookPr;
-  alternateContent: Dep_org_docx4j_mce.AlternateContent;
+  alternateContent?: Dep_org_docx4j_mce.AlternateContent;
   workbookProtection?: CTWorkbookProtection;
   bookViews?: BookViews;
   sheets: Sheets;

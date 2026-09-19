@@ -924,7 +924,12 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2010_main_Module_Factory = 
           }]
       }, {
         localName: 'CTTextMath',
-        typeName: 'CT_TextMath'
+        typeName: 'CT_TextMath',
+        propertyInfos: [{
+            name: 'any',
+            mixed: false,
+            type: 'anyElement'
+          }]
       }, {
         localName: 'CTUseLocalDpi',
         typeName: 'CT_UseLocalDpi',
