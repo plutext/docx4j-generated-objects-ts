@@ -205,13 +205,43 @@ so core-ts's `toApiScript` can emit `body.insertElement(<source>, 'End')` instea
 element exactly (the run formatting is the inverse of `applyRunOptions`). XML stays the fallback
 only for what neither form types (DOM held by `xs:any`).
 
+### 3.8 The `mc:AlternateContent` branch a reader takes
+
+**Implemented 2026-09-19** (`mcBranchOf`, and `textOf` through it).
+
+```ts
+export interface McOptions { understood?: Iterable<string> }
+export function mcBranchOf(value: Mce.AlternateContent | undefined, options?: McOptions): Element[] | undefined;
+```
+
+docx4j CR-021 made the schemas admit `mc:AlternateContent` where Word writes it (a paragraph's
+content, `w:numPicBullet`, a DrawingML text paragraph), so a tree can now hold one unresolved, and
+`textOf` returned the text of neither branch: a text box's text vanished. `mcBranchOf` is docx4j's
+`McSelection` (ECMA-376 Part 3, 10.2.1): the first `mc:Choice` whose `Requires` prefixes are all
+understood, else the `mc:Fallback`, else the first `mc:Choice`, else nothing. `textOf` reads the
+branch it returns.
+
+Two notes, both from the docx4j session (2026-09-19):
+
+- **Rule 3 is a deliberate difference.** docx4j's `TextUtils` is a SAX stream and cannot know there
+  is no `mc:Fallback` until the end, so it drops such an element (Word never writes one; Excel's
+  x15 `absPath` does). Over an object model the rule costs nothing.
+- **"Understood" is judged by prefix.** `Requires` names prefixes, and the unmarshalled model keeps
+  no prefix-to-namespace mapping for the element, so the default set is the prefixes of
+  `NAMESPACE_PREFIXES` (the namespaces this package types, in the conventional prefixes Word
+  writes). A caller that knows better passes `understood`.
+
+`@docx4j/core-ts` resolves `mc:AlternateContent` when it unmarshals a part, so this shows only with
+`{ mcePreprocess: false }` or when using the object model directly.
+
 ## 4. Phases
 
 - **A**: sections 2 and 3.1 to 3.6. Ports of running code; core-ts deletes its copies. In the order
   core-ts asked for (2026-09-16), by the size of the copy each removes: `sdt` / `sdtPr` /
   `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
   `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
-  then `walkAll`. The `runItemsOf` part landed early with the `textOf` fix (section 1), and section
+  then `walkAll`; section 3.8 (`mcBranchOf`) followed docx4j CR-021. The `runItemsOf` part landed
+  early with the `textOf` fix (section 1), and section
   **phase A is complete as of 2026-09-16**: sections 2, 3.1 to 3.6 are all implemented.
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
   No deadline: core-ts's `toApiScript` fallback works with marshalled XML.

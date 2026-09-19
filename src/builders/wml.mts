@@ -9,12 +9,14 @@
 //     `sdtProperty` / `sdtKindOf`; rows and cells (`tr`, `tc`) and `inlinePicture`, docx4j's
 //     createImageInline over the generated dml factories;
 //   - run properties as the element list `w:rPrChange/w:rPr` keeps (`rPrToElements` / `rPrFromElements`);
+//   - the mc:AlternateContent branch a reader takes (`mcBranchOf`, docx4j's McSelection);
 //   - traversal: `walk`, `walkAll` (DOM in `xs:any` properties too), `find`, `linkParents`.
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
 import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../index.mjs';
 import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
+import type * as Mce from '../../modules/org_docx4j_mce.mjs';
 import type * as Dml from '../../modules/org_docx4j_dml.mjs';
 import * as el from '../../modules/org_docx4j_wml.el.mjs';
 import * as wmlFactory from '../../modules/org_docx4j_wml.factory.mjs';
@@ -457,16 +459,25 @@ export function tbl(rows: string[][], opts: TableOptions = {}): Element<M.Tbl> {
   return el.tbl(value);
 }
 
-/** Run containers: their children are scanned for runs. w:del (RunDel) is not among them, so deleted text is skipped. */
+/**
+ * Run containers: their children are scanned for runs. w:del (RunDel) is not among them, so deleted
+ * text is skipped; mc:AlternateContent is, and `childValues` gives it the branch `mcBranchOf` selects.
+ */
 const RUN_CONTAINERS = new Set([
   'org_docx4j_wml.P', 'org_docx4j_wml.P.Hyperlink', 'org_docx4j_wml.SdtRun', 'org_docx4j_wml.CTSdtContentRun', 'org_docx4j_wml.RunIns',
   'org_docx4j_wml.RunTrackChange', 'org_docx4j_wml.CTSmartTagRun', 'org_docx4j_wml.CTCustomXmlRun', 'org_docx4j_wml.P.Dir', 'org_docx4j_wml.P.Bdo',
-  'org_docx4j_wml.CTSimpleField',
+  'org_docx4j_wml.CTSimpleField', 'org_docx4j_mce.AlternateContent',
 ]);
 
 /** The child values of a container, under whichever property the model gives them (docx4j's names: content, customXmlOrSmartTagOrSdt, accOrBarOrBox, footnote, ...); element pairs unwrapped, w:moveFrom dropped (its runs are not the document's text, as w:del's are not). */
 function childValues(v: object): object[] {
   const o = v as Record<string, unknown>;
+  if (o.TYPE_NAME === 'org_docx4j_mce.AlternateContent') {
+    // The branch a reader takes, as docx4j's McSelection does; skipping the element would lose a text box's text.
+    return (mcBranchOf(v as Mce.AlternateContent) ?? [])
+      .map((item) => (isElement(item) ? item.value : item))
+      .filter((item): item is object => typeof item === 'object' && item !== null);
+  }
   if ((o.TYPE_NAME === 'org_docx4j_wml.SdtRun' || o.TYPE_NAME === 'org_docx4j_wml.SdtBlock' || o.TYPE_NAME === 'org_docx4j_wml.CTSdtRow' || o.TYPE_NAME === 'org_docx4j_wml.CTSdtCell') && typeof o.sdtContent === 'object' && o.sdtContent !== null) {
     return childValues(o.sdtContent);
   }
@@ -736,12 +747,47 @@ export function inlinePicture(relId: string, options: InlinePictureOptions): Ele
 /** The graphic data uri of a DrawingML picture. */
 const PIC_NS = 'http://schemas.openxmlformats.org/drawingml/2006/picture';
 
+export interface McOptions {
+  /**
+   * The prefixes this reader understands; `NAMESPACE_PREFIXES`' own prefixes by default, which are
+   * the namespaces this package types. `mc:Choice/@Requires` names prefixes, not namespaces, and
+   * the unmarshalled model does not keep the declarations in force at the element, so a prefix is
+   * all there is to go on; Word writes the conventional ones.
+   */
+  understood?: Iterable<string>;
+}
+
+const CONVENTIONAL_PREFIXES: ReadonlySet<string> = new Set(Object.values(NAMESPACE_PREFIXES));
+
+/**
+ * The branch of an `mc:AlternateContent` a reader takes, as docx4j's `McSelection` (ECMA-376
+ * Part 3, 10.2.1) and Word do: the first `mc:Choice` whose `Requires` prefixes are all understood,
+ * else the `mc:Fallback`, else the first `mc:Choice` (Choices with no Fallback: Word never writes
+ * it, Excel's x15 `absPath` does), else nothing for an element with no branches.
+ *
+ * docx4j's `TextUtils` cannot take that third step, being a SAX stream that does not know there is
+ * no Fallback until the end; over an object model it costs nothing, so this package differs there
+ * deliberately (reported by the docx4j session, 2026-09-19).
+ */
+export function mcBranchOf(value: Mce.AlternateContent | undefined, options: McOptions = {}): Element[] | undefined {
+  if (!value) return undefined;
+  const understood = options.understood === undefined ? CONVENTIONAL_PREFIXES : new Set(options.understood);
+  const choices = value.choice ?? [];
+  for (const choice of choices) {
+    const required = String(choice.requires ?? '').split(/\s+/).filter(Boolean);
+    if (required.length > 0 && required.every((prefix) => understood.has(prefix))) return (choice.any ?? []) as Element[];
+  }
+  if (value.fallback) return (value.fallback.any ?? []) as Element[];
+  if (choices.length > 0) return (choices[0]!.any ?? []) as Element[];
+  return undefined;
+}
+
 /**
  * docx4j TextUtils: the text of a run, a paragraph or a block container (cell, table, body,
  * header, footer, content control, document). w:t, w:tab (\t), w:br and w:cr (\n),
  * w:noBreakHyphen, w:softHyphen and w:sym contribute; runs inside hyperlinks, content controls,
- * fields, insertions and moved-to runs are read; deletions and w:moveFrom are skipped; paragraphs
- * are joined with \n.
+ * fields, insertions and moved-to runs are read; deletions and w:moveFrom are skipped; an
+ * mc:AlternateContent contributes its selected branch (`mcBranchOf`); paragraphs are joined with \n.
  */
 export function textOf(value: Element | object): string {
   const v = isElement(value) ? value.value : value;

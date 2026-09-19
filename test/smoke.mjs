@@ -123,7 +123,7 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {
-  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, rPrToElements, rPrFromElements, walkAll, sdt, W15_NAMESPACE, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const { wml, wmlOne, p, r, t, br, tab, tbl, tr, tc, inlinePicture, rPrToElements, rPrFromElements, walkAll, mcBranchOf, sdt, W15_NAMESPACE, sdtPr, nextSdtId, sdtProperty, sdtKindOf, textOf, runItemsOf, walk, find, linkParents, applyRunOptions, readRunOptions } = await import('@docx4j/generated-objects-ts/builders/wml');
   const el = await import('@docx4j/generated-objects-ts/el/org_docx4j_wml');
   const types = (elements) => elements.map((e) => e.value.TYPE_NAME);
   const names = (elements) => elements.map((e) => e.name.localPart);
@@ -319,6 +319,25 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   const typedSeen = [];
   walkAll(pkgElement, (v) => { typedSeen.push(v); }, () => {});
   assert.ok(typedSeen.length > 0, 'walkAll visits typed objects like walk');
+
+  // CR-003 section 3.8: the mc:AlternateContent branch a reader takes (docx4j's McSelection).
+  const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
+  const alt = (branches) => `<w:p xmlns:w="${W}" xmlns:mc="${MC}" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" xmlns:zz="urn:not-known"><w:r><w:t xml:space="preserve">a </w:t></w:r><mc:AlternateContent>${branches}</mc:AlternateContent></w:p>`;
+  const paragraphOf = async (xml) => unwrap(await unmarshalString(xml));
+  const choiceWps = '<mc:Choice Requires="wps"><w:r><w:t>wps</w:t></w:r></mc:Choice>';
+  const choiceUnknown = '<mc:Choice Requires="zz"><w:r><w:t>unknown</w:t></w:r></mc:Choice>';
+  const fallback = '<mc:Fallback><w:r><w:t>fallback</w:t></w:r></mc:Fallback>';
+  assert.equal(textOf(await paragraphOf(alt(choiceUnknown + choiceWps + fallback))), 'a wps', 'rule 1: the first understood Choice');
+  assert.equal(textOf(await paragraphOf(alt(choiceUnknown + fallback))), 'a fallback', 'rule 2: the Fallback when no Choice is understood');
+  assert.equal(textOf(await paragraphOf(alt(choiceUnknown))), 'a unknown', 'rule 3: Choices with no Fallback take the first, which docx4j TextUtils cannot');
+  assert.equal(textOf(await paragraphOf(alt(''))), 'a ', 'rule 4: no branches, no text');
+  const withBoth = await paragraphOf(alt(choiceUnknown + choiceWps + fallback));
+  const ac = withBoth.content[1].value;
+  assert.equal(mcBranchOf(ac).length, 1);
+  assert.equal(textOf(mcBranchOf(ac)[0]), 'wps', 'mcBranchOf returns the branch items');
+  assert.equal(textOf(mcBranchOf(ac, { understood: ['zz'] })[0]), 'unknown', 'a caller can say what it understands');
+  assert.equal(textOf(mcBranchOf(ac, { understood: [] })[0]), 'fallback', 'nothing understood: the Fallback');
+  assert.equal(mcBranchOf(undefined), undefined);
 
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
 }
