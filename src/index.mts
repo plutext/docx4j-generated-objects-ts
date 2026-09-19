@@ -237,6 +237,7 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://schemas.microsoft.com/office/drawing/2016/5/12/chartex': 'cx6',
   'http://schemas.microsoft.com/office/drawing/2016/5/13/chartex': 'cx7',
   'http://schemas.microsoft.com/office/drawing/2016/5/14/chartex': 'cx8',
+  'http://schemas.microsoft.com/office/excel/2006/main': 'xm',
   'http://schemas.microsoft.com/office/spreadsheetml/2011/1/ac': 'x12ac',
   'http://schemas.microsoft.com/office/spreadsheetml/2014/11/main': 'x16',
   'http://schemas.microsoft.com/office/spreadsheetml/2017/revision16': 'xr16',

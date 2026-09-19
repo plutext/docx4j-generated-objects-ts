@@ -6847,18 +6847,10 @@ export const org_xlsx4j_sml = {
       propertyInfos: [{
           name: 'from',
           required: true,
-          elementName: {
-            localPart: 'from',
-            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/spreadsheetDrawing'
-          },
           typeInfo: 'org_docx4j_dml_spreadsheetdrawing.CTMarker'
         }, {
           name: 'to',
           required: true,
-          elementName: {
-            localPart: 'to',
-            namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/spreadsheetDrawing'
-          },
           typeInfo: 'org_docx4j_dml_spreadsheetdrawing.CTMarker'
         }, {
           name: 'moveWithCells',
