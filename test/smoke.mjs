@@ -120,6 +120,29 @@ console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, m
   console.log('factories: ObjectFactory names, TYPE_NAME and marshalling agree with literals');
 }
 
+// CR-001 section 7: every prefix mc:Ignorable names is declared on the root (docx4j's
+// McIgnorableNamespaceDeclarator). Word and Excel repair a file where one is not; found by an
+// @docx4j/core-ts Excel run over xl/workbook.xml, whose xr2, xr6 and xr10 nothing in the tree uses.
+const SML = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+const declarationsOf = (xml) => {
+  const root = xml.slice(0, xml.indexOf('>') + 1);
+  const declared = [...root.matchAll(/xmlns:([a-z0-9]+)=/g)].map((m) => m[1]);
+  const ignorable = (root.match(/mc:Ignorable="([^"]*)"/) || [, ''])[1].split(/\s+/).filter(Boolean);
+  return { declared, ignorable, undeclared: ignorable.filter((p) => !declared.includes(p)) };
+};
+const workbook = `<workbook xmlns="${SML}" xmlns:mc="${MC}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main" xmlns:xr="http://schemas.microsoft.com/office/spreadsheetml/2014/revision" xmlns:xr6="http://schemas.microsoft.com/office/spreadsheetml/2016/revision6" xmlns:xr10="http://schemas.microsoft.com/office/spreadsheetml/2016/revision10" xmlns:xr2="http://schemas.microsoft.com/office/spreadsheetml/2015/revision2" mc:Ignorable="x15 xr xr6 xr10 xr2"><sheets><sheet name="S1" sheetId="1" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="rId1"/></sheets></workbook>`;
+const workbookOut = declarationsOf(await marshalString(await unmarshalString(workbook)));
+assert.deepEqual(workbookOut.undeclared, [], 'every mc:Ignorable prefix is declared (xr2, xr6, xr10 are not used by the tree)');
+assert.ok(['xr2', 'xr6', 'xr10'].every((p) => workbookOut.declared.includes(p)), 'the revision prefixes are declared from NAMESPACE_PREFIXES');
+const wordOut = declarationsOf(await marshalString(await unmarshalString(
+  `<w:document xmlns:w="${W}" xmlns:w14="${W14}" xmlns:mc="${MC}" mc:Ignorable="w14 w15"><w:body><w:p/></w:body></w:document>`)));
+assert.deepEqual(wordOut.undeclared, [], 'w15 is declared although nothing uses it');
+assert.deepEqual(wordOut.ignorable, ['w14', 'w15']);
+const unknownOut = declarationsOf(await marshalString(await unmarshalString(
+  `<w:document xmlns:w="${W}" xmlns:mc="${MC}" mc:Ignorable="w14 zz"><w:body><w:p/></w:body></w:document>`)));
+assert.deepEqual(unknownOut.ignorable, ['w14'], 'a prefix no table entry resolves is dropped from mc:Ignorable');
+assert.deepEqual(unknownOut.undeclared, []);
+
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
 {

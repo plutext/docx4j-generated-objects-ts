@@ -1,6 +1,6 @@
 # CR-001: The facade ships docx4j's namespace prefix table as the context default
 
-**Status:** Implemented 2026-09-10 (sections 2.1 and 2.3 amended on implementation: one default namespace per marshal, chosen by the root, as docx4j's per-part mappers)
+**Status:** Implemented 2026-09-10 (sections 2.1 and 2.3 amended on implementation: one default namespace per marshal, chosen by the root, as docx4j's per-part mappers); section 3.1 added 2026-09-19: mc:Ignorable prefixes are declared, not only kept.
 **Depends on:** `@docx4j/jsonix` 3.2.0 (`Jsonix.Context` option `namespacePrefixes`, already supported)
 **Requested by:** `plutext/docx4j-core-ts` CR-001 (the engine), whose Phase A cannot write a
 Word-readable `document.xml` without this
@@ -227,6 +227,30 @@ preference only (declared where first used); a new marshaller option, say
 `declareNamespaces: string[]`, lists the URIs to declare on the root regardless; and `xml` is
 seeded as already declared. When that lands, the interim stripping becomes a no-op and can go.
 Until then it is the behaviour consumers can rely on.
+
+## 3.1 Declaring what `mc:Ignorable` names (2026-09-19)
+
+The interim pass removed declarations; it could not add one. `@docx4j/core-ts` found the gap in an
+Excel acceptance run: a re-marshalled `xl/workbook.xml` kept `mc:Ignorable="x15 xr xr6 xr10 xr2"`
+but declared only `x15` and `xr`, and Excel opened it with a repair prompt. The model binds no
+`xr:revisionPtr` and no `@xr2:uid` (docx4j's sml schema has no wildcard on `CT_Workbook` or
+`CT_BookView`), so those namespaces are dropped at unmarshal, nothing in the tree uses them, and the
+marshaller declares none of them. Word repairs the same shape.
+
+The pass (now `fixRootNamespaceDeclarations`) therefore does both halves of docx4j's
+`McIgnorableNamespaceDeclarator`: it removes what the tree does not use and `mc:Ignorable` does not
+name, and it declares every prefix `mc:Ignorable` names that is not declared, taking the namespace
+from the per-root table. A prefix the table cannot resolve is dropped from `mc:Ignorable` with one
+warning, since a declaration cannot be invented and naming an undeclared prefix is the thing Word
+and Excel repair.
+
+`NAMESPACE_PREFIXES` gained the four revision namespaces this uncovered: `xr2`
+(`.../spreadsheetml/2015/revision2`), `xr3` (`.../2016/revision3`), `xr6` (`.../2016/revision6`) and
+`xr10` (`.../2016/revision10`). docx4j's own table lacks them too, which is worth its own look there.
+
+Tests (section 4): the workbook above marshals with every `mc:Ignorable` prefix declared; a
+`w:document` whose `mc:Ignorable` names `w15` declares it although nothing uses it; and an
+unresolvable prefix is dropped from `mc:Ignorable`, leaving the rest.
 
 ## 4. Tests
 

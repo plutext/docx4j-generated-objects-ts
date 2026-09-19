@@ -223,6 +223,10 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://schemas.microsoft.com/office/spreadsheetml/2009/9/main': 'x14',
   'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac': 'x14ac',
   'http://schemas.microsoft.com/office/spreadsheetml/2010/11/main': 'x15',
+  'http://schemas.microsoft.com/office/spreadsheetml/2015/revision2': 'xr2',
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision3': 'xr3',
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision6': 'xr6',
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision10': 'xr10',
   'http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac': 'x15ac',
   'http://schemas.microsoft.com/office/spreadsheetml/2014/revision': 'xr',
   'http://schemas.microsoft.com/office/excel/2010/spreadsheetDrawing': 'xdr14',
@@ -389,7 +393,7 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue): Document {
   const derived = Object.create(context, { namespacePrefixes: { value: namespacePrefixesFor(context, element) } }) as Jsonix.Context;
   const doc = derived.createMarshaller().marshalDocument(element);
-  stripUnusedNamespaceDeclarations(doc.documentElement);
+  fixRootNamespaceDeclarations(doc.documentElement, namespacePrefixesFor(context, element));
   return doc;
 }
 
@@ -405,13 +409,19 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
 }
 
 /**
- * Removes from the root element every namespace declaration that no element or attribute in
- * the tree resolves to and that the root's mc:Ignorable does not name (docx4j's
- * McIgnorableNamespaceDeclarator: every prefix listed there must be declared on the root).
+ * The root's namespace declarations, as docx4j's McIgnorableNamespaceDeclarator leaves them:
+ * every declaration that no element or attribute in the tree resolves to is removed unless the
+ * root's mc:Ignorable names its prefix, and every prefix mc:Ignorable names that is not declared
+ * is added from `table`. A prefix the table cannot resolve is dropped from mc:Ignorable with a
+ * warning: Word and Excel repair a file whose mc:Ignorable names an undeclared prefix, which is
+ * how this was found (@docx4j/core-ts, an Excel acceptance run over xl/workbook.xml, 2026-09-19:
+ * the model binds no xr:revisionPtr or xr2:uid, so nothing in the tree used xr2, xr6 or xr10 and
+ * the marshaller declared none of them).
+ *
  * `xmlns:xml` is never written. Declarations below the root shadow the root's, so a part's own
  * declarations inside a flat package count for the part, not for the package root.
  */
-function stripUnusedNamespaceDeclarations(root: Element): void {
+function fixRootNamespaceDeclarations(root: Element, table: Record<string, string>): void {
   const declared = new Map<string, Attr>();
   for (const attr of Array.from(root.attributes)) {
     const prefix = prefixOfDeclaration(attr);
@@ -441,11 +451,28 @@ function stripUnusedNamespaceDeclarations(root: Element): void {
     }
   };
   walk(root, new Set());
-  for (const prefix of (root.getAttributeNS(MC_NS, 'Ignorable') ?? '').split(/\s+/)) {
-    if (prefix) used.add(prefix);
-  }
+  const ignorable = (root.getAttributeNS(MC_NS, 'Ignorable') ?? '').split(/\s+/).filter(Boolean);
+  for (const prefix of ignorable) used.add(prefix);
   for (const [prefix, attr] of declared) {
     if (!used.has(prefix) || attr.value === XML_NS) root.removeAttributeNode(attr);
+  }
+  if (ignorable.length === 0) return;
+
+  const namespaceFor = new Map(Object.entries(table).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
+  const unresolved: string[] = [];
+  for (const prefix of ignorable) {
+    if (root.getAttributeNode(`xmlns:${prefix}`)) continue;
+    const namespaceURI = namespaceFor.get(prefix);
+    if (namespaceURI === undefined) { unresolved.push(prefix); continue; }
+    root.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
+  }
+  if (unresolved.length > 0) {
+    const kept = ignorable.filter((prefix) => !unresolved.includes(prefix));
+    // An mc:Ignorable naming a prefix nothing declares is what Word and Excel repair, and the
+    // table is the only place a declaration could come from.
+    console.warn(`marshal: mc:Ignorable names ${unresolved.join(', ')}, which no declaration or NAMESPACE_PREFIXES entry resolves; dropped`);
+    if (kept.length > 0) root.setAttributeNS(MC_NS, 'mc:Ignorable', kept.join(' '));
+    else root.removeAttributeNS(MC_NS, 'Ignorable');
   }
 }
 
