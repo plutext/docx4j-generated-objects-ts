@@ -36,7 +36,6 @@ var org_docx4j_mce_Module_Factory = function () {
             name: 'any',
             minOccurs: 0,
             collection: true,
-            allowDom: false,
             mixed: false,
             type: 'anyElement'
           }, {
@@ -66,7 +65,6 @@ var org_docx4j_mce_Module_Factory = function () {
             name: 'any',
             minOccurs: 0,
             collection: true,
-            allowDom: false,
             mixed: false,
             type: 'anyElement'
           }, {

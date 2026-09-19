@@ -36,7 +36,6 @@ export const org_docx4j_mce = {
           name: 'any',
           minOccurs: 0,
           collection: true,
-          allowDom: false,
           mixed: false,
           type: 'anyElement'
         }, {
@@ -66,7 +65,6 @@ export const org_docx4j_mce = {
           name: 'any',
           minOccurs: 0,
           collection: true,
-          allowDom: false,
           mixed: false,
           type: 'anyElement'
         }, {
