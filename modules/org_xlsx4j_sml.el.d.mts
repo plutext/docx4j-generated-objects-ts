@@ -2,9 +2,12 @@
 import type * as M from './org_xlsx4j_sml.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_xlsx4j_sml.js';
 import type * as Dep_org_xlsx4j_schemas_microsoft_com_office_excel_2006_main from './org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.js';
+import type * as Dep_org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_main from './org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_main.js';
+import type * as Dep_org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2009_x9_main from './org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2009_x9_main.js';
+import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes.js';
 import type * as Dep_org_docx4j_dml_spreadsheetdrawing from './org_docx4j_dml_spreadsheetdrawing.js';
-import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
+import type * as Dep_org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision from './org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision.js';
 
 /** The element {http://schemas.openxmlformats.org/spreadsheetml/2006/main}MapInfo. */
 export function MapInfo(value: M.CTMapInfo): M.TypedNamedValue<M.CTMapInfo>;

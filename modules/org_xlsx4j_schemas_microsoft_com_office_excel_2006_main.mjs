@@ -4,6 +4,72 @@ export const org_xlsx4j_schemas_microsoft_com_office_excel_2006_main = {
   defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/excel\/2006\/main',
   dependencies: ['org_xlsx4j_sml'],
   typeInfos: [{
+      localName: 'CTRef',
+      typeName: 'CT_Ref',
+      propertyInfos: [{
+          name: 'value',
+          type: 'value'
+        }, {
+          name: 'adjust',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'adjust'
+          },
+          type: 'attribute'
+        }, {
+          name: 'adjusted',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'adjusted'
+          },
+          type: 'attribute'
+        }, {
+          name: 'edited',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'edited'
+          },
+          type: 'attribute'
+        }]
+    }, {
+      localName: 'CTSqref',
+      typeName: 'CT_Sqref',
+      propertyInfos: [{
+          name: 'value',
+          typeInfo: {
+            type: 'list'
+          },
+          type: 'value'
+        }, {
+          name: 'adjust',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'adjust'
+          },
+          type: 'attribute'
+        }, {
+          name: 'adjusted',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'adjusted'
+          },
+          type: 'attribute'
+        }, {
+          name: 'edited',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'edited'
+          },
+          type: 'attribute'
+        }, {
+          name: 'split',
+          typeInfo: 'Boolean',
+          attributeName: {
+            localPart: 'split'
+          },
+          type: 'attribute'
+        }]
+    }, {
       localName: 'CTWorksheet',
       typeName: 'CT_Worksheet',
       propertyInfos: [{
@@ -122,7 +188,15 @@ export const org_xlsx4j_schemas_microsoft_com_office_excel_2006_main = {
         }]
     }],
   elementInfos: [{
+      elementName: 'f'
+    }, {
       typeInfo: '.CTWorksheet',
       elementName: 'macrosheet'
+    }, {
+      typeInfo: '.CTRef',
+      elementName: 'ref'
+    }, {
+      typeInfo: '.CTSqref',
+      elementName: 'sqref'
     }]
 };

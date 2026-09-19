@@ -5,5 +5,10 @@ function __element(namespaceURI, localPart, value, typeName) {
   if (typeName !== undefined && value !== null && typeof value === 'object' && value.TYPE_NAME === undefined) { value.TYPE_NAME = typeName; }
   return { name: { namespaceURI, localPart }, value };
 }
+export function createCTRef(init) { return Object.assign({ TYPE_NAME: 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTRef' }, init); }
+export function createCTSqref(init) { return Object.assign({ TYPE_NAME: 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTSqref' }, init); }
 export function createCTWorksheet(init) { return Object.assign({ TYPE_NAME: 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTWorksheet' }, init); }
+export function createFElement(value) { return __element(__ns0, 'f', value); }
 export function createMacrosheetElement(value) { return __element(__ns0, 'macrosheet', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTWorksheet'); }
+export function createRefElement(value) { return __element(__ns0, 'ref', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTRef'); }
+export function createSqrefElement(value) { return __element(__ns0, 'sqref', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTSqref'); }

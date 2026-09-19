@@ -1,0 +1,103 @@
+var org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module_Factory = function () {
+  var org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main = {
+    name: 'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main',
+    defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/11\/main',
+    typeInfos: [{
+        localName: 'CTCalculatedTimeColumn',
+        typeName: 'CT_CalculatedTimeColumn',
+        propertyInfos: [{
+            name: 'columnId',
+            required: true,
+            attributeName: {
+              localPart: 'columnId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'columnName',
+            required: true,
+            attributeName: {
+              localPart: 'columnName'
+            },
+            type: 'attribute'
+          }, {
+            name: 'contentType',
+            required: true,
+            typeInfo: '.STModelTimeGroupingContentType',
+            attributeName: {
+              localPart: 'contentType'
+            },
+            type: 'attribute'
+          }, {
+            name: 'isSelected',
+            required: true,
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'isSelected'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTModelTimeGrouping',
+        typeName: 'CT_ModelTimeGrouping',
+        propertyInfos: [{
+            name: 'calculatedTimeColumn',
+            required: true,
+            collection: true,
+            typeInfo: '.CTCalculatedTimeColumn'
+          }, {
+            name: 'columnId',
+            required: true,
+            attributeName: {
+              localPart: 'columnId'
+            },
+            type: 'attribute'
+          }, {
+            name: 'columnName',
+            required: true,
+            attributeName: {
+              localPart: 'columnName'
+            },
+            type: 'attribute'
+          }, {
+            name: 'tableName',
+            required: true,
+            attributeName: {
+              localPart: 'tableName'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTModelTimeGroupings',
+        typeName: 'CT_ModelTimeGroupings',
+        propertyInfos: [{
+            name: 'modelTimeGrouping',
+            required: true,
+            collection: true,
+            typeInfo: '.CTModelTimeGrouping'
+          }]
+      }, {
+        type: 'enumInfo',
+        localName: 'STModelTimeGroupingContentType',
+        values: ['years', 'quarters', 'monthsindex', 'months', 'daysindex', 'days', 'hours', 'minutes', 'seconds']
+      }],
+    elementInfos: [{
+        typeInfo: '.CTModelTimeGroupings',
+        elementName: 'modelTimeGroupings'
+      }]
+  };
+  return {
+    org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main: org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main
+  };
+};
+if (typeof define === 'function' && define.amd) {
+  define([], org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module_Factory);
+}
+else {
+  var org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module = org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module_Factory();
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports.org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main = org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module.org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main;
+  }
+  else {
+    var org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main = org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main_Module.org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main;
+  }
+}

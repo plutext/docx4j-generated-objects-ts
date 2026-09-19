@@ -5,4 +5,7 @@ function __element(namespaceURI, localPart, value, typeName) {
   if (typeName !== undefined && value !== null && typeof value === 'object' && value.TYPE_NAME === undefined) { value.TYPE_NAME = typeName; }
   return { name: { namespaceURI, localPart }, value };
 }
+export function f(value) { return __element(__ns0, 'f', value); }
 export function macrosheet(value) { return __element(__ns0, 'macrosheet', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTWorksheet'); }
+export function ref(value) { return __element(__ns0, 'ref', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTRef'); }
+export function sqref(value) { return __element(__ns0, 'sqref', value, 'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.CTSqref'); }

@@ -2,7 +2,7 @@ var org_xlsx4j_sml_Module_Factory = function () {
   var org_xlsx4j_sml = {
     name: 'org_xlsx4j_sml',
     defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/spreadsheetml\/2006\/main',
-    dependencies: ['org_docx4j_dml_spreadsheetdrawing', 'org_docx4j_mce', 'org_docx4j_sharedtypes'],
+    dependencies: ['org_docx4j_dml_spreadsheetdrawing', 'org_docx4j_mce', 'org_docx4j_sharedtypes', 'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision'],
     typeInfos: [{
         localName: 'BookViews',
         typeName: 'CT_BookViews',
@@ -2001,6 +2001,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
           }, {
             name: 'extLst',
             typeInfo: '.CTExtensionList'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTConditionalFormat',
@@ -2262,6 +2269,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             required: true,
             collection: true,
             typeInfo: '.CTConnection'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTConsolidation',
@@ -2434,9 +2448,18 @@ var org_xlsx4j_sml_Module_Factory = function () {
         typeName: 'CT_Controls',
         propertyInfos: [{
             name: 'control',
-            required: true,
+            minOccurs: 0,
             collection: true,
             typeInfo: '.CTControl'
+          }, {
+            name: 'alternateContent',
+            minOccurs: 0,
+            collection: true,
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
           }]
       }, {
         localName: 'CTCsPageSetup',
@@ -4785,6 +4808,14 @@ var org_xlsx4j_sml_Module_Factory = function () {
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'count'
+            },
+            type: 'attribute'
+          }, {
+            name: 'knownFonts',
+            typeInfo: 'Boolean',
+            attributeName: {
+              localPart: 'knownFonts',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2009\/9\/ac'
             },
             type: 'attribute'
           }]
@@ -8339,6 +8370,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             },
             type: 'attribute'
           }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
+          }, {
             name: 'id',
             attributeName: {
               localPart: 'id',
@@ -8362,6 +8400,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             typeInfo: 'UnsignedInt',
             attributeName: {
               localPart: 'count'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
             },
             type: 'attribute'
           }]
@@ -9745,6 +9790,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
               localPart: 'visualTotals'
             },
             type: 'attribute'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTPivotTableStyle',
@@ -10114,6 +10166,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             defaultValue: false,
             attributeName: {
               localPart: 'rowNumbers'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
             },
             type: 'attribute'
           }]
@@ -12243,6 +12302,14 @@ var org_xlsx4j_sml_Module_Factory = function () {
               localPart: 'zeroHeight'
             },
             type: 'attribute'
+          }, {
+            name: 'dyDescent',
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'dyDescent',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2009\/9\/ac'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTSheetId',
@@ -12884,6 +12951,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
           }, {
             name: 'extLst',
             typeInfo: '.CTExtensionList'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTTable',
@@ -13059,6 +13133,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             defaultValue: true,
             attributeName: {
               localPart: 'totalsRowShown'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
             },
             type: 'attribute'
           }]
@@ -14988,6 +15069,14 @@ var org_xlsx4j_sml_Module_Factory = function () {
               localPart: 'thickTop'
             },
             type: 'attribute'
+          }, {
+            name: 'dyDescent',
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'dyDescent',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2009\/9\/ac'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'Sheet',
@@ -15245,6 +15334,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
             },
             typeInfo: 'org_docx4j_mce.AlternateContent'
+          }, {
+            name: 'revisionPtr',
+            elementName: {
+              localPart: 'revisionPtr',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+            },
+            typeInfo: 'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision.CTRevisionPtr'
           }, {
             name: 'workbookProtection',
             typeInfo: '.CTWorkbookProtection'
@@ -15573,6 +15669,15 @@ var org_xlsx4j_sml_Module_Factory = function () {
             name: 'controls',
             typeInfo: '.CTControls'
           }, {
+            name: 'alternateContent',
+            minOccurs: 0,
+            collection: true,
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
+          }, {
             name: 'webPublishItems',
             typeInfo: '.CTWebPublishItems'
           }, {
@@ -15587,6 +15692,13 @@ var org_xlsx4j_sml_Module_Factory = function () {
             attributeName: {
               localPart: 'uid',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+            },
+            type: 'attribute'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
             },
             type: 'attribute'
           }]

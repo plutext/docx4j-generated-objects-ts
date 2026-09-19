@@ -26,8 +26,8 @@ export const MODULE_NAMES = [
   'org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram',
   'org_docx4j_com_microsoft_schemas_office_drawing_x201611_main',
   'org_docx4j_com_microsoft_schemas_office_drawing_x201612_diagram',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2016_ink',
   'org_docx4j_com_microsoft_schemas_office_drawing_x2016_SVG_main',
+  'org_docx4j_com_microsoft_schemas_office_drawing_x2016_ink',
   'org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart',
   'org_docx4j_com_microsoft_schemas_office_drawing_x2017_decorative',
   'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d',
@@ -47,8 +47,8 @@ export const MODULE_NAMES = [
   'org_docx4j_com_microsoft_schemas_office_x2006_encryption',
   'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate',
   'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password',
-  'org_docx4j_customxml',
   'org_docx4j_customXmlProperties',
+  'org_docx4j_customxml',
   'org_docx4j_dml',
   'org_docx4j_dml_chart',
   'org_docx4j_dml_chartDrawing',
@@ -101,10 +101,16 @@ export const MODULE_NAMES = [
   'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201710_main',
   'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201804_main',
   'org_pptx4j_pml',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2009_x9_main',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_ac',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_main',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2011_x1_ac',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision',
+  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main',
   'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main',
   'org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main',
   'org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing',
-  'org_xlsx4j_sml'
+  'org_xlsx4j_sml',
 ] as const;
 
 export type ModuleName = (typeof MODULE_NAMES)[number];
@@ -231,6 +237,9 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://schemas.microsoft.com/office/drawing/2016/5/12/chartex': 'cx6',
   'http://schemas.microsoft.com/office/drawing/2016/5/13/chartex': 'cx7',
   'http://schemas.microsoft.com/office/drawing/2016/5/14/chartex': 'cx8',
+  'http://schemas.microsoft.com/office/spreadsheetml/2011/1/ac': 'x12ac',
+  'http://schemas.microsoft.com/office/spreadsheetml/2014/11/main': 'x16',
+  'http://schemas.microsoft.com/office/spreadsheetml/2017/revision16': 'xr16',
   'http://schemas.microsoft.com/office/spreadsheetml/2015/revision2': 'xr2',
   'http://schemas.microsoft.com/office/spreadsheetml/2016/revision3': 'xr3',
   'http://schemas.microsoft.com/office/spreadsheetml/2016/revision6': 'xr6',
@@ -256,7 +265,7 @@ let builtContext: Jsonix.Context | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
- * loaded lazily; 96 modules are several megabytes). Parent pointers are on by default, as in
+ * loaded lazily; 102 modules are several megabytes). Parent pointers are on by default, as in
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
  * change that or anything else.
  */
