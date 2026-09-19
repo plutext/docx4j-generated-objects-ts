@@ -1,6 +1,6 @@
 # CR-003: `builders/wml` additions from core-ts's content API, and `deepCopyAs`
 
-**Status:** Proposed 2026-09-16
+**Status:** Phase A implemented 2026-09-16 (sections 2 and 3.1 to 3.6, released in 0.1.4); phase B proposed
 **Depends on:** CR-002 (`builders/wml`), compiler CR-010 (the generated `factory/*` and `el/*`)
 **Requested by:** `plutext/docx4j-core-ts` CR-002 (the content API), phases C, E, F, G and I, which
 worked around each gap below with a private copy and recorded it ("Objects-package gaps" in its
