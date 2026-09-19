@@ -221,15 +221,19 @@ content, `w:numPicBullet`, a DrawingML text paragraph), so a tree can now hold o
 understood, else the `mc:Fallback`, else the first `mc:Choice`, else nothing. `textOf` reads the
 branch it returns.
 
-Two notes, both from the docx4j session (2026-09-19):
+Two notes, both settled with the docx4j session (2026-09-19):
 
-- **Rule 3 is a deliberate difference.** docx4j's `TextUtils` is a SAX stream and cannot know there
-  is no `mc:Fallback` until the end, so it drops such an element (Word never writes one; Excel's
-  x15 `absPath` does). Over an object model the rule costs nothing.
-- **"Understood" is judged by prefix.** `Requires` names prefixes, and the unmarshalled model keeps
-  no prefix-to-namespace mapping for the element, so the default set is the prefixes of
-  `NAMESPACE_PREFIXES` (the namespaces this package types, in the conventional prefixes Word
-  writes). A caller that knows better passes `understood`.
+- **Rule 3 agrees with docx4j.** Its `TextUtils` at first dropped a Choices-without-Fallback element,
+  being a SAX stream that cannot know there is no `mc:Fallback` until the end (Word never writes one;
+  Excel's x15 `absPath` does). `TextExtractor` now holds the first unpreferred Choice's text back and
+  writes it when the element ends, so both implementations apply the whole rule.
+- **"Understood" is judged by prefix, as docx4j judges it.** `Requires` names prefixes, and the
+  unmarshalled model keeps no prefix-to-namespace mapping for the element, so the default set is the
+  prefixes of `NAMESPACE_PREFIXES` (the namespaces this package types, in the conventional prefixes
+  Word writes). docx4j's `McSelection.prefersChoice` and its load-time XSLT compare the tokens as
+  prefix strings too, and ECMA-376 Part 3's `mc:Ignorable` is prefix-based, so this is the faithful
+  reading rather than an approximation. A caller that knows its document's declarations passes
+  `understood`.
 
 `@docx4j/core-ts` resolves `mc:AlternateContent` when it unmarshals a part, so this shows only with
 `{ mcePreprocess: false }` or when using the object model directly.

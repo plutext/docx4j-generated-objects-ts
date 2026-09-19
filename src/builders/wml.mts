@@ -752,7 +752,7 @@ export interface McOptions {
    * The prefixes this reader understands; `NAMESPACE_PREFIXES`' own prefixes by default, which are
    * the namespaces this package types. `mc:Choice/@Requires` names prefixes, not namespaces, and
    * the unmarshalled model does not keep the declarations in force at the element, so a prefix is
-   * all there is to go on; Word writes the conventional ones.
+   * all there is to go on; Word writes the conventional ones and docx4j matches prefixes too.
    */
   understood?: Iterable<string>;
 }
@@ -765,9 +765,9 @@ const CONVENTIONAL_PREFIXES: ReadonlySet<string> = new Set(Object.values(NAMESPA
  * else the `mc:Fallback`, else the first `mc:Choice` (Choices with no Fallback: Word never writes
  * it, Excel's x15 `absPath` does), else nothing for an element with no branches.
  *
- * docx4j's `TextUtils` cannot take that third step, being a SAX stream that does not know there is
- * no Fallback until the end; over an object model it costs nothing, so this package differs there
- * deliberately (reported by the docx4j session, 2026-09-19).
+ * docx4j applies the same rule (its `TextExtractor` holds an unpreferred Choice's text back until
+ * the element ends, so the SAX stream can take the third step too). `Requires` names prefixes and
+ * docx4j compares them as prefixes, which ECMA-376 Part 3 also does for `mc:Ignorable`.
  */
 export function mcBranchOf(value: Mce.AlternateContent | undefined, options: McOptions = {}): Element[] | undefined {
   if (!value) return undefined;
