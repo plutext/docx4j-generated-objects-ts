@@ -2,6 +2,7 @@
 import type * as M from './org_docx4j_math.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_math.js';
 import type * as Dep_org_docx4j_wml from './org_docx4j_wml.js';
+import type * as Dep_org_docx4j_dml from './org_docx4j_dml.js';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes.js';
 import type * as Dep_org_docx4j_w15symex from './org_docx4j_w15symex.js';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
@@ -150,6 +151,8 @@ export function createCTUnSignedInteger(init?: Partial<Omit<M.CTUnSignedInteger,
 export function createCTXAlign(init?: Partial<Omit<M.CTXAlign, 'TYPE_NAME' | 'PARENT'>>): M.CTXAlign;
 /** docx4j ObjectFactory.createCTYAlign(): a org_docx4j_math.CTYAlign with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createCTYAlign(init?: Partial<Omit<M.CTYAlign, 'TYPE_NAME' | 'PARENT'>>): M.CTYAlign;
+/** The element {http://schemas.openxmlformats.org/drawingml/2006/main}rPr in the scope of org_docx4j_math.CTR (docx4j ObjectFactory.createCTRRPrDml(value)). */
+export function createCTRRPrDml(value: Dep_org_docx4j_dml.CTTextCharacterProperties): M.TypedNamedValue<Dep_org_docx4j_dml.CTTextCharacterProperties>;
 /** The element {http://schemas.openxmlformats.org/officeDocument/2006/math}acc in the scope of org_docx4j_math.CTOMath (docx4j ObjectFactory.createCTOMathAcc(value)). */
 export function createCTOMathAcc(value: M.CTAcc): M.TypedNamedValue<M.CTAcc>;
 /** The element {http://schemas.openxmlformats.org/officeDocument/2006/math}acc in the scope of org_docx4j_math.CTOMathArg (docx4j ObjectFactory.createCTOMathArgAcc(value)). */

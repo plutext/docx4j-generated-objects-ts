@@ -32,6 +32,7 @@ import type * as Dep_org_docx4j_dml_chart_x2007 from './org_docx4j_dml_chart_x20
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram from './org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.js';
+import type * as Dep_org_docx4j_math from './org_docx4j_math.js';
 
 /** The element {http://schemas.openxmlformats.org/drawingml/2006/main}alpha. */
 export function alpha(value: M.CTPositiveFixedPercentage): M.TypedNamedValue<M.CTPositiveFixedPercentage>;

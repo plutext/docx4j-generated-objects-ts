@@ -31,6 +31,7 @@ import type * as Dep_org_docx4j_dml_chart_x2007 from './org_docx4j_dml_chart_x20
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram from './org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram';
+import type * as Dep_org_docx4j_math from './org_docx4j_math';
 
 /** Jsonix.XML.QName */
 export interface XmlQName { namespaceURI: string; localPart: string; prefix?: string; key?: string; string?: string; }
@@ -1744,7 +1745,7 @@ export interface CTTextCharBullet {
 
 export interface CTTextCharacterProperties {
   TYPE_NAME?: 'org_docx4j_dml.CTTextCharacterProperties';
-  readonly PARENT?: CTRegularTextRun | CTTextField | CTTextLineBreak | CTTextParagraph | CTTextParagraphProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry;
+  readonly PARENT?: CTRegularTextRun | CTTextField | CTTextLineBreak | CTTextParagraph | CTTextParagraphProperties | Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle.CTStyleEntry | Dep_org_docx4j_math.CTCtrlPr | Dep_org_docx4j_math.CTR;
   ln?: CTLineProperties;
   noFill?: CTNoFillProperties;
   solidFill?: CTSolidColorFillProperties;

@@ -32,6 +32,7 @@ import type * as Dep_org_docx4j_dml_chart_x2007 from './org_docx4j_dml_chart_x20
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram from './org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram.js';
+import type * as Dep_org_docx4j_math from './org_docx4j_math.js';
 
 /** docx4j ObjectFactory.createBaseStyles(): a org_docx4j_dml.BaseStyles with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createBaseStyles(init?: Partial<Omit<M.BaseStyles, 'TYPE_NAME' | 'PARENT'>>): M.BaseStyles;

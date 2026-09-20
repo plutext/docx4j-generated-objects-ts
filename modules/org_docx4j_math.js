@@ -3,7 +3,7 @@ var org_docx4j_math_Module_Factory = function () {
     name: 'org_docx4j_math',
     defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math',
     defaultAttributeNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math',
-    dependencies: ['org_docx4j_sharedtypes', 'org_docx4j_wml'],
+    dependencies: ['org_docx4j_dml', 'org_docx4j_sharedtypes', 'org_docx4j_wml'],
     typeInfos: [{
         localName: 'CTAcc',
         typeName: 'CT_Acc',
@@ -169,6 +169,13 @@ var org_docx4j_math_Module_Factory = function () {
               namespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main'
             },
             typeInfo: 'org_docx4j_wml.CTRPrChange'
+          }, {
+            name: 'rPrDml',
+            elementName: {
+              localPart: 'rPr',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+            },
+            typeInfo: 'org_docx4j_dml.CTTextCharacterProperties'
           }]
       }, {
         localName: 'CTD',
@@ -1104,6 +1111,12 @@ var org_docx4j_math_Module_Factory = function () {
                 typeInfo: 'org_docx4j_wml.RPr'
               }, {
                 elementName: {
+                  localPart: 'rPr',
+                  namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+                },
+                typeInfo: 'org_docx4j_dml.CTTextCharacterProperties'
+              }, {
+                elementName: {
                   localPart: 'br',
                   namespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main'
                 },
@@ -1604,6 +1617,13 @@ var org_docx4j_math_Module_Factory = function () {
         values: ['top', 'bot']
       }],
     elementInfos: [{
+        typeInfo: 'org_docx4j_dml.CTTextCharacterProperties',
+        elementName: {
+          localPart: 'rPr',
+          namespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/main'
+        },
+        scope: '.CTR'
+      }, {
         typeInfo: '.CTAcc',
         elementName: 'acc',
         scope: '.CTOMath'
