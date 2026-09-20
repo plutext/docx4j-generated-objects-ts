@@ -5,6 +5,7 @@ import type * as Dep_org_docx4j_math from './org_docx4j_math.js';
 import type * as Dep_org_docx4j_w15 from './org_docx4j_w15.js';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
 import type * as Dep_org_docx4j_w14 from './org_docx4j_w14.js';
+import type * as Dep_org_docx4j_w15symex from './org_docx4j_w15symex.js';
 import type * as Dep_org_docx4j_customxml from './org_docx4j_customxml.js';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape.js';

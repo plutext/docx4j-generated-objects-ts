@@ -3,6 +3,7 @@ import type * as M from './org_docx4j_math.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_math.js';
 import type * as Dep_org_docx4j_wml from './org_docx4j_wml.js';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes.js';
+import type * as Dep_org_docx4j_w15symex from './org_docx4j_w15symex.js';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
 
 /** The element {http://schemas.openxmlformats.org/officeDocument/2006/math}acc. */

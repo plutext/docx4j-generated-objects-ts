@@ -1218,6 +1218,12 @@ export const org_docx4j_math = {
               typeInfo: 'org_docx4j_wml.R.Sym'
             }, {
               elementName: {
+                localPart: 'symEx',
+                namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2015\/wordml\/symex'
+              },
+              typeInfo: 'org_docx4j_w15symex.CTSymEx'
+            }, {
+              elementName: {
                 localPart: 'pgNum',
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/wordprocessingml\/2006\/main'
               },

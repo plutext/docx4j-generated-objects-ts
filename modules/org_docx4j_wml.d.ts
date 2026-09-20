@@ -4,6 +4,7 @@ import type * as Dep_org_docx4j_math from './org_docx4j_math';
 import type * as Dep_org_docx4j_w15 from './org_docx4j_w15';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce';
 import type * as Dep_org_docx4j_w14 from './org_docx4j_w14';
+import type * as Dep_org_docx4j_w15symex from './org_docx4j_w15symex';
 import type * as Dep_org_docx4j_customxml from './org_docx4j_customxml';
 import type * as Dep_org_docx4j_sharedtypes from './org_docx4j_sharedtypes';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape from './org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape';
@@ -342,6 +343,7 @@ export interface CTCustomXmlRun {
 export interface CTDataBinding {
   TYPE_NAME?: 'org_docx4j_wml.CTDataBinding';
   readonly PARENT?: SdtPr;
+  storeItemChecksum?: string;
   prefixMappings?: string;
   storeItemID: string;
   xpath: string;
@@ -851,7 +853,7 @@ export interface CTMarkupRange extends CTMarkup {
 export interface CTMathRunTrackChange extends CTTrackChange {
   TYPE_NAME?: 'org_docx4j_wml.CTMathRunTrackChange';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTParaRPrOriginal | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTxbxContent | Comments.Comment | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Dep_org_docx4j_math.CTR | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | PPrBase.NumPr | ParaRPr | RunDel | RunIns | RunTrackChange | SdtContentBlock | Tbl | Tc | TcPr | TcPrInner | Tr | TrPr;
-  rest?: (TypedNamedValue<Dep_org_docx4j_math.CTRPR> | TypedNamedValue<RPr> | TypedNamedValue<Br> | TypedNamedValue<Text> | TypedNamedValue<DelText> | TypedNamedValue<R.NoBreakHyphen> | TypedNamedValue<R.SoftHyphen> | TypedNamedValue<R.DayShort> | TypedNamedValue<R.MonthShort> | TypedNamedValue<R.YearShort> | TypedNamedValue<R.DayLong> | TypedNamedValue<R.MonthLong> | TypedNamedValue<R.YearLong> | TypedNamedValue<R.AnnotationRef> | TypedNamedValue<R.FootnoteRef> | TypedNamedValue<R.EndnoteRef> | TypedNamedValue<R.Separator> | TypedNamedValue<R.ContinuationSeparator> | TypedNamedValue<R.Sym> | TypedNamedValue<R.PgNum> | TypedNamedValue<R.Cr> | TypedNamedValue<R.Tab> | TypedNamedValue<CTObject> | TypedNamedValue<Pict> | TypedNamedValue<FldChar> | TypedNamedValue<CTRuby> | TypedNamedValue<CTFtnEdnRef> | TypedNamedValue<R.CommentReference> | TypedNamedValue<Drawing> | TypedNamedValue<R.Ptab> | TypedNamedValue<R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent> | TypedNamedValue<Dep_org_docx4j_math.CTText>)[];
+  rest?: (TypedNamedValue<Dep_org_docx4j_math.CTRPR> | TypedNamedValue<RPr> | TypedNamedValue<Br> | TypedNamedValue<Text> | TypedNamedValue<DelText> | TypedNamedValue<R.NoBreakHyphen> | TypedNamedValue<R.SoftHyphen> | TypedNamedValue<R.DayShort> | TypedNamedValue<R.MonthShort> | TypedNamedValue<R.YearShort> | TypedNamedValue<R.DayLong> | TypedNamedValue<R.MonthLong> | TypedNamedValue<R.YearLong> | TypedNamedValue<R.AnnotationRef> | TypedNamedValue<R.FootnoteRef> | TypedNamedValue<R.EndnoteRef> | TypedNamedValue<R.Separator> | TypedNamedValue<R.ContinuationSeparator> | TypedNamedValue<R.Sym> | TypedNamedValue<Dep_org_docx4j_w15symex.CTSymEx> | TypedNamedValue<R.PgNum> | TypedNamedValue<R.Cr> | TypedNamedValue<R.Tab> | TypedNamedValue<CTObject> | TypedNamedValue<Pict> | TypedNamedValue<FldChar> | TypedNamedValue<CTRuby> | TypedNamedValue<CTFtnEdnRef> | TypedNamedValue<R.CommentReference> | TypedNamedValue<Drawing> | TypedNamedValue<R.Ptab> | TypedNamedValue<R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent> | TypedNamedValue<Dep_org_docx4j_math.CTText>)[];
 }
 
 export interface CTMoveBookmark extends CTBookmark {
@@ -1517,6 +1519,7 @@ export interface CTTrPrChange extends CTTrackChange {
 export interface CTTrackChange extends CTMarkup {
   TYPE_NAME?: 'org_docx4j_wml.CTTrackChange' | 'org_docx4j_wml.CTCellMergeTrackChange' | 'org_docx4j_wml.CTMathRunTrackChange' | 'org_docx4j_wml.CTPPrChange' | 'org_docx4j_wml.CTRPrChange' | 'org_docx4j_wml.CTSectPrChange' | 'org_docx4j_wml.CTTblPrChange' | 'org_docx4j_wml.CTTblPrExChange' | 'org_docx4j_wml.CTTcPrChange' | 'org_docx4j_wml.CTTrPrChange' | 'org_docx4j_wml.CTTrackChangeNumbering' | 'org_docx4j_wml.CTTrackChangeRange' | 'org_docx4j_wml.Comments.Comment' | 'org_docx4j_wml.ParaRPrChange' | 'org_docx4j_wml.RunDel' | 'org_docx4j_wml.RunIns' | 'org_docx4j_wml.RunTrackChange';
   readonly PARENT?: Body | CTCustomXmlBlock | CTCustomXmlCell | CTCustomXmlRow | CTCustomXmlRun | CTFtnEdn | CTParaRPrOriginal | CTRubyContent | CTSdtContentCell | CTSdtContentRow | CTSdtContentRun | CTSimpleField | CTSmartTagRun | CTTblPrEx | CTTxbxContent | Comments | Comments.Comment | Dep_org_docx4j_math.CTCtrlPr | Dep_org_docx4j_math.CTOMath | Dep_org_docx4j_math.CTOMathArg | Dep_org_docx4j_math.CTR | FldChar | Ftr | Hdr | P | P.Bdo | P.Dir | P.Hyperlink | PPr | PPrBase.NumPr | ParaRPr | RPr | RunDel | RunIns | RunTrackChange | SdtContentBlock | SectPr | Tbl | TblPr | Tc | TcPr | TcPrInner | Tr | TrPr;
+  dateUtc?: XmlCalendar;
   author: string;
   date?: XmlCalendar;
 }
@@ -1594,6 +1597,7 @@ export interface CTWebSettings {
   pixelsPerInch?: CTWebSettings.PixelsPerInch;
   targetScreenSz?: CTTargetScreenSz;
   saveSmartTagsAsXml?: BooleanDefaultTrue;
+  ignorable?: string;
 }
 
 export interface CTWriteProtection {
@@ -1738,6 +1742,7 @@ export interface FontSig {
 export interface Fonts {
   TYPE_NAME?: 'org_docx4j_wml.Fonts';
   font?: Fonts.Font[];
+  ignorable?: string;
 }
 
 export interface FooterReference extends CTRel {
@@ -1756,6 +1761,7 @@ export interface GlossaryDocument {
   TYPE_NAME?: 'org_docx4j_wml.GlossaryDocument';
   background?: CTBackground;
   docParts?: CTDocParts;
+  ignorable?: string;
 }
 
 export interface Hdr {
@@ -1834,6 +1840,7 @@ export interface P {
   readonly PARENT?: Body | CTCustomXmlBlock | CTFtnEdn | CTTxbxContent | Comments.Comment | Ftr | Hdr | SdtContentBlock | Tc;
   pPr?: PPr;
   content?: (TypedNamedValue<CTCustomXmlRun> | TypedNamedValue<CTSmartTagRun> | TypedNamedValue<SdtRun> | TypedNamedValue<P.Dir> | TypedNamedValue<P.Bdo> | TypedNamedValue<R> | TypedNamedValue<ProofErr> | TypedNamedValue<RangePermissionStart> | TypedNamedValue<CTPerm> | TypedNamedValue<CTBookmark> | TypedNamedValue<CTMarkupRange> | TypedNamedValue<CTMoveBookmark> | TypedNamedValue<CTMoveFromRangeEnd> | TypedNamedValue<CTMoveToRangeEnd> | TypedNamedValue<CommentRangeStart> | TypedNamedValue<CommentRangeEnd> | TypedNamedValue<CTTrackChange> | TypedNamedValue<CTMarkup> | TypedNamedValue<RunIns> | TypedNamedValue<RunDel> | TypedNamedValue<RunTrackChange> | TypedNamedValue<Dep_org_docx4j_math.CTOMathPara> | TypedNamedValue<Dep_org_docx4j_math.CTOMath> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent> | TypedNamedValue<CTSimpleField> | TypedNamedValue<P.Hyperlink> | TypedNamedValue<CTRel>)[];
+  noSpellErr?: string;
   paraId?: string;
   textId?: string;
   rsidDel?: string;
@@ -1975,7 +1982,7 @@ export interface R {
   TYPE_NAME?: 'org_docx4j_wml.R';
   readonly PARENT?: CTCustomXmlRun | CTRubyContent | CTSdtContentRun | CTSimpleField | CTSmartTagRun | P | P.Bdo | P.Dir | P.Hyperlink | RunDel | RunIns | RunTrackChange;
   rPr?: RPr;
-  content?: (TypedNamedValue<Br> | TypedNamedValue<Text> | TypedNamedValue<DelText> | TypedNamedValue<R.NoBreakHyphen> | TypedNamedValue<R.SoftHyphen> | TypedNamedValue<R.DayShort> | TypedNamedValue<R.MonthShort> | TypedNamedValue<R.YearShort> | TypedNamedValue<R.DayLong> | TypedNamedValue<R.MonthLong> | TypedNamedValue<R.YearLong> | TypedNamedValue<R.AnnotationRef> | TypedNamedValue<R.FootnoteRef> | TypedNamedValue<R.EndnoteRef> | TypedNamedValue<R.Separator> | TypedNamedValue<R.ContinuationSeparator> | TypedNamedValue<R.Sym> | TypedNamedValue<R.PgNum> | TypedNamedValue<R.Cr> | TypedNamedValue<R.Tab> | TypedNamedValue<CTObject> | TypedNamedValue<Pict> | TypedNamedValue<FldChar> | TypedNamedValue<CTRuby> | TypedNamedValue<CTFtnEdnRef> | TypedNamedValue<R.CommentReference> | TypedNamedValue<Drawing> | TypedNamedValue<R.Ptab> | TypedNamedValue<R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent>)[];
+  content?: (TypedNamedValue<Br> | TypedNamedValue<Text> | TypedNamedValue<DelText> | TypedNamedValue<R.NoBreakHyphen> | TypedNamedValue<R.SoftHyphen> | TypedNamedValue<R.DayShort> | TypedNamedValue<R.MonthShort> | TypedNamedValue<R.YearShort> | TypedNamedValue<R.DayLong> | TypedNamedValue<R.MonthLong> | TypedNamedValue<R.YearLong> | TypedNamedValue<R.AnnotationRef> | TypedNamedValue<R.FootnoteRef> | TypedNamedValue<R.EndnoteRef> | TypedNamedValue<R.Separator> | TypedNamedValue<R.ContinuationSeparator> | TypedNamedValue<R.Sym> | TypedNamedValue<Dep_org_docx4j_w15symex.CTSymEx> | TypedNamedValue<R.PgNum> | TypedNamedValue<R.Cr> | TypedNamedValue<R.Tab> | TypedNamedValue<CTObject> | TypedNamedValue<Pict> | TypedNamedValue<FldChar> | TypedNamedValue<CTRuby> | TypedNamedValue<CTFtnEdnRef> | TypedNamedValue<R.CommentReference> | TypedNamedValue<Drawing> | TypedNamedValue<R.Ptab> | TypedNamedValue<R.LastRenderedPageBreak> | TypedNamedValue<Dep_org_docx4j_mce.AlternateContent>)[];
   rsidDel?: string;
   rsidR?: string;
   rsidRPr?: string;
@@ -2103,6 +2110,7 @@ export interface SdtPr {
   TYPE_NAME?: 'org_docx4j_wml.SdtPr';
   readonly PARENT?: CTSdtCell | CTSdtRow | SdtBlock | SdtRun;
   rPrOrAliasOrLock?: (TypedNamedValue<RPr> | TypedNamedValue<SdtPr.Alias> | TypedNamedValue<CTLock> | TypedNamedValue<CTPlaceholder> | TypedNamedValue<BooleanDefaultTrue> | TypedNamedValue<CTDataBinding> | TypedNamedValue<Id> | TypedNamedValue<Tag> | TypedNamedValue<SdtPr.Equation> | TypedNamedValue<CTSdtComboBox> | TypedNamedValue<CTSdtDate> | TypedNamedValue<CTSdtDocPart> | TypedNamedValue<CTSdtDropDownList> | TypedNamedValue<SdtPr.Picture> | TypedNamedValue<SdtPr.RichText> | TypedNamedValue<CTSdtText> | TypedNamedValue<SdtPr.Citation> | TypedNamedValue<SdtPr.Group> | TypedNamedValue<SdtPr.Bibliography> | TypedNamedValue<Dep_org_docx4j_w14.CTSdtCheckbox> | TypedNamedValue<CTEmpty> | TypedNamedValue<Dep_org_docx4j_w15.CTSdtAppearance> | TypedNamedValue<CTColor> | TypedNamedValue<Dep_org_docx4j_w15.CTSdtRepeatedSection>)[];
+  formattingAllowed?: string;
 }
 
 export interface SdtRun {
@@ -3229,6 +3237,7 @@ export namespace Numbering {
     styleLink?: Numbering.AbstractNum.StyleLink;
     numStyleLink?: Numbering.AbstractNum.NumStyleLink;
     lvl?: Lvl[];
+    restartNumberingAfterBreak?: string;
     abstractNumId: number;
   }
 
@@ -3237,6 +3246,7 @@ export namespace Numbering {
     readonly PARENT?: Numbering;
     abstractNumId: Numbering.Num.AbstractNumId;
     lvlOverride?: Numbering.Num.LvlOverride[];
+    durableId?: number;
     numId: number;
   }
 

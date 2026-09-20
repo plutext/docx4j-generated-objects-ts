@@ -10,6 +10,7 @@ export type { PackageElement, Package, Part };
 /** All generated modules, one Jsonix mapping each; they reference each other, so a context needs them all. */
 export const MODULE_NAMES = [
   'org_docx4j_bibliography',
+  'org_docx4j_cei',
   'org_docx4j_com_microsoft_schemas_ink_x2010_main',
   'org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing',
   'org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram',
@@ -237,6 +238,8 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://schemas.microsoft.com/office/drawing/2016/5/12/chartex': 'cx6',
   'http://schemas.microsoft.com/office/drawing/2016/5/13/chartex': 'cx7',
   'http://schemas.microsoft.com/office/drawing/2016/5/14/chartex': 'cx8',
+  'http://schemas.microsoft.com/office/word/2026/wordml/cei': 'cei',
+  'http://schemas.microsoft.com/office/comments/2020/reactions': 'cr',
   'http://schemas.microsoft.com/office/excel/2006/main': 'xm',
   'http://schemas.microsoft.com/office/spreadsheetml/2011/1/ac': 'x12ac',
   'http://schemas.microsoft.com/office/spreadsheetml/2014/11/main': 'x16',
@@ -266,7 +269,7 @@ let builtContext: Jsonix.Context | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
- * loaded lazily; 102 modules are several megabytes). Parent pointers are on by default, as in
+ * loaded lazily; 103 modules are several megabytes). Parent pointers are on by default, as in
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
  * change that or anything else.
  */

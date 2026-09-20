@@ -2,4 +2,5 @@
 import type * as M from './org_docx4j_w16.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_w16.js';
 import type * as Dep_org_docx4j_w16cex from './org_docx4j_w16cex.js';
+import type * as Dep_org_docx4j_cei from './org_docx4j_cei.js';
 

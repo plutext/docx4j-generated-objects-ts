@@ -1206,6 +1206,13 @@ var org_docx4j_wml_Module_Factory = function () {
         localName: 'CTDataBinding',
         typeName: 'CT_DataBinding',
         propertyInfos: [{
+            name: 'storeItemChecksum',
+            attributeName: {
+              localPart: 'storeItemChecksum',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2020\/wordml\/sdtdatahash'
+            },
+            type: 'attribute'
+          }, {
             name: 'prefixMappings',
             type: 'attribute'
           }, {
@@ -2565,6 +2572,12 @@ var org_docx4j_wml_Module_Factory = function () {
               }, {
                 elementName: 'sym',
                 typeInfo: '.R.Sym'
+              }, {
+                elementName: {
+                  localPart: 'symEx',
+                  namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2015\/wordml\/symex'
+                },
+                typeInfo: 'org_docx4j_w15symex.CTSymEx'
               }, {
                 elementName: 'pgNum',
                 typeInfo: '.R.PgNum'
@@ -5293,6 +5306,14 @@ var org_docx4j_wml_Module_Factory = function () {
         typeName: 'CT_TrackChange',
         baseTypeInfo: '.CTMarkup',
         propertyInfos: [{
+            name: 'dateUtc',
+            typeInfo: 'DateTime',
+            attributeName: {
+              localPart: 'dateUtc',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2023\/wordml\/word16du'
+            },
+            type: 'attribute'
+          }, {
             name: 'author',
             required: true,
             type: 'attribute'
@@ -5541,6 +5562,13 @@ var org_docx4j_wml_Module_Factory = function () {
           }, {
             name: 'saveSmartTagsAsXml',
             typeInfo: '.BooleanDefaultTrue'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'CTWebSettings.Encoding',
@@ -6010,6 +6038,13 @@ var org_docx4j_wml_Module_Factory = function () {
             minOccurs: 0,
             collection: true,
             typeInfo: '.Fonts.Font'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'Fonts.Font',
@@ -6193,6 +6228,13 @@ var org_docx4j_wml_Module_Factory = function () {
           }, {
             name: 'docParts',
             typeInfo: '.CTDocParts'
+          }, {
+            name: 'ignorable',
+            attributeName: {
+              localPart: 'Ignorable',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'Hdr',
@@ -6547,6 +6589,14 @@ var org_docx4j_wml_Module_Factory = function () {
             collection: true,
             typeInfo: '.Lvl'
           }, {
+            name: 'restartNumberingAfterBreak',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            attributeName: {
+              localPart: 'restartNumberingAfterBreak',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2012\/wordml'
+            },
+            type: 'attribute'
+          }, {
             name: 'abstractNumId',
             required: true,
             typeInfo: 'Integer',
@@ -6595,6 +6645,14 @@ var org_docx4j_wml_Module_Factory = function () {
             maxOccurs: 9,
             collection: true,
             typeInfo: '.Numbering.Num.LvlOverride'
+          }, {
+            name: 'durableId',
+            typeInfo: 'Integer',
+            attributeName: {
+              localPart: 'durableId',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2016\/wordml\/cid'
+            },
+            type: 'attribute'
           }, {
             name: 'numId',
             required: true,
@@ -6793,6 +6851,14 @@ var org_docx4j_wml_Module_Factory = function () {
                 typeInfo: '.CTRel'
               }],
             type: 'elementRefs'
+          }, {
+            name: 'noSpellErr',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            attributeName: {
+              localPart: 'noSpellErr',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+            },
+            type: 'attribute'
           }, {
             name: 'paraId',
             attributeName: {
@@ -7862,6 +7928,12 @@ var org_docx4j_wml_Module_Factory = function () {
               }, {
                 elementName: 'sym',
                 typeInfo: '.R.Sym'
+              }, {
+                elementName: {
+                  localPart: 'symEx',
+                  namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2015\/wordml\/symex'
+                },
+                typeInfo: 'org_docx4j_w15symex.CTSymEx'
               }, {
                 elementName: 'pgNum',
                 typeInfo: '.R.PgNum'
@@ -9225,6 +9297,14 @@ var org_docx4j_wml_Module_Factory = function () {
                 typeInfo: '.BooleanDefaultTrue'
               }],
             type: 'elementRefs'
+          }, {
+            name: 'formattingAllowed',
+            values: ['true', 'false', 'on', 'off', '0', '1'],
+            attributeName: {
+              localPart: 'formattingAllowed',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2024\/wordml\/sdtformatlock'
+            },
+            type: 'attribute'
           }]
       }, {
         localName: 'SdtPr.Alias',

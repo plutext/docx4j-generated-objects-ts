@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`@docx4j/generated-objects-ts`: Office Open XML as typed JavaScript. `modules/` holds 102 Jsonix mappings
+`@docx4j/generated-objects-ts`: Office Open XML as typed JavaScript. `modules/` holds 103 Jsonix mappings
 (UMD `.js`, ES module `.mjs`) with TypeScript declarations (`.d.ts`, `.d.mts`), **generated** by
 [jsonix-schema-compiler](https://github.com/plutext/jsonix-schema-compiler) from
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
