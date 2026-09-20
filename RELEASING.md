@@ -59,8 +59,10 @@ published. Every later version follows "Steps".
 # 1. If modules/ is to be regenerated for the release, do it first and commit it citing the compiler
 #    and docx4j commits (see generate.md); a regeneration with unchanged inputs is an empty diff.
 
-# 2. Set the version, the next one after the latest on npm (npm view @docx4j/generated-objects-ts version);
-#    no tag or commit yet
+# 2. Ask a docx4j-core-ts agent to typecheck and run its full test suite against the pushed main
+#    commit, and wait for its confirmation that it is good to release (CLAUDE.md, "Never release
+#    without core-ts's confirmation"). Then set the version, the next one after the latest on npm
+#    (npm view @docx4j/generated-objects-ts version); no tag or commit yet
 npm version 0.1.1 --no-git-tag-version
 
 # 3. From a clean node_modules, check against the locked dependencies and inspect the package

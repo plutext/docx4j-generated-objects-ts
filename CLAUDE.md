@@ -34,6 +34,15 @@ npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package
 Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted
 publishing, tag = `package.json` version); see `RELEASING.md`.
 
+**Never release without core-ts's confirmation.** Before `npm version` (step 2 of `RELEASING.md`),
+ask a `docx4j-core-ts` agent (`SendMessage`, see `ListAgents`) to run its typecheck and full test
+suite against the proposed release (the pushed `main` commit, by `file:` or `git` dependency), and
+wait for its reply saying it is good to release. This package's tests are a self-written
+`document.xml` and two compile-only checks; core-ts's fixtures are real Office parts and its tests
+take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) went out without
+that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
+unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
+
 There are three tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
