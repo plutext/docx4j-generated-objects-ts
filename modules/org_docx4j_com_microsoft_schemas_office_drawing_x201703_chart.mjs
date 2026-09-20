@@ -2,7 +2,6 @@
 export const org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart = {
   name: 'org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart',
   defaultElementNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2017\/03\/chart',
-  defaultAttributeNamespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2017\/03\/chart',
   typeInfos: [{
       localName: 'CTBooleanFalse',
       typeName: 'CT_BooleanFalse',
@@ -10,6 +9,9 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart = {
           name: 'val',
           typeInfo: 'Boolean',
           defaultValue: false,
+          attributeName: {
+            localPart: 'val'
+          },
           type: 'attribute'
         }]
     }, {

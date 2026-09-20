@@ -206,7 +206,7 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://schemas.microsoft.com/office/drawing/2016/12/diagram': 'dgm1612',
   'http://schemas.microsoft.com/office/drawing/2016/ink': 'ink16',
   'http://schemas.microsoft.com/office/drawing/2016/SVG/main': 'a16svg',
-  'http://schemas.microsoft.com/office/drawing/2017/03/chart': 'c173',
+  'http://schemas.microsoft.com/office/drawing/2017/03/chart': 'c16r3',
   'http://schemas.microsoft.com/office/drawing/2017/decorative': 'adec',
   'http://schemas.microsoft.com/office/drawing/2017/model3d': 'am3d',
   'http://schemas.microsoft.com/office/drawing/2018/animation': 'an18',
