@@ -2,7 +2,7 @@ var org_docx4j_dml_chart_Module_Factory = function () {
   var org_docx4j_dml_chart = {
     name: 'org_docx4j_dml_chart',
     defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/chart',
-    dependencies: ['org_docx4j_dml', 'org_docx4j_dml_chartDrawing'],
+    dependencies: ['org_docx4j_dml', 'org_docx4j_dml_chartDrawing', 'org_docx4j_mce'],
     typeInfos: [{
         localName: 'CTArea3DChart',
         typeName: 'CT_Area3DChart',
@@ -611,6 +611,13 @@ var org_docx4j_dml_chart_Module_Factory = function () {
           }, {
             name: 'style',
             typeInfo: '.CTStyle'
+          }, {
+            name: 'alternateContent',
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
           }, {
             name: 'clrMapOvr',
             typeInfo: 'org_docx4j_dml.CTColorMapping'

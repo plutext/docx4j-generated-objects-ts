@@ -2,6 +2,7 @@
 import type * as M from './org_docx4j_dml_spreadsheetdrawing.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_dml_spreadsheetdrawing.js';
 import type * as Dep_org_docx4j_dml from './org_docx4j_dml.js';
+import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
 import type * as Dep_org_xlsx4j_sml from './org_xlsx4j_sml.js';
 
 /** docx4j ObjectFactory.createCTAbsoluteAnchor(): a org_docx4j_dml_spreadsheetdrawing.CTAbsoluteAnchor with TYPE_NAME set; a literal remains the stricter form (init is partial). */

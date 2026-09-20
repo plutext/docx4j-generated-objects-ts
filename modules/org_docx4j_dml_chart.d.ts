@@ -3,6 +3,7 @@
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart';
 import type * as Dep_org_docx4j_dml from './org_docx4j_dml';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart';
+import type * as Dep_org_docx4j_mce from './org_docx4j_mce';
 import type * as Dep_org_docx4j_dml_chartDrawing from './org_docx4j_dml_chartDrawing';
 
 /** Jsonix.XML.QName */
@@ -269,6 +270,7 @@ export interface CTChartSpace {
   lang?: CTTextLanguageID;
   roundedCorners?: CTBoolean;
   style?: CTStyle;
+  alternateContent?: Dep_org_docx4j_mce.AlternateContent;
   clrMapOvr?: Dep_org_docx4j_dml.CTColorMapping;
   pivotSource?: CTPivotSource;
   protection?: CTProtection;

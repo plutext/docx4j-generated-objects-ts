@@ -2,7 +2,7 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
   var org_docx4j_dml_spreadsheetdrawing = {
     name: 'org_docx4j_dml_spreadsheetdrawing',
     defaultElementNamespaceURI: 'http:\/\/schemas.openxmlformats.org\/drawingml\/2006\/spreadsheetDrawing',
-    dependencies: ['org_docx4j_dml'],
+    dependencies: ['org_docx4j_dml', 'org_docx4j_mce'],
     typeInfos: [{
         localName: 'CTAbsoluteAnchor',
         typeName: 'CT_AbsoluteAnchor',
@@ -29,6 +29,13 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
           }, {
             name: 'pic',
             typeInfo: '.CTPicture'
+          }, {
+            name: 'alternateContent',
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
           }, {
             name: 'clientData',
             required: true,
@@ -111,6 +118,12 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
               }, {
                 elementName: 'absoluteAnchor',
                 typeInfo: '.CTAbsoluteAnchor'
+              }, {
+                elementName: {
+                  localPart: 'AlternateContent',
+                  namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+                },
+                typeInfo: 'org_docx4j_mce.AlternateContent'
               }],
             type: 'elements'
           }]
@@ -190,6 +203,12 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
               }, {
                 elementName: 'pic',
                 typeInfo: '.CTPicture'
+              }, {
+                elementName: {
+                  localPart: 'AlternateContent',
+                  namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+                },
+                typeInfo: 'org_docx4j_mce.AlternateContent'
               }],
             type: 'elements'
           }]
@@ -251,6 +270,13 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
           }, {
             name: 'pic',
             typeInfo: '.CTPicture'
+          }, {
+            name: 'alternateContent',
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
           }, {
             name: 'clientData',
             required: true,
@@ -386,6 +412,13 @@ var org_docx4j_dml_spreadsheetdrawing_Module_Factory = function () {
           }, {
             name: 'pic',
             typeInfo: '.CTPicture'
+          }, {
+            name: 'alternateContent',
+            elementName: {
+              localPart: 'AlternateContent',
+              namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+            },
+            typeInfo: 'org_docx4j_mce.AlternateContent'
           }, {
             name: 'clientData',
             required: true,

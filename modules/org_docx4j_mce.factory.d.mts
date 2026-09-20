@@ -2,6 +2,8 @@
 import type * as M from './org_docx4j_mce.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_mce.js';
 import type * as Dep_org_pptx4j_pml from './org_pptx4j_pml.js';
+import type * as Dep_org_docx4j_dml_chart from './org_docx4j_dml_chart.js';
+import type * as Dep_org_docx4j_dml_spreadsheetdrawing from './org_docx4j_dml_spreadsheetdrawing.js';
 import type * as Dep_org_docx4j_wml from './org_docx4j_wml.js';
 import type * as Dep_org_docx4j_math from './org_docx4j_math.js';
 import type * as Dep_org_xlsx4j_sml from './org_xlsx4j_sml.js';

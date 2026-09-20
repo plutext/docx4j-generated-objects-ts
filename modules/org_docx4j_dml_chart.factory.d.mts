@@ -4,6 +4,7 @@ import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, Xml
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart.js';
 import type * as Dep_org_docx4j_dml from './org_docx4j_dml.js';
 import type * as Dep_org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart from './org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart.js';
+import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
 import type * as Dep_org_docx4j_dml_chartDrawing from './org_docx4j_dml_chartDrawing.js';
 
 /** docx4j ObjectFactory.createCTArea3DChart(): a org_docx4j_dml_chart.CTArea3DChart with TYPE_NAME set; a literal remains the stricter form (init is partial). */
