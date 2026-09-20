@@ -1,0 +1,119 @@
+# CR-004: A round-trip fidelity test over parts Office wrote
+
+**Status:** Proposed 2026-09-20
+**Depends on:** nothing in this package; the fixtures come from `plutext/docx4j`
+**Requested by:** the docx4j session (2026-09-20), after CR-021 to CR-023 closed a run of losses
+that none of this package's tests could have found
+**Counterpart:** docx4j's `ExcelExtensionsTest`, `WordExtensionAttributesTest` and the byte
+comparison in its CR gates
+
+## 1. Summary
+
+Every loss docx4j's CR-021, CR-022 and CR-023 closed was of one kind: unmarshal a part Office wrote,
+marshal it again, and something is missing. None was visible in the declarations, and none of the
+three tests here would have caught any of them:
+
+- `test/smoke.mjs` round-trips one small `document.xml` this repository wrote itself;
+- `test/readme-examples.ts` and `test/nodenext/consumer.mts` are compile-only.
+
+This CR adds the missing kind: take the XML parts of documents Office 365 saved, unmarshal and
+marshal each through the facade, and compare canonically.
+
+**A trial run on 2026-09-20 found a serious bug in twenty minutes**, which is the argument for the
+CR. Over 17 parts from docx4j's `cr022-checkbox.xlsx` and `tracked-changes-equations.docx`, 12 were
+identical and four differed:
+
+| Part | Finding |
+|---|---|
+| `xl/drawings/drawing1.xml` | **empties**: 59 elements in, one out, silently. Excel's `xdr:wsDr` holds an `mc:AlternateContent`, which `CT_Drawing` does not admit, so it is dropped. Reported to docx4j, whose schema it is. |
+| `xl/styles.xml` | `mc:Ignorable` lost `x16r2`, a prefix the table lacked (fixed, `7a74fb0`) |
+| `xl/workbook.xml` | the `xr2:uid` loss docx4j has logged as its own xlsx4j CR, seen from a second direction |
+| `word/settings.xml` | same content, different element order: to be understood, then either fixed or justified |
+
+`[Content_Types].xml` throws, since the model does not carry it; the test excludes package-level
+parts, which are `@docx4j/core-ts`'s ground.
+
+## 2. What the test does
+
+For each fixture part:
+
+1. `unmarshalString`, then `marshalString`, both through the facade (not `createMarshaller`, so the
+   namespace rules of CR-001 are exercised too);
+2. canonicalise both sides and compare;
+3. on a difference, report the part, the counts, and the first differing line.
+
+A part that throws is a failure with its message, since Office wrote it and the model claims to
+cover it.
+
+### 2.1 Canonicalisation
+
+Raw bytes differ legitimately, so the comparison normalises, and each rule is a decision this CR
+records rather than a convenience:
+
+- **QNames, not prefixes**: `{ns}local`, since a prefix table choice is not a difference (CR-001
+  tests the prefixes themselves).
+- **Attributes sorted** by QName: the declarations promise sorted output, Office's order is its own.
+- **Namespace declarations ignored** on comparison: CR-001 section 3.1's tests cover which
+  declarations appear, and `mc:Ignorable` is compared as an attribute value.
+- **`xs:boolean` attributes normalised**: `1` and `true` are the same value. Only for attributes the
+  model types as boolean, not for every attribute that looks like one.
+- **Whitespace-only text dropped**, and text otherwise compared exactly. `xml:space="preserve"`
+  content is compared exactly, which the canonicaliser must respect.
+
+A difference in element order is a difference: docx4j's `propertyOrder` (compiler CR-007) is there
+to keep schema order, so `word/settings.xml` above is a real question, not noise.
+
+## 3. Fixtures
+
+Extracted part XML as text files under `test/fixtures/fidelity/<document>/<part path>.xml`, not the
+`.docx` and `.xlsx` archives:
+
+- no zip dependency (this package has one devDependency, TypeScript, and no runtime dependency but
+  the Jsonix runtime);
+- a failing test shows a readable diff;
+- `package.json`'s `files` ships `dist` and `modules` only, so fixtures cost consumers nothing.
+
+Sizes measured 2026-09-20: the six `cr022-*.xlsx` hold 103 XML parts, 222 kB uncompressed
+(`cr022-data-model.xlsx` is 245 kB of archive, almost all the binary `xl/model/item.data`, which is
+not XML and stays out). The Word fixtures add `tracked-changes-equations.docx` (9 parts),
+`numPicBullet-word2019-pict.docx` and `loadAndSave.docx`.
+
+Each fixture directory carries a `SOURCE.md`: the docx4j path it came from, the commit, and what it
+demonstrates. Fixtures are never edited by hand; a part that needs trimming is regenerated from the
+source document and that is recorded.
+
+## 4. Phases
+
+- **A**: the canonicaliser, the runner, and the dozen parts that between them cover every loss
+  CR-021 to CR-023 closed: `xl/workbook.xml`, `xl/worksheets/sheet1.xml` (x14ac attributes, a
+  control), `xl/styles.xml`, `xl/drawings/drawing1.xml`, a slicer cache, a timeline cache,
+  `xl/ctrlProps/ctrlProp1.xml`, `word/document.xml` (tracked changes with `dateUtc`),
+  `word/numbering.xml` (`durableId`, `restartNumberingAfterBreak`), `word/settings.xml`,
+  `word/people.xml`, `word/commentsExtensible.xml`.
+- **B**: every XML part of the fixtures, once the canonicaliser has settled; the differences it
+  finds are triaged into bugs here, schema gaps for docx4j, or new canonicalisation rules with
+  their justification.
+
+## 5. Tests and layout
+
+`test/fidelity.mjs`, run from `npm test` after the build, beside `test/smoke.mjs`; the canonicaliser
+in `test/lib/canonical.mjs` so it can be unit-tested itself (a difference the canonicaliser hides is
+worse than one it reports). `CLAUDE.md`'s test list gains it. No `src/` change: this is a test.
+
+## 6. What it does not cover
+
+- Parts and packaging: content types, relationships, the zip. `@docx4j/core-ts` owns those, and its
+  own round-trip tests cover them.
+- Binary parts, including the data model's `item.data`.
+- Whether Office opens the result. Only Word and Excel can answer that, which is what docx4j's
+  manual checks are for; this catches the losses before it gets that far.
+
+## 7. Open questions
+
+1. How large a corpus before the runtime cost matters? Phase A is a dozen parts; phase B is ~110 and
+   builds the context once, so the cost is parsing, not context construction.
+2. Should a known, accepted difference be recorded per part (an expectations file), or should the
+   test fail until the difference is fixed or the canonicaliser justified? The second is stricter
+   and likely right while the list is short.
+3. Do the fixtures belong here, or in a repository both packages can share? core-ts will want the
+   same documents for its package-level tests.
