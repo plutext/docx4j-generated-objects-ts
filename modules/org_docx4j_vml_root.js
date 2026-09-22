@@ -1,7 +1,6 @@
 var org_docx4j_vml_root_Module_Factory = function () {
   var org_docx4j_vml_root = {
     name: 'org_docx4j_vml_root',
-    defaultElementNamespaceURI: 'urn:docx4j:vml:root',
     typeInfos: [{
         localName: 'Xml',
         typeName: null,
@@ -16,7 +15,9 @@ var org_docx4j_vml_root_Module_Factory = function () {
       }],
     elementInfos: [{
         typeInfo: '.Xml',
-        elementName: 'xml'
+        elementName: {
+          localPart: 'xml'
+        }
       }]
   };
   return {

@@ -2,5 +2,5 @@
 import type * as M from './org_docx4j_vml_root.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_vml_root.js';
 
-/** The element {urn:docx4j:vml:root}xml. */
+/** The element xml. */
 export function xml(value: M.Xml): M.TypedNamedValue<M.Xml>;

@@ -4,5 +4,5 @@ import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, Xml
 
 /** docx4j ObjectFactory.createXml(): a org_docx4j_vml_root.Xml with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createXml(init?: Partial<Omit<M.Xml, 'TYPE_NAME' | 'PARENT'>>): M.Xml;
-/** The global element {urn:docx4j:vml:root}xml (docx4j ObjectFactory.createXml(value)). */
+/** The global element xml (docx4j ObjectFactory.createXml(value)). */
 export function createXmlElement(value: M.Xml): M.TypedNamedValue<M.Xml>;
