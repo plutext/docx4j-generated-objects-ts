@@ -116,14 +116,6 @@ const KNOWN = new Map([
     before: '{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid="{00000000-000D-0000-FFFF-FFFF00000000}"',
     after: '(absent)',
   }],
-  ['cr022-slicers-timelines.xlsx/xl/slicerCaches/slicerCache1.xml', {
-    why: 'mc:Ignorable loses "x": Excel binds x to the SpreadsheetML main namespace, which this package '
-      + 'writes as the default, so the prefix table cannot produce it and the facade drops the token. '
-      + 'docx4j declares the prefix beside the default instead (its CR-024). A facade fix belongs to a CR here.',
-    owner: 'this package, unfiled',
-    before: 'Ignorable="x xr10"',
-    after: 'Ignorable="xr10"',
-  }],
   ['tracked-changes-equations.docx/word/settings.xml', {
     why: "CT_Settings declares w15:chartTrackingRefBased before w14:docId and Word writes the reverse, "
       + 'so a re-marshal reorders the two. Harmless (Word opens it); docx4j deferred the schema change past 17.1.1.',

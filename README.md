@@ -220,7 +220,12 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   root uses the default namespace, as docx4j's relationships part mapper. To add or change
   prefixes, pass a table before the context is first used:
   `getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, 'urn:my-ns': 'my' } })`. A table
-  passed to `getContext` replaces the default (spread it to extend it).
+  passed to `getContext` replaces the default (spread it to extend it). One namespace is written as
+  the default rather than with a prefix (SpreadsheetML main, as docx4j), so a prefix `mc:Ignorable`
+  names for it cannot come from the table; `IGNORABLE_PREFIX_ALIASES` supplies it, and the prefix is
+  declared beside the default declaration (Excel writes `mc:Ignorable="x xr10"` on slicer, slicer
+  cache and timeline parts). A prefix neither table resolves is dropped from `mc:Ignorable`, with a
+  warning, since Office repairs a file naming an undeclared prefix.
 - **103 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export

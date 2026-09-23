@@ -1,6 +1,6 @@
 # CR-006: An `mc:Ignorable` prefix the preferred-prefix table cannot produce
 
-**Status:** Proposed 2026-09-24
+**Status:** Implemented 2026-09-24
 **Depends on:** CR-001 (`NAMESPACE_PREFIXES` and `fixRootNamespaceDeclarations`)
 **Requested by:** CR-004 phase A's fidelity test, which found it on 2026-09-23 over Excel's own
 slicer cache
@@ -78,8 +78,11 @@ if (prefix.equals("x"))
 
 2. **`fixRootNamespaceDeclarations` consults it** after the inverted table and before giving up:
    `namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]`. A prefix resolved this way is
-   declared like any other, so the root gains `xmlns:x="...spreadsheetml/2006/main"` beside its
-   default declaration and keeps `mc:Ignorable="x xr10"`. The warning and the dropping stay for a
+   declared like any other, so the root gains `xmlns:x="...spreadsheetml/2006/main"` and keeps
+   `mc:Ignorable="x xr10"`. Where the root is itself in the SpreadsheetML main namespace the
+   declaration sits beside the default one, as docx4j's pair does; where it is an x14 or x15 root,
+   as a slicer cache is, there is no default declaration to sit beside and `xmlns:x` simply joins
+   the others. The warning and the dropping stay for a
    prefix neither table knows: that case is still a file Office would repair, and silence would
    hide it.
 
@@ -91,8 +94,8 @@ if (prefix.equals("x"))
 
 ## 4. Tests
 
-- `test/smoke.mjs`: a root in the SML main namespace with `mc:Ignorable="x xr10"` marshals with both
-  `xmlns:x` and the default declaration present, and `mc:Ignorable` intact; and the existing check
+- `test/smoke.mjs`: an `x14:slicerCacheDefinition` root with `mc:Ignorable="x xr10"` marshals with
+  `xmlns:x` present and `mc:Ignorable` intact; and the existing check
   that an unknown prefix (`zz`) is still dropped with the warning keeps its behaviour.
 - `test/fidelity.mjs`: the `KNOWN` entry for
   `cr022-slicers-timelines.xlsx/xl/slicerCaches/slicerCache1.xml` is removed, and the part joins the
@@ -111,7 +114,25 @@ namespaces at unmarshal - and `mcBranchOf` (CR-003 section 3.8) judges `Requires
 against `NAMESPACE_PREFIXES` for a documented reason of its own. This CR touches one question on
 the marshal side: what a prefix in a root's `mc:Ignorable` must be declared as.
 
-## 7. Open questions
+## 7. As implemented (2026-09-24)
+
+As proposed, in `src/index.mts`: `IGNORABLE_PREFIX_ALIASES` exported beside `NAMESPACE_PREFIXES`
+with its one entry, and `fixRootNamespaceDeclarations` resolving an `mc:Ignorable` token through
+`namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]`. The warning and the dropping stay
+for a prefix neither table knows, which the smoke still pins (`zz`).
+
+Excel's `slicerCache1.xml` now round-trips: the root keeps `mc:Ignorable="x xr10"` and carries
+`xmlns:x="...spreadsheetml/2006/main"`. It writes the root's own namespace with the table's prefix
+(`<x14:slicerCacheDefinition xmlns:x14="...">`) where Excel writes it as the default - a prefix
+choice under CR-001, not a difference in content, which the fidelity canonicaliser compares as
+equal. A first draft of the smoke asserted the root kept a default declaration; that assertion was
+wrong about this package's own rules, and the corrected one pins the prefixed form.
+
+The `KNOWN` entry in `test/fidelity.mjs` is gone, and with it the third of the three differences
+phase A found. The test's insistence - it fails while an entry records a difference the part no
+longer has - is what closed this CR rather than leaving the entry to rot.
+
+## 8. Open questions
 
 1. Should the aliases instead be folded into `NAMESPACE_PREFIXES` as a second entry for the same
    namespace? No: that table is namespace-keyed and one namespace has one preferred prefix, which

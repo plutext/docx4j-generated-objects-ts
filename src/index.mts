@@ -269,6 +269,24 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://opendope.org/SmartArt/DataHierarchy': 'odgm',
 });
 
+/**
+ * Prefixes Office names in a root's `mc:Ignorable` that `NAMESPACE_PREFIXES` cannot produce,
+ * because that namespace is written as the default (CR-006). Prefix to namespace URI, the
+ * opposite direction to `NAMESPACE_PREFIXES`, since this is the direction the question is asked
+ * in: an `mc:Ignorable` token is a prefix, and the marshaller must declare it or drop it.
+ *
+ * Excel binds `x` to the SpreadsheetML main namespace on its slicer, slicer cache and timeline
+ * parts (whose roots are x14 and x15) and writes `mc:Ignorable="x xr10"`; this package writes
+ * that namespace as the default, so the prefix is declared beside the default declaration, both
+ * being in scope. docx4j does the same through `NamespacePrefixMapperUtils
+ * .getPreDeclaredNamespaceUris2` and `NamespacePrefixMappings.getNamespaceURIStatic` (its CR-024).
+ *
+ * One entry, because one namespace is written as the default.
+ */
+export const IGNORABLE_PREFIX_ALIASES: Readonly<Record<string, string>> = Object.freeze({
+  x: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+});
+
 let contextPromise: Promise<Jsonix.Context> | undefined;
 let builtContext: Jsonix.Context | undefined;
 
@@ -438,8 +456,9 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * The root's namespace declarations, as docx4j's McIgnorableNamespaceDeclarator leaves them:
  * every declaration that no element or attribute in the tree resolves to is removed unless the
  * root's mc:Ignorable names its prefix, and every prefix mc:Ignorable names that is not declared
- * is added from `table`. A prefix the table cannot resolve is dropped from mc:Ignorable with a
- * warning: Word and Excel repair a file whose mc:Ignorable names an undeclared prefix, which is
+ * is added from `table`, or from `IGNORABLE_PREFIX_ALIASES` for a prefix the table cannot produce
+ * because its namespace is written as the default (CR-006). A prefix neither resolves is dropped
+ * from mc:Ignorable with a warning: Word and Excel repair a file whose mc:Ignorable names an undeclared prefix, which is
  * how this was found (@docx4j/core-ts, an Excel acceptance run over xl/workbook.xml, 2026-09-19:
  * the model binds no xr:revisionPtr or xr2:uid, so nothing in the tree used xr2, xr6 or xr10 and
  * the marshaller declared none of them).
@@ -488,7 +507,9 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
   const unresolved: string[] = [];
   for (const prefix of ignorable) {
     if (root.getAttributeNode(`xmlns:${prefix}`)) continue;
-    const namespaceURI = namespaceFor.get(prefix);
+    // The table answers "which prefix for this namespace", which has no answer for the namespace
+    // written as the default; the aliases answer "what does this Ignorable prefix mean" (CR-006).
+    const namespaceURI = namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix];
     if (namespaceURI === undefined) { unresolved.push(prefix); continue; }
     root.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
   }

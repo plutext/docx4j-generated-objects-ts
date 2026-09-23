@@ -2,7 +2,7 @@
 // through the package's own name and exports map. The repository's tsconfigs use moduleResolution bundler,
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
-import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES } from '@docx4j/generated-objects-ts';
+import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
@@ -14,7 +14,7 @@ export async function consume(xml: string): Promise<string> {
   const paragraphs: P[] = find<P>(doc, 'org_docx4j_wml.P');
   const built: P = p([r('a', { bold: true })]).value;
   const same: P = el.p({ content: [] }).value;
-  void [NAMESPACE_PREFIXES, paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow')];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow')];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 

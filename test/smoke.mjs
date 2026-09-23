@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -142,6 +142,24 @@ const unknownOut = declarationsOf(await marshalString(await unmarshalString(
   `<w:document xmlns:w="${W}" xmlns:mc="${MC}" mc:Ignorable="w14 zz"><w:body><w:p/></w:body></w:document>`)));
 assert.deepEqual(unknownOut.ignorable, ['w14'], 'a prefix no table entry resolves is dropped from mc:Ignorable');
 assert.deepEqual(unknownOut.undeclared, []);
+
+// CR-006: a prefix mc:Ignorable names that the table cannot produce, because its namespace is
+// written as the default. Excel's slicer cache: x is the SpreadsheetML main namespace, which this
+// package writes as the default, so the prefix is declared beside the default rather than the token
+// dropped (docx4j's getPreDeclaredNamespaceUris2, its CR-024). Found by test/fidelity.mjs.
+const X14 = 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/main';
+const XR10 = 'http://schemas.microsoft.com/office/spreadsheetml/2016/revision10';
+const slicerCacheXml = await marshalString(await unmarshalString(
+  `<slicerCacheDefinition xmlns="${X14}" xmlns:mc="${MC}" mc:Ignorable="x xr10" xmlns:x="${SML}" xmlns:xr10="${XR10}" name="S" sourceName="R" xr10:uid="{1}"><pivotTables><pivotTable tabId="3" name="P"/></pivotTables><data><tabular pivotCacheId="1"><items count="0"/></tabular></data></slicerCacheDefinition>`));
+const slicerCache = declarationsOf(slicerCacheXml);
+assert.deepEqual(slicerCache.ignorable, ['x', 'xr10'], 'CR-006: the x token survives');
+assert.deepEqual(slicerCache.undeclared, [], 'CR-006: and is declared');
+assert.match(slicerCacheXml, new RegExp(`xmlns:x="${SML}"`), 'CR-006: x is declared as the SpreadsheetML main namespace');
+// Excel writes that root's own namespace as the default; this package writes it with the table's
+// prefix (CR-001), which is a prefix choice and not a difference in content.
+assert.match(slicerCacheXml, /^<x14:slicerCacheDefinition /, "the root uses the table's prefix for x14");
+assert.ok(!slicerCacheXml.slice(0, slicerCacheXml.indexOf('>')).includes(' xmlns='), 'and declares no default namespace');
+assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as NAMESPACE_PREFIXES is');
 
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.
