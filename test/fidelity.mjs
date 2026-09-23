@@ -96,6 +96,7 @@ assert.ok(parts.length >= 17, `expected the phase A fixtures, found ${parts.leng
 // understands this package's namespaces would accept. Word and PowerPoint write a14 (equations and
 // shapes in DrawingML text); the list is the branch's `Requires`, not every prefix we know.
 const RESOLVED = new Map([
+  ['cr022-slicers-timelines.xlsx/xl/drawings/drawing1.xml', ['a14']],
   ['loadAndSave.pptx/ppt/slides/slide2.xml', ['a14']],
   ['loadAndSave.xlsx/xl/drawings/drawing1.xml', ['a14']],
 ]);
@@ -115,6 +116,14 @@ const KNOWN = new Map([
     owner: 'plutext/docx4j (xlsx4j)',
     before: '{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid="{00000000-000D-0000-FFFF-FFFF00000000}"',
     after: '(absent)',
+  }],
+  ['cr022-slicers-timelines.xlsx/xl/drawings/drawing1.xml [mc:Choice a14 taken]', {
+    why: "CT_GraphicalObjectData's wildcard is processContents=\"strict\" in dml-graphicalObject.xsd, so a "
+      + 'graphic the model does not bind is fatal rather than DOM. Here an a:graphicData framing '
+      + 'sle:slicer, reached through the a14 Choice every consumer takes. Found by core-ts CR-004 '
+      + 'phase A and confirmed here; the remedy is lax, as docx4j CR-021 did for the mce wildcards.',
+    owner: 'plutext/docx4j',
+    throws: 'Element [{http://schemas.microsoft.com/office/drawing/2010/slicer}sle:slicer] could not be unmarshalled',
   }],
   ['tracked-changes-equations.docx/word/settings.xml', {
     why: "CT_Settings declares w15:chartTrackingRefBased before w14:docId and Word writes the reverse, "
@@ -147,14 +156,21 @@ for (const file of parts) {
     try {
       out = await marshalString(await unmarshalString(xml));
     } catch (error) {
-      failures.push(`${label}\n    threw: ${error.message.split('\n')[0]}`);
+      // A throw can be a recorded difference too: a part Office wrote that the model cannot read
+      // is the same finding as one it reads lossily, and wants the same owner and the same
+      // insistence. Matched on the message, so a part that starts throwing differently fails.
+      const expectedThrow = KNOWN.get(label)?.throws;
+      if (expectedThrow && error.message.includes(expectedThrow)) known.push(`${label}: ${KNOWN.get(label).why} [${KNOWN.get(label).owner}]`);
+      else failures.push(`${label}\n    threw: ${error.message.split('\n')[0]}`
+        + (expectedThrow ? `\n    (KNOWN expects a different throw here: ${expectedThrow})` : ''));
       continue;
     }
     const report = compareCanonically(xml, out);
     const expected = KNOWN.get(label);
     if (report.equal) {
       // A known difference that has gone: the entry is stale and must be removed, or a canonicalisation
-      // rule has started hiding it. Either way it needs a person, so it fails.
+      // rule has started hiding it. Either way it needs a person, so it fails. A recorded throw that
+      // no longer throws arrives here too, which is how a fix upstream forces the record out.
       if (expected) failures.push(`${label}\n    round-trips identically now, but KNOWN still records a difference`
         + `\n    (${expected.owner}): ${expected.why}\n    Remove the entry.`);
       continue;

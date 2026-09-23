@@ -144,21 +144,34 @@ worse than one it reports). `CLAUDE.md`'s test list gains it. No `src/` change: 
 ## 8. What phase A found (2026-09-23)
 
 17 parts from six documents, 19 checks (two parts are checked a second time with their `mc:Choice`
-taken). Sixteen round-trip identically. Three differences, each recorded in `KNOWN`:
+taken); 18 parts and 21 checks after the addition below. Sixteen round-trip identically. Three
+differences, each recorded in `KNOWN`, and a fourth added the next day:
 
 | Part | Difference | Owner |
 |---|---|---|
 | `cr022-checkbox.xlsx` `xl/workbook.xml` | `xr2:uid` on `workbookView` is dropped: not in the model | docx4j, logged as an xlsx4j CR |
 | `cr022-slicers-timelines.xlsx` `xl/slicerCaches/slicerCache1.xml` | `mc:Ignorable` loses `x` | **this package**, see below |
 | `tracked-changes-equations.docx` `word/settings.xml` | `w14:docId` and `w15:chartTrackingRefBased` swap | docx4j, deferred past 17.1.1 |
+| `cr022-slicers-timelines.xlsx` `xl/drawings/drawing1.xml` (a14 taken, added 2026-09-24) | **throws**: an `sle:slicer` graphic cannot stay DOM | docx4j, see below |
 
-The middle one is new, and is this package's own: Excel binds `x` to the SpreadsheetML main
+The second is this package's own: Excel binds `x` to the SpreadsheetML main
 namespace on its slicer, slicer cache and timeline parts and names it in `mc:Ignorable="x xr10"`,
 but this package writes that namespace as the default (CR-001), so the prefix table cannot produce
 `x` and the facade drops the token from `mc:Ignorable` rather than declaring the prefix. docx4j met
 the same problem and answered it in its CR-024 by pre-declaring the prefix beside the default. The
 fix here is a facade change and so wants its own CR; until it lands, a re-marshalled slicer cache
 tells a reader to ignore one prefix fewer than Excel did.
+
+**An eighteenth part, added 2026-09-24.** `cr022-slicers-timelines.xlsx` `xl/drawings/drawing1.xml`,
+after `@docx4j/core-ts` met it implementing its own CR-004: an `a:graphicData` framing an
+`sle:slicer`, inside the `a14` `mc:Choice` that every consumer takes. As Office wrote it the part
+round-trips; with the branch taken it **throws**, because `CT_GraphicalObjectData`'s wildcard is
+`processContents="strict"` in `dml-graphicalObject.xsd`, so a graphic no module binds cannot stay
+DOM. Confirmed here and relayed to docx4j, whose schema it is; the remedy is `lax`, as its CR-021
+did for the mce wildcards, and XJC gives `@XmlAnyElement(lax = true)` either way, which is why
+docx4j never sees it. Recording it taught `KNOWN` to carry a throw: a part the model cannot read at
+all is the same finding as one it reads lossily, and wants the same owner and the same insistence -
+the entry is matched on the message and fails if the part throws differently or stops throwing.
 
 **The test was checked against the releases it was built for.** Run with 0.1.5's `modules/`, it
 reports all five losses that release carried: the `a14` equation throwing in both the pptx slide and

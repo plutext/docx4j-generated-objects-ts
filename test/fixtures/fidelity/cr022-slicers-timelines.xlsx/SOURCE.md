@@ -7,5 +7,11 @@ Excel 365's save of a pivot table with a slicer and a timeline.
   `mc:Ignorable="x xr10"`: `x` is bound to the SpreadsheetML main namespace, which this package
   writes as the default. A known difference, recorded in `test/fidelity.mjs`.
 - `xl/timelineCaches/timelineCache1.xml` - an `x15` `timelineCacheDefinition` root (docx4j CR-022).
+- `xl/drawings/drawing1.xml` - an `a:graphicData` framing an `sle:slicer`, inside the `a14`
+  `mc:Choice` every consumer takes. As Office wrote it the part round-trips (the
+  `mc:AlternateContent` is kept whole); with the branch taken it throws, because
+  `CT_GraphicalObjectData`'s wildcard is `processContents="strict"` and a graphic the model does
+  not bind cannot stay DOM. Found by core-ts CR-004 phase A (2026-09-24), recorded in
+  `test/fidelity.mjs` against docx4j.
 
 Extracted as part XML, not the archive (CR-004 section 3). Never edited by hand.

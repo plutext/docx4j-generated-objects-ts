@@ -55,7 +55,7 @@ There are four tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
-- `test/fidelity.mjs` (runtime, CR-004 phase A) unmarshals and marshals 17 parts Office 365 wrote,
+- `test/fidelity.mjs` (runtime, CR-004 phase A) unmarshals and marshals 18 parts Office 365 wrote,
   from six documents under `test/fixtures/fidelity/<document>/<part path>` (each with a `SOURCE.md`
   naming the docx4j file and commit), and compares canonically with `test/lib/canonical.mjs`
   (QNames not prefixes, attributes sorted, namespace declarations ignored, `1`/`true` the same
@@ -63,8 +63,9 @@ There are four tests and no test framework:
   with their `mc:Choice` taken, which is what a consumer resolving markup compatibility unmarshals.
   A part that throws is a failure. The canonicaliser is checked first, on both sides: what it must
   call equal and what it must not. Three differences are recorded in the runner's `KNOWN` table with
-  their owner; an entry is matched on the difference itself and **fails when the part becomes
-  identical**, so it cannot outlive its fix. Run against 0.1.5's `modules/` it reports all five
+  their owner; an entry is matched on the difference itself - or on the error message, for a part
+  the model cannot read at all - and **fails when the part becomes identical or stops throwing**,
+  so it cannot outlive its fix. Run against 0.1.5's `modules/` it reports all five
   losses that release carried.
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
