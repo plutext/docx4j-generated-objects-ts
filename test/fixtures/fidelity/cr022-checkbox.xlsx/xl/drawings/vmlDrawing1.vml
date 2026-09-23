@@ -1,0 +1,30 @@
+<xml xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel">
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout><v:shapetype id="_x0000_t201" coordsize="21600,21600" o:spt="201"
+  path="m,l,21600r21600,l21600,xe">
+  <v:stroke joinstyle="miter"/>
+  <v:path shadowok="f" o:extrusionok="f" strokeok="f" fillok="f" o:connecttype="rect"/>
+  <o:lock v:ext="edit" shapetype="t"/>
+ </v:shapetype><v:shape id="_x0000_s1025" type="#_x0000_t201" style='position:absolute;
+  margin-left:64.8pt;margin-top:45.6pt;width:102pt;height:41.4pt;z-index:1;
+  mso-wrap-style:tight' filled="f" fillcolor="window [65]" stroked="f"
+  strokecolor="windowText [64]" o:insetmode="auto">
+  <v:path shadowok="t" strokeok="t" fillok="t"/>
+  <o:lock v:ext="edit" rotation="t"/>
+  <v:textbox o:singleclick="f">
+   <div style='text-align:left'><font face="Segoe UI" size="160" color="#000000">Check
+   Box 1</font></div>
+  </v:textbox>
+  <x:ClientData ObjectType="Checkbox">
+   <x:SizeWithCells/>
+   <x:Anchor>
+    1, 28, 3, 4, 3, 38, 6, 1</x:Anchor>
+   <x:AutoFill>False</x:AutoFill>
+   <x:AutoLine>False</x:AutoLine>
+   <x:TextVAlign>Center</x:TextVAlign>
+   <x:NoThreeD/>
+  </x:ClientData>
+ </v:shape></xml>

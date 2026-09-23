@@ -1,6 +1,6 @@
 # CR-004: A round-trip fidelity test over parts Office wrote
 
-**Status:** Proposed 2026-09-20
+**Status:** Phase A implemented 2026-09-23 (section 8 records what it found); phase B proposed
 **Depends on:** nothing in this package; the fixtures come from `plutext/docx4j`
 **Requested by:** the docx4j session (2026-09-20), after CR-021 to CR-023 closed a run of losses
 that none of this package's tests could have found
@@ -55,8 +55,15 @@ records rather than a convenience:
 - **Attributes sorted** by QName: the declarations promise sorted output, Office's order is its own.
 - **Namespace declarations ignored** on comparison: CR-001 section 3.1's tests cover which
   declarations appear, and `mc:Ignorable` is compared as an attribute value.
-- **`xs:boolean` attributes normalised**: `1` and `true` are the same value. Only for attributes the
-  model types as boolean, not for every attribute that looks like one.
+- **`xs:boolean` attributes normalised**: `1` and `true` are the same value. The CR first said "only
+  for attributes the model types as boolean, not for every attribute that looks like one"; the
+  implementation normalises every attribute's lexical form instead, which is **safe in this
+  comparison and not in general**, and the reason is worth keeping: the two sides are a part Office
+  wrote and that same part marshalled back, so an attribute the model does not type as boolean is
+  copied through verbatim and cannot present two spellings. Only the model's own typing can produce
+  a `1` against a `true`. The list came first and silently missed `noGrp`, `noChangeAspect`,
+  `anchorCtr` and `knownFonts` - a canonicaliser with a hand-kept list of what to normalise is a
+  canonicaliser that hides differences by omission.
 - **Whitespace-only text dropped**, and text otherwise compared exactly. `xml:space="preserve"`
   content is compared exactly, which the canonicaliser must respect.
 
@@ -84,12 +91,16 @@ source document and that is recorded.
 
 ## 4. Phases
 
-- **A**: the canonicaliser, the runner, and the dozen parts that between them cover every loss
-  CR-021 to CR-023 closed: `xl/workbook.xml`, `xl/worksheets/sheet1.xml` (x14ac attributes, a
-  control), `xl/styles.xml`, `xl/drawings/drawing1.xml`, a slicer cache, a timeline cache,
-  `xl/ctrlProps/ctrlProp1.xml`, `word/document.xml` (tracked changes with `dateUtc`),
+- **A** (implemented 2026-09-23): the canonicaliser, the runner, and the parts that between them
+  cover every loss CR-021 to CR-023 closed: `xl/workbook.xml`, `xl/worksheets/sheet1.xml` (x14ac
+  attributes, a control), `xl/styles.xml`, `xl/drawings/drawing1.xml`, a slicer cache, a timeline
+  cache, `xl/ctrlProps/ctrlProp1.xml`, `word/document.xml` (tracked changes with `dateUtc`),
   `word/numbering.xml` (`durableId`, `restartNumberingAfterBreak`), `word/settings.xml`,
-  `word/people.xml`, `word/commentsExtensible.xml`.
+  `word/people.xml`, `word/commentsExtensible.xml`. Four more were added as the CR was implemented,
+  each from a loss found after the CR was written: `xl/drawings/vmlDrawing1.vml` (docx4j CR-026),
+  two `chart1.xml` carrying `c16r3:dispNaAsBlank` (docx4j `c363a969f`), and `ppt/slides/slide2.xml`
+  with `xl/drawings/drawing1.xml` from `loadAndSave.xlsx`, both also checked with their `a14`
+  `mc:Choice` taken (0.1.5's regression). 17 parts, 19 checks.
 - **B**: every XML part of the fixtures, once the canonicaliser has settled; the differences it
   finds are triaged into bugs here, schema gaps for docx4j, or new canonicalisation rules with
   their justification.
@@ -112,8 +123,45 @@ worse than one it reports). `CLAUDE.md`'s test list gains it. No `src/` change: 
 
 1. How large a corpus before the runtime cost matters? Phase A is a dozen parts; phase B is ~110 and
    builds the context once, so the cost is parsing, not context construction.
+   **Settled by measurement (2026-09-23)**: 19 checks over 17 parts add about a second to `npm test`,
+   almost all of it the one context build the smoke already pays for. Phase B can proceed on size.
 2. Should a known, accepted difference be recorded per part (an expectations file), or should the
-   test fail until the difference is fixed or the canonicaliser justified? The second is stricter
-   and likely right while the list is short.
+   test fail until the difference is fixed or the canonicaliser justified?
+   **Settled 2026-09-23, and neither purely**: two of the three differences phase A found are owned
+   by docx4j and deferred there, so failing until fixed would mean a red suite indefinitely, and a
+   red suite teaches people to ignore it. The runner keeps a `KNOWN` table instead, and it is strict
+   in both directions: an entry names the owner and the difference, is matched on the difference
+   itself (a part that starts differing some other way fails), and **fails when the part becomes
+   identical**, so a fix elsewhere forces the entry out rather than passing silently. An
+   expectations file that absorbs whatever it finds would defeat the test.
 3. Do the fixtures belong here, or in a repository both packages can share? core-ts will want the
    same documents for its package-level tests.
+   **Deferred, deliberately**: the four documents phase A uses are already identical in both
+   repositories (checked byte for byte), so the cost of the duplication today is 212 kB and the
+   `SOURCE.md` note that says where each came from. A shared repository is worth proposing when the
+   corpus grows in phase B, not before.
+
+## 8. What phase A found (2026-09-23)
+
+17 parts from six documents, 19 checks (two parts are checked a second time with their `mc:Choice`
+taken). Sixteen round-trip identically. Three differences, each recorded in `KNOWN`:
+
+| Part | Difference | Owner |
+|---|---|---|
+| `cr022-checkbox.xlsx` `xl/workbook.xml` | `xr2:uid` on `workbookView` is dropped: not in the model | docx4j, logged as an xlsx4j CR |
+| `cr022-slicers-timelines.xlsx` `xl/slicerCaches/slicerCache1.xml` | `mc:Ignorable` loses `x` | **this package**, see below |
+| `tracked-changes-equations.docx` `word/settings.xml` | `w14:docId` and `w15:chartTrackingRefBased` swap | docx4j, deferred past 17.1.1 |
+
+The middle one is new, and is this package's own: Excel binds `x` to the SpreadsheetML main
+namespace on its slicer, slicer cache and timeline parts and names it in `mc:Ignorable="x xr10"`,
+but this package writes that namespace as the default (CR-001), so the prefix table cannot produce
+`x` and the facade drops the token from `mc:Ignorable` rather than declaring the prefix. docx4j met
+the same problem and answered it in its CR-024 by pre-declaring the prefix beside the default. The
+fix here is a facade change and so wants its own CR; until it lands, a re-marshalled slicer cache
+tells a reader to ignore one prefix fewer than Excel did.
+
+**The test was checked against the releases it was built for.** Run with 0.1.5's `modules/`, it
+reports all five losses that release carried: the `a14` equation throwing in both the pptx slide and
+the xlsx drawing (only in the resolved check - as Office wrote them, both round-trip, which is why
+the resolved variant exists), `c16r3:dispNaAsBlank` losing its `val` in both charts, and the
+vmlDrawing part throwing. Those cost two releases and a regression between them.

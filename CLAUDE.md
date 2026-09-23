@@ -43,7 +43,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are three tests and no test framework:
+There are four tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -55,6 +55,17 @@ There are three tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
+- `test/fidelity.mjs` (runtime, CR-004 phase A) unmarshals and marshals 17 parts Office 365 wrote,
+  from six documents under `test/fixtures/fidelity/<document>/<part path>` (each with a `SOURCE.md`
+  naming the docx4j file and commit), and compares canonically with `test/lib/canonical.mjs`
+  (QNames not prefixes, attributes sorted, namespace declarations ignored, `1`/`true` the same
+  value, whitespace-only text dropped, element order compared). Two parts are checked twice, once
+  with their `mc:Choice` taken, which is what a consumer resolving markup compatibility unmarshals.
+  A part that throws is a failure. The canonicaliser is checked first, on both sides: what it must
+  call equal and what it must not. Three differences are recorded in the runner's `KNOWN` table with
+  their owner; an entry is matched on the difference itself and **fails when the part becomes
+  identical**, so it cannot outlive its fix. Run against 0.1.5's `modules/` it reports all five
+  losses that release carried.
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
   consumer does. The repository's tsconfigs use `bundler`, which accepts extensionless relative
@@ -62,6 +73,9 @@ There are three tests and no test framework:
   silently become `any` (0.1.0 shipped that in `helpers/wml` and `builders/wml`). Import `modules/`
   from `src/` with the `.mjs` extension. Its `@ts-expect-error` lines go unused, and fail, if those types
   resolve to `any`.
+
+Fixtures are extracted part XML, never archives (no zip dependency) and never edited by hand; they
+cost consumers nothing, since `files` ships `dist/` and `modules/` only.
 
 `typecheck` has `skipLibCheck: false` and includes every generated `.d.ts`, so it is also the check
 that a regeneration's declarations compile; `lib` includes `dom` because the runtime typings need
