@@ -8,7 +8,6 @@ export const org_docx4j_vml_root = {
           name: 'any',
           required: true,
           collection: true,
-          allowDom: false,
           mixed: false,
           type: 'anyElement'
         }]

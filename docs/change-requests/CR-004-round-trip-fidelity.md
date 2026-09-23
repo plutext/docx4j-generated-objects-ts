@@ -173,6 +173,12 @@ docx4j never sees it. Recording it taught `KNOWN` to carry a throw: a part the m
 all is the same finding as one it reads lossily, and wants the same owner and the same insistence -
 the entry is matched on the message and fails if the part throws differently or stops throwing.
 
+**Two of the four closed on 2026-09-25**, by docx4j `8e8f6ea83` (both strict wildcards to lax,
+CR-024 section 10) and `dae2dfc8b` (`CT_Settings` in Word's order), regenerated here: the slicer
+graphic and `word/settings.xml` both round-trip, and the `KNOWN` entries failed until they were
+removed, which is the behaviour the table exists for. CR-006 closed a third. One remains, the
+`xr2:uid` docx4j has logged for xlsx4j.
+
 **The test was checked against the releases it was built for.** Run with 0.1.5's `modules/`, it
 reports all five losses that release carried: the `a14` equation throwing in both the pptx slide and
 the xlsx drawing (only in the resolved check - as Office wrote them, both round-trip, which is why

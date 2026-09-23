@@ -6233,7 +6233,6 @@ export const org_docx4j_dml = {
           name: 'any',
           minOccurs: 0,
           collection: true,
-          allowDom: false,
           mixed: false,
           type: 'anyElement'
         }, {

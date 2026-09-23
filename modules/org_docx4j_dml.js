@@ -6233,7 +6233,6 @@ var org_docx4j_dml_Module_Factory = function () {
             name: 'any',
             minOccurs: 0,
             collection: true,
-            allowDom: false,
             mixed: false,
             type: 'anyElement'
           }, {

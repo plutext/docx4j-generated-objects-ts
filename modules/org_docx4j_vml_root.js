@@ -8,7 +8,6 @@ var org_docx4j_vml_root_Module_Factory = function () {
             name: 'any',
             required: true,
             collection: true,
-            allowDom: false,
             mixed: false,
             type: 'anyElement'
           }]

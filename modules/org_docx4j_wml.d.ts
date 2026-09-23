@@ -1258,8 +1258,8 @@ export interface CTSettings {
   doNotEmbedSmartTags?: BooleanDefaultTrue;
   decimalSymbol?: CTSettings.DecimalSymbol;
   listSeparator?: CTSettings.ListSeparator;
-  chartTrackingRefBased?: BooleanDefaultTrue;
   docId14?: Dep_org_docx4j_w14.CTLongHexNumber;
+  chartTrackingRefBased?: BooleanDefaultTrue;
   docId15?: Dep_org_docx4j_w15.CTGuid;
   conflictMode?: Dep_org_docx4j_w14.CTOnOff;
   discardImageEditingData?: Dep_org_docx4j_w14.CTOnOff;

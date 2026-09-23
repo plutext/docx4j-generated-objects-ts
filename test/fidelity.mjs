@@ -117,21 +117,6 @@ const KNOWN = new Map([
     before: '{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid="{00000000-000D-0000-FFFF-FFFF00000000}"',
     after: '(absent)',
   }],
-  ['cr022-slicers-timelines.xlsx/xl/drawings/drawing1.xml [mc:Choice a14 taken]', {
-    why: "CT_GraphicalObjectData's wildcard is processContents=\"strict\" in dml-graphicalObject.xsd, so a "
-      + 'graphic the model does not bind is fatal rather than DOM. Here an a:graphicData framing '
-      + 'sle:slicer, reached through the a14 Choice every consumer takes. Found by core-ts CR-004 '
-      + 'phase A and confirmed here; fixed lax in docx4j 8e8f6ea83 (CR-024 section 10), unreleased there.',
-    owner: 'plutext/docx4j',
-    throws: 'Element [{http://schemas.microsoft.com/office/drawing/2010/slicer}sle:slicer] could not be unmarshalled',
-  }],
-  ['tracked-changes-equations.docx/word/settings.xml', {
-    why: "CT_Settings declares w15:chartTrackingRefBased before w14:docId and Word writes the reverse, "
-      + 'so a re-marshal reorders the two. Harmless (Word opens it); docx4j deferred the schema change past 17.1.1.',
-    owner: 'plutext/docx4j',
-    before: '{http://schemas.microsoft.com/office/word/2010/wordml}docId',
-    after: '{http://schemas.microsoft.com/office/word/2012/wordml}chartTrackingRefBased',
-  }],
 ]);
 
 const failures = [];
@@ -197,5 +182,5 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.log(`fidelity: ${checked} parts Office wrote round-trip through the facade unchanged`
-    + (known.length ? `, but for ${known.length} known differences above` : ''));
+    + (known.length ? `, but for ${known.length} known difference${known.length === 1 ? '' : 's'} above` : ''));
 }

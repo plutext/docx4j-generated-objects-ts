@@ -62,8 +62,8 @@ There are four tests and no test framework:
   value, whitespace-only text dropped, element order compared). Two parts are checked twice, once
   with their `mc:Choice` taken, which is what a consumer resolving markup compatibility unmarshals.
   A part that throws is a failure. The canonicaliser is checked first, on both sides: what it must
-  call equal and what it must not. Three differences are recorded in the runner's `KNOWN` table with
-  their owner; an entry is matched on the difference itself - or on the error message, for a part
+  call equal and what it must not. One difference is recorded in the runner's `KNOWN` table with
+  its owner (three were, until docx4j closed two); an entry is matched on the difference itself - or on the error message, for a part
   the model cannot read at all - and **fails when the part becomes identical or stops throwing**,
   so it cannot outlive its fix. Run against 0.1.5's `modules/` it reports all five
   losses that release carried.

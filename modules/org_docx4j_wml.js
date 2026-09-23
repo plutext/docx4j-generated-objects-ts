@@ -4356,19 +4356,19 @@ var org_docx4j_wml_Module_Factory = function () {
             name: 'listSeparator',
             typeInfo: '.CTSettings.ListSeparator'
           }, {
-            name: 'chartTrackingRefBased',
-            elementName: {
-              localPart: 'chartTrackingRefBased',
-              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2012\/wordml'
-            },
-            typeInfo: '.BooleanDefaultTrue'
-          }, {
             name: 'docId14',
             elementName: {
               localPart: 'docId',
               namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
             },
             typeInfo: 'org_docx4j_w14.CTLongHexNumber'
+          }, {
+            name: 'chartTrackingRefBased',
+            elementName: {
+              localPart: 'chartTrackingRefBased',
+              namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2012\/wordml'
+            },
+            typeInfo: '.BooleanDefaultTrue'
           }, {
             name: 'docId15',
             elementName: {
