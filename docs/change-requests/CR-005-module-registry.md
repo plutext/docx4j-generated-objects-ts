@@ -1,6 +1,6 @@
 # CR-005: A bundler-friendly way to load the mapping modules
 
-**Status:** Proposed 2026-09-24
+**Status:** Proposed 2026-09-24 (reviewed here 2026-09-24, section 5: accepted in shape, with the registry hand-written in `src/`)
 **Depends on:** nothing in this package
 **Requested by:** `plutext/docx4j-ts-editor` ED-002 section 10.3 item 1 (the browser editor,
 2026-09-23), which had to teach its bundler where the modules are before the first open worked
@@ -64,6 +64,58 @@ bundle-size-conscious add-in wants, and it costs one option.
 ## 4. Open questions
 
 1. Whether `MODULE_NAMES` stays exported once the registry exists (recommendation: yes; the
-   editor's console lists the names to load declarations lazily).
+   editor's console lists the names to load declarations lazily). **Answered in section 5.2: it
+   stays, but derived from the registry rather than kept beside it.**
 2. Whether the registry is a JavaScript module with 103 static imports or a JSON manifest the
    facade reads (recommendation: the module; a manifest still needs a computed import).
+   **Agreed: the module.** A manifest buys nothing, since reading it still leaves the facade with
+   a computed specifier, which is the whole defect.
+
+## 5. Review (this repository, 2026-09-24)
+
+The diagnosis holds against the shipped code: `dist/index.mjs` carries
+``import(`../modules/${name}.mjs`)`` verbatim, so a bundler has a template literal and no way to
+know what it names. The cost of the editor's glob workaround is as described: `modules/` holds 309
+`.mjs` files of which 103 are mappings, the other 206 being the `.el.mjs` and `.factory.mjs`
+siblings of compiler CR-010. Both proposals are accepted in shape, with three changes.
+
+### 5.1 The registry is hand-written in `src/`, not generated into `modules/`
+
+Section 2 has `generate.sh` write `modules/index.mjs`. That crosses a repository boundary for no
+gain: `generate.sh` and `bindings.xjb` live in `plutext/jsonix-schema-compiler`, `modules/` is
+generated output this repository must never edit by hand, and a change there needs a CR in the
+compiler repository, a compiler release, and a regeneration - to ship a fix that has nothing to do
+with the schemas. The alternative section 1 already offers in parentheses becomes the
+recommendation: **a hand-written `src/modules.mts`** with 103 literal `import` statements,
+compiled into `dist/` with the rest of the facade.
+
+Nothing is lost by hand-maintaining it, because the list is hand-maintained today: `MODULE_NAMES`
+lives in `src/index.mts` precisely because `generate.sh` does not write it (see `CLAUDE.md`), and
+the smoke test fails when it goes stale, since a mapping then references a module the context
+never loaded. The registry inherits that check.
+
+### 5.2 One list, not two: `MODULE_NAMES` derives from the registry
+
+A registry of 103 literal imports beside a hand-kept array of the same 103 names is two lists that
+must agree, and only one of them is watched. The registry is therefore the single source: it maps
+name to module, and `MODULE_NAMES` becomes its keys (`Object.keys(MODULES)`, or the array built
+from it), keeping the export and the `ModuleName` type that callers and `test/nodenext/consumer.mts`
+use. A module added or dropped by a regeneration is then one edit, and the smoke still catches a
+miss.
+
+### 5.3 The `modules` option obeys the singleton rule, and says so
+
+`getContext` caches one context and returns it for every later call, so `getContext({ modules })`
+after something has already built the default context returns that one and ignores the option, as
+it already does for `namespacePrefixes` and the rest. This is a footgun for exactly the caller item
+2 is for - the add-in that wants a small context will often be the second caller, not the first.
+The option is fine as proposed, but its documentation must carry the same sentence `resetContext`
+carries: to build a context with different options, call `resetContext()` first. A test should pin
+it (`getContext({ modules: [...] })` after a default build returns the full context; after
+`resetContext()`, the small one).
+
+### 5.4 Not blocking
+
+None of this changes the recommendation to do both items. The defect is real for the standalone
+consumers this package exists to serve - an Office JS add-in bundled with esbuild meets it on its
+first run, as the editor did.
