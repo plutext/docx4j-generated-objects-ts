@@ -211,8 +211,23 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   for a copy typed as a base type (`w:pPrChange` holds a `PPrBase`, not a `PPr`) and
   `deepCopyAsSync` / `getContextSync` where a caller cannot await; `unmarshalPackage` /
   `marshalPackage` handle flat OPC packages with typed parts; `Jsonix` is re-exported. The facade is
-  asynchronous because the modules are loaded with dynamic `import()`; for a synchronous setup
-  import the modules you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.
+  asynchronous because the mappings load as ES modules; for a synchronous setup import the modules
+  you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.
+- **Bundling**: no bundler configuration is needed. The mappings are imported by literal specifiers
+  from a registry (`MODULES`), so a bundler sees exactly the 103 modules a context loads, rather
+  than the template specifier earlier versions used - which Vite could not resolve without
+  `dynamicImportVarsOptions` and esbuild expanded to a glob over every `.mjs` in `modules/`,
+  including the `.el` and `.factory` siblings (a 3.5MB esbuild bundle against 2.0MB now). One
+  obstacle remains and is the runtime's: bundled for Node, `@docx4j/jsonix` loses the
+  `@xmldom/xmldom` it injects through its UMD wrapper and reaches for browser globals, so a Node
+  bundle needs `globalThis.DOMParser` and `globalThis.XMLSerializer` set; a browser has them.
+- **A smaller context**: `getContext({ modules: modulesFor('org_docx4j_wml') })` builds a context
+  over one root's modules and their closure - twelve modules for WordprocessingML, which reads a
+  Word 365 `document.xml` - instead of all 103. `modulesFor` follows the type references in the
+  mappings themselves, since a hand-picked list almost always misses one and fails with "Type info
+  [...] is not known in this context". Options are read when the context is built, so call
+  `resetContext()` first if one already exists; and a smaller context knows less, so a document
+  carrying content its modules do not cover will throw where the full context would type it.
 - **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
   (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
   Word writes it. The facade's marshal functions declare on the root element the namespaces the

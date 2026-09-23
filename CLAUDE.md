@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 (UMD `.js`, ES module `.mjs`) with TypeScript declarations (`.d.ts`, `.d.mts`), **generated** by
 [jsonix-schema-compiler](https://github.com/plutext/jsonix-schema-compiler) from
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
-code: a facade with docx4j's names (`index.mts`), `helpers/wml.mts` (per-type docx4j decisions,
+code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
@@ -104,9 +104,12 @@ that a regeneration's declarations compile; `lib` includes `dom` because the run
   `unmarshalPackage` / `marshalPackage` handle flat OPC packages (Office JS `getOoxml()`): parts are
   `xsd:any processContents="skip"`, hence DOM by the schema, and are converted to typed elements
   where the model knows the root element (and back to DOM on marshal, without modifying the input).
-  `MODULE_NAMES` in `src/index.mts` is maintained by hand when modules appear or disappear
-  (`generate.sh` does not write it); the smoke fails on a stale list (a mapping references a
-  missing dependency).
+  `src/modules.mts` is the registry of the 103 mappings, imported by literal specifiers so a
+  bundler can see them (CR-005); it is maintained by hand when modules appear or disappear
+  (`generate.sh` does not write it), and `MODULE_NAMES` and `ModuleName` derive from it, so it is
+  the only list. The smoke fails on a stale registry (a mapping references a missing dependency).
+  `getContext({ modules })` builds a context over fewer mappings, with `modulesFor(root)` for the
+  closure.
 - `src/` and `test/` import from `../modules/...` and `../dist/...`; `dist/` is git-ignored and
   built by `npm run build`.
 

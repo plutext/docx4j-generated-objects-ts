@@ -41,7 +41,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "npm run build && tsc -p test/nodenext/tsconfig.json && node test/smoke.mjs && node test/fidelity.mjs",
+    "test": "npm run build && tsc -p test/nodenext/tsconfig.json && node test/smoke.mjs && node test/fidelity.mjs && node test/bundle.mjs",
     "prepublishOnly": "npm run typecheck && npm test"
   },
   "keywords": [
@@ -69,6 +69,7 @@
     "@docx4j/jsonix": "^3.2.1"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "typescript": "~5.6.3"
   },
   "engines": {

@@ -1,120 +1,23 @@
 // The facade of @docx4j/generated-objects-ts: docx4j's names over the Jsonix runtime and the generated
-// Office Open XML mappings in ../modules. Hand-written, MODULE_NAMES included: generate.sh does not write
-// it, so add or remove names when modules appear or disappear (the smoke test fails on a stale list).
+// Office Open XML mappings in ../modules. Hand-written; the list of modules is ./modules.mts, which
+// generate.sh does not write either, so add or remove an import there when modules appear or
+// disappear (the smoke test fails on a stale registry).
 import { Jsonix } from '@docx4j/jsonix';
+import { MODULES } from './modules.mjs';
+export { MODULES };
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
 import type { PackageElement, Package, Part } from '../modules/org_docx4j_xmlPackage.mjs';
 export type { PackageElement, Package, Part };
 
-/** All generated modules, one Jsonix mapping each; they reference each other, so a context needs them all. */
-export const MODULE_NAMES = [
-  'org_docx4j_bibliography',
-  'org_docx4j_cei',
-  'org_docx4j_com_microsoft_schemas_ink_x2010_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2010_chartDrawing',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2010_diagram',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2010_picture',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chart',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2012_chartStyle',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2012_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2013_main_command',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chart_ac',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2014_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x201611_diagram',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x201611_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x201612_diagram',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2016_SVG_main',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2016_ink',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x201703_chart',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2017_decorative',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2017_model3d',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2018_animation_model3d',
-  'org_docx4j_com_microsoft_schemas_office_drawing_x2018_hyperlinkcolor',
-  'org_docx4j_com_microsoft_schemas_office_powerpoint_x2014_inkAction',
-  'org_docx4j_com_microsoft_schemas_office_thememl_x2012_main',
-  'org_docx4j_com_microsoft_schemas_office_webextensions_taskpanes_2010_11',
-  'org_docx4j_com_microsoft_schemas_office_webextensions_webextension_2010_11',
-  'org_docx4j_com_microsoft_schemas_office_word_x2006_wordml',
-  'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingCanvas',
-  'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingDrawing',
-  'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingGroup',
-  'org_docx4j_com_microsoft_schemas_office_word_x2010_wordprocessingShape',
-  'org_docx4j_com_microsoft_schemas_office_word_x2012_wordprocessingDrawing',
-  'org_docx4j_com_microsoft_schemas_office_x2006_encryption',
-  'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_certificate',
-  'org_docx4j_com_microsoft_schemas_office_x2006_keyEncryptor_password',
-  'org_docx4j_customXmlProperties',
-  'org_docx4j_customxml',
-  'org_docx4j_dml',
-  'org_docx4j_dml_chart',
-  'org_docx4j_dml_chartDrawing',
-  'org_docx4j_dml_chart_x2007',
-  'org_docx4j_dml_compatibility',
-  'org_docx4j_dml_diagram',
-  'org_docx4j_dml_diagram2008',
-  'org_docx4j_dml_lockedCanvas',
-  'org_docx4j_dml_picture',
-  'org_docx4j_dml_spreadsheetdrawing',
-  'org_docx4j_dml_wordprocessingDrawing',
-  'org_docx4j_docProps_core',
-  'org_docx4j_docProps_core_dc_elements',
-  'org_docx4j_docProps_core_dc_terms',
-  'org_docx4j_docProps_coverPageProps',
-  'org_docx4j_docProps_custom',
-  'org_docx4j_docProps_extended',
-  'org_docx4j_docProps_variantTypes',
-  'org_docx4j_math',
-  'org_docx4j_mce',
-  'org_docx4j_org_w3_x1998_math_mathML',
-  'org_docx4j_org_w3_x2003_inkML',
-  'org_docx4j_relationships',
-  'org_docx4j_sharedtypes',
-  'org_docx4j_vml',
-  'org_docx4j_vml_officedrawing',
-  'org_docx4j_vml_presentationDrawing',
-  'org_docx4j_vml_root',
-  'org_docx4j_vml_spreadsheetDrawing',
-  'org_docx4j_vml_wordprocessingDrawing',
-  'org_docx4j_w14',
-  'org_docx4j_w15',
-  'org_docx4j_w15symex',
-  'org_docx4j_w16',
-  'org_docx4j_w16cex',
-  'org_docx4j_w16cid',
-  'org_docx4j_wml',
-  'org_docx4j_xmlPackage',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2010_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2012_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2013_main_command',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201509_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201510_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2015_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201606_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_sectionzoom',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_slidezoom',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x2016_summaryzoom',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201703_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201710_main',
-  'org_pptx4j_com_microsoft_schemas_office_powerpoint_x201804_main',
-  'org_pptx4j_pml',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2009_x9_main',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_ac',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2010_x11_main',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2011_x1_ac',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_revision',
-  'org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main',
-  'org_xlsx4j_schemas_microsoft_com_office_excel_2006_main',
-  'org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main',
-  'org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing',
-  'org_xlsx4j_sml',
-] as const;
+/**
+ * Every generated module, one Jsonix mapping each; they reference each other, so a context needs
+ * them all. The registry in `./modules.mjs` is the list (CR-005): these names are its keys, so a
+ * module added or dropped by a regeneration is one edit there, not two here.
+ */
+export const MODULE_NAMES = Object.keys(MODULES) as readonly ModuleName[] & ModuleName[];
 
-export type ModuleName = (typeof MODULE_NAMES)[number];
+export type ModuleName = keyof typeof MODULES;
 
 const XML_NS = 'http://www.w3.org/XML/1998/namespace';
 const XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
@@ -287,6 +190,75 @@ export const IGNORABLE_PREFIX_ALIASES: Readonly<Record<string, string>> = Object
   x: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
 });
 
+/**
+ * `getContext` options: the runtime's, plus `modules` for a context over fewer mappings than the
+ * whole model (CR-005) - the mapping objects themselves, or a function returning them, so a caller
+ * that wants wml alone can import those modules and nothing else is pulled in. The option is
+ * stripped before the rest is passed to the runtime.
+ *
+ * Like every option here it is read only when the context is BUILT: `getContext` returns the one
+ * it has built for every later call, so a caller that wants a different context calls
+ * `resetContext()` first. An add-in asking for a small context is usually not the first caller.
+ */
+export interface ContextOptions extends Jsonix.ContextOptions {
+  modules?: readonly unknown[] | (() => Promise<readonly unknown[]> | readonly unknown[]);
+}
+
+/**
+ * The modules named, plus everything they depend on, transitively (CR-005): the mappings reference
+ * each other, so a context over a hand-picked list usually fails at build time with "Type info
+ * [...] is not known in this context" - a list of wml and the obvious neighbours misses the a14
+ * module that `CT_TextParagraph` reached after docx4j CR-021, for instance.
+ *
+ * Each generated mapping declares its own `dependencies`, so the closure is computed rather than
+ * guessed: `getContext({ modules: modulesFor('org_docx4j_wml') })` is the usable form of the
+ * option. Note that this makes a SMALLER CONTEXT, not a smaller bundle - a bundler that sees the
+ * facade takes the registry with it either way.
+ */
+export function modulesFor(...names: ModuleName[]): Jsonix.Mapping[] {
+  const chosen = new Map<string, Jsonix.Mapping>();
+  const add = (name: string): void => {
+    if (chosen.has(name)) return;
+    const module = (MODULES as Record<string, Jsonix.Mapping | undefined>)[name];
+    if (module === undefined) throw new Error(`${name} is not a module of this package (see MODULE_NAMES)`);
+    chosen.set(name, module);
+    for (const dependency of referencedModules(module)) add(dependency);
+  };
+  for (const name of names) add(name);
+  return [...chosen.values()];
+}
+
+/**
+ * The modules a mapping refers to, read from the type references themselves
+ * (`typeInfo: 'org_docx4j_dml.CTTextCharacterProperties'`) rather than from its `dependencies`
+ * field, which the compiler under-reports: `org_docx4j_wml` names six there and refers to eight,
+ * missing `org_docx4j_dml_wordprocessingDrawing` and `org_docx4j_w15symex`, so a closure built
+ * from `dependencies` fails at context build. Reported to the compiler; reading the references is
+ * right either way, since they are what the runtime resolves.
+ */
+function referencedModules(module: Jsonix.Mapping): Set<string> {
+  const found = new Set<string>();
+  const seen = new Set<unknown>();
+  const visit = (value: unknown): void => {
+    if (typeof value === 'string') {
+      const dot = value.indexOf('.');
+      if (dot > 0 && value.startsWith('org_')) {
+        const name = value.slice(0, dot);
+        if (name in MODULES && name !== module.name) found.add(name);
+      }
+      return;
+    }
+    if (typeof value !== 'object' || value === null || seen.has(value)) return;
+    seen.add(value);
+    for (const each of Object.values(value)) visit(each);
+  };
+  visit(module);
+  for (const declared of (module as { dependencies?: readonly string[] }).dependencies ?? []) {
+    if (declared in MODULES) found.add(declared);
+  }
+  return found;
+}
+
 let contextPromise: Promise<Jsonix.Context> | undefined;
 let builtContext: Jsonix.Context | undefined;
 
@@ -296,14 +268,14 @@ let builtContext: Jsonix.Context | undefined;
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
  * change that or anything else.
  */
-export function getContext(options?: Jsonix.ContextOptions): Promise<Jsonix.Context> {
+export function getContext(options?: ContextOptions): Promise<Jsonix.Context> {
   if (contextPromise === undefined) {
-    contextPromise = Promise.all(MODULE_NAMES.map((name) => import(`../modules/${name}.mjs`))).then(
-      (modules) => {
-        builtContext = new Jsonix.Context(modules.flatMap((m) => Object.values(m) as Jsonix.Mapping[]), { parentPointers: true, namespacePrefixes: NAMESPACE_PREFIXES, ...options });
-        return builtContext;
-      },
-    );
+    const { modules, ...contextOptions } = options ?? {};
+    const mappings = Promise.resolve(typeof modules === 'function' ? modules() : modules ?? Object.values(MODULES));
+    contextPromise = mappings.then((loaded) => {
+      builtContext = new Jsonix.Context(loaded as Jsonix.Mapping[], { parentPointers: true, namespacePrefixes: NAMESPACE_PREFIXES, ...contextOptions });
+      return builtContext;
+    });
   }
   return contextPromise;
 }

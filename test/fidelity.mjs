@@ -121,7 +121,7 @@ const KNOWN = new Map([
     why: "CT_GraphicalObjectData's wildcard is processContents=\"strict\" in dml-graphicalObject.xsd, so a "
       + 'graphic the model does not bind is fatal rather than DOM. Here an a:graphicData framing '
       + 'sle:slicer, reached through the a14 Choice every consumer takes. Found by core-ts CR-004 '
-      + 'phase A and confirmed here; the remedy is lax, as docx4j CR-021 did for the mce wildcards.',
+      + 'phase A and confirmed here; fixed lax in docx4j 8e8f6ea83 (CR-024 section 10), unreleased there.',
     owner: 'plutext/docx4j',
     throws: 'Element [{http://schemas.microsoft.com/office/drawing/2010/slicer}sle:slicer] could not be unmarshalled',
   }],

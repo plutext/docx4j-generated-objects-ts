@@ -1,6 +1,6 @@
 # CR-005: A bundler-friendly way to load the mapping modules
 
-**Status:** Proposed 2026-09-24 (reviewed here 2026-09-24, section 5: accepted in shape, with the registry hand-written in `src/`)
+**Status:** Implemented 2026-09-24 (section 6 records what implementing it corrected)
 **Depends on:** nothing in this package
 **Requested by:** `plutext/docx4j-ts-editor` ED-002 section 10.3 item 1 (the browser editor,
 2026-09-23), which had to teach its bundler where the modules are before the first open worked
@@ -119,3 +119,74 @@ it (`getContext({ modules: [...] })` after a default build returns the full cont
 None of this changes the recommendation to do both items. The defect is real for the standalone
 consumers this package exists to serve - an Office JS add-in bundled with esbuild meets it on its
 first run, as the editor did.
+
+
+## 6. As implemented (2026-09-24)
+
+`src/modules.mts` holds the 103 literal imports and exports `MODULES`; `MODULE_NAMES` and
+`ModuleName` derive from it; `getContext` builds from `Object.values(MODULES)` or from a `modules`
+option, typed by a `ContextOptions` interface the facade strips before passing the rest on;
+`modulesFor(...roots)` returns a closure. Four things implementing it settled, three of them
+corrections to this CR.
+
+### 6.1 esbuild does resolve the template - at a price
+
+The CR says a bundler "leaves the `import()` as a runtime URL" and that "every other consumer (the
+add-in guide's esbuild command) has to find the same trick". That is true of Vite and not of
+esbuild: esbuild expands a template specifier into a glob map itself, so the add-in guide's command
+has always produced a working bundle. What it produces is a bundle holding **every `.mjs` in
+`modules/`** - the `.el` and `.factory` siblings as well - which is the same over-inclusion the
+editor measured in Vite, paid in bytes instead of chunks.
+
+Measured on a one-line consumer, `esbuild --bundle --platform=node --format=esm`:
+
+| | bundle | glob expansion |
+|---|---|---|
+| before | 3,683,504 bytes | `__glob` over `../modules/**/*.mjs`, 309 files |
+| after | 2,142,833 bytes | none; 103 literal imports |
+
+So the benefit is stated more precisely as: **no configuration for any bundler, and 42% less
+bundle** for the one that needed none.
+
+### 6.2 A second obstacle to bundling, which is the runtime's
+
+A bundle for Node fails even with the registry, and not for anything in this package: the Jsonix
+runtime is a UMD that injects `@xmldom/xmldom` through `amdefine`, a bundler cannot satisfy that,
+and the bundled runtime falls back to browser globals - `XMLHttpRequest` for parsing, which Node
+does not have. A browser bundle is unaffected (it has `DOMParser`), which is why the editor never
+saw it. `test/bundle.mjs` sets `globalThis.DOMParser` and `globalThis.XMLSerializer` and says why.
+**This wants a CR in `plutext/jsonix`**; it is the remaining reason a Node consumer cannot bundle
+this package with no configuration at all.
+
+### 6.3 `dependencies` in the generated mappings is under-reported
+
+Item 2's option is a trap without a way to compute a closure: a hand-picked list of wml and its
+obvious neighbours fails at context build with "Type info [...] is not known in this context". The
+mappings carry a `dependencies` array, but it is incomplete - `org_docx4j_wml` declares six and
+refers to eight, missing `org_docx4j_dml_wordprocessingDrawing` and `org_docx4j_w15symex`. So
+`modulesFor` reads the type references in the mapping instead (`typeInfo:
+'org_docx4j_dml.CTTextCharacterProperties'` and friends), unions them with whatever `dependencies`
+does say, and closes transitively. **The under-reporting wants a look in
+`plutext/jsonix-schema-compiler`**; reading the references is the right implementation either way,
+since they are what the runtime resolves.
+
+Closures measured: `org_docx4j_wml` 12 modules of 103, `org_xlsx4j_sml` 7, `org_pptx4j_pml` 5,
+`org_docx4j_relationships` 1. The wml closure unmarshals and re-marshals a Word 365
+`word/document.xml`, not only a toy paragraph.
+
+### 6.4 The option makes a smaller context, not a smaller bundle
+
+Worth stating plainly in the README, since the CR's motivation for item 2 was "a bundle-size-conscious
+add-in": a bundler that sees the facade takes the registry with it, because `getContext`'s default
+refers to it. `modules` buys a context that is faster to build and holds less, and an add-in that
+wants a smaller **bundle** should import the modules it needs directly and build its own context.
+
+### 6.5 Tests
+
+`test/bundle.mjs`, in `npm test`: esbuild with no flags but target and format, asserting no glob
+expansion, no `.el`/`.factory` module in the bundle, and that the bundle unmarshals when run in a
+temporary directory with nothing of this package beside it. Checked against the previous loader,
+where it fails on the glob assertion. The smoke gains the registry checks, the `modules` option
+with `modulesFor`, the singleton rule (`getContext({ modules })` after a build returns the built
+context; after `resetContext()`, the small one), the function form, and that `modulesFor` rejects
+an unknown name.

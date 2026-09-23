@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, MODULE_NAMES, MODULES, modulesFor, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -93,6 +93,33 @@ assert.deepEqual(declarations(packaged), { pkg: 'http://schemas.microsoft.com/of
 resetContext();
 await getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, [W14]: 'wx14' } });
 assert.match(await marshalString(await unmarshalString(`<w:document xmlns:w="${W}" xmlns:w14="${W14}"><w:body><w:p w14:paraId="1"/></w:body></w:document>`)), /xmlns:wx14="[^"]*"[^>]*><w:body><w:p wx14:paraId="1"\/>/, 'a table passed to getContext replaces the default');
+resetContext();
+
+// CR-005: the registry is the list of modules, and `modules` builds a context over fewer of them.
+assert.equal(MODULE_NAMES.length, Object.keys(MODULES).length, 'MODULE_NAMES is the registry keys');
+assert.deepEqual([...MODULE_NAMES].sort(), Object.keys(MODULES).sort());
+assert.equal(MODULES.org_docx4j_wml.name, 'org_docx4j_wml', 'the registry holds the mappings themselves');
+// The option is read when the context is BUILT, so a caller wanting another one resets first; a
+// caller that forgets gets the context that exists, as with every other option.
+// The mappings reference each other, so a hand-picked list fails at context build; modulesFor
+// takes the closure from each mapping's own `dependencies`.
+const wmlOnly = modulesFor('org_docx4j_wml');
+assert.ok(wmlOnly.length > 1 && wmlOnly.length < MODULE_NAMES.length, `a closure, not everything: ${wmlOnly.length} of ${MODULE_NAMES.length}`);
+assert.ok(wmlOnly.some((m) => m.name === 'org_docx4j_com_microsoft_schemas_office_drawing_x2010_main'),
+  'the closure reaches a14, which a hand-picked list of wml and its neighbours misses');
+assert.throws(() => modulesFor('org_docx4j_not_a_module'), /not a module of this package/);
+const full = await getContext();
+assert.equal(await getContext({ modules: wmlOnly }), full, 'options are read when the context is built, not after');
+resetContext();
+const small = await getContext({ modules: wmlOnly });
+assert.notEqual(small, full);
+assert.match(await marshalString(await unmarshalString(`<w:document xmlns:w="${W}"><w:body><w:p><w:r><w:t>x</w:t></w:r></w:p></w:body></w:document>`)),
+  /<w:t>x<\/w:t>/, 'a context over a subset of the modules marshals a w:p');
+await assert.rejects(unmarshalString(`<Relationships xmlns="${RELS}"><Relationship Id="rId1" Type="http://x" Target="s.xml"/></Relationships>`)
+  .then(() => {}), /not known in this context|Relationships/, 'and knows nothing of the modules it was not given');
+resetContext();
+const byLoader = await getContext({ modules: () => Promise.resolve(wmlOnly) });
+assert.notEqual(byLoader, full, 'modules may be a function, for a caller that loads them itself');
 resetContext();
 
 console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip, namespace prefixes OK');
