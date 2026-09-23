@@ -179,6 +179,16 @@ graphic and `word/settings.xml` both round-trip, and the `KNOWN` entries failed 
 removed, which is the behaviour the table exists for. CR-006 closed a third. One remains, the
 `xr2:uid` docx4j has logged for xlsx4j.
 
+**The device the `KNOWN` table is an instance of** - recording a dependency's defect as a test that
+asserts the broken behaviour, so that the fix announces itself by failing - is written up once, in
+`plutext/docx4j-core-ts` CR-001 section 19, "Recording a defect so that its fix cannot pass
+unnoticed" (2026-09-25). core-ts arrived at the same thing independently in its
+`test/ignorable.test.mjs` `UNREADABLE` table, and both have now caught a fix rather than a
+regression. Its two boundaries apply here: the table is for defects in a **dependency**, never in
+this package - a defect of our own is fixed or the test fails - and an entry without its reason and
+its upstream reference decays into the exclusion it was meant to replace, which is why every entry
+here carries an owner and a commit.
+
 **The test was checked against the releases it was built for.** Run with 0.1.5's `modules/`, it
 reports all five losses that release carried: the `a14` equation throwing in both the pptx slide and
 the xlsx drawing (only in the resolved check - as Office wrote them, both round-trip, which is why

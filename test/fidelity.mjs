@@ -104,6 +104,12 @@ const RESOLVED = new Map([
 /**
  * Differences that are known, understood, and owned elsewhere (CR-004 open question 2).
  *
+ * The device is written up in plutext/docx4j-core-ts CR-001 section 19: a dependency's defect is
+ * recorded as a test that asserts the broken behaviour, so the fix announces itself by failing,
+ * where a skip would be silent in both directions. It is for a DEPENDENCY's defect, never one of
+ * ours, and an entry without its reason and upstream reference decays into the exclusion it
+ * replaced.
+ *
  * The test is otherwise strict: any difference fails. An entry here does not soften that, it
  * records a specific difference and its owner - and it is matched exactly, so the part still fails
  * if the difference changes shape, AND it fails when the part becomes identical, which is how the
