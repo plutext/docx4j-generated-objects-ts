@@ -7,4 +7,6 @@ file `@docx4j/core-ts` uses): an Excel 365 workbook with a comment, a chart and 
   checked as written and with that branch taken, as for the pptx slide above.
 - `xl/charts/chart1.xml` - a second `c16r3:dispNaAsBlank`, from Excel rather than Word.
 
-Extracted as part XML, not the archive (CR-004 section 3). Never edited by hand.
+Phase B extracted **every** XML part of this document, not only those listed above; the listed
+ones are what each was chosen for. Parts are the archive's bytes, never edited by hand, and
+`[Content_Types].xml` is excluded (the model does not carry it).

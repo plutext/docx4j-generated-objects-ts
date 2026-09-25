@@ -15,4 +15,6 @@ Parts here, and what each demonstrates:
 - `xl/drawings/vmlDrawing1.vml` - the legacy drawing behind the control, whose root is `<xml>` in no
   namespace. Every release up to 0.1.6 threw on it; docx4j CR-026 fixed the binding.
 
-Extracted as part XML, not the archive (CR-004 section 3). Never edited by hand.
+Phase B extracted **every** XML part of this document, not only those listed above; the listed
+ones are what each was chosen for. Parts are the archive's bytes, never edited by hand, and
+`[Content_Types].xml` is excluded (the model does not carry it).

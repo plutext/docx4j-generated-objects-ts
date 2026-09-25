@@ -1,6 +1,6 @@
 # CR-004: A round-trip fidelity test over parts Office wrote
 
-**Status:** Phase A implemented 2026-09-23 (section 8 records what it found); phase B proposed
+**Status:** Phase A implemented 2026-09-23 (section 8), phase B 2026-09-25 (section 9)
 **Depends on:** nothing in this package; the fixtures come from `plutext/docx4j`
 **Requested by:** the docx4j session (2026-09-20), after CR-021 to CR-023 closed a run of losses
 that none of this package's tests could have found
@@ -101,9 +101,9 @@ source document and that is recorded.
   two `chart1.xml` carrying `c16r3:dispNaAsBlank` (docx4j `c363a969f`), and `ppt/slides/slide2.xml`
   with `xl/drawings/drawing1.xml` from `loadAndSave.xlsx`, both also checked with their `a14`
   `mc:Choice` taken (0.1.5's regression). 17 parts, 19 checks.
-- **B**: every XML part of the fixtures, once the canonicaliser has settled; the differences it
-  finds are triaged into bugs here, schema gaps for docx4j, or new canonicalisation rules with
-  their justification.
+- **B** (implemented 2026-09-25): every XML part of the fixtures, triaged into bugs here, schema
+  gaps for docx4j, or canonicalisation rules with their justification. 237 parts from twelve
+  documents; see section 9.
 
 ## 5. Tests and layout
 
@@ -194,3 +194,77 @@ reports all five losses that release carried: the `a14` equation throwing in bot
 the xlsx drawing (only in the resolved check - as Office wrote them, both round-trip, which is why
 the resolved variant exists), `c16r3:dispNaAsBlank` losing its `val` in both charts, and the
 vmlDrawing part throwing. Those cost two releases and a regression between them.
+
+
+## 9. Phase B (2026-09-25)
+
+Every XML part of twelve documents: the six `cr022-*.xlsx`, `tracked-changes-equations.docx`,
+`numPicBullet-word2019-pict.docx`, and `loadAndSave.docx`/`.pptx`/`.xlsx`. **237 parts, 745 kB, and
+the whole run takes under a second**, which settles open question 1 for good. 184 were identical at
+the first run; 53 differed, in four groups, and the triage below is what phase B is for.
+
+### 9.1 Two canonicalisation rules, both narrow (23 parts)
+
+`docProps/core.xml` and `docProps/app.xml` differed in **every** document, by sibling order alone -
+verified as a pure permutation in all 23, so nothing is lost. Both roots are **`xsd:all`** in
+docx4j's schemas (`opc-coreProperties.xsd`, and `Properties` in
+`shared-documentPropertiesExtended.xsd`), where no order is privileged. Jsonix cannot represent an
+unordered model, so the compiler flattens the members into an ordered property list; and no order
+would match anyway, because Word, Excel and PowerPoint each write `app.xml` differently (Word puts
+`Application` after `Characters`, Excel first, PowerPoint third). There is nothing to fix in a
+schema or in the facade, so this is section 2.1's premise - "the declarations promise schema order"
+- being true of `xsd:sequence` and false of `xsd:all`. The canonicaliser now sorts the **subtrees**
+of exactly those two elements, which keeps a value swapped between two differently named siblings
+visible; `docProps/custom.xml` is an `xsd:sequence` and must never be added.
+
+The second rule: `xsd:double` has many lexical forms per value (`1E-4` against `0.0001`,
+`46285.360326851849` against `46285.36032685185`), so two attribute values that both parse as
+finite numbers and compare `===` are the same value. As with the boolean rule, this can only hide a
+difference the model's own typing created, since an untyped attribute is copied through verbatim.
+
+### 9.2 Three losses, all docx4j's, all missing declarations (22 parts)
+
+| Attribute | Dropped from | Instances |
+|---|---|---|
+| `xr:uid` (2014/revision) | `autoFilter`, `hyperlink`, `table`, `pivotCacheDefinition`, `pivotTableDefinition`, `comment` | 17 |
+| `xr2:uid` (2015/revision2) | `workbookView` | 8 |
+| `xr3:uid` (2016/revision3) | `tableColumn` | 13 |
+| `xr16:uid` (2017/revision16) | `connection` | 5 |
+| `Version` | `b:Sources` | 1 |
+
+69 `uid` attributes in the corpus, **43 lost**. The mechanism is sound and only declarations are
+missing: the 26 that survive are exactly the elements docx4j has already declared them on -
+`CT_Worksheet`, and the x14/x15 slicer and timeline roots. `loadAndSave.xlsx`'s `sheet1.xml` makes
+the point on its own, with two `xr:uid` in and one out: the worksheet's survives, the hyperlink's
+does not. None of the losses is inside an `extLst` or an `mc:AlternateContent`. Relayed to docx4j
+with the draft schema changes.
+
+### 9.3 Eight parts nobody models, recorded as such
+
+`docMetadata/LabelInfo.xml` (three documents), PowerPoint's `authors.xml` and modern comments,
+Excel's `persons` and threaded comments, and a Power Query `DataMashup` blob. docx4j's
+`ContentTypes.java` says of each "not bound, a `DefaultXmlPart`", and `unmarshalPackage` here
+already keeps such a part as DOM, so the throw was the harness asking a question the model never
+claimed to answer. They are now listed in `UNMODELLED` with that citation and checked the opposite
+way round: **the root must still be unknown**, so if docx4j ever binds one the entry fails and has
+to go.
+
+The `DataMashup` part also found a bug in the harness rather than the model: it is UTF-16 LE with a
+BOM, and fixtures were read as UTF-8, so it arrived as mojibake. Parts are now read by their own
+encoding.
+
+### 9.4 What phase B changed about the method
+
+Recording a loss **per part** stops working at this size: one missing declaration costs the same
+attribute on 21 parts, and 21 entries would rot separately. Losses are now recorded per
+**attribute**, in `KNOWN_MISSING_ATTRIBUTES`, and an entry no part exercises fails at the end of the
+run - the same insistence as `KNOWN`, applied to a class.
+
+That change forced another, and it is the more important of the two: the comparison used to report
+only the **first** differing line of a part, which was enough when a part had one finding. With
+findings recorded by class, the first difference can mask a later one - `xr3:uid` on `tableColumn`
+was invisible behind the `table` element's own `xr:uid`, and only the staleness check revealed it.
+Every differing line is now classified, and a line is explained only if the recorded attributes
+account for **all** of it. That classifier is the code most able to hide a real loss, so it has its
+own self-checks: a line that drops a recorded attribute *and* changes another value is not
+explained.

@@ -9,4 +9,6 @@ comments and a chart.
   round trip (the element came back bare, flipping the option) until docx4j `c363a969f`, released
   in 0.1.6.
 
-Extracted as part XML, not the archive (CR-004 section 3). Never edited by hand.
+Phase B extracted **every** XML part of this document, not only those listed above; the listed
+ones are what each was chosen for. Parts are the archive's bytes, never edited by hand, and
+`[Content_Types].xml` is excluded (the model does not carry it).

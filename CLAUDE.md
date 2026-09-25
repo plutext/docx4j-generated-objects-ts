@@ -55,18 +55,25 @@ There are four tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
-- `test/fidelity.mjs` (runtime, CR-004 phase A) unmarshals and marshals 18 parts Office 365 wrote,
-  from six documents under `test/fixtures/fidelity/<document>/<part path>` (each with a `SOURCE.md`
-  naming the docx4j file and commit), and compares canonically with `test/lib/canonical.mjs`
-  (QNames not prefixes, attributes sorted, namespace declarations ignored, `1`/`true` the same
-  value, whitespace-only text dropped, element order compared). Two parts are checked twice, once
-  with their `mc:Choice` taken, which is what a consumer resolving markup compatibility unmarshals.
-  A part that throws is a failure. The canonicaliser is checked first, on both sides: what it must
-  call equal and what it must not. One difference is recorded in the runner's `KNOWN` table with
-  its owner (three were, until docx4j closed two); an entry is matched on the difference itself - or on the error message, for a part
-  the model cannot read at all - and **fails when the part becomes identical or stops throwing**,
-  so it cannot outlive its fix. Run against 0.1.5's `modules/` it reports all five
-  losses that release carried.
+- `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **237 parts** Office 365
+  wrote - every XML part of twelve documents from docx4j's test resources, under
+  `test/fixtures/fidelity/<document>/<part path>`, each directory with a `SOURCE.md` naming the file
+  and commit - and compares canonically with `test/lib/canonical.mjs` (QNames not prefixes,
+  attributes sorted, namespace declarations ignored, `1`/`true` and two spellings of one
+  `xsd:double` the same value, whitespace-only text dropped, element order compared **except** under
+  the two `xsd:all` roots of `docProps`). Parts are read by their own encoding, since one is UTF-16.
+  Three parts are also checked with their `mc:Choice` taken, which is what a consumer resolving
+  markup compatibility unmarshals. A part that throws is a failure.
+  Three tables record what is not a new finding, each strict in both directions so it cannot outlive
+  its reason (the device is core-ts CR-001 section 19): `KNOWN`, a difference in one part, matched on
+  the difference itself; `KNOWN_MISSING_ATTRIBUTES`, an attribute the model does not bind and so
+  drops everywhere (five today, all docx4j's - the `xr`/`xr2`/`xr3`/`xr16` `uid` family and
+  `b:Sources/@Version`), which fails if no part loses it any more; and `UNMODELLED`, eight parts
+  whose roots docx4j deliberately does not bind (sensitivity labels, PowerPoint's 2018 comments,
+  Excel's threaded comments, a Power Query blob), which fails if the model ever learns one. Every
+  differing line is classified, not only the first, so a recorded loss cannot mask an unrecorded one;
+  the classifier has its own self-checks, as does the canonicaliser.
+  Run against 0.1.5's `modules/` the test reports all five losses that release carried.
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
   consumer does. The repository's tsconfigs use `bundler`, which accepts extensionless relative

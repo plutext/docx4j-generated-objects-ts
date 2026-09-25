@@ -14,4 +14,6 @@ Excel 365's save of a pivot table with a slicer and a timeline.
   not bind cannot stay DOM. Found by core-ts CR-004 phase A (2026-09-24), recorded in
   `test/fidelity.mjs` against docx4j.
 
-Extracted as part XML, not the archive (CR-004 section 3). Never edited by hand.
+Phase B extracted **every** XML part of this document, not only those listed above; the listed
+ones are what each was chosen for. Parts are the archive's bytes, never edited by hand, and
+`[Content_Types].xml` is excluded (the model does not carry it).

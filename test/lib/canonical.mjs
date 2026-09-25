@@ -27,6 +27,24 @@ export const qname = (node) => (node.namespaceURI ? `{${node.namespaceURI}}${nod
 const normaliseBoolean = (value) => (value === '1' ? 'true' : value === '0' ? 'false' : value);
 
 /**
+ * Whether two attribute values are the same `xsd:double` written differently: Office writes
+ * `1E-4` and `46285.360326851849`, the model holds a JS number and writes `0.0001` and
+ * `46285.36032685185`. The lexical space of `xsd:double` is many-to-one, so this is a spelling,
+ * not a value - but only where BOTH sides parse as finite numbers and compare `===`, and only
+ * where the two strings differ in the first place.
+ *
+ * What it hides, and all it hides: a string-typed attribute re-spelled into a numerically equal
+ * form (a `ST_Xstring` cell value `"1.0"` becoming `"1"`, which Excel would see as a change). That
+ * cannot arise between a part and its own re-marshal unless the model typed the attribute as a
+ * number, which is the case the rule is for - the same argument as the boolean rule above.
+ */
+const sameNumber = (a, b) => {
+  if (a === b || a === '' || b === '') return false;
+  const x = Number(a), y = Number(b);
+  return Number.isFinite(x) && Number.isFinite(y) && x === y;
+};
+
+/**
  * The attributes of an element, as sorted `qname=value` strings. Namespace declarations are
  * dropped: which declarations a root carries is CR-001's subject and has its own tests, and
  * `mc:Ignorable` is compared as an ordinary attribute value (it names prefixes, so it is compared
@@ -56,18 +74,48 @@ const preservesSpace = (element, inherited) => {
 };
 
 /**
+ * Elements whose children have no order, so a reordering is not a difference (CR-004 phase B).
+ *
+ * The general rule is the opposite - element order IS compared, because the generated declarations
+ * promise schema order (compiler CR-007) - but that premise holds only for `xsd:sequence`. These
+ * two are `xsd:all` in docx4j's schemas (`opc-coreProperties.xsd`, and `Properties` in
+ * `shared-documentPropertiesExtended.xsd`), where every order is equally valid. Jsonix has no
+ * representation for an unordered model, so the compiler flattens the members into an ordered
+ * property list and the marshaller writes that order; no order it could write would match the
+ * corpus, because Word, Excel and PowerPoint each write `docProps/app.xml` differently (Word puts
+ * `Application` after `Characters`, Excel first, PowerPoint third). There is nothing to fix in the
+ * schema or the facade, which is why this is a canonicalisation rule and not a bug.
+ *
+ * Deliberately two QNames and not a category: `docProps/custom.xml` is an `xsd:sequence` of
+ * repeated `property` elements, where order is meaningful, and must never be added here.
+ */
+const ORDER_FREE = new Set([
+  '{http://schemas.openxmlformats.org/package/2006/metadata/core-properties}coreProperties',
+  '{http://schemas.openxmlformats.org/officeDocument/2006/extended-properties}Properties',
+]);
+
+/**
  * A canonical string for an element tree: one line per node, indented by depth, with the element's
  * QName, its sorted attributes, and its text. Element ORDER is preserved and therefore compared -
- * the declarations promise schema order (compiler CR-007), so a reordering is a real difference.
+ * the declarations promise schema order (compiler CR-007), so a reordering is a real difference -
+ * except under an `ORDER_FREE` element, where the children's whole subtrees are sorted.
+ *
+ * Sorting subtrees rather than lines is what keeps that exception narrow: a child keeps its own
+ * descendants and attributes, so a value moved between two differently named siblings still shows
+ * as a difference. What the exception does hide, and all it hides, is a reordering of those
+ * children.
  */
 export function canonicalise(node, { preserve = false, depth = 0, lines = [], path = '' } = {}) {
   const here = `${path}/${qname(node)}`;
   lines.push(`${'  '.repeat(depth)}${qname(node)} ${attributesOf(node).join(' ')}`.trimEnd());
   const space = preservesSpace(node, preserve);
+  const orderFree = ORDER_FREE.has(qname(node));
+  const blocks = [];
   for (let i = 0; i < node.childNodes.length; i++) {
     const child = node.childNodes[i];
     if (child.nodeType === 1) {
-      canonicalise(child, { preserve: space, depth: depth + 1, lines, path: here });
+      if (orderFree) blocks.push(canonicalise(child, { preserve: space, depth: depth + 1, path: here }));
+      else canonicalise(child, { preserve: space, depth: depth + 1, lines, path: here });
     } else if (child.nodeType === 3 || child.nodeType === 4) {
       // Whitespace-only text between elements is formatting, not content, unless xml:space says so.
       const text = space ? child.data : child.data.trim();
@@ -75,6 +123,7 @@ export function canonicalise(node, { preserve = false, depth = 0, lines = [], pa
     }
     // Comments and processing instructions are not part of the model and are not compared.
   }
+  if (orderFree) for (const block of blocks.sort((a, b) => (a.join('\n') < b.join('\n') ? -1 : 1))) lines.push(...block);
   return lines;
 }
 
@@ -92,11 +141,42 @@ export function canonicaliseString(xml) {
  * Compare two parts canonically. Returns `{ equal }`, and on a difference the line number and the
  * two lines, plus the element counts, so a failure names what moved rather than only that it did.
  */
+/** Two canonical lines differing only in the lexical form of numeric attribute values. */
+export const sameLine = (a, b) => {
+  if (a === b) return true;
+  if (a === undefined || b === undefined) return false;
+  const values = (line) => [...line.matchAll(/="((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]);
+  const [x, y] = [values(a), values(b)];
+  if (x.length !== y.length || x.length === 0) return false;
+  // The line with every value blanked must match, so only the values may differ.
+  const blank = (line) => line.replace(/="(?:[^"\\]|\\.)*"/g, '=""');
+  if (blank(a) !== blank(b)) return false;
+  return x.every((value, i) => value === y[i] || sameNumber(value, y[i]));
+};
+
+/**
+ * Every differing line between two parts, not merely the first. The first-difference form was
+ * enough while a part had one finding; once findings are recorded by class (an attribute the model
+ * does not bind, say), stopping at the first would let a known difference mask an unknown one
+ * further down - the masking this test exists to prevent.
+ */
+export function differences(before, after) {
+  const a = canonicaliseString(before);
+  const b = canonicaliseString(after);
+  const out = [];
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (!sameLine(a[i], b[i])) {
+      out.push({ line: i + 1, before: a[i] ?? '(nothing: the part ends here)', after: b[i] ?? '(nothing: the part ends here)' });
+    }
+  }
+  return { differences: out, counts: { before: a.length, after: b.length } };
+}
+
 export function compareCanonically(before, after) {
   const a = canonicaliseString(before);
   const b = canonicaliseString(after);
   for (let i = 0; i < Math.max(a.length, b.length); i++) {
-    if (a[i] !== b[i]) {
+    if (!sameLine(a[i], b[i])) {
       return {
         equal: false, line: i + 1, before: a[i] ?? '(nothing: the part ends here)', after: b[i] ?? '(nothing: the part ends here)',
         counts: { before: a.length, after: b.length },

@@ -12,7 +12,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import { unmarshalString, marshalString } from '../dist/index.mjs';
-import { canonicaliseString, compareCanonically } from './lib/canonical.mjs';
+import { canonicaliseString, compareCanonically, differences, sameLine } from './lib/canonical.mjs';
 
 const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
 const root = fileURLToPath(new URL('./fixtures/fidelity/', import.meta.url));
@@ -40,6 +40,27 @@ const root = fileURLToPath(new URL('./fixtures/fidelity/', import.meta.url));
   differs('<p><t xml:space="preserve">a </t></p>', '<p><t xml:space="preserve">a</t></p>', 'preserved trailing space');
   differs('<p><t>text</t></p>', '<p><t/></p>', 'dropped text');
   differs('<p xmlns="urn:a"/>', '<p xmlns="urn:b"/>', 'a different namespace');
+
+  // CR-004 phase B: xs:all members have no order, and xsd:double has many spellings per value.
+  const CORE = 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties';
+  const APP = 'http://schemas.openxmlformats.org/officeDocument/2006/extended-properties';
+  same(`<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"><d:a>1</d:a><d:b>2</d:b></cp:coreProperties>`,
+    `<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"><d:b>2</d:b><d:a>1</d:a></cp:coreProperties>`,
+    'coreProperties is xsd:all: its children have no order');
+  same(`<Properties xmlns="${APP}"><a>1</a><b>2</b></Properties>`, `<Properties xmlns="${APP}"><b>2</b><a>1</a></Properties>`,
+    'extended Properties likewise');
+  differs(`<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"><d:a>1</d:a><d:b>2</d:b></cp:coreProperties>`,
+    `<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"><d:a>2</d:a><d:b>1</d:b></cp:coreProperties>`,
+    'and a value swapped between two of them is still a difference: subtrees are sorted, not lines');
+  differs(`<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"><d:a>1</d:a></cp:coreProperties>`,
+    `<cp:coreProperties xmlns:cp="${CORE}" xmlns:d="urn:d"/>`, 'nor does the exception hide a dropped child');
+  differs('<p><a/><b/></p>', '<p><b/><a/></p>', 'and it reaches only those two elements');
+
+  same('<p v="1E-4"/>', '<p v="0.0001"/>', 'the same xsd:double written differently');
+  same('<p v="46285.360326851849"/>', '<p v="46285.36032685185"/>', 'and at the precision Office writes');
+  differs('<p v="1E-4"/>', '<p v="1E-3"/>', 'a different number is a difference');
+  differs('<p v="1"/>', '<p v="1x"/>', 'and a value that is not a number is compared as text');
+  differs('<p v="1" w="2"/>', '<p v="1"/>', 'a dropped attribute is not hidden by the numeric rule');
 
   // The line numbers and counts a failure reports must point at the difference.
   const report = compareCanonically('<p><a/><b/></p>', '<p><a/></p>');
@@ -79,6 +100,44 @@ function takeChoice(xml, understood) {
   return { xml: new XMLSerializer().serializeToString(doc), count: alternates.length };
 }
 
+// ---------------------------------------------------------------- reading a part
+//
+// Fixtures are the archive's bytes, so a part is read by its own encoding rather than assumed to
+// be UTF-8: Excel writes customXml/item1.xml of a Power Query workbook as UTF-16 LE with a BOM.
+// Read as UTF-8 it arrives as mojibake and the parser fails, which would look like a model defect.
+function readPart(file) {
+  const bytes = readFileSync(file);
+  if (bytes[0] === 0xff && bytes[1] === 0xfe) return new TextDecoder('utf-16le').decode(bytes);
+  if (bytes[0] === 0xfe && bytes[1] === 0xff) return new TextDecoder('utf-16be').decode(bytes);
+  return bytes.toString('utf8').replace(/^\uFEFF/, '');
+}
+
+// Roots docx4j deliberately does not bind, so the model cannot type them and the facade keeps such
+// a part as DOM (`unmarshalPackage` catches exactly this and passes the part through unchanged).
+// Each names where that decision is recorded. They are checked the opposite way round from
+// everything else: the root must still be unknown, so if docx4j ever binds one this fails and the
+// entry has to go - the same insistence as KNOWN, for a decision rather than a defect
+// (core-ts CR-001 section 19).
+const UNMODELLED = new Map([
+  ['{http://schemas.microsoft.com/office/2020/mipLabelMetadata}labelList',
+    'a sensitivity label; docx4j has no schema for the namespace and no content type for the part'],
+  ['{http://schemas.microsoft.com/office/powerpoint/2018/8/main}authorLst',
+    "PowerPoint's 2018 comment authors; docx4j ContentTypes.java: \"not bound, a DefaultXmlPart\""],
+  ['{http://schemas.microsoft.com/office/powerpoint/2018/8/main}cmLst',
+    'PowerPoint\'s 2018 modern comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2018/threadedcomments}personList',
+    'the persons of Excel\'s threaded comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2018/threadedcomments}ThreadedComments',
+    'Excel\'s threaded comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+  ['{http://schemas.microsoft.com/DataMashup}DataMashup',
+    "a Power Query blob (base64 in UTF-16), modelled by nobody"],
+]);
+
+const rootQNameOf = (xml) => {
+  const root = new DOMParser().parseFromString(xml, 'text/xml').documentElement;
+  return root.namespaceURI ? `{${root.namespaceURI}}${root.localName}` : root.localName;
+};
+
 // ---------------------------------------------------------------- the fixtures
 const parts = [];
 const walk = (dir) => {
@@ -116,22 +175,90 @@ const RESOLVED = new Map([
  * entry gets removed when someone fixes it. An expectations file that quietly absorbs whatever it
  * finds would defeat the test.
  */
+/**
+ * Attributes the model does not bind, so they are dropped from every element that carries them
+ * (CR-004 phase B). Recorded by ATTRIBUTE rather than by part, because that is the shape of the
+ * finding: one missing declaration costs the same attribute on 21 parts, and 21 entries saying the
+ * same thing would rot separately.
+ *
+ * Kept honest the same way `KNOWN` is: an entry never observed during a run fails at the end, so a
+ * declaration arriving upstream forces the entry out rather than passing unnoticed.
+ */
+const KNOWN_MISSING_ATTRIBUTES = new Map([
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2014/revision}uid',
+    'xr:uid is declared on CT_Worksheet alone, so it survives on a worksheet root and is dropped from '
+    + 'autoFilter, hyperlink, table, pivotCacheDefinition, pivotTableDefinition and comment. [plutext/docx4j]'],
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid',
+    'xr2:uid on workbookView: the loss docx4j has logged for xlsx4j, seen on every workbook here. [plutext/docx4j]'],
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2016/revision3}uid',
+    'xr3:uid on tableColumn; docx4j binds no schema for the 2016/revision3 namespace. [plutext/docx4j]'],
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2017/revision16}uid',
+    'xr16:uid on connection; docx4j binds no schema for the 2017/revision16 namespace. [plutext/docx4j]'],
+  ['Version',
+    'Version on b:Sources: CT_Sources in shared-bibliography.xsd declares SelectedStyle, StyleName and '
+    + 'URI only, and Word writes Version="6". [plutext/docx4j]'],
+]);
+
+const seenMissing = new Set();
+
+/**
+ * The attributes of `KNOWN_MISSING_ATTRIBUTES` that account for the whole of a differing line, or
+ * null if anything else differs too. Striking them from Office's line and comparing what is left
+ * makes the rules compose - a line may lose an xr:uid AND respell an xsd:double - while keeping the
+ * classification honest: a line that loses a recorded attribute and something else is not
+ * explained, and fails. This is the code most able to hide a real loss, so it is checked below.
+ */
+export function explainedByMissingAttributes(office, ours) {
+  const known = droppedAttributes(office, ours).filter((a) => KNOWN_MISSING_ATTRIBUTES.has(a));
+  if (known.length === 0) return null;
+  // Rebuild Office's line without the recorded attributes and compare what is left, structurally
+  // rather than by pattern: an attribute name here is a QName in braces, which a regexp would have
+  // to escape, and getting that wrong would silently explain everything.
+  const head = (line) => line.slice(0, line.length - attributeTokens(line).join(' ').length).trimEnd();
+  const remainder = `${head(office)} ${attributeTokens(office)
+    .filter((token) => !known.includes(token.slice(0, token.indexOf('='))))
+    .join(' ')}`.trimEnd();
+  return sameLine(remainder, ours) ? known : null;
+}
+
+/** The attributes a canonical line has that its counterpart does not. */
+const attributeTokens = (line) => (line ?? '').match(/(?:\{[^}]*\})?[\w:.-]+="(?:[^"\\]|\\.)*"/g) ?? [];
+
+const droppedAttributes = (office, ours) => {
+  const theirs = new Set(attributeTokens(ours));
+  return attributeTokens(office).filter((a) => !theirs.has(a)).map((a) => a.slice(0, a.indexOf('=')));
+};
+
+{
+  // The classifier that decides a difference is a recorded one. Over-permissive here means a real
+  // loss reported as known, which is the failure mode this whole test exists to prevent.
+  const XR = '{http://schemas.microsoft.com/office/spreadsheetml/2014/revision}uid';
+  const line = (attrs) => `  {ns}table name="T" ${attrs}`.trimEnd();
+  assert.deepEqual(explainedByMissingAttributes(line(`${XR}="{A}" ref="A1"`), line('ref="A1"')), [XR],
+    'a line losing only a recorded attribute is explained');
+  assert.equal(explainedByMissingAttributes(line(`${XR}="{A}" ref="A1"`), line('ref="A2"')), null,
+    'a line losing a recorded attribute AND changing another value is NOT explained');
+  assert.equal(explainedByMissingAttributes(line(`${XR}="{A}" ref="A1" displayName="D"`), line('ref="A1"')), null,
+    'nor one that also drops an unrecorded attribute');
+  assert.equal(explainedByMissingAttributes(line('ref="A1" displayName="D"'), line('ref="A1"')), null,
+    'an unrecorded attribute alone is never explained');
+  assert.deepEqual(explainedByMissingAttributes(line(`${XR}="{A}" v="1E-4"`), line('v="0.0001"')), [XR],
+    'the rules compose: a recorded loss and an xsd:double respelling together');
+
+  console.log('fidelity: classifier self-checks OK');
+}
+
 const KNOWN = new Map([
-  ['cr022-checkbox.xlsx/xl/workbook.xml', {
-    why: 'xr2:uid on workbookView is not in the model; docx4j has logged it as an xlsx4j CR of its own.',
-    owner: 'plutext/docx4j (xlsx4j)',
-    before: '{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid="{00000000-000D-0000-FFFF-FFFF00000000}"',
-    after: '(absent)',
-  }],
 ]);
 
 const failures = [];
 const known = [];
+const notModelled = [];
 let checked = 0;
 
 for (const file of parts) {
   const name = path.relative(root, file).split(path.sep).join('/');
-  const source = readFileSync(file, 'utf8');
+  const source = readPart(file);
   const cases = [[name, source]];
   const resolve = RESOLVED.get(name);
   if (resolve) {
@@ -139,6 +266,14 @@ for (const file of parts) {
     assert.ok(count > 0, `${name}: no mc:AlternateContent to resolve; the fixture or the list is stale`);
     assert.ok(canonicaliseString(xml).length > 0);
     cases.push([`${name} [mc:Choice ${resolve.join(' ')} taken]`, xml]);
+  }
+
+  const unmodelled = UNMODELLED.get(rootQNameOf(source));
+  if (unmodelled) {
+    notModelled.push(`${name}: ${unmodelled}`);
+    await assert.rejects(unmarshalString(source), /not known in this context/,
+      `${name} is recorded as unmodelled, but the model now knows its root: remove the entry`);
+    continue;
   }
 
   for (const [label, xml] of cases) {
@@ -156,7 +291,17 @@ for (const file of parts) {
         + (expectedThrow ? `\n    (KNOWN expects a different throw here: ${expectedThrow})` : ''));
       continue;
     }
-    const report = compareCanonically(xml, out);
+    const all = differences(xml, out);
+    // Every differing line is classified, not only the first: a line that differs solely by an
+    // attribute the model is known not to bind is that finding, recorded once per attribute; the
+    // rest are failures. Stopping at the first would let a recorded loss mask an unrecorded one.
+    const unexplained = [];
+    for (const difference of all.differences) {
+      const explained = explainedByMissingAttributes(difference.before, difference.after);
+      if (explained) for (const a of explained) seenMissing.add(a);
+      else unexplained.push(difference);
+    }
+    const report = { ...compareCanonically(xml, out), ...(unexplained[0] ?? {}), equal: unexplained.length === 0 };
     const expected = KNOWN.get(label);
     if (report.equal) {
       // A known difference that has gone: the entry is stale and must be removed, or a canonicalisation
@@ -180,7 +325,14 @@ for (const file of parts) {
   }
 }
 
+for (const attribute of seenMissing) console.log(`fidelity: not bound, so dropped: ${attribute}\n  ${KNOWN_MISSING_ATTRIBUTES.get(attribute)}`);
+for (const [attribute, why] of KNOWN_MISSING_ATTRIBUTES) {
+  if (!seenMissing.has(attribute)) failures.push(`${attribute}\n    is recorded as not bound, but no part loses it any more`
+    + `\n    (${why})\n    Remove the entry, and check the attribute now round-trips.`);
+}
 for (const entry of known) console.log(`fidelity: known difference, ${entry}`);
+if (notModelled.length) console.log(`fidelity: ${notModelled.length} parts are not modelled by design and stay DOM:\n`
+  + notModelled.map((e) => `  ${e}`).join('\n'));
 
 if (failures.length) {
   console.error(`\nfidelity: ${failures.length} of ${checked} checks lost something in a round trip:\n`);
