@@ -245,9 +245,15 @@ with the draft schema changes.
 Excel's `persons` and threaded comments, and a Power Query `DataMashup` blob. docx4j's
 `ContentTypes.java` says of each "not bound, a `DefaultXmlPart`", and `unmarshalPackage` here
 already keeps such a part as DOM, so the throw was the harness asking a question the model never
-claimed to answer. They are now listed in `UNMODELLED` with that citation and checked the opposite
+claimed to answer. They are now listed in `UNMODELLED` and checked the opposite
 way round: **the root must still be unknown**, so if docx4j ever binds one the entry fails and has
-to go.
+to go. Each cites the docx4j `ContentTypes` **constant name** rather than its comment, at that
+session's request: the names are the interface it keeps stable, the comments get reworded.
+
+docx4j confirmed both losses of section 9.2 independently, on its own round trip with every part
+forced to unmarshal - the same nine `xr*:uid` in `loadAndSave.xlsx` with one surviving, and
+`b:Sources/@Version` - and is taking them as the "one small CR" its CR-022 section 20 left open,
+with the two attribute-only schema files (2016/revision3, 2017/revision16) the drafts call for.
 
 The `DataMashup` part also found a bug in the harness rather than the model: it is UTF-16 LE with a
 BOM, and fixtures were read as UTF-8, so it arrived as mojibake. Parts are now read by their own

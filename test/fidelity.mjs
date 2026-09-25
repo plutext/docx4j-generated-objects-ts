@@ -114,21 +114,22 @@ function readPart(file) {
 
 // Roots docx4j deliberately does not bind, so the model cannot type them and the facade keeps such
 // a part as DOM (`unmarshalPackage` catches exactly this and passes the part through unchanged).
-// Each names where that decision is recorded. They are checked the opposite way round from
+// Each names the docx4j ContentTypes constant that records the decision - the constant name rather
+// than its comment, since docx4j keeps the names stable and rewords the comments. They are checked the opposite way round from
 // everything else: the root must still be unknown, so if docx4j ever binds one this fails and the
 // entry has to go - the same insistence as KNOWN, for a decision rather than a defect
 // (core-ts CR-001 section 19).
 const UNMODELLED = new Map([
   ['{http://schemas.microsoft.com/office/2020/mipLabelMetadata}labelList',
-    'a sensitivity label; docx4j has no schema for the namespace and no content type for the part'],
+    'a sensitivity label; docx4j binds no schema for the namespace and has no ContentTypes constant for the part'],
   ['{http://schemas.microsoft.com/office/powerpoint/2018/8/main}authorLst',
-    "PowerPoint's 2018 comment authors; docx4j ContentTypes.java: \"not bound, a DefaultXmlPart\""],
+    "PowerPoint's 2018 comment authors; docx4j ContentTypes.PRESENTATIONML_MODERN_COMMENT_AUTHORS, not bound (a DefaultXmlPart)"],
   ['{http://schemas.microsoft.com/office/powerpoint/2018/8/main}cmLst',
-    'PowerPoint\'s 2018 modern comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+    "PowerPoint's 2018 modern comments; docx4j ContentTypes.PRESENTATIONML_MODERN_COMMENTS, not bound (a DefaultXmlPart)"],
   ['{http://schemas.microsoft.com/office/spreadsheetml/2018/threadedcomments}personList',
-    'the persons of Excel\'s threaded comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+    "the persons of Excel's threaded comments; docx4j ContentTypes.SPREADSHEETML_PERSONS, not bound (a DefaultXmlPart)"],
   ['{http://schemas.microsoft.com/office/spreadsheetml/2018/threadedcomments}ThreadedComments',
-    'Excel\'s threaded comments; docx4j ContentTypes.java: "not bound, a DefaultXmlPart"'],
+    "Excel's threaded comments; docx4j ContentTypes.SPREADSHEETML_THREADED_COMMENTS, not bound (a DefaultXmlPart)"],
   ['{http://schemas.microsoft.com/DataMashup}DataMashup',
     "a Power Query blob (base64 in UTF-16), modelled by nobody"],
 ]);
