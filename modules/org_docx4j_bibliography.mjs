@@ -256,6 +256,12 @@ export const org_docx4j_bibliography = {
             localPart: 'URI'
           },
           type: 'attribute'
+        }, {
+          name: 'version',
+          attributeName: {
+            localPart: 'Version'
+          },
+          type: 'attribute'
         }]
     }, {
       type: 'enumInfo',

@@ -256,6 +256,12 @@ var org_docx4j_bibliography_Module_Factory = function () {
               localPart: 'URI'
             },
             type: 'attribute'
+          }, {
+            name: 'version',
+            attributeName: {
+              localPart: 'Version'
+            },
+            type: 'attribute'
           }]
       }, {
         type: 'enumInfo',

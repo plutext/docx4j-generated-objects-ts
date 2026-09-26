@@ -63,6 +63,7 @@ export interface CTSources {
   selectedStyle?: string;
   styleName?: string;
   uri?: string;
+  version?: string;
 }
 
 export type STSourceType = 'ArticleInAPeriodical' | 'Book' | 'BookSection' | 'JournalArticle' | 'ConferenceProceedings' | 'Report' | 'SoundRecording' | 'Performance' | 'Art' | 'DocumentFromInternetSite' | 'InternetSite' | 'Film' | 'Interview' | 'Patent' | 'ElectronicSource' | 'Case' | 'Misc';

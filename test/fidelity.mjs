@@ -196,15 +196,6 @@ const RESOLVED = new Map([
  * declaration arriving upstream forces the entry out rather than passing unnoticed.
  */
 const KNOWN_MISSING_ATTRIBUTES = new Map([
-  ['{http://schemas.microsoft.com/office/spreadsheetml/2014/revision}uid',
-    'xr:uid is declared on CT_Worksheet alone, so it survives on a worksheet root and is dropped from '
-    + 'autoFilter, hyperlink, table, pivotCacheDefinition, pivotTableDefinition and comment. [plutext/docx4j]'],
-  ['{http://schemas.microsoft.com/office/spreadsheetml/2015/revision2}uid',
-    'xr2:uid on workbookView: the loss docx4j has logged for xlsx4j, seen on every workbook here. [plutext/docx4j]'],
-  ['{http://schemas.microsoft.com/office/spreadsheetml/2016/revision3}uid',
-    'xr3:uid on tableColumn; docx4j binds no schema for the 2016/revision3 namespace. [plutext/docx4j]'],
-  ['{http://schemas.microsoft.com/office/spreadsheetml/2017/revision16}uid',
-    'xr16:uid on connection; docx4j binds no schema for the 2017/revision16 namespace. [plutext/docx4j]'],
   ['{http://schemas.microsoft.com/office/drawing/2010/main}legacySpreadsheetColorIndex',
     'a14:legacySpreadsheetColorIndex on a:srgbClr inside a14:hiddenFill: CT_SRgbColor has no anyAttribute, '
     + 'so the attribute goes once the a14 Choice is taken and the content is typed. Unresolved it survives, '
@@ -216,9 +207,6 @@ const KNOWN_MISSING_ATTRIBUTES = new Map([
     + 'keeping it while dropping the attribute would leave a reader told to ignore a prefix that the '
     + 'root does not declare, and Office repairs a file like that. Whoever fixes the attribute should '
     + 'take this with it. [plutext/docx4j]'],
-  ['Version',
-    'Version on b:Sources: CT_Sources in shared-bibliography.xsd declares SelectedStyle, StyleName and '
-    + 'URI only, and Word writes Version="6". [plutext/docx4j]'],
 ]);
 
 const seenMissing = new Set();
@@ -254,7 +242,8 @@ const droppedAttributes = (office, ours) => {
 {
   // The classifier that decides a difference is a recorded one. Over-permissive here means a real
   // loss reported as known, which is the failure mode this whole test exists to prevent.
-  const XR = '{http://schemas.microsoft.com/office/spreadsheetml/2014/revision}uid';
+  // Any attribute actually in the table; this one outlived docx4j CR-027, which closed the uid family.
+  const XR = '{http://schemas.microsoft.com/office/drawing/2010/main}legacySpreadsheetColorIndex';
   const line = (attrs) => `  {ns}table name="T" ${attrs}`.trimEnd();
   assert.deepEqual(explainedByMissingAttributes(line(`${XR}="{A}" ref="A1"`), line('ref="A1"')), [XR],
     'a line losing only a recorded attribute is explained');

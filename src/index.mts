@@ -169,6 +169,7 @@ export const NAMESPACE_PREFIXES: Readonly<Record<string, string>> = Object.freez
   'http://opendope.org/components': 'odi',
   'http://opendope.org/questions': 'odq',
   'http://opendope.org/answers': 'oda',
+  'http://schemas.microsoft.com/office/spreadsheetml/2018/calcfeatures': 'xcalcf',
   'http://opendope.org/SmartArt/DataHierarchy': 'odgm',
 });
 
@@ -264,7 +265,7 @@ let builtContext: Jsonix.Context | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
- * loaded lazily; 103 modules are several megabytes). Parent pointers are on by default, as in
+ * loaded lazily; 104 modules are several megabytes). Parent pointers are on by default, as in
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
  * change that or anything else.
  */

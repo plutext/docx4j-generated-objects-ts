@@ -44,6 +44,7 @@ export interface CTAutoFilter {
   sortState?: CTSortState;
   extLst?: CTExtensionList;
   ref?: string;
+  uid?: string;
 }
 
 export interface CTAutoSortScope {
@@ -69,6 +70,7 @@ export interface CTBookView {
   windowWidth?: number;
   xWindow?: number;
   yWindow?: number;
+  uid?: string;
 }
 
 export interface CTBoolean {
@@ -349,6 +351,7 @@ export interface CTCellStyle {
   iLevel?: number;
   name?: string;
   xfId: number;
+  uid?: string;
 }
 
 export interface CTCellStyleXfs {
@@ -548,6 +551,7 @@ export interface CTComment {
   guid?: string;
   ref: string;
   shapeId?: number;
+  uid?: string;
 }
 
 export interface CTCommentList {
@@ -637,6 +641,7 @@ export interface CTConnection {
   singleSignOnId?: string;
   sourceFile?: string;
   type?: number;
+  uid?: string;
 }
 
 export interface CTConnections {
@@ -916,6 +921,7 @@ export interface CTDataValidation {
   showInputMessage?: boolean;
   sqref: string[];
   type?: STDataValidationType;
+  uid?: string;
 }
 
 export interface CTDataValidations {
@@ -1485,6 +1491,7 @@ export interface CTHyperlink {
   location?: string;
   ref: string;
   tooltip?: string;
+  uid?: string;
   id?: string;
 }
 
@@ -2286,6 +2293,7 @@ export interface CTPivotCacheDefinition {
   supportSubquery?: boolean;
   tupleCacheQ?: boolean;
   upgradeOnRefresh?: boolean;
+  uid?: string;
   ignorable?: string;
   id?: string;
 }
@@ -2537,6 +2545,7 @@ export interface CTPivotTableDefinition {
   useAutoFormatting?: boolean;
   vacatedStyle?: string;
   visualTotals?: boolean;
+  uid?: string;
   ignorable?: string;
 }
 
@@ -3307,6 +3316,7 @@ export interface CTTable {
   totalsRowCount?: number;
   totalsRowDxfId?: number;
   totalsRowShown?: boolean;
+  uid?: string;
   ignorable?: string;
 }
 
@@ -3329,6 +3339,7 @@ export interface CTTableColumn {
   totalsRowFunction?: STTotalsRowFunction;
   totalsRowLabel?: string;
   uniqueName?: string;
+  uid?: string;
 }
 
 export interface CTTableColumns {
@@ -3371,6 +3382,7 @@ export interface CTTableStyle {
   name: string;
   pivot?: boolean;
   table?: boolean;
+  uid?: string;
 }
 
 export interface CTTableStyleElement {

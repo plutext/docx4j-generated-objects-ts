@@ -112,7 +112,7 @@ that a regeneration's declarations compile; `lib` includes `dom` because the run
   `unmarshalPackage` / `marshalPackage` handle flat OPC packages (Office JS `getOoxml()`): parts are
   `xsd:any processContents="skip"`, hence DOM by the schema, and are converted to typed elements
   where the model knows the root element (and back to DOM on marshal, without modifying the input).
-  `src/modules.mts` is the registry of the 103 mappings, imported by literal specifiers so a
+  `src/modules.mts` is the registry of the 104 mappings, imported by literal specifiers so a
   bundler can see them (CR-005); it is maintained by hand when modules appear or disappear
   (`generate.sh` does not write it), and `MODULE_NAMES` and `ModuleName` derive from it, so it is
   the only list. The smoke fails on a stale registry (a mapping references a missing dependency).

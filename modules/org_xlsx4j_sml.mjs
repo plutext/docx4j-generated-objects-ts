@@ -40,6 +40,14 @@ export const org_xlsx4j_sml = {
             localPart: 'ref'
           },
           type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTAutoSortScope',
@@ -153,6 +161,14 @@ export const org_xlsx4j_sml = {
           typeInfo: 'Int',
           attributeName: {
             localPart: 'yWindow'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2015\/revision2'
           },
           type: 'attribute'
         }]
@@ -1264,6 +1280,14 @@ export const org_xlsx4j_sml = {
             localPart: 'xfId'
           },
           type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTCellStyleXfs',
@@ -1875,6 +1899,14 @@ export const org_xlsx4j_sml = {
             localPart: 'shapeId'
           },
           type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTCommentList',
@@ -2258,6 +2290,14 @@ export const org_xlsx4j_sml = {
           typeInfo: 'UnsignedInt',
           attributeName: {
             localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2017\/revision16'
           },
           type: 'attribute'
         }]
@@ -3443,6 +3483,14 @@ export const org_xlsx4j_sml = {
           defaultValue: 'none',
           attributeName: {
             localPart: 'type'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
           },
           type: 'attribute'
         }]
@@ -5224,6 +5272,14 @@ export const org_xlsx4j_sml = {
           name: 'tooltip',
           attributeName: {
             localPart: 'tooltip'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
           },
           type: 'attribute'
         }, {
@@ -8362,6 +8418,14 @@ export const org_xlsx4j_sml = {
           },
           type: 'attribute'
         }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+          },
+          type: 'attribute'
+        }, {
           name: 'ignorable',
           attributeName: {
             localPart: 'Ignorable',
@@ -9780,6 +9844,14 @@ export const org_xlsx4j_sml = {
           defaultValue: true,
           attributeName: {
             localPart: 'visualTotals'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
           },
           type: 'attribute'
         }, {
@@ -13128,6 +13200,14 @@ export const org_xlsx4j_sml = {
           },
           type: 'attribute'
         }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2014\/revision'
+          },
+          type: 'attribute'
+        }, {
           name: 'ignorable',
           attributeName: {
             localPart: 'Ignorable',
@@ -13231,6 +13311,14 @@ export const org_xlsx4j_sml = {
             localPart: 'uniqueName'
           },
           type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2016\/revision3'
+          },
+          type: 'attribute'
         }]
     }, {
       localName: 'CTTableColumns',
@@ -13330,6 +13418,14 @@ export const org_xlsx4j_sml = {
           defaultValue: true,
           attributeName: {
             localPart: 'table'
+          },
+          type: 'attribute'
+        }, {
+          name: 'uid',
+          typeInfo: 'Token',
+          attributeName: {
+            localPart: 'uid',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/spreadsheetml\/2016\/revision9'
           },
           type: 'attribute'
         }]

@@ -205,7 +205,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 
 ## What is here
 
-- **The facade** (`src/index.mts`, built to `dist/`): `getContext()` builds one `Jsonix.Context` over all 103 modules,
+- **The facade** (`src/index.mts`, built to `dist/`): `getContext()` builds one `Jsonix.Context` over all 104 modules,
   lazily on first use, with `parentPointers: true`; `unmarshalString`, `marshalString`, `unmarshalNode`,
   `marshalNode`, `unwrap` and `deepCopy` are docx4j's `XmlUtils` names over it, with `deepCopyAs`
   for a copy typed as a base type (`w:pPrChange` holds a `PPrBase`, not a `PPr`) and
@@ -214,7 +214,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   asynchronous because the mappings load as ES modules; for a synchronous setup import the modules
   you need from `@docx4j/generated-objects-ts/modules/<module>` and build your own context.
 - **Bundling**: no bundler configuration is needed. The mappings are imported by literal specifiers
-  from a registry (`MODULES`), so a bundler sees exactly the 103 modules a context loads, rather
+  from a registry (`MODULES`), so a bundler sees exactly the 104 modules a context loads, rather
   than the template specifier earlier versions used - which Vite could not resolve without
   `dynamicImportVarsOptions` and esbuild expanded to a glob over every `.mjs` in `modules/`,
   including the `.el` and `.factory` siblings (a 3.5MB esbuild bundle against 2.0MB now). One
@@ -241,7 +241,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   declared beside the default declaration (Excel writes `mc:Ignorable="x xr10"` on slicer, slicer
   cache and timeline parts). A prefix neither table resolves is dropped from `mc:Ignorable`, with a
   warning, since Office repairs a file naming an undeclared prefix.
-- **103 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
+- **104 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.

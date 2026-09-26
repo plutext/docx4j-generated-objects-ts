@@ -113,6 +113,7 @@ import { org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2014_x11_main } 
 import { org_xlsx4j_schemas_microsoft_com_office_excel_2006_main } from '../modules/org_xlsx4j_schemas_microsoft_com_office_excel_2006_main.mjs';
 import { org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main } from '../modules/org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main.mjs';
 import { org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing } from '../modules/org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing.mjs';
+import { org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2018_calcfeatures } from '../modules/org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2018_calcfeatures.mjs';
 import { org_xlsx4j_sml } from '../modules/org_xlsx4j_sml.mjs';
 
 /** Every mapping module, by name, in MODULE_NAMES order. The context needs them all: they reference each other. */
@@ -219,5 +220,6 @@ export const MODULES = {
   org_xlsx4j_schemas_microsoft_com_office_excel_2006_main,
   org_xlsx4j_schemas_microsoft_com_office_excel_2008_2_main,
   org_xlsx4j_schemas_microsoft_com_office_excel_x2010_spreadsheetDrawing,
+  org_xlsx4j_com_microsoft_schemas_office_spreadsheetml_x2018_calcfeatures,
   org_xlsx4j_sml,
 } as const;
