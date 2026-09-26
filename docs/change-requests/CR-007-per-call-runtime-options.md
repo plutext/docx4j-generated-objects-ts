@@ -87,14 +87,28 @@ This is not a reason to hurry the CR; it is a reason to do it properly when the 
 - `test/nodenext/consumer.mts` gains the new option types.
 - `test/fidelity.mjs` (section 4) once the callbacks exist.
 
-## 6. Open questions
+## 6. No callback is ever wired by default
+
+Nothing in the facade sets `onUnexpectedElement` or `onUnexpectedAttribute` of its own accord, and
+this is a rule rather than an omission, because **for at least one caller a drop is the mechanism
+and not a fault**. core-ts's `recordPPrChange` calls `deepCopyAsSync(pPr, 'org_docx4j_wml.PPrBase')`
+*because* the copy drops what `CT_PPrBase` does not declare - `w:rPr`, `w:sectPr`, `w:pPrChange` -
+so that no `xsi:type` is marshalled. A default callback would report three unexpected elements on
+every tracked paragraph-property change, every one of them intended. Reporting belongs to the
+caller who asked for it, per call.
+
+## 7. Open questions
 
 1. Should the fidelity test **fail** on any `onUnexpectedElement` that its diff did not also find,
    or only report? Failing is stricter and likely right, on the argument of CR-004 section 7.2, but
    it cannot be decided until the callback has been run over the corpus once.
-2. `parentPointers` as a per-call option: the facade sets it true when building the context
-   (docx4j's model has parents), and a caller turning it off for one unmarshal would get objects
-   whose `PARENT` is absent where the declarations say it may be present. Worth exposing, or worth
-   refusing? Refusing is a facade decision, not a runtime one.
-3. Does `deepCopyAs` want the same treatment? It marshals and unmarshals internally; a caller
-   cannot reach those calls today, and it is not obvious anyone wants to.
+
+### Answered by core-ts, 2026-09-27
+
+2. **`parentPointers` as a per-call option: refused at the facade.** Its content API is built on
+   `PARENT` throughout - `linkParents` on everything inserted, the paragraph text model walking up
+   through it - so an unmarshal without parents hands back objects that API cannot use and whose
+   declarations would be lying. A caller who genuinely wants that builds a context, and should have
+   to think about it.
+3. **`deepCopyAs` and `deepCopyAsSync` take the options too**, for the caller who wants them - with
+   section 6's rule as the reason they must stay opt-in.
