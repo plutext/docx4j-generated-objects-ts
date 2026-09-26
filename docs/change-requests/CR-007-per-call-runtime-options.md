@@ -76,6 +76,8 @@ itself a finding about the canonicaliser.
 
 This is not a reason to hurry the CR; it is a reason to do it properly when the runtime ships.
 
+**Run, and they agree: CR-004 section 11.**
+
 ## 5. Tests
 
 - `test/smoke.mjs`: an `onUnexpectedElement` callback fires for an element the model does not

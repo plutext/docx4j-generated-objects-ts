@@ -341,3 +341,27 @@ able to see when its own diverges.
 The trial did find one thing worth keeping: the resolver in `test/fidelity.mjs` re-declared a
 namespace prefix onto a branch child that already declared it, which made three chart parts throw
 `Attribute xmlns:c14 redefined`. Fixed; the three parts in the resolved set never exercised it.
+
+## 11. The diff and the callbacks agree exactly (2026-09-27)
+
+CR-007 section 4 proposed running two instruments over the losses and requiring them to agree. That
+has now happened across two repositories, and they do.
+
+This test records seventeen attributes the model drops: `a14:legacySpreadsheetColorIndex`, the
+`mc:Ignorable` beside it, and `w:stylePaneFormatFilter`'s fifteen booleans. core-ts wired
+`@docx4j/jsonix` 3.4.0's callbacks over its own 467 parts of 51 fixtures and reports **seventeen
+distinct unexpected attributes - the same set**. Two instruments of different kinds, over two
+corpora of different sizes, converging on one list is the strongest evidence either has of not
+missing a class of loss.
+
+The agreement is exact for attributes only, and the reason is worth keeping: the callbacks see what
+the **unmarshaller** drops, so they miss anything lost on the way out, while the diff sees the whole
+round trip but has to infer the cause. Neither subsumes the other, which is why running both earns
+its cost.
+
+It also gave the 17.2.1 regeneration a second, independent measurement: core-ts's inventory fell
+from 26 distinct dropped attributes to 17 against a checkout carrying it, and the nine that vanished
+are exactly the `uid` family and `b:Sources/@Version` that docx4j CR-027 bound. Six of its Excel
+parts re-marshal about 48 bytes longer than under 0.2.0, for the same reason - a hash difference
+that is a fidelity improvement.
+
