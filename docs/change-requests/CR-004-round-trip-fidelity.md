@@ -301,14 +301,42 @@ prefix the root does not declare, which is what Office repairs a file over (CR-0
 CR-006 here, both concern the root's `mc:Ignorable`; this one is on a descendant). Whoever admits
 the attribute should admit this with it.
 
-**What this implies for the corpus, and what has not been done.** Twenty-four parts carry an
-`mc:AlternateContent` and only five are checked resolved, so the other nineteen are checked in
-their weaker form. Resolving all of them is not a mechanical change and is deliberately not done
-here: a trial run promoted `x14ac:absPath` out of a workbook's `mc:AlternateContent` and produced
-element-order differences that are an artifact of promoting a branch crudely rather than a finding
-about the model, and a real preprocessor's understood-prefix set is a consumer's decision, not this
-test's. Doing it properly means stating which prefixes are assumed understood and triaging each
-difference, which is a phase of its own.
+### 10.1 Three kinds of difference, and only one is ours (corrected 2026-09-27)
+
+The first draft of this section called the `x14ac:absPath` differences an artifact of promoting a
+branch crudely. That was wrong, and core-ts corrected it with a measurement this repository can
+reproduce: left alone, `absPath` is in the tree **typed** as `CTAbsolutePath` and survives the round
+trip; resolved, it is gone from the part entirely. It is bound *inside* the wrapper and not at the
+parent - `CT_Workbook` has no `absPath`, because the schema does not allow one there - so promoting
+it puts legal content in an illegal position and the unmarshaller skips it.
+
+So a difference in a resolved check is one of three kinds, and the triage rule matters more than
+the corpus:
+
+1. **The model binds the content only partly**, so resolving exposes the unbound remainder -
+   `a14:legacySpreadsheetColorIndex`. A finding about this package's model, to record against
+   whoever owns the schema.
+2. **The model binds the content only inside the wrapper**, so resolving loses it at the parent -
+   `absPath`. **Not** a finding about the model, which is right; it is a finding about a consumer
+   that resolves, and belongs in that consumer's record. core-ts has it as its CR-001 section 21.
+3. **Element order**, which is the promotion being crude and says nothing about either.
+
+Kind 2 will dominate the remaining nineteen, because `CT_Workbook` and `CT_Worksheet` have bound
+`mc:AlternateContent` since docx4j CR-021 and CR-022, so every Choice directly under one is in that
+class. A triage that cannot separate 2 from 1 mechanically would present this package's resolved
+check as a list of model defects that are mostly somebody else's.
+
+**So the nineteen wait for CR-007.** `onUnexpectedAttribute` reports kind 1 at the element carrying
+the attribute, and `onUnexpectedElement` reports kind 2 at the parent that would not accept it -
+different callbacks, so the separation is mechanical rather than a judgement. (Checked against the
+3.4.0 source rather than assumed: the unmarshaller reports any attribute a class info does not
+declare, suppressing only namespace declarations and `xsi:type`, and suppressing the report
+entirely when the type has an `anyAttribute` - in which case nothing is dropped anyway.) Building
+the comparison-based triage first would mean building the weaker instrument and then replacing it.
+
+The understood-prefix set, when that phase comes, is core-ts's `UNDERSTOOD_NAMESPACES`, copied with
+its provenance rather than imported: it encodes a consumer's judgement, and this package should be
+able to see when its own diverges.
 
 The trial did find one thing worth keeping: the resolver in `test/fidelity.mjs` re-declared a
 namespace prefix onto a branch child that already declared it, which made three chart parts throw
