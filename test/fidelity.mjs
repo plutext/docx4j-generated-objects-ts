@@ -195,6 +195,18 @@ const RESOLVED = new Map([
  * Kept honest the same way `KNOWN` is: an entry never observed during a run fails at the end, so a
  * declaration arriving upstream forces the entry out rather than passing unnoticed.
  */
+const W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+
+/**
+ * The fifteen booleans Word writes on `w:stylePaneFormatFilter` beside its `w:val`. One gap, so one
+ * reason, expanded to one entry per attribute: each must be seen for its entry to survive, so a fix
+ * that reaches only some of them still fails the rest.
+ */
+const STYLE_PANE_FILTER = ['allStyles', 'customStyles', 'latentStyles', 'stylesInUse', 'headingStyles',
+  'numberingStyles', 'tableStyles', 'directFormattingOnRuns', 'directFormattingOnParagraphs',
+  'directFormattingOnNumbering', 'directFormattingOnTables', 'clearFormatting', 'top3HeadingStyles',
+  'visibleStyles', 'alternateStyleNames'];
+
 const KNOWN_MISSING_ATTRIBUTES = new Map([
   ['{http://schemas.microsoft.com/office/drawing/2010/main}legacySpreadsheetColorIndex',
     'a14:legacySpreadsheetColorIndex on a:srgbClr inside a14:hiddenFill: CT_SRgbColor has no anyAttribute, '
@@ -207,6 +219,12 @@ const KNOWN_MISSING_ATTRIBUTES = new Map([
     + 'keeping it while dropping the attribute would leave a reader told to ignore a prefix that the '
     + 'root does not declare, and Office repairs a file like that. Whoever fixes the attribute should '
     + 'take this with it. [plutext/docx4j]'],
+  ...STYLE_PANE_FILTER.map((name) => [`{${W_NS}}${name}`,
+    'one of the fifteen booleans Word writes on w:stylePaneFormatFilter beside w:val: wml.xsd types '
+    + 'the element CT_ShortHexNumber, which declares w:val alone, so 16 attributes go in and 1 comes '
+    + 'out. They encode the same state as the hex val, which is presumably why it went unnoticed. '
+    + 'The 4th-edition transitional schema has a CT_StylePaneFilter with all sixteen. '
+    + 'Found by core-ts over its whole corpus with jsonix 3.4.0 callbacks; confirmed here. [plutext/docx4j]']),
 ]);
 
 const seenMissing = new Set();

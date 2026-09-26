@@ -55,8 +55,8 @@ There are four tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
-- `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **237 parts** Office 365
-  wrote - every XML part of twelve documents from docx4j's test resources, under
+- `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **256 parts** Office 365
+  wrote - every XML part of thirteen documents from docx4j's test resources, under
   `test/fixtures/fidelity/<document>/<part path>`, each directory with a `SOURCE.md` naming the file
   and commit - and compares canonically with `test/lib/canonical.mjs` (QNames not prefixes,
   attributes sorted, namespace declarations ignored, `1`/`true` and two spellings of one
