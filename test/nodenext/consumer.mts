@@ -15,6 +15,9 @@ export async function consume(xml: string): Promise<string> {
   const built: P = p([r('a', { bold: true })]).value;
   const same: P = el.p({ content: [] }).value;
   void getContext({ modules: modulesFor('org_docx4j_wml') });
+  // CR-007: per-call options, typed by the runtime's own interfaces.
+  void unmarshalString('<w:p/>', { onUnexpectedAttribute: (name) => void name.localPart });
+  void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
   void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow')];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }

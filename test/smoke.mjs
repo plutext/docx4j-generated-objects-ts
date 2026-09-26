@@ -122,6 +122,60 @@ const byLoader = await getContext({ modules: () => Promise.resolve(wmlOnly) });
 assert.notEqual(byLoader, full, 'modules may be a function, for a caller that loads them itself');
 resetContext();
 
+// CR-007: per-call options reach the runtime, and nothing is wired by default.
+{
+  const W_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const SML_ = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  const XR_ = 'http://schemas.microsoft.com/office/spreadsheetml/2014/revision';
+
+  // An attribute no type declares is dropped; the callback names it where it was dropped.
+  const dropped = [];
+  await unmarshalString(`<w:document xmlns:w="${W_}" xmlns:zz="urn:zz"><w:body><w:p zz:mine="1"/></w:body></w:document>`,
+    { onUnexpectedAttribute: (name) => dropped.push(`${name.namespaceURI}}${name.localPart}`) });
+  assert.deepEqual(dropped, ['urn:zz}mine'], 'onUnexpectedAttribute reports the dropped attribute');
+
+  // Nothing is reported when nothing is dropped, and a namespace declaration is not dropped content.
+  const quiet = [];
+  await unmarshalString(`<w:document xmlns:w="${W_}"><w:body><w:p/></w:body></w:document>`,
+    { onUnexpectedAttribute: (name) => quiet.push(name.localPart), onUnexpectedElement: (name) => quiet.push(name.localPart) });
+  assert.deepEqual(quiet, [], 'no callback fires for a part the model reads whole');
+
+  // An element the parent does not accept is reported at the parent (the kind-2 case of CR-004 section 10.1).
+  const elements = [];
+  await unmarshalString(`<w:document xmlns:w="${W_}"><w:body><w:p/></w:body><w:sectPr/></w:document>`,
+    { onUnexpectedElement: (name) => elements.push(name.localPart) });
+  assert.deepEqual(elements, ['sectPr'], 'onUnexpectedElement reports an element its parent does not accept');
+
+  // onElement records what a marshal wrote.
+  const written = [];
+  await marshalString(await unmarshalString(`<w:document xmlns:w="${W_}"><w:body><w:p><w:r><w:t>x</w:t></w:r></w:p></w:body></w:document>`),
+    { onElement: (element) => written.push(element.localName) });
+  assert.deepEqual(written.slice(0, 4), ['document', 'body', 'p', 'r'], 'onElement records the elements written');
+
+  // A per-call prefix table applies to this call only. It governs names that carry no prefix of
+  // their own: a QName unmarshalled from input keeps the prefix the input used, which is the
+  // runtime's documented behaviour and was true of the hand-rolled derivation this replaced. So the
+  // element here is built rather than parsed.
+  const parsed = await unmarshalString(`<w:document xmlns:w="${W_}"><w:body><w:p/></w:body></w:document>`);
+  const built = { name: { namespaceURI: W_, localPart: 'document' }, value: unwrap(parsed) };
+  const mine = await marshalString(built, { namespacePrefixes: { ...NAMESPACE_PREFIXES, [W_]: 'ww' } });
+  assert.match(mine, /^<ww:document /, 'the call sees its own table');
+  const next = await marshalString(built);
+  assert.match(next, /^<w:document /, 'and the shared context is unchanged by it');
+  assert.match(await marshalString(parsed), /^<w:document /, 'a parsed root keeps the prefix its input used');
+  const rels = await marshalString(await unmarshalString(`<Relationships xmlns="${RELS}"><Relationship Id="rId1" Type="http://x" Target="s.xml"/></Relationships>`),
+    { namespacePrefixes: { ...NAMESPACE_PREFIXES, [SML_]: 'sx' } });
+  assert.match(rels, /^<Relationships xmlns="/, "CR-001's per-root rule still applies over a caller's table");
+
+  // The facade sets no callback of its own: a drop is some callers' mechanism (CR-007 section 6).
+  const sheet = `<worksheet xmlns="${SML_}" xmlns:xr="${XR_}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="xr"><sheetData><row r="1"><c r="A1" xr:uid="{1}"/></row></sheetData></worksheet>`;
+  let fired = false;
+  await unmarshalString(sheet);                                    // no options: silent
+  await unmarshalString(sheet, { onUnexpectedAttribute: () => { fired = true; } });
+  assert.equal(fired, true, 'xr:uid on a cell is not bound, and is reported when asked for');
+  console.log('CR-007: per-call unmarshal and marshal options, and no default callback OK');
+}
+
 console.log('generated-objects-ts smoke: unmarshal, parent pointers, deepCopy, marshal, v:line order, flat OPC package round trip, namespace prefixes OK');
 
 // Element factories (compiler CR-010): docx4j's ObjectFactory names, TYPE_NAME on wrapped literals,

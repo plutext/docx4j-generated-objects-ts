@@ -1,6 +1,6 @@
 # CR-007: Per-call runtime options on the facade, and what unmarshalling dropped
 
-**Status:** Proposed 2026-09-27
+**Status:** Implemented 2026-09-27 (section 8 records two things implementing it corrected)
 **Depends on:** `@docx4j/jsonix` 3.4.0 (jsonix-CR-006, implemented there as `fc44f0c`, unreleased)
 **Requested by:** `plutext/docx4j-core-ts` CR-002 section 27 and its CR-006, relayed by the jsonix
 session 2026-09-27; and CR-004's fidelity test here, which is a second consumer (section 4)
@@ -111,4 +111,44 @@ caller who asked for it, per call.
    declarations would be lying. A caller who genuinely wants that builds a context, and should have
    to think about it.
 3. **`deepCopyAs` and `deepCopyAsSync` take the options too**, for the caller who wants them - with
-   section 6's rule as the reason they must stay opt-in.
+   section 6's rule as the reason they must stay opt-in. **Withdrawn on implementation: there is
+   nothing to pass them to.** See section 8.1.
+
+
+## 8. As implemented (2026-09-27)
+
+`@docx4j/jsonix` `^3.4.0`; the four entry points take an optional second argument, forwarded to
+`createUnmarshaller` / `createMarshaller`; `marshalToDocument` no longer derives a context by hand.
+Two things the implementation corrected.
+
+### 8.1 `deepCopyAs` cannot take these options: it does not marshal
+
+Open question 3 was answered "yes, and my use of it is the argument for section 6", on the premise
+that `deepCopyAs` "marshals and unmarshals internally". It does not. `deepCopy` is
+`Jsonix.Util.deepCopy`, a structural copy of the object graph (jsonix-CR-002), and `deepCopyAs`
+then deletes the properties the target type does not declare, reading the mapping model directly.
+No unmarshaller and no marshaller exist in that path, so there is no per-call option to forward and
+nothing was added.
+
+**Section 6's rule stands, and its justification changes.** The example given for it -
+`recordPPrChange` reporting three unexpected elements on every tracked change - cannot happen,
+because the callbacks are never reached from `deepCopyAs`. The rule is right for a plainer reason:
+the facade cannot know which drops a given caller intends, and a default callback would impose a
+diagnostic on every unmarshal that almost no caller reads. A drop being someone's mechanism is
+still the sharpest way to see why - it is simply a property of `deepCopyAs` rather than of the
+callbacks.
+
+### 8.2 A per-call table governs names that carry no prefix
+
+Section 3 recorded the jsonix session's caveat and the first test written here ignored it: a root
+unmarshalled from input keeps the prefix its input used, so marshalling a parsed `w:document` with
+a table saying `ww` still writes `w:document`. The test now builds the element instead, and asserts
+the parsed case keeps `w:` as the behaviour it is rather than the bug it looked like. This is
+unchanged from the hand-rolled derivation - the runtime's rule, not a regression - and the CR-001
+prefix tests passing untouched is the evidence that replacing the derivation changed nothing.
+
+### 8.3 What is not done
+
+The nineteen unresolved-only `mc:AlternateContent` parts of CR-004 section 10.1. The callbacks now
+exist to separate a finding about this model from a finding about a consumer that resolves, which
+was the blocker; the work itself is a phase of CR-004, not of this CR.

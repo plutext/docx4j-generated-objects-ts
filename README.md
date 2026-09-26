@@ -221,6 +221,16 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   obstacle remains and is the runtime's: bundled for Node, `@docx4j/jsonix` loses the
   `@xmldom/xmldom` it injects through its UMD wrapper and reaches for browser globals, so a Node
   bundle needs `globalThis.DOMParser` and `globalThis.XMLSerializer` set; a browser has them.
+- **Per-call options** (CR-007): `unmarshalString`, `unmarshalNode`, `marshalString` and
+  `marshalNode` each take an optional second argument, passed to the runtime for that call alone -
+  `onUnexpectedElement` and `onUnexpectedAttribute` to be told what the model dropped and where,
+  `onElement` to record what a marshal wrote, `namespacePrefixes` for one call's table. These are
+  the opposite of `getContext`'s options, which are read once when the context is built: nothing
+  here touches the shared context, and `resetContext()` is not involved. **No callback is set by
+  default and none should be**: for some callers a drop is the mechanism rather than a fault, so
+  reporting belongs to whoever asked for it. A caller's `namespacePrefixes` replaces the context's
+  table for that call, with the per-root rule applied over it; note that a root unmarshalled from
+  input keeps the prefix its input used, so a table governs names that carry none.
 - **A smaller context**: `getContext({ modules: modulesFor('org_docx4j_wml') })` builds a context
   over one root's modules and their closure - twelve modules for WordprocessingML, which reads a
   Word 365 `document.xml` - instead of all 103. `modulesFor` follows the type references in the

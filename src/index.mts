@@ -299,14 +299,22 @@ export function getContextSync(): Jsonix.Context {
   return builtContext;
 }
 
-/** docx4j XmlUtils.unmarshalString: parse XML into a typed element, e.g. unmarshalString<DocumentElement>(xml). */
-export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(xml: string): Promise<E> {
-  return (await getContext()).createUnmarshaller().unmarshalString<E>(xml);
+/**
+ * docx4j XmlUtils.unmarshalString: parse XML into a typed element, e.g. unmarshalString<DocumentElement>(xml).
+ *
+ * `options` are for this call only (CR-007): `onUnexpectedElement` and `onUnexpectedAttribute`
+ * report what the model dropped, at the point it was dropped. They are never set by default - see
+ * the note on `UnmarshallerOptions`.
+ */
+export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
+  xml: string, options?: Jsonix.UnmarshallerOptions,
+): Promise<E> {
+  return (await getContext()).createUnmarshaller(options).unmarshalString<E>(xml);
 }
 
 /** docx4j XmlUtils.marshaltoString: serialise an element to XML, with docx4j's prefixes and namespace declarations. */
-export async function marshalString(element: Jsonix.TypedNamedValue): Promise<string> {
-  return serialize(marshalToDocument(await getContext(), element));
+export async function marshalString(element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Promise<string> {
+  return serialize(marshalToDocument(await getContext(), element, options));
 }
 
 /** docx4j XmlUtils.unwrap: the value of an element. */
@@ -372,13 +380,15 @@ export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, 
 }
 
 /** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context. */
-export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(node: Node): Promise<E> {
-  return (await getContext()).createUnmarshaller().unmarshalDocument<E>(node);
+export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
+  node: Node, options?: Jsonix.UnmarshallerOptions,
+): Promise<E> {
+  return (await getContext()).createUnmarshaller(options).unmarshalDocument<E>(node);
 }
 
 /** docx4j XmlUtils.marshaltoW3CDomDocument: the element as a DOM element, with docx4j's prefixes and namespace declarations. */
-export async function marshalNode(element: Jsonix.TypedNamedValue): Promise<Element> {
-  return marshalToDocument(await getContext(), element).documentElement;
+export async function marshalNode(element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Promise<Element> {
+  return marshalToDocument(await getContext(), element, options).documentElement;
 }
 
 function isNode(value: unknown): value is Node {
@@ -391,8 +401,8 @@ function isNode(value: unknown): value is Node {
  * writes) and SpreadsheetML takes docx4j's requirePrefix prefix, since the runtime can bind only
  * one namespace to the default prefix.
  */
-function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedValue): Record<string, string> {
-  const table: Record<string, string> = { ...context.namespacePrefixes };
+function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedValue, base?: Record<string, string>): Record<string, string> {
+  const table: Record<string, string> = { ...(base ?? context.namespacePrefixes) };
   if (root.name.namespaceURI === RELATIONSHIPS_NS) {
     table[RELATIONSHIPS_NS] = '';
     if (table[SML_NS] === '') table[SML_NS] = 's';
@@ -403,14 +413,19 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
 /**
  * Marshals through the context with the root-specific table, then declares on the root only what
  * the tree uses (CR-001 section 3): the runtime declares every entry of the table on the root
- * element, used or not. The context is not modified: the marshaller sees the table through a
- * derived object, the runtime's `namespacePrefixes` field being the documented option (jsonix-CR-003
- * part 2, deferred to 3.3.0, is the runtime fix; when it lands this reduces to createMarshaller().marshalDocument).
+ * element, used or not.
+ *
+ * The context is not modified - the table and any other per-call option go to
+ * `createMarshaller(options)`, which derives a context of its own (CR-007; until
+ * `@docx4j/jsonix` 3.4.0 this package derived one by hand with `Object.create`). A caller's own
+ * `namespacePrefixes` replaces the context's as the base, and the per-root rule is then applied to
+ * it, since choosing a table per root is this package's decision rather than the runtime's.
+ * jsonix-CR-003 part 2, still deferred there, is what would retire `fixRootNamespaceDeclarations`.
  */
-function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue): Document {
-  const derived = Object.create(context, { namespacePrefixes: { value: namespacePrefixesFor(context, element) } }) as Jsonix.Context;
-  const doc = derived.createMarshaller().marshalDocument(element);
-  fixRootNamespaceDeclarations(doc.documentElement, namespacePrefixesFor(context, element));
+function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Document {
+  const table = namespacePrefixesFor(context, element, options?.namespacePrefixes);
+  const doc = context.createMarshaller({ ...options, namespacePrefixes: table }).marshalDocument(element);
+  fixRootNamespaceDeclarations(doc.documentElement, table);
   return doc;
 }
 
