@@ -92,7 +92,7 @@ function takeChoice(xml, understood) {
     // since the element that declared them is about to be dropped.
     const declarations = [...chosen.attributes].filter((a) => a.name === 'xmlns' || a.prefix === 'xmlns');
     for (const child of [...chosen.childNodes].filter((n) => n.nodeType === 1)) {
-      for (const d of declarations) child.setAttribute(d.name, d.value);
+      for (const d of declarations) if (!child.hasAttribute(d.name)) child.setAttribute(d.name, d.value);
       alternate.parentNode.insertBefore(child, alternate);
     }
     alternate.parentNode.removeChild(alternate);
@@ -152,10 +152,20 @@ walk(root);
 parts.sort();
 assert.ok(parts.length >= 17, `expected the phase A fixtures, found ${parts.length}`);
 
+// Taking a Choice CONVERTS DOM INTO TYPED CONTENT, which is why the resolved check is the stronger
+// one and not merely a second one. Unresolved, a branch is held whole as DOM (docx4j CR-021 made the
+// mce wildcards lax), so nothing in it is typed and nothing can be dropped: the part round-trips
+// whatever it contains. Resolved, the same content meets the model, and anything the model binds
+// only partly loses the unbound remainder - so a part that passes as written can still lose content
+// for a consumer that resolves markup compatibility first, which `@docx4j/core-ts` does on every
+// part. Established with that session 2026-09-27, from its a14:legacySpreadsheetColorIndex loss.
+//
 // Parts whose `mc:AlternateContent` is also checked resolved, with the prefixes a reader that
 // understands this package's namespaces would accept. Word and PowerPoint write a14 (equations and
 // shapes in DrawingML text); the list is the branch's `Requires`, not every prefix we know.
 const RESOLVED = new Map([
+  ['cr022-checkbox.xlsx/xl/drawings/drawing1.xml', ['a14']],
+  ['cr022-checkbox-linked.xlsx/xl/drawings/drawing1.xml', ['a14']],
   ['cr022-slicers-timelines.xlsx/xl/drawings/drawing1.xml', ['a14']],
   ['loadAndSave.pptx/ppt/slides/slide2.xml', ['a14']],
   ['loadAndSave.xlsx/xl/drawings/drawing1.xml', ['a14']],
@@ -195,6 +205,17 @@ const KNOWN_MISSING_ATTRIBUTES = new Map([
     'xr3:uid on tableColumn; docx4j binds no schema for the 2016/revision3 namespace. [plutext/docx4j]'],
   ['{http://schemas.microsoft.com/office/spreadsheetml/2017/revision16}uid',
     'xr16:uid on connection; docx4j binds no schema for the 2017/revision16 namespace. [plutext/docx4j]'],
+  ['{http://schemas.microsoft.com/office/drawing/2010/main}legacySpreadsheetColorIndex',
+    'a14:legacySpreadsheetColorIndex on a:srgbClr inside a14:hiddenFill: CT_SRgbColor has no anyAttribute, '
+    + 'so the attribute goes once the a14 Choice is taken and the content is typed. Unresolved it survives, '
+    + 'because the whole branch is DOM - the property in the comment above. [plutext/docx4j]'],
+  ['{http://schemas.openxmlformats.org/markup-compatibility/2006}Ignorable',
+    'mc:Ignorable on an element that is not a part root (here a:srgbClr, naming the a14 prefix of the '
+    + 'attribute beside it): the model binds an ignorable property on the roots docx4j declared it on '
+    + 'and nowhere else. It goes with the attribute it governs, which is the safer of the two outcomes - '
+    + 'keeping it while dropping the attribute would leave a reader told to ignore a prefix that the '
+    + 'root does not declare, and Office repairs a file like that. Whoever fixes the attribute should '
+    + 'take this with it. [plutext/docx4j]'],
   ['Version',
     'Version on b:Sources: CT_Sources in shared-bibliography.xsd declares SelectedStyle, StyleName and '
     + 'URI only, and Word writes Version="6". [plutext/docx4j]'],

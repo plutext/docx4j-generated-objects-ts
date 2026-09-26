@@ -62,8 +62,9 @@ There are four tests and no test framework:
   attributes sorted, namespace declarations ignored, `1`/`true` and two spellings of one
   `xsd:double` the same value, whitespace-only text dropped, element order compared **except** under
   the two `xsd:all` roots of `docProps`). Parts are read by their own encoding, since one is UTF-16.
-  Three parts are also checked with their `mc:Choice` taken, which is what a consumer resolving
-  markup compatibility unmarshals. A part that throws is a failure.
+  Five parts are also checked with their `mc:Choice` taken, which is what a consumer resolving
+  markup compatibility unmarshals - the stronger check, since resolving a branch converts DOM into
+  typed content and so can expose a binding gap the unresolved form hid (CR-004 section 10). A part that throws is a failure.
   Three tables record what is not a new finding, each strict in both directions so it cannot outlive
   its reason (the device is core-ts CR-001 section 19): `KNOWN`, a difference in one part, matched on
   the difference itself; `KNOWN_MISSING_ATTRIBUTES`, an attribute the model does not bind and so

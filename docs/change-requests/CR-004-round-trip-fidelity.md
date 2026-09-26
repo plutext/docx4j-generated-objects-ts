@@ -274,3 +274,42 @@ Every differing line is now classified, and a line is explained only if the reco
 account for **all** of it. That classifier is the code most able to hide a real loss, so it has its
 own self-checks: a line that drops a recorded attribute *and* changes another value is not
 explained.
+
+
+## 10. Resolving a Choice converts DOM into typed content (2026-09-27)
+
+Established with the core-ts session, from a loss it saw and this corpus did not: **the resolved
+check is the stronger one, not merely a second one.**
+
+Unresolved, an `mc:AlternateContent` branch is held whole as DOM, since docx4j CR-021 made the mce
+wildcards lax. Nothing in it is typed, so nothing in it can be dropped, and the part round-trips
+whatever it contains - including content the model would mangle if it ever saw it. Resolving the
+Choice hands that same content to the typed model, and anything the model binds only *partly* now
+loses the unbound remainder. So a part can pass as written and lose content for a consumer that
+resolves markup compatibility first, which `@docx4j/core-ts` does on every part.
+
+The case: `a14:legacySpreadsheetColorIndex` on an `a:srgbClr` inside an `a14:hiddenFill`, in
+`cr022-checkbox.xlsx` and `cr022-checkbox-linked.xlsx`. As Office wrote it, two in and two out.
+With the `a14` Choice taken, two in and **none** out - `a14:hiddenFill` is typed, its `a:srgbClr` is
+`CT_SRgbColor`, and that type has no `anyAttribute`. Both parts are now checked resolved, and the
+attribute is recorded against docx4j, along with the `mc:Ignorable="a14"` beside it, which the same
+line loses for the same reason.
+
+That `mc:Ignorable` is worth a sentence of its own, because losing it is the *safer* of the two
+outcomes: keeping it while dropping the attribute it governs would leave a reader told to ignore a
+prefix the root does not declare, which is what Office repairs a file over (CR-001 section 7, and
+CR-006 here, both concern the root's `mc:Ignorable`; this one is on a descendant). Whoever admits
+the attribute should admit this with it.
+
+**What this implies for the corpus, and what has not been done.** Twenty-four parts carry an
+`mc:AlternateContent` and only five are checked resolved, so the other nineteen are checked in
+their weaker form. Resolving all of them is not a mechanical change and is deliberately not done
+here: a trial run promoted `x14ac:absPath` out of a workbook's `mc:AlternateContent` and produced
+element-order differences that are an artifact of promoting a branch crudely rather than a finding
+about the model, and a real preprocessor's understood-prefix set is a consumer's decision, not this
+test's. Doing it properly means stating which prefixes are assumed understood and triaging each
+difference, which is a phase of its own.
+
+The trial did find one thing worth keeping: the resolver in `test/fidelity.mjs` re-declared a
+namespace prefix onto a branch child that already declared it, which made three chart parts throw
+`Attribute xmlns:c14 redefined`. Fixed; the three parts in the resolved set never exercised it.
