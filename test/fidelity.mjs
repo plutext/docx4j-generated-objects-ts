@@ -17,8 +17,10 @@ import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 const { unmarshalString, marshalString } = await import(
   process.env.OBJECTS_TS_DIST ? pathToFileURL(process.env.OBJECTS_TS_DIST).href : '../dist/index.mjs');
 import { canonicaliseString, compareCanonically, differences, sameLine } from './lib/canonical.mjs';
+import { UNDERSTOOD_NAMESPACES } from './lib/understood.mjs';
 
 const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
+const XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
 const root = fileURLToPath(new URL('./fixtures/fidelity/', import.meta.url));
 
 // ---------------------------------------------------------------- the canonicaliser itself
@@ -83,20 +85,21 @@ const root = fileURLToPath(new URL('./fixtures/fidelity/', import.meta.url));
 //
 // This is the reader's half of ECMA-376 Part 3's rule, done on the DOM rather than in the model,
 // since the point is to unmarshal what a preprocessing consumer would hand us.
-function takeChoice(xml, understood) {
+function takeChoice(xml) {
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
   const alternates = [...doc.getElementsByTagNameNS(MC, 'AlternateContent')];
   for (const alternate of alternates) {
     const branches = [...alternate.childNodes].filter((n) => n.nodeType === 1);
-    const chosen = branches.find((b) => b.localName === 'Choice'
-      && b.getAttribute('Requires').split(/\s+/).every((p) => understood.includes(p)))
+    const chosen = branches.find((b) => b.localName === 'Choice' && choiceIsUnderstood(b))
       ?? branches.find((b) => b.localName === 'Fallback')
       ?? branches[0];
     // The declarations a branch carries (Office puts xmlns:a14 on the Choice) go with its children,
     // since the element that declared them is about to be dropped.
     const declarations = [...chosen.attributes].filter((a) => a.name === 'xmlns' || a.prefix === 'xmlns');
     for (const child of [...chosen.childNodes].filter((n) => n.nodeType === 1)) {
-      for (const d of declarations) if (!child.hasAttribute(d.name)) child.setAttribute(d.name, d.value);
+      // setAttributeNS, not setAttribute: a plain attribute named xmlns:p is not a declaration to
+      // xmldom, which then emits its own beside it and produces a document that will not parse.
+      for (const d of declarations) if (!child.hasAttribute(d.name)) child.setAttributeNS(XMLNS_NS, d.name, d.value);
       alternate.parentNode.insertBefore(child, alternate);
     }
     alternate.parentNode.removeChild(alternate);
@@ -167,13 +170,21 @@ assert.ok(parts.length >= 17, `expected the phase A fixtures, found ${parts.leng
 // Parts whose `mc:AlternateContent` is also checked resolved, with the prefixes a reader that
 // understands this package's namespaces would accept. Word and PowerPoint write a14 (equations and
 // shapes in DrawingML text); the list is the branch's `Requires`, not every prefix we know.
-const RESOLVED = new Map([
-  ['cr022-checkbox.xlsx/xl/drawings/drawing1.xml', ['a14']],
-  ['cr022-checkbox-linked.xlsx/xl/drawings/drawing1.xml', ['a14']],
-  ['cr022-slicers-timelines.xlsx/xl/drawings/drawing1.xml', ['a14']],
-  ['loadAndSave.pptx/ppt/slides/slide2.xml', ['a14']],
-  ['loadAndSave.xlsx/xl/drawings/drawing1.xml', ['a14']],
-]);
+/**
+ * A part carrying an `mc:AlternateContent` is checked twice: as Office wrote it, and with its
+ * Choices resolved as a consumer that understands `UNDERSTOOD_NAMESPACES` would resolve them.
+ * Every such part, not a hand-kept list - what is understood is stated once, in
+ * `test/lib/understood.mjs`, and `Requires` prefixes are looked up against the declarations in
+ * scope where they are written rather than compared as strings.
+ */
+const choiceIsUnderstood = (branch) => (branch.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean)
+  .every((prefix) => {
+    for (let node = branch; node && node.nodeType === 1; node = node.parentNode) {
+      const declared = node.getAttribute(`xmlns:${prefix}`);
+      if (declared) return UNDERSTOOD_NAMESPACES.has(declared);
+    }
+    return false;   // a prefix nothing in scope declares cannot be understood
+  });
 
 /**
  * Differences that are known, understood, and owned elsewhere (CR-004 open question 2).
@@ -230,6 +241,29 @@ const KNOWN_MISSING_ATTRIBUTES = new Map([
     + 'The 4th-edition transitional schema has a CT_StylePaneFilter with all sixteen. '
     + 'Found by core-ts over its whole corpus with jsonix 3.4.0 callbacks; confirmed here. [plutext/docx4j]']),
 ]);
+
+/**
+ * Content this model binds only INSIDE an `mc:AlternateContent`, so resolving the Choice loses it
+ * at the parent (CR-004 section 10.1, kind 2). Not defects here: the model is right, and the
+ * schema does not allow the element in the position the promotion puts it in. They are findings
+ * about a consumer that resolves markup compatibility, and `@docx4j/core-ts` records them as such
+ * in its CR-001 section 21.
+ *
+ * Keyed by the element, and classified by the unmarshaller's own `onUnexpectedElement` rather than
+ * by reading the diff: the callback reports at the parent that would not accept it, which is what
+ * distinguishes this kind from an unbound remainder the model never had (kind 1, reported by
+ * `onUnexpectedAttribute`). Same insistence as the other tables - an entry no resolved part
+ * exercises fails at the end of the run.
+ */
+const LOST_ON_RESOLUTION = new Map([
+  ['{http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac}absPath',
+    "x14ac:absPath is typed as CTAbsolutePath inside the workbook's mc:AlternateContent and has no "
+    + 'home on CT_Workbook itself, so promoting it puts legal content in an illegal position.'],
+  ['{http://schemas.microsoft.com/office/drawing/2007/8/2/chart}style',
+    'c14:style likewise inside a chart\'s mc:AlternateContent; CT_ChartSpace declares no c14:style.'],
+]);
+
+const seenLostOnResolution = new Set();
 
 const seenMissing = new Set();
 
@@ -293,12 +327,9 @@ for (const file of parts) {
   const name = path.relative(root, file).split(path.sep).join('/');
   const source = readPart(file);
   const cases = [[name, source]];
-  const resolve = RESOLVED.get(name);
-  if (resolve) {
-    const { xml, count } = takeChoice(source, resolve);
-    assert.ok(count > 0, `${name}: no mc:AlternateContent to resolve; the fixture or the list is stale`);
-    assert.ok(canonicaliseString(xml).length > 0);
-    cases.push([`${name} [mc:Choice ${resolve.join(' ')} taken]`, xml]);
+  if (source.includes('AlternateContent')) {
+    const { xml, count } = takeChoice(source);
+    if (count > 0) cases.push([`${name} [resolved]`, xml]);
   }
 
   const unmodelled = UNMODELLED.get(rootQNameOf(source));
@@ -312,8 +343,13 @@ for (const file of parts) {
   for (const [label, xml] of cases) {
     checked++;
     let out;
+    const rejectedAtParent = new Set();
     try {
-      out = await marshalString(await unmarshalString(xml));
+      // The callback is the classifier for a resolved check: it reports an element at the parent
+      // that would not accept it, which is what tells kind 2 from kind 1 (CR-004 section 10.1).
+      out = await marshalString(await unmarshalString(xml, label.endsWith('[resolved]')
+        ? { onUnexpectedElement: (name) => rejectedAtParent.add(`{${name.namespaceURI}}${name.localPart}`) }
+        : undefined));
     } catch (error) {
       // A throw can be a recorded difference too: a part Office wrote that the model cannot read
       // is the same finding as one it reads lossily, and wants the same owner and the same
@@ -331,8 +367,16 @@ for (const file of parts) {
     const unexplained = [];
     for (const difference of all.differences) {
       const explained = explainedByMissingAttributes(difference.before, difference.after);
-      if (explained) for (const a of explained) seenMissing.add(a);
-      else unexplained.push(difference);
+      if (explained) { for (const a of explained) seenMissing.add(a); continue; }
+      // A line Office has and we do not, whose element the unmarshaller reported as unacceptable
+      // at its parent, and which is recorded as lost on resolution.
+      const gone = difference.after.startsWith('(absent') || difference.after.startsWith('(nothing');
+      const qname = (difference.before.match(/\{[^}]*\}[\w.-]+|^\s*[\w.-]+/) ?? [''])[0].trim();
+      if (gone && rejectedAtParent.has(qname) && LOST_ON_RESOLUTION.has(qname)) {
+        seenLostOnResolution.add(qname);
+        continue;
+      }
+      unexplained.push(difference);
     }
     const report = { ...compareCanonically(xml, out), ...(unexplained[0] ?? {}), equal: unexplained.length === 0 };
     const expected = KNOWN.get(label);
@@ -358,6 +402,11 @@ for (const file of parts) {
   }
 }
 
+for (const element of seenLostOnResolution) console.log(`fidelity: lost only when its mc:Choice is resolved: ${element}\n  ${LOST_ON_RESOLUTION.get(element)}\n  Not a defect here: a finding about a consumer that resolves (core-ts CR-001 section 21).`);
+for (const [element, why] of LOST_ON_RESOLUTION) {
+  if (!seenLostOnResolution.has(element)) failures.push(`${element}\n    is recorded as lost on resolution, but no resolved part loses it any more`
+    + `\n    (${why})\n    Remove the entry, and check what changed.`);
+}
 for (const attribute of seenMissing) console.log(`fidelity: not bound, so dropped: ${attribute}\n  ${KNOWN_MISSING_ATTRIBUTES.get(attribute)}`);
 for (const [attribute, why] of KNOWN_MISSING_ATTRIBUTES) {
   if (!seenMissing.has(attribute)) failures.push(`${attribute}\n    is recorded as not bound, but no part loses it any more`

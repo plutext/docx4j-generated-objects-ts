@@ -326,7 +326,7 @@ Kind 2 will dominate the remaining nineteen, because `CT_Workbook` and `CT_Works
 class. A triage that cannot separate 2 from 1 mechanically would present this package's resolved
 check as a list of model defects that are mostly somebody else's.
 
-**So the nineteen wait for CR-007.** `onUnexpectedAttribute` reports kind 1 at the element carrying
+**Done 2026-09-27, once CR-007 shipped. See section 12.** What follows was the plan: `onUnexpectedAttribute` reports kind 1 at the element carrying
 the attribute, and `onUnexpectedElement` reports kind 2 at the parent that would not accept it -
 different callbacks, so the separation is mechanical rather than a judgement. (Checked against the
 3.4.0 source rather than assumed: the unmarshaller reports any attribute a class info does not
@@ -374,3 +374,54 @@ are exactly the `uid` family and `b:Sources/@Version` that docx4j CR-027 bound. 
 parts re-marshal about 48 bytes longer than under 0.2.0, for the same reason - a hash difference
 that is a fidelity improvement.
 
+## 12. Every `mc:AlternateContent` part is now checked resolved (2026-09-27)
+
+All twenty-four, not five, and without a hand-kept list: a part whose source contains an
+`mc:AlternateContent` is checked twice, and which Choice is taken follows
+`test/lib/understood.mjs` - core-ts's `UNDERSTOOD_NAMESPACES`, copied with its provenance because
+it encodes a consumer's judgement about what its own load and save preserve. 268 checks, up from
+253.
+
+`Requires` names **prefixes**, so the resolver looks each one up against the declarations in scope
+where it is written and asks whether the *namespace* is understood. The previous resolver compared
+prefix strings against a hand-written list, which happened to work on three parts.
+
+### 12.1 What it found: two elements, both kind 2
+
+`x14ac:absPath` in eight workbooks and `c14:style` in three charts - exactly what core-ts's
+inventory reports from the other direction. Both are section 10.1's kind 2: bound only inside the
+wrapper, lost at the parent when promoted, **not defects here**. They are recorded in
+`LOST_ON_RESOLUTION`, which fails if a resolved part stops losing one, like every other table.
+
+Nothing of kind 1 beyond the `a14` pair already recorded, and **nothing of kind 3 at all**: the
+element-order differences that made this phase look expensive were an artifact of the comparison,
+not of the promotion. See 12.3.
+
+### 12.2 The callback classifies, not the diff
+
+A resolved check unmarshals with `onUnexpectedElement` and a difference counts as kind 2 only if
+the unmarshaller **reported that element at its parent** *and* the element is recorded. Two
+independent conditions, so a part that starts losing something else fails even if the element
+happens to be in the table, and a table entry cannot silently absorb a different loss. This is what
+CR-007 bought here, and it is why section 10.1 said to wait for it rather than build the triage by
+comparison.
+
+### 12.3 Two defects in the instrument, both found by widening it
+
+**The resolver produced documents that would not parse.** Promoting a branch child copied the
+Choice's namespace declarations onto it with `setAttribute`, which xmldom does not treat as a
+declaration, so it emitted its own beside the copy: `xmlns:c14` twice, and three chart parts threw
+`Attribute xmlns:c14 redefined`. `setAttributeNS` fixes it. The five parts resolved before this
+phase never exercised it.
+
+**The comparison cascaded.** It paired canonical lines by index, so one dropped element made every
+later line differ: the chart parts reported 200 to 367 differences for a single lost `c14:style`.
+Index-wise comparison was sufficient only while every finding was attribute-level and the two sides
+had equal line counts. It now aligns by longest common subsequence, and those parts report **one**
+difference each - the true size of the loss. A removal and an insertion of the same element are
+paired back into one change afterwards, because the attribute classifier needs both sides of a
+line, not two halves in sequence.
+
+The second is the more interesting failure: the cascade did not hide a loss, it **buried** one, and
+a report nobody can read is not much better than no report. It had been latent since phase A and
+only a part that drops an element could expose it.

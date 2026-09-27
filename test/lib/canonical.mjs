@@ -163,13 +163,60 @@ export const sameLine = (a, b) => {
 export function differences(before, after) {
   const a = canonicaliseString(before);
   const b = canonicaliseString(after);
-  const out = [];
-  for (let i = 0; i < Math.max(a.length, b.length); i++) {
-    if (!sameLine(a[i], b[i])) {
-      out.push({ line: i + 1, before: a[i] ?? '(nothing: the part ends here)', after: b[i] ?? '(nothing: the part ends here)' });
+  return { differences: align(a, b), counts: { before: a.length, after: b.length } };
+}
+
+/**
+ * Pair up two canonical forms by their longest common subsequence, so that a line present on one
+ * side only is reported once instead of shifting everything after it.
+ *
+ * Comparing index by index was enough while every finding was attribute-level - the two sides had
+ * the same line count and differed in place. It stops being enough the moment an ELEMENT is
+ * dropped: resolving a chart's mc:Choice loses one `c14:style` and an index-wise comparison called
+ * 200 lines different, which is a report nobody can read and, worse, one that hides how small the
+ * loss was. The cost is O(n*m) over a few hundred lines, which is nothing next to the parsing.
+ */
+function align(a, b) {
+  const lcs = Array.from({ length: a.length + 1 }, () => new Uint32Array(b.length + 1));
+  for (let i = a.length - 1; i >= 0; i--) {
+    for (let j = b.length - 1; j >= 0; j--) {
+      lcs[i][j] = sameLine(a[i], b[j]) ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
     }
   }
-  return { differences: out, counts: { before: a.length, after: b.length } };
+  const out = [];
+  let i = 0, j = 0;
+  while (i < a.length && j < b.length) {
+    if (sameLine(a[i], b[j])) { i++; j++; }
+    else if (lcs[i + 1][j] >= lcs[i][j + 1]) { out.push({ line: i + 1, before: a[i], after: '(absent from ours)' }); i++; }
+    else { out.push({ line: i + 1, before: '(absent from Office)', after: b[j] }); j++; }
+  }
+  for (; i < a.length; i++) out.push({ line: i + 1, before: a[i], after: '(nothing: the part ends here)' });
+  for (; j < b.length; j++) out.push({ line: i + 1, before: '(nothing: the part ends here)', after: b[j] });
+  return pairChanges(out);
+}
+
+/**
+ * An alignment reports a changed line as a removal followed by an insertion, because the two lines
+ * are not equal and so cannot be matched. Where the pair is plainly the same element written
+ * differently - same indent and same QName - it is one change, and reporting it as one is what
+ * lets a caller ask what differs ABOUT it: the classifier that decides whether a difference is a
+ * known dropped attribute needs both sides of the line, not two halves in sequence.
+ */
+function pairChanges(entries) {
+  const head = (line) => (line.match(/^\s*[^\s]+/) ?? [''])[0];
+  const out = [];
+  for (let i = 0; i < entries.length; i++) {
+    const here = entries[i], next = entries[i + 1];
+    const removed = here.after.startsWith('(absent') || here.after.startsWith('(nothing');
+    const inserted = next && (next.before.startsWith('(absent') || next.before.startsWith('(nothing'));
+    if (removed && inserted && head(here.before) === head(next.after) && head(here.before) !== '') {
+      out.push({ line: here.line, before: here.before, after: next.after });
+      i++;
+      continue;
+    }
+    out.push(here);
+  }
+  return out;
 }
 
 export function compareCanonically(before, after) {
