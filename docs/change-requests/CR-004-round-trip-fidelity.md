@@ -357,7 +357,16 @@ missing a class of loss.
 The agreement is exact for attributes only, and the reason is worth keeping: the callbacks see what
 the **unmarshaller** drops, so they miss anything lost on the way out, while the diff sees the whole
 round trip but has to infer the cause. Neither subsumes the other, which is why running both earns
-its cost.
+its cost. (core-ts has taken that distinction into its CR-001 section 21.1 as a stated limit of its
+own instrument, with the `deepCopyAs` blindness as the second.)
+
+Its residual list is seventeen attributes **and two elements** - `x15ac:absPath` in
+`sml.Workbook` and `c14:style` in `dml_chart.CTChartSpace`. The attributes match this test's
+seventeen exactly. The two elements do not appear here at all, and their absence is structural
+rather than a miss: both are the kind-2 case of section 10.1, visible only once a `Choice` is
+resolved, and this corpus resolves five of its twenty-four `mc:AlternateContent` parts. They are
+what the remaining nineteen would surface, and they are findings about a consumer that resolves
+rather than about this model.
 
 It also gave the 17.2.1 regeneration a second, independent measurement: core-ts's inventory fell
 from 26 distinct dropped attributes to 17 against a checkout carrying it, and the nine that vanished
