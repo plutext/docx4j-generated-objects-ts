@@ -7,11 +7,15 @@
 // Every loss docx4j's CR-021 to CR-026 closed was of this kind - invisible in the declarations, and
 // invisible to a round trip of a document this repository wrote itself.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
-import { unmarshalString, marshalString } from '../dist/index.mjs';
+// The build under test. `OBJECTS_TS_DIST` points it at another one - a published tarball's, for
+// the post-publish check in RELEASING.md, which asks the question a pre-release run cannot: is the
+// artifact on npm the thing that was tested? Default is this working tree's dist/.
+const { unmarshalString, marshalString } = await import(
+  process.env.OBJECTS_TS_DIST ? pathToFileURL(process.env.OBJECTS_TS_DIST).href : '../dist/index.mjs');
 import { canonicaliseString, compareCanonically, differences, sameLine } from './lib/canonical.mjs';
 
 const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';

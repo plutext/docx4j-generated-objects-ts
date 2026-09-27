@@ -29,6 +29,10 @@ node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
 
+`test/lib/marshal-hashes.mjs` hashes the marshalled output of every fidelity part for the build
+`OBJECTS_TS_DIST` names, defaulting to `dist/`; `RELEASING.md` step 6 runs it against the published
+tarball and diffs, which is the only check that the artifact npm served is the one that was tested.
+
 `prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
 18, 20 and 22, after `npm ci`; `npm update` then a lockfile commit picks up newer dependency versions.
 Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted

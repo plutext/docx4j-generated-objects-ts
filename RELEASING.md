@@ -83,6 +83,23 @@ Publishing the release runs `push-to-npm.yml`, which installs with `npm ci`, fai
 `package.json`'s version, runs typecheck and test, checks the tree is unchanged, and runs `npm pack` and
 `npm publish` (with provenance, via OIDC).
 
+```bash
+# 6. After publishing: check that the artifact npm served is the one that was tested. Everything
+#    before this point tested a working tree; this tests the tarball.
+node test/lib/marshal-hashes.mjs > /tmp/tree.txt
+cd /tmp && npm pack @docx4j/generated-objects-ts@0.3.0 && tar xzf docx4j-generated-objects-ts-0.3.0.tgz \
+  && (cd package && npm install --omit=dev)
+cd -                                   # back to the repository
+OBJECTS_TS_DIST=/tmp/package/dist/index.mjs node test/lib/marshal-hashes.mjs > /tmp/npm.txt
+diff /tmp/tree.txt /tmp/npm.txt        # must be empty
+```
+
+`test/lib/marshal-hashes.mjs` hashes the marshalled output of every part of the fidelity corpus,
+for whichever build `OBJECTS_TS_DIST` names. A green suite before publishing says the code was
+good; only this says the published artifact *is* that code - a question no pre-release run can
+answer. Adopted 2026-09-27 from `@docx4j/core-ts`, which does the same against its own corpus and
+found it worth the minute it costs; 0.3.0 passed it (256 parts, 248 marshalled, identical).
+
 If the workflow fails before the publish step, fix the problem, move the tag, and re-run it from the
 Actions tab (or delete and recreate the release).
 
