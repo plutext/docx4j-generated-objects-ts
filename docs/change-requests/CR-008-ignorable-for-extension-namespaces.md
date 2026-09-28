@@ -4,7 +4,8 @@
 **Depends on:** CR-001 (`fixRootNamespaceDeclarations`, which owns the root's declarations and its
 `mc:Ignorable`), CR-006 (the prefix aliases it resolves through)
 **Requested by:** `plutext/docx4j-core-ts` CR-002 section 29 and its check 23 (2026-09-28, at
-Jason's direction), which needs `w16du:dateUtc` on every tracked revision it creates
+Jason's direction), which needs `w16du:dateUtc` on every tracked revision it creates - **though no
+longer blocked on this**: see section 7
 **Counterpart:** docx4j's `Paginate.declareW14Ignorable` and `DocumentSettingsPart`, which add
 `w14`/`w15` to a part's `ignorable` when they write content in those namespaces (docx4j CR-023)
 
@@ -101,3 +102,21 @@ part Office rejects - a worse outcome than the one this CR fixes.
 3. Whether the table should follow docx4j's `NamespacePrefixMappings` mechanically or be a
    hand-kept subset. Mechanical risks claiming ignorability for a namespace that is not an
    extension; hand-kept risks going stale. The CR assumes hand-kept, small, and exported.
+
+## 7. Nobody is waiting for it (2026-09-28)
+
+The day this was filed, core-ts took docx4j's pattern for itself (its `257d40c`): before its
+tracker writes `w16du:dateUtc` into a part, it adds `w16du` to that root's `ignorable`, and this
+package's marshaller then declares it - which it already does. So `core-ts/CR-002.revision-dates`
+records this CR as related rather than depending on it, and **no consumer is blocked**.
+
+That is the right outcome for core-ts and it does not retire the CR, but it does change what the CR
+is for, and the distinction is worth keeping straight. It is no longer "the thing that makes
+tracked dates work"; it is a safeguard for **the writer who does not know to ask** - the editor, an
+add-in, any consumer writing `w14` or `w15` content into a part it created - and a second line
+under core-ts, whose per-part call is correct but easy to omit in a new code path.
+
+A safeguard with no one waiting is a weaker case for scheduling than a blocker, and should be
+judged as one. What would strengthen it is evidence for open question 2: if some Word version does
+refuse a part whose extension content is not declared ignorable, this stops being a tidiness
+measure. Neither repository has tested it, and neither can without Word.
