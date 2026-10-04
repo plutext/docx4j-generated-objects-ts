@@ -36,7 +36,10 @@ tarball and diffs, which is the only check that the artifact npm served is the o
 `prepublishOnly` runs `typecheck` then `test`. CI (`.github/workflows/test.yml`) runs both on Node
 18, 20 and 22, after `npm ci`; `npm update` then a lockfile commit picks up newer dependency versions.
 Releases publish to npm from `.github/workflows/push-to-npm.yml` on a GitHub release (trusted
-publishing, tag = `package.json` version); see `RELEASING.md`.
+publishing, tag = `package.json` version); see `RELEASING.md`. The GitHub CLI `gh` is installed on
+this machine and logged in as `plutext` (scopes `repo`, `workflow`; confirmed 2026-10-04), so CI
+results (`gh run list --commit <sha>`) and RELEASING.md step 5's `gh release create` work from the
+shell.
 
 **Never release without core-ts's confirmation.** Before `npm version` (step 2 of `RELEASING.md`),
 ask a `docx4j-core-ts` agent (`SendMessage`, see `ListAgents`) to run its typecheck and full test
