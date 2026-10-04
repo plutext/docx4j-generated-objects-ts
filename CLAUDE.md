@@ -138,8 +138,10 @@ Check the index before changing facade behaviour: a CR may already specify it. C
 (implemented 2026-09-10) makes docx4j's prefix table (`NAMESPACE_PREFIXES`) the context default;
 the facade's marshal functions derive a per-root table (a `Relationships` root takes the default
 namespace, since the runtime allows one default) and strip unused root `xmlns` declarations,
-keeping what `mc:Ignorable` names. Marshal through the facade, not `createMarshaller()` directly,
-to get that output.
+keeping what `mc:Ignorable` names. CR-008 (implemented 2026-10-04) has them first append to a
+part root's `mc:Ignorable` the Office extension namespaces its tree uses
+(`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
+must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.
 
 ## What the declarations promise
 

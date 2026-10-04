@@ -251,6 +251,15 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   declared beside the default declaration (Excel writes `mc:Ignorable="x xr10"` on slicer, slicer
   cache and timeline parts). A prefix neither table resolves is dropped from `mc:Ignorable`, with a
   warning, since Office repairs a file naming an undeclared prefix.
+- **Extension namespaces are declared ignorable** (CR-008): a part root whose type binds
+  `mc:Ignorable` (`w:document`, `w:hdr`, `w:styles`, `worksheet`, ...) lists every namespace of
+  `IGNORABLE_EXTENSION_NAMESPACES` its tree uses - `w14`, `w15`, the `w16*`, `wp14`, `x14ac`,
+  `xr*`, ..., the twenty Office itself lists - with the prefix the table gives, so content a writer
+  adds in one (`w16du:dateUtc` on a revision, `w15:appearance` on a content control) is legal for a
+  reader that does not understand it - Word 2010 refuses a document whose `w15:appearance` is not
+  declared ignorable. A loaded list is kept whole and in order; new prefixes are
+  appended. As Office does, it does not count the root's own namespace, content in an `mc:Choice`
+  that requires the namespace, or content in an extension list's `ext`. Other roots are left alone.
 - **104 modules** under `modules/`, one per JAXB package reachable from `ROOT.xsd`, named after the package with dots
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export

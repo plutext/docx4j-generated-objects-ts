@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, MODULE_NAMES, MODULES, modulesFor, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -241,6 +241,69 @@ assert.match(slicerCacheXml, new RegExp(`xmlns:x="${SML}"`), 'CR-006: x is decla
 assert.match(slicerCacheXml, /^<x14:slicerCacheDefinition /, "the root uses the table's prefix for x14");
 assert.ok(!slicerCacheXml.slice(0, slicerCacheXml.indexOf('>')).includes(' xmlns='), 'and declares no default namespace');
 assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as NAMESPACE_PREFIXES is');
+
+// CR-008: a part root that binds mc:Ignorable lists the Office extension namespaces its tree uses,
+// by the prefix the call's table gives, after what it already lists. ECMA-376 Part 3 makes extension
+// markup that is not declared ignorable an error for a reader that does not understand it; core-ts
+// met it writing w16du:dateUtc, then in a caller's w15 content spliced in by insertOoxml.
+{
+  const W16DU = 'http://schemas.microsoft.com/office/word/2023/wordml/word16du';
+  const X14AC = 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac';
+  const X15 = 'http://schemas.microsoft.com/office/spreadsheetml/2010/11/main';
+  const marshalled = async (xml, options) => marshalString(await unmarshalString(xml), options);
+  const ins = '<w:ins w:id="1" w:author="A" w:date="2026-10-04T00:00:00Z" w16du:dateUtc="2026-10-04T00:00:00Z"><w:r><w:t>x</w:t></w:r></w:ins>';
+  const datedXml = `<w:document xmlns:w="${W}" xmlns:w16du="${W16DU}"><w:body><w:p>${ins}</w:p></w:body></w:document>`;
+
+  // Section 5's four. A document with no mc:Ignorable, as a created one has, whose w:ins carries dateUtc:
+  const dated = await marshalled(datedXml);
+  assert.deepEqual(declarationsOf(dated).ignorable, ['w16du'], 'CR-008: w16du:dateUtc lists w16du');
+  assert.equal(declarations(dated).w16du, W16DU, 'CR-008: and declares it');
+  // A loaded document keeps Word's ten, in order, and gains nothing it does not use.
+  const WORD = 'w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14';
+  const loaded = await marshalled(`<w:document xmlns:w="${W}" xmlns:w14="${W14}" xmlns:w16du="${W16DU}" xmlns:mc="${MC}" mc:Ignorable="${WORD}"><w:body><w:p w14:paraId="1">${ins}</w:p></w:body></w:document>`);
+  assert.deepEqual(declarationsOf(loaded).ignorable, WORD.split(' '), 'CR-008: a loaded list is unioned, never replaced');
+  // A root whose type binds no mc:Ignorable gains none: the schema does not admit it there.
+  const paragraph = await marshalled(`<w:p xmlns:w="${W}" xmlns:w14="${W14}" xmlns:w16du="${W16DU}" w14:paraId="1">${ins}</w:p>`);
+  assert.ok(!paragraph.includes('Ignorable'), 'CR-008: w:p binds no mc:Ignorable, so none is written');
+  // The prefix is the call's table's. A SpreadsheetML part, whose main namespace is the default and
+  // so has no prefix to list (CR-006), lists x14ac; the slicer cache above kept "x xr10" whole, and
+  // its root's own x14 is not added. A per-call table's prefix is the one listed.
+  const sheet = await marshalled(`<worksheet xmlns="${SML}" xmlns:x14ac="${X14AC}"><sheetData><row r="1" x14ac:dyDescent="0.25"/></sheetData></worksheet>`);
+  assert.deepEqual(declarationsOf(sheet).ignorable, ['x14ac'], 'CR-008: x14ac:dyDescent lists x14ac');
+  assert.equal(declarations(sheet).x14ac, X14AC);
+  assert.equal(declarations(sheet)[''], SML, 'CR-008: and the default namespace is untouched');
+  const renamed = await marshalString({ name: { namespaceURI: W, localPart: 'document' }, value: unwrap(await unmarshalString(datedXml)) },
+    { namespacePrefixes: { ...NAMESPACE_PREFIXES, [W16DU]: 'du' } });
+  assert.deepEqual(declarationsOf(renamed).ignorable, ['du'], "CR-008: the prefix listed is the call's table's");
+  assert.equal(declarations(renamed).du, W16DU);
+
+  // Section 8's two: content a caller brings in. A literal w:document (no TYPE_NAME, so the root's
+  // type comes from its element name) whose content control was built from a fragment with a w15
+  // element, as core-ts's insertOoxml splices one in:
+  const { wml } = await import('@docx4j/generated-objects-ts/builders/wml');
+  const control = await wml('<w:sdt><w:sdtPr><w15:appearance w15:val="tags"/></w:sdtPr><w:sdtContent><w:p/></w:sdtContent></w:sdt>');
+  const created = await marshalString({ name: { namespaceURI: W, localPart: 'document' }, value: { body: { content: control } } });
+  assert.deepEqual(declarationsOf(created).ignorable, ['w15'], 'CR-008: a w15 element in w:sdtPr lists w15');
+  assert.equal(declarations(created).w15, W15);
+  // And a root that already lists w15, as core-ts's own declareIgnorable leaves it, is unchanged.
+  const declared = await marshalled(`<w:document xmlns:w="${W}" xmlns:w15="${W15}" xmlns:mc="${MC}" mc:Ignorable="w14 w15"><w:body><w:sdt><w:sdtPr><w15:appearance w15:val="tags"/></w:sdtPr><w:sdtContent><w:p/></w:sdtContent></w:sdt></w:body></w:document>`);
+  assert.deepEqual(declarationsOf(declared).ignorable, ['w14', 'w15'], 'CR-008: a list already naming w15 is unchanged');
+
+  // Where Office does not list a namespace it uses, nor does this: in a branch whose mc:Choice
+  // requires it (but in one requiring something else it counts), below an extension list's ext,
+  // and as the root's own namespace (Excel's x15 timelines). w14:x is unknown to the model, so it is
+  // held as a DOM node: the walk is over the marshalled DOM, and wildcard content counts like typed.
+  const branch = (requires) => marshalled(`<w:document xmlns:w="${W}" xmlns:w14="${W14}" xmlns:mc="${MC}"><w:body><w:p><w:r><mc:AlternateContent><mc:Choice Requires="${requires}"><w14:x/></mc:Choice><mc:Fallback><w:t>a</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p></w:body></w:document>`);
+  assert.deepEqual(declarationsOf(await branch('w14')).ignorable, [], 'CR-008: not inside an mc:Choice that requires it');
+  assert.deepEqual(declarationsOf(await branch('wps')).ignorable, ['w14'], 'CR-008: but inside one requiring another namespace');
+  const styles = await marshalled(`<styleSheet xmlns="${SML}"><extLst><ext uri="{9260A510-F301-46a8-8635-F512D64BE5F5}" xmlns:x15="${X15}"><x15:timelineStyles defaultTimelineStyle="TimeSlicerStyleLight1"/></ext></extLst></styleSheet>`);
+  assert.ok(!styles.includes('Ignorable'), 'CR-008: not below an extension list\'s ext');
+  const timelines = await marshalled(`<timelines xmlns="${X15}"><timeline name="Date" cache="C" caption="Date" level="2" selectionLevel="2" scrollPosition="2026-05-19T00:00:00"/></timelines>`);
+  assert.ok(!timelines.includes('Ignorable'), "CR-008: not the root's own namespace");
+
+  assert.ok(Object.isFrozen(IGNORABLE_EXTENSION_NAMESPACES) && IGNORABLE_EXTENSION_NAMESPACES.includes(W16DU), 'the table is exported');
+  console.log('CR-008: extension namespaces a part root uses are listed in its mc:Ignorable OK');
+}
 
 // CR-002: builders/wml. Fragments wrapped in the container docx4j would use, text sugar over el,
 // the run mapping shared with core-ts's Font view, and traversal.

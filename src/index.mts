@@ -192,6 +192,46 @@ export const IGNORABLE_PREFIX_ALIASES: Readonly<Record<string, string>> = Object
 });
 
 /**
+ * Office's extension namespaces, which the facade's marshal functions declare ignorable on a part
+ * root whose tree uses them (CR-008): ECMA-376 Part 3 makes markup in a namespace a reader does not
+ * understand an error unless the namespace is declared ignorable, and Word declares every one it
+ * knows. A root whose type binds `mc:Ignorable` gains, for each of these its tree uses and its list
+ * does not already name, the prefix the call's table gives; prefixes it already lists are kept, in
+ * order.
+ *
+ * Being listed here is a claim that a reader may ignore the namespace, so the list is the
+ * namespaces Office itself names in a part root's `mc:Ignorable` (measured on the fidelity corpus),
+ * Word's in the order Word writes them, then Excel's. Nothing Office does not list: not x15ac,
+ * which Excel writes only inside an `mc:Choice` requiring x15; not a14, a16, c14 or p14, which
+ * Office writes only inside such a Choice or an extension list. No PresentationML root binds
+ * `mc:Ignorable` in any case.
+ */
+export const IGNORABLE_EXTENSION_NAMESPACES: readonly string[] = Object.freeze([
+  'http://schemas.microsoft.com/office/word/2010/wordml',                   // w14
+  'http://schemas.microsoft.com/office/word/2012/wordml',                   // w15
+  'http://schemas.microsoft.com/office/word/2015/wordml/symex',             // w16se
+  'http://schemas.microsoft.com/office/word/2016/wordml/cid',               // w16cid
+  'http://schemas.microsoft.com/office/word/2018/wordml',                   // w16
+  'http://schemas.microsoft.com/office/word/2018/wordml/cex',               // w16cex
+  'http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash',       // w16sdtdh
+  'http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock',     // w16sdtfl
+  'http://schemas.microsoft.com/office/comments/2020/reactions',            // cr (Word lists it on commentsExtensible)
+  'http://schemas.microsoft.com/office/word/2023/wordml/word16du',          // w16du
+  'http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing',    // wp14
+  'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',            // x14ac
+  'http://schemas.microsoft.com/office/spreadsheetml/2010/11/main',         // x15
+  'http://schemas.microsoft.com/office/spreadsheetml/2015/02/main',         // x16r2
+  'http://schemas.microsoft.com/office/spreadsheetml/2014/revision',        // xr
+  'http://schemas.microsoft.com/office/spreadsheetml/2015/revision2',       // xr2
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision3',       // xr3
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision6',       // xr6
+  'http://schemas.microsoft.com/office/spreadsheetml/2016/revision10',      // xr10
+  'http://schemas.microsoft.com/office/spreadsheetml/2017/revision16',      // xr16
+]);
+
+const EXTENSION_NAMESPACES: ReadonlySet<string> = new Set(IGNORABLE_EXTENSION_NAMESPACES);
+
+/**
  * `getContext` options: the runtime's, plus `modules` for a context over fewer mappings than the
  * whole model (CR-005) - the mapping objects themselves, or a function returning them, so a caller
  * that wants wml alone can import those modules and nothing else is pulled in. The option is
@@ -421,12 +461,106 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * `namespacePrefixes` replaces the context's as the base, and the per-root rule is then applied to
  * it, since choosing a table per root is this package's decision rather than the runtime's.
  * jsonix-CR-003 part 2, still deferred there, is what would retire `fixRootNamespaceDeclarations`.
+ *
+ * Before that, a part root that binds `mc:Ignorable` lists the extension namespaces its tree uses
+ * (CR-008). The markup-compatibility elements bind it too, but are never a part's root.
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Document {
   const table = namespacePrefixesFor(context, element, options?.namespacePrefixes);
   const doc = context.createMarshaller({ ...options, namespacePrefixes: table }).marshalDocument(element);
+  if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
   fixRootNamespaceDeclarations(doc.documentElement, table);
   return doc;
+}
+
+/**
+ * Whether the root's type binds `mc:Ignorable` (CR-008 section 4): the type its `TYPE_NAME` names,
+ * or for a literal without one, the type its element name declares. A root that does not is left
+ * alone, since the schema does not admit the attribute there and Office rejects a part that has it.
+ */
+function bindsIgnorable(context: Jsonix.Context, element: Jsonix.TypedNamedValue): boolean {
+  const typeName = (element.value as { TYPE_NAME?: unknown } | null)?.TYPE_NAME;
+  // getElementInfo reads only the name's key; its typings say string.
+  const key = (element.name.namespaceURI ? `{${element.name.namespaceURI}}` : '') + element.name.localPart;
+  const typeInfo: Jsonix.TypeInfo | undefined = typeof typeName === 'string'
+    ? context.getTypeInfoByName(typeName)
+    : context.getElementInfo({ key } as unknown as string, undefined as unknown as string)?.typeInfo;
+  for (let ti = typeInfo; ti; ti = ti.baseTypeInfo) {
+    for (const property of (ti as unknown as { properties?: { attributeName?: Jsonix.XML.QName | null }[] }).properties ?? []) {
+      if (property.attributeName?.namespaceURI === MC_NS && property.attributeName.localPart === 'Ignorable') return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Appends to the root's `mc:Ignorable` the table's prefix for each of
+ * `IGNORABLE_EXTENSION_NAMESPACES` the tree uses and the list does not already name (CR-008);
+ * `fixRootNamespaceDeclarations` then declares it. The list is unioned, never replaced (CR-001
+ * section 7), and new prefixes follow the old in the order of `IGNORABLE_EXTENSION_NAMESPACES`.
+ *
+ * Used means where ECMA-376 Part 3 asks a reader to understand it, less three places Office relies
+ * on something else, so that a part Office wrote gains nothing:
+ * - the root's own namespace (Excel's x15 timeline parts do not list x15; a reader that does not
+ *   understand it has no reason to open the part);
+ * - below an `mc:Choice` whose `Requires` names it, a branch only a reader that understands it takes
+ *   (why Word never lists wps);
+ * - below an extension list's `ext`, which a reader skips by its `uri` (Excel's styles carry x15
+ *   there and do not list it).
+ */
+function declareExtensionsIgnorable(root: Element, table: Record<string, string>): void {
+  const namespaceFor = new Map(Object.entries(table).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
+  const resolve = (prefix: string, scope: ReadonlyMap<string, string>): string | undefined =>
+    scope.get(prefix) ?? namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix];
+  const scopeOf = (element: Element, outer: ReadonlyMap<string, string>): ReadonlyMap<string, string> => {
+    let scope: Map<string, string> | undefined;
+    for (const attr of Array.from(element.attributes)) {
+      const prefix = prefixOfDeclaration(attr);
+      if (prefix !== undefined) (scope ??= new Map(outer)).set(prefix, attr.value);
+    }
+    return scope ?? outer;
+  };
+  const used = new Set<string>();
+  const note = (namespaceURI: string | null, required: ReadonlySet<string>): void => {
+    if (namespaceURI && EXTENSION_NAMESPACES.has(namespaceURI) && namespaceURI !== root.namespaceURI && !required.has(namespaceURI)) used.add(namespaceURI);
+  };
+  const walk = (element: Element, outer: ReadonlyMap<string, string>, required: ReadonlySet<string>): void => {
+    const scope = scopeOf(element, outer);
+    let within = required;
+    if (element.namespaceURI === MC_NS && element.localName === 'Choice') {
+      const named = new Set(required);
+      for (const prefix of (element.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean)) {
+        const namespaceURI = resolve(prefix, scope);
+        if (namespaceURI !== undefined) named.add(namespaceURI);
+      }
+      within = named;
+    }
+    note(element.namespaceURI, within);
+    for (const attr of Array.from(element.attributes)) {
+      if (prefixOfDeclaration(attr) === undefined) note(attr.namespaceURI, within);
+    }
+    if (element.localName === 'ext' && (element.parentNode as Element | null)?.localName === 'extLst') return;
+    for (const child of Array.from(element.childNodes)) {
+      if (child.nodeType === 1) walk(child as Element, scope, within);
+    }
+  };
+  walk(root, new Map(), new Set());
+  if (used.size === 0) return;
+
+  const existing = root.getAttributeNodeNS(MC_NS, 'Ignorable');
+  const listed = (existing?.value ?? '').split(/\s+/).filter(Boolean);
+  const rootScope = scopeOf(root, new Map());
+  for (const prefix of listed) {
+    const namespaceURI = resolve(prefix, rootScope);
+    if (namespaceURI !== undefined) used.delete(namespaceURI);
+  }
+  // A namespace the table writes as the default has no prefix to list, so it is left unlisted.
+  const added = IGNORABLE_EXTENSION_NAMESPACES.filter((namespaceURI) => used.has(namespaceURI) && table[namespaceURI])
+    .map((namespaceURI) => table[namespaceURI]);
+  if (added.length === 0) return;
+  const mc = existing?.prefix || table[MC_NS] || 'mc';
+  if (!root.getAttributeNode(`xmlns:${mc}`)) root.setAttributeNS(XMLNS_NS, `xmlns:${mc}`, MC_NS);
+  root.setAttributeNS(MC_NS, `${mc}:Ignorable`, [...listed, ...added].join(' '));
 }
 
 /** The runtime's serializer (xmldom in Node, XMLSerializer in browsers). */

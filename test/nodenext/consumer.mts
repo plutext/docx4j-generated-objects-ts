@@ -2,7 +2,7 @@
 // through the package's own name and exports map. The repository's tsconfigs use moduleResolution bundler,
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
-import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, MODULES, MODULE_NAMES, modulesFor, getContext } from '@docx4j/generated-objects-ts';
+import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
@@ -18,7 +18,9 @@ export async function consume(xml: string): Promise<string> {
   // CR-007: per-call options, typed by the runtime's own interfaces.
   void unmarshalString('<w:p/>', { onUnexpectedAttribute: (name) => void name.localPart });
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow')];
+  // CR-008: the extension namespaces, a readonly list of URIs.
+  const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow')];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
