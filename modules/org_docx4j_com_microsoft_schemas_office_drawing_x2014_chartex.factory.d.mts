@@ -17,6 +17,10 @@ export function createCTAxisTitle(init?: Partial<Omit<M.CTAxisTitle, 'TYPE_NAME'
 export function createCTAxisUnits(init?: Partial<Omit<M.CTAxisUnits, 'TYPE_NAME' | 'PARENT'>>): M.CTAxisUnits;
 /** docx4j ObjectFactory.createCTAxisUnitsLabel(): a org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisUnitsLabel with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createCTAxisUnitsLabel(init?: Partial<Omit<M.CTAxisUnitsLabel, 'TYPE_NAME' | 'PARENT'>>): M.CTAxisUnitsLabel;
+/** docx4j ObjectFactory.createCTBinCount(): a org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinCount with TYPE_NAME set; a literal remains the stricter form (init is partial). */
+export function createCTBinCount(init?: Partial<Omit<M.CTBinCount, 'TYPE_NAME' | 'PARENT'>>): M.CTBinCount;
+/** docx4j ObjectFactory.createCTBinSize(): a org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinSize with TYPE_NAME set; a literal remains the stricter form (init is partial). */
+export function createCTBinSize(init?: Partial<Omit<M.CTBinSize, 'TYPE_NAME' | 'PARENT'>>): M.CTBinSize;
 /** docx4j ObjectFactory.createCTBinning(): a org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinning with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createCTBinning(init?: Partial<Omit<M.CTBinning, 'TYPE_NAME' | 'PARENT'>>): M.CTBinning;
 /** docx4j ObjectFactory.createCTCategoryAxisScaling(): a org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTCategoryAxisScaling with TYPE_NAME set; a literal remains the stricter form (init is partial). */

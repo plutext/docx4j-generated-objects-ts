@@ -173,14 +173,38 @@ var org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex_Module_Factory
             typeInfo: '.CTExtensionList'
           }]
       }, {
+        localName: 'CTBinCount',
+        typeName: 'CT_BinCount',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'UnsignedInt',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTBinSize',
+        typeName: 'CT_BinSize',
+        propertyInfos: [{
+            name: 'val',
+            required: true,
+            typeInfo: 'Double',
+            attributeName: {
+              localPart: 'val'
+            },
+            type: 'attribute'
+          }]
+      }, {
         localName: 'CTBinning',
         typeName: 'CT_Binning',
         propertyInfos: [{
             name: 'binSize',
-            typeInfo: 'Double'
+            typeInfo: '.CTBinSize'
           }, {
             name: 'binCount',
-            typeInfo: 'UnsignedInt'
+            typeInfo: '.CTBinCount'
           }, {
             name: 'intervalClosed',
             typeInfo: '.STIntervalClosedSide',

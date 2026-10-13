@@ -425,3 +425,33 @@ line, not two halves in sequence.
 The second is the more interesting failure: the cascade did not hide a loss, it **buried** one, and
 a report nobody can read is not much better than no report. It had been latent since phase A and
 only a part that drops an element could expose it.
+
+## 13. A histogram's bins: the corpus gains Excel's two chartex oracles (2026-10-14)
+
+docx4j CR-040 (its `e748bae04`) found that Excel writes a histogram's bins as
+`<cx:binSize val="10"/>` and `<cx:binCount val="6"/>`, where [MS-ODRAWXML] revision 21.0's
+`office_drawing_2014_chartex.xsd` has both as elements of a simple type with text content, and that
+Excel refuses the text form. docx4j patches the schema in place (`CT_BinSize` and `CT_BinCount`,
+each a required `val`) and this package regenerates.
+
+Reproduced here before the regeneration on docx4j's two oracle workbooks, `manual-binwidth-10.xlsx`
+and `manual-bincount-6.xlsx` (Excel 365, synthetic data), added whole as the fourteenth and
+fifteenth documents: the facade read `cx:chartSpace` without an error, held `binning` as
+`{ intervalClosed: "r" }`, and wrote `<cx:binning intervalClosed="r"/>`. The test reported exactly
+the two lines, `binCount val="6"` and `binSize val="10"` absent from ours. After the regeneration
+(the chartex module alone changes: `CTBinSize` and `CTBinCount` with a required `val`, `CTBinning`
+holding them) every check passes: 304, up from 268, the two workbooks adding 32 parts and 4 resolved
+forms.
+
+Two things worth keeping from it.
+
+**A loss the callbacks cannot see.** With CR-007's `onUnexpectedElement` and
+`onUnexpectedAttribute` wired, the unresolved read of either chart reports **nothing**: the element
+is known, its text content is empty, and the `val` attribute sits on an element the model binds as a
+simple type, where the runtime has no attribute loop to report from. Section 11's caveat has a
+third case beside the two it names - the callbacks see what the unmarshaller's *class* loop drops,
+and an attribute on a simple-typed element is dropped before any loop runs. Only the diff found it,
+which is why the diff stays.
+
+**Not a `KNOWN` entry.** The loss was fixed by the regeneration in the same change that added the
+fixtures, so no table ever recorded it; the test's own report, quoted above, is the record.

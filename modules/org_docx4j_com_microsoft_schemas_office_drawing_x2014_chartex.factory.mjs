@@ -12,6 +12,8 @@ export function createCTAxisId(init) { return Object.assign({ TYPE_NAME: 'org_do
 export function createCTAxisTitle(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisTitle' }, init); }
 export function createCTAxisUnits(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisUnits' }, init); }
 export function createCTAxisUnitsLabel(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTAxisUnitsLabel' }, init); }
+export function createCTBinCount(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinCount' }, init); }
+export function createCTBinSize(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinSize' }, init); }
 export function createCTBinning(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinning' }, init); }
 export function createCTCategoryAxisScaling(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTCategoryAxisScaling' }, init); }
 export function createCTChart(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTChart' }, init); }

@@ -88,11 +88,23 @@ export interface CTAxisUnitsLabel {
   extLst?: CTExtensionList;
 }
 
+export interface CTBinCount {
+  TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinCount';
+  readonly PARENT?: CTBinning;
+  val: number;
+}
+
+export interface CTBinSize {
+  TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinSize';
+  readonly PARENT?: CTBinning;
+  val: number;
+}
+
 export interface CTBinning {
   TYPE_NAME?: 'org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex.CTBinning';
   readonly PARENT?: CTSeriesLayoutProperties;
-  binSize?: number;
-  binCount?: number;
+  binSize?: CTBinSize;
+  binCount?: CTBinCount;
   intervalClosed?: STIntervalClosedSide;
   overflow?: string;
   underflow?: string;

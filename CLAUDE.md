@@ -62,8 +62,8 @@ There are four tests and no test framework:
   `linkParents`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
-- `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **256 parts** Office 365
-  wrote - every XML part of thirteen documents from docx4j's test resources, under
+- `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **288 parts** Office 365
+  wrote - every XML part of fifteen documents from docx4j's test resources, under
   `test/fixtures/fidelity/<document>/<part path>`, each directory with a `SOURCE.md` naming the file
   and commit - and compares canonically with `test/lib/canonical.mjs` (QNames not prefixes,
   attributes sorted, namespace declarations ignored, `1`/`true` and two spellings of one
@@ -77,8 +77,10 @@ There are four tests and no test framework:
   Three tables record what is not a new finding, each strict in both directions so it cannot outlive
   its reason (the device is core-ts CR-001 section 19): `KNOWN`, a difference in one part, matched on
   the difference itself; `KNOWN_MISSING_ATTRIBUTES`, an attribute the model does not bind and so
-  drops everywhere (five today, all docx4j's - the `xr`/`xr2`/`xr3`/`xr16` `uid` family and
-  `b:Sources/@Version`), which fails if no part loses it any more; and `UNMODELLED`, eight parts
+  drops everywhere (seventeen today, all docx4j's - `a14:legacySpreadsheetColorIndex` with the
+  `mc:Ignorable` beside it, and `w:stylePaneFormatFilter`'s fifteen booleans; the `xr*` `uid`
+  family and `b:Sources/@Version` left the table with the docx4j 17.2.1 regeneration), which fails
+  if no part loses it any more; and `UNMODELLED`, eight parts
   whose roots docx4j deliberately does not bind (sensitivity labels, PowerPoint's 2018 comments,
   Excel's threaded comments, a Power Query blob), which fails if the model ever learns one. Every
   differing line is classified, not only the first, so a recorded loss cannot mask an unrecorded one;
