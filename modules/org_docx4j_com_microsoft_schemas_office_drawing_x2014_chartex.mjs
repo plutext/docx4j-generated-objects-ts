@@ -564,7 +564,8 @@ export const org_docx4j_com_microsoft_schemas_office_drawing_x2014_chartex = {
           name: 'autoUpdate',
           typeInfo: 'Boolean',
           attributeName: {
-            localPart: 'autoUpdate'
+            localPart: 'autoUpdate',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/drawing\/2014\/chartex'
           },
           type: 'attribute'
         }, {

@@ -455,3 +455,18 @@ which is why the diff stays.
 
 **Not a `KNOWN` entry.** The loss was fixed by the regeneration in the same change that added the
 fixtures, so no table ever recorded it; the test's own report, quoted above, is the record.
+
+### 13.1 Phase 2 of the same CR: `cx:autoUpdate` is qualified (2026-10-15)
+
+docx4j CR-040's phase 2 (`14fcb2f4e`) found a second departure in the same schema: Word and
+PowerPoint write `<cx:externalData r:id="rId1" cx:autoUpdate="0"/>`, the attribute **qualified**,
+where the xsd declares it under `attributeFormDefault="unqualified"`. A binding generated from the
+schema reads the attribute past and writes none. docx4j marks it `form="qualified"`; here the
+mapping's `attributeName` gains the chartex `namespaceURI` and nothing else changes.
+
+docx4j's two oracles, `waterfall.docx` and `waterfall.pptx`, join the corpus whole as the sixteenth
+and seventeenth documents. Before the regeneration the test reported exactly the two lines, the
+`autoUpdate` attribute absent from ours on each `chartEx1.xml`; after it every check passes: 359,
+the two documents adding 53 parts and 2 resolved forms. Same shape as section 13: a loss the
+callbacks would report (an unqualified-bound element seeing a qualified attribute is an unexpected
+attribute), fixed in the change that added the fixtures, so no table ever recorded it.
