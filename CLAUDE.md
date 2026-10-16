@@ -173,11 +173,20 @@ This repository's change requests are indexed, with their dependencies on work i
 docx4j repositories, in `../docx4j-portfolio/tasks.yaml` (ids `<repo>/<CR>[.<phase>]`; this
 repository's key is `objects-ts`).
 
-- When a CR's status changes (a phase lands; a CR is proposed, deferred or abandoned) or its
-  dependencies change, update the matching entry in `tasks.yaml` in the same session (`status`,
-  `depends_on`; add an entry for a new CR or phase).
-- Then run `python3 ../docx4j-portfolio/scripts/tasks.py check`. It reports `CHANGED` for each CR
-  whose Status line was edited; once the registry entry agrees, run `tasks.py accept` (and
-  `tasks.py graph` if dependencies changed).
-- Before starting a CR or phase, check `python3 ../docx4j-portfolio/scripts/tasks.py blocked`: it
-  may be waiting on work in another repository.
+- **Registry changes go through the docx4j-portfolio session** (Jason's rule, 2026-10-17). Do
+  not edit `../docx4j-portfolio/tasks.yaml`, `scripts/status-snapshots.yaml` or
+  `docs/dependencies.md` directly. When a CR's status changes (a phase lands; a CR is proposed,
+  deferred or abandoned) or its dependencies change, send the change in the same session
+  (`SendMessage`) to the session whose working directory is `~/git/docx4j-portfolio` (find it in
+  `ListAgents` by that directory; its name suffix changes): the entry id, the exact new `status`,
+  `depends_on` and `notes` (or the whole new entry), and any CR Status line to re-baseline. It
+  applies the change, runs `tasks.py check`, `graph` and `accept`, and commits naming the
+  requesting session.
+- Only if no such session is running may you edit directly: then run
+  `python3 ../docx4j-portfolio/scripts/tasks.py check` (it reports `CHANGED` for each CR whose
+  Status line was edited; once the registry entry agrees, `tasks.py accept`, and `tasks.py graph`
+  if dependencies changed), and commit only your own hunks through a temporary index built from
+  HEAD (`GIT_INDEX_FILE`), never the shared index; apply the edit to a copy of HEAD's file and to
+  the working tree separately, never truncating the shared file (it was emptied twice that way).
+- Before starting a CR or phase, check `python3 ../docx4j-portfolio/scripts/tasks.py blocked`
+  (read-only): it may be waiting on work in another repository.
