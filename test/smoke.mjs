@@ -91,7 +91,7 @@ assert.deepEqual(declarations(relationships), { '': RELS }, 'a Relationships roo
 assert.match(relationships, /^<Relationships [^>]*><Relationship Id="rId1" Target="styles.xml" Type="http:\/\/x"\/><\/Relationships>$/, 'children unprefixed, nothing redeclared');
 assert.deepEqual(declarations(packaged), { pkg: 'http://schemas.microsoft.com/office/2006/xmlPackage' }, 'a package root declares only pkg; each part declares its own');
 // ECMA-376 Transitional ST_OnOff admits on/off beside true/false/1/0 (pandoc writes w:val="off"); the runtime reads them since
-// @docx4j/jsonix 3.4.1 (jsonix-CR-007), the floor of 0.4.0, and writes them back as false/true, the forms ECMA-376 admits and Office itself writes.
+// @docx4j/jsonix 3.4.1 (jsonix-CR-007), the floor of 0.3.2, and writes them back as false/true, the forms ECMA-376 admits and Office itself writes.
 const onOff = await unmarshalString(`<w:style xmlns:w="${W}" w:type="paragraph" w:styleId="SourceCode"><w:pPr><w:keepNext w:val="on"/><w:wordWrap w:val="off"/></w:pPr></w:style>`);
 assert.equal(onOff.value.pPr.wordWrap.val, false, 'w:val="off" is false');
 assert.equal(onOff.value.pPr.keepNext.val, true, 'w:val="on" is true');
