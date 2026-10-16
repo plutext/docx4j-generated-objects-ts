@@ -90,6 +90,12 @@ const relationships = await marshalString(await unmarshalString(`<Relationships 
 assert.deepEqual(declarations(relationships), { '': RELS }, 'a Relationships root uses the default namespace');
 assert.match(relationships, /^<Relationships [^>]*><Relationship Id="rId1" Target="styles.xml" Type="http:\/\/x"\/><\/Relationships>$/, 'children unprefixed, nothing redeclared');
 assert.deepEqual(declarations(packaged), { pkg: 'http://schemas.microsoft.com/office/2006/xmlPackage' }, 'a package root declares only pkg; each part declares its own');
+// ECMA-376 Transitional ST_OnOff admits on/off beside true/false/1/0 (pandoc writes w:val="off"); the runtime reads them since
+// @docx4j/jsonix 3.4.1 (jsonix-CR-007), the floor of 0.4.0, and writes them back as false/true, which Word reads.
+const onOff = await unmarshalString(`<w:style xmlns:w="${W}" w:type="paragraph" w:styleId="SourceCode"><w:pPr><w:keepNext w:val="on"/><w:wordWrap w:val="off"/></w:pPr></w:style>`);
+assert.equal(onOff.value.pPr.wordWrap.val, false, 'w:val="off" is false');
+assert.equal(onOff.value.pPr.keepNext.val, true, 'w:val="on" is true');
+assert.match(await marshalString(onOff), /<w:keepNext w:val="true"\/><w:wordWrap w:val="false"\/>/, 'written back as true and false');
 resetContext();
 await getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, [W14]: 'wx14' } });
 assert.match(await marshalString(await unmarshalString(`<w:document xmlns:w="${W}" xmlns:w14="${W14}"><w:body><w:p w14:paraId="1"/></w:body></w:document>`)), /xmlns:wx14="[^"]*"[^>]*><w:body><w:p wx14:paraId="1"\/>/, 'a table passed to getContext replaces the default');
