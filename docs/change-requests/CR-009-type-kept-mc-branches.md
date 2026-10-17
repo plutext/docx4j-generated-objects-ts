@@ -241,3 +241,13 @@ this package's position, sent the same day: the broad set (every VML shape type 
 and `o:gfxdata` on the types lacking it, since optional attributes cost nothing here and the
 "seen" set keeps moving.
 
+**CR-048 landed; the gate is open (2026-10-18).** docx4j `acd0defc9` (VERSION_17_3_4, unpushed)
+adds `w14:anchorId` to `AG_AllCoreAttributes`, so all eleven VML shape types bind it, and
+`o:gfxdata` to the nine that lacked it; `o:spt` stays `xsd:float`. Regenerated here as `97c43b9`:
+only the VML mapping changes (eleven `anchorId`, nine `gfxdata`), typecheck, tests and the
+fidelity corpus unchanged, as expected while kept branches are DOM. Section 7's probe rerun on it
+keeps `w14:anchorId` on the Fallback's `v:shapetype`, and a `v:rect` with both attributes
+round-trips through the facade. Word's own saves keep every VML `anchorId` and `gfxdata` (Jason's
+Office check, via the docx4j session). So proposal 2 is done by regeneration, the sequencing
+question of section 8 is moot, and proposal 1 can ship with all 61, `w:pict` included.
+
