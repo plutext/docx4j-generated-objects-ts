@@ -1,10 +1,10 @@
 # CR-009: Type what a kept `mc:AlternateContent` branch holds, as docx4j does
 
-**Status:** Proposed 2026-10-17
+**Status:** Proposed 2026-10-17; proposal 2 implemented 2026-10-18 by regeneration from docx4j CR-048 (`97c43b9`); proposal 1 awaiting Jason's go
 **Requested by:** `plutext/docx4j-core-ts` CR-010 phase 2 (Jason asked for phase 2 in the core-ts
 session, 2026-10-17). CR-010 keeps `mc:AlternateContent` and saves every branch, docx4j CR-021's
 policy. Its phase 1 is done (core-ts `6b178af`); phase 3 puts the content API over kept branches.
-**Depends on:** for proposal 1, nothing new; for proposal 2 and so for typing `w:pict` (section 8), docx4j CR-048 (`CR-048-vml-attributes-word-writes.md`, drafted 2026-10-18, undecided) and the regeneration it brings. The measurements below ran on 0.3.2 and `@docx4j/jsonix` 3.4.1.
+**Depends on:** docx4j CR-048 (`CR-048-vml-attributes-word-writes.md`), implemented in docx4j as `acd0defc9` on VERSION_17_3_4, pushed 2026-10-18, to ship in docx4j 17.3.4; regenerated here as `97c43b9`. Nothing else. The measurements below ran on 0.3.2 and `@docx4j/jsonix` 3.4.1.
 **Counterpart:** docx4j's `@XmlRootElement` classes and unscoped `ObjectFactory` `@XmlElementDecl`s,
 which its JAXB context types in a lax wildcard.
 
@@ -135,11 +135,12 @@ The comparison above treats both as equal.
    modules, and `modulesFor` includes it whenever `org_docx4j_wml` is in the closure. It is not a
    generated module, so it does not go in `modules/` or the CR-005 registry's count; it is facade
    code, like the prefix table. Verified on a kept branch, section 7.
-2. **Keep `w14:anchorId` on `v:shapetype`.** Either give `CT_Shapetype` an any-attribute (and its
-   VML siblings if the fidelity test, CR-004, finds the same there), or declare the attribute.
-   Either way it's a generated-type change, through the compiler or `bindings.xjb`. The
-   loss also exists in docx4j's binding; the core-ts session tells Jason, who decides whether
-   docx4j hears of it.
+2. **Keep `w14:anchorId` on `v:shapetype`.** Done (2026-10-18): docx4j CR-048 declares
+   `w14:anchorId` on every VML shape type and `v:group`, and `o:gfxdata` on the nine shape types
+   that lacked it, in `vml-main.xsd`, and `97c43b9` regenerates `modules/` from it. The loss was
+   in docx4j's own binding too, and is closed there by the same change. (As first written this
+   said the fix went through the compiler or `bindings.xjb`; section 8 corrects that: `modules/`
+   is generated from docx4j's schemas, so the schema was the place.)
 
 ## 5. Tests
 
@@ -202,7 +203,7 @@ name, distinct QNames). The facade's one scopeless `getElementInfo` call, `binds
 lookup for a literal root, gains answers for the 61 and is unaffected (none binds
 `mc:Ignorable`). Section 7 settles the route.
 
-**Proposal 2 needs a docx4j CR, and must land first or together.** Two findings:
+**Proposal 2 was a docx4j schema change, and had to land first or together.** It has landed (see the end of this section). The two findings that decided it:
 
 - The attribute belongs in docx4j's schema, not the compiler or `bindings.xjb`: `modules/` is
   generated from `../docx4j/xsd/vml/vml-main.xsd`, whose `CT_Shapetype` (line 662) and every
@@ -217,8 +218,8 @@ lookup for a literal root, gains answers for the 61 and is unaffected (none bind
   `mc:AlternateContent`; none of 12 `v:shape` or the 3 `v:shapetype` outside a branch carries it.
   Thin evidence (the corpus has little WordprocessingML VML; nothing opened in Word for it), but
   it says a declared `w14:anchorId` on `CT_Shapetype` would cover what is seen, where an
-  any-attribute on the core group covers what is not. docx4j has been told, at Jason's go, by
-  the core-ts session; docx4j 17.3.2's `CTShapetype` has neither the property nor an
+  any-attribute on the core group covers what is not. docx4j was told, at Jason's go, by
+  the core-ts session; docx4j 17.3.2's `CTShapetype` had neither the property nor an
   `@XmlAnyAttribute`.
 - **Shipping proposal 1 alone regresses the facade's round trip.** The facade keeps every
   branch (resolution is core-ts's and the fidelity test's, not the unmarshaller's), and the
@@ -228,7 +229,7 @@ lookup for a literal root, gains answers for the 61 and is unaffected (none bind
   this CR introduced. So either docx4j's VML change regenerates here before or with proposal 1,
   or proposal 1 ships without `w:pict` (60 elements; the Choice's `w:drawing` typed, the
   Fallback's `w:pict` DOM until the regeneration), which costs core-ts phase 2 the 9 typed
-  `w:pict`s meanwhile. The choice is Jason's.
+  `w:pict`s meanwhile. The choice did not arise: CR-048 landed the same day.
 
 **docx4j CR-048 (2026-10-18).** docx4j's own fixtures (36 VML parts in 29 files, 1,839 `v:`
 elements) widen the picture: `w14:anchorId` lost on `v:shape` (32, Word 16 regenerating a
@@ -241,7 +242,7 @@ this package's position, sent the same day: the broad set (every VML shape type 
 and `o:gfxdata` on the types lacking it, since optional attributes cost nothing here and the
 "seen" set keeps moving.
 
-**CR-048 landed; the gate is open (2026-10-18).** docx4j `acd0defc9` (VERSION_17_3_4, unpushed)
+**CR-048 implemented; the gate is open (2026-10-18).** docx4j `acd0defc9` (VERSION_17_3_4, pushed the same day; ships in docx4j 17.3.4, date not set)
 adds `w14:anchorId` to `AG_AllCoreAttributes`, so all eleven VML shape types bind it, and
 `o:gfxdata` to the nine that lacked it; `o:spt` stays `xsd:float`. Regenerated here as `97c43b9`:
 only the VML mapping changes (eleven `anchorId`, nine `gfxdata`), typecheck, tests and the
