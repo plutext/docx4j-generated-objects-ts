@@ -470,3 +470,13 @@ and seventeenth documents. Before the regeneration the test reported exactly the
 the two documents adding 53 parts and 2 resolved forms. Same shape as section 13: a loss the
 callbacks would report (an unqualified-bound element seeing a qualified attribute is an unexpected
 attribute), fixed in the change that added the fixtures, so no table ever recorded it.
+
+**The boolean form, settled (2026-10-17).** The binding writes `cx:autoUpdate="false"` where
+Office writes `0`; the canonical comparison treats them as one value, so the test never saw a
+difference, but whether Office accepts the written form was unmeasured when 0.3.2 shipped. The
+docx4j session reports it was already measured on the share: the Enterprise session's tenth Office
+pass (2026-10-15, Office 16.0.20326) opened 16 docx and 11 pptx written by docx4j's CR-040.2
+binding, every one carrying `cx:autoUpdate="false"`, without an error, and Word's and PowerPoint's
+PDFs of those charts match their PDFs of Office's own charts pixel for pixel (docx4j CR-040 section
+7.1). docx4j 17.3.3 also keeps Office's `0` unchanged on load and save of both waterfall fixtures,
+as this binding does. Nothing to change here.
