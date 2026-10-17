@@ -292,3 +292,22 @@ Two things the tests exposed, both expected by section 3 and now recorded:
 Not done here: core-ts's survey of section 5 on this build, and its CR-010 phase 2, which this
 unblocks; the 11 non-WordprocessingML roots of section 2 remain a later CR.
 
+**core-ts's survey and verdict (2026-10-18): good to release.** Against an npm pack of `abcb881`
+installed over core-ts `328439e`: 837 of 838 tests pass, the one failure the announcer that
+asserted a kept `w:drawing` is DOM; parity, XPath parity, typecheck and the nodenext consumer check
+green. The section 5 survey over 459 inputs with branches kept: `w:drawing` 13 and `w:pict` 9 now
+typed, everything else as before; 281 of 281 parts write every `mc:AlternateContent` back whole
+(booleans, `o:gfxdata` whitespace and whitespace-only text normalised), so the four `w14:anchorId`
+losses of section 3 are closed, `loadAndSave.docx`'s Fallback `v:shapetype` keeping
+`w14:anchorId="7969C50B"` and `o:spt="202"`. Hashes after load, unmarshalAll and save: with
+branches resolved, 0 of 8,235 entries differ (the CR-048 regeneration included); with branches
+kept, 9 `document.xml` parts differ, all of it booleans `1`/`0` written `true`/`false`, four
+`o:gfxdata` unwrapped, attribute order, namespace declarations and whitespace-only text between
+elements - nothing added, dropped or changed. Bare-element marshalling over 8,089 elements: `w:p`,
+`w:sdt` and `w:tr` unchanged; `w:tbl`, `w:tc`, `w:drawing`, `w:bookmarkStart` and `w:bookmarkEnd`
+differ by `xsi:type` and its declaration only, and XML saved with the old `xsi:type` still
+unmarshals and re-marshals to the new form (2,574 each way), so scripts saved before the change
+read back. No core-ts test or golden expects the `xsi:type`; the editor may marshal bare `w:tbl`
+or `w:tc`, and has been told. core-ts's own range (`^0.3.2`) does not admit 0.4.0, so it takes the
+release by a deliberate range raise, flipping its announcer to the typed form, at Jason's word.
+
