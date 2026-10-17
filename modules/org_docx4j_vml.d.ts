@@ -48,6 +48,7 @@ export interface CTArc {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -67,6 +68,7 @@ export interface CTArc {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -123,6 +125,7 @@ export interface CTCurve {
   title?: string;
   to?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -142,6 +145,7 @@ export interface CTCurve {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -222,6 +226,7 @@ export interface CTGroup {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -234,6 +239,7 @@ export interface CTGroup {
   dgmlayoutmru?: number;
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -302,6 +308,7 @@ export interface CTImage {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -321,6 +328,7 @@ export interface CTImage {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -392,6 +400,7 @@ export interface CTLine {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -411,6 +420,7 @@ export interface CTLine {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -451,6 +461,7 @@ export interface CTOval {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -470,6 +481,7 @@ export interface CTOval {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -531,6 +543,7 @@ export interface CTPolyLine {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -550,6 +563,7 @@ export interface CTPolyLine {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -590,6 +604,7 @@ export interface CTRect {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -609,6 +624,7 @@ export interface CTRect {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -650,6 +666,7 @@ export interface CTRoundRect {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -669,6 +686,7 @@ export interface CTRoundRect {
   dgmnodekind?: number;
   doubleclicknotify?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   forcedash?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
+  gfxdata?: string;
   hr?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   hralign?: Dep_org_docx4j_vml_officedrawing.STHrAlign;
   hrnoshade?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
@@ -729,6 +747,7 @@ export interface CTShape {
   title?: string;
   type?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;
@@ -792,6 +811,7 @@ export interface CTShapetype {
   target?: string;
   title?: string;
   wrapcoords?: string;
+  anchorId?: string;
   allowincell?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   allowoverlap?: Dep_org_docx4j_vml_officedrawing.STTrueFalse;
   borderbottomcolor?: string;

@@ -259,6 +259,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -330,6 +337,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -700,6 +711,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -771,6 +789,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -1267,6 +1289,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -1309,6 +1338,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'doubleclicknotify',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -1735,6 +1768,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -1806,6 +1846,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -2258,6 +2302,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -2329,6 +2380,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -2633,6 +2688,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -2704,6 +2766,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -3111,6 +3177,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -3182,6 +3255,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -3486,6 +3563,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -3557,6 +3641,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -3867,6 +3955,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -3938,6 +4033,10 @@ export const org_docx4j_vml = {
         }, {
           name: 'forcedash',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
+          type: 'attribute'
+        }, {
+          name: 'gfxdata',
+          typeInfo: 'Base64Binary',
           type: 'attribute'
         }, {
           name: 'hr',
@@ -4351,6 +4450,13 @@ export const org_docx4j_vml = {
           },
           type: 'attribute'
         }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
+          },
+          type: 'attribute'
+        }, {
           name: 'allowincell',
           typeInfo: 'org_docx4j_vml_officedrawing.STTrueFalse',
           type: 'attribute'
@@ -4746,6 +4852,13 @@ export const org_docx4j_vml = {
           name: 'wrapcoords',
           attributeName: {
             localPart: 'wrapcoords'
+          },
+          type: 'attribute'
+        }, {
+          name: 'anchorId',
+          attributeName: {
+            localPart: 'anchorId',
+            namespaceURI: 'http:\/\/schemas.microsoft.com\/office\/word\/2010\/wordml'
           },
           type: 'attribute'
         }, {
