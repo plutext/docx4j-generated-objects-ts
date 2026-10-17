@@ -210,7 +210,16 @@ lookup for a literal root, gains answers for the 61 and is unaffected (none bind
   on the core attribute group, or a declared `w14:anchorId`, in docx4j, then a regeneration
   here, the shape of CR-040. That also closes docx4j's own loss (section 3). Which VML elements
   Word writes `w14:anchorId` on decides the form: in the corpus here it is `v:shapetype` only,
-  the `v:shape` beside it carrying none; core-ts's four files say the same.
+  the `v:shape` beside it carrying none. core-ts measured its 459 survey inputs (2026-10-18,
+  core-ts CR-010 section 10.2, `328439e`): every attribute on a `v:`, `o:`, `w10:`, `x:` or
+  `pvml:` element outside the no-namespace and `o:` namespaces is either `v:ext`, which the
+  schema declares, or `w14:anchorId` on `v:shapetype`, four times, all inside an
+  `mc:AlternateContent`; none of 12 `v:shape` or the 3 `v:shapetype` outside a branch carries it.
+  Thin evidence (the corpus has little WordprocessingML VML; nothing opened in Word for it), but
+  it says a declared `w14:anchorId` on `CT_Shapetype` would cover what is seen, where an
+  any-attribute on the core group covers what is not. docx4j has been told, at Jason's go, by
+  the core-ts session; docx4j 17.3.2's `CTShapetype` has neither the property nor an
+  `@XmlAnyAttribute`.
 - **Shipping proposal 1 alone regresses the facade's round trip.** The facade keeps every
   branch (resolution is core-ts's and the fidelity test's, not the unmarshaller's), and the
   fidelity corpus holds the case: `loadAndSave.docx`'s `document.xml` has a `w:pict` Fallback
