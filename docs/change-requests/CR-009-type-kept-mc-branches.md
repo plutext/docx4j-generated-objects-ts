@@ -1,6 +1,6 @@
 # CR-009: Type what a kept `mc:AlternateContent` branch holds, as docx4j does
 
-**Status:** Implemented 2026-10-18 (proposal 2 by regeneration from docx4j CR-048, `97c43b9`; proposal 1 in the facade, section 9); unreleased
+**Status:** Implemented 2026-10-18 (proposal 2 by regeneration from docx4j CR-048, `97c43b9`; proposal 1 in the facade, section 9); released the same day in 0.4.0 (tag `4a4bf9b`)
 **Requested by:** `plutext/docx4j-core-ts` CR-010 phase 2 (Jason asked for phase 2 in the core-ts
 session, 2026-10-17). CR-010 keeps `mc:AlternateContent` and saves every branch, docx4j CR-021's
 policy. Its phase 1 is done (core-ts `6b178af`); phase 3 puts the content API over kept branches.
