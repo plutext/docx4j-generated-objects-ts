@@ -192,3 +192,31 @@ docx4j's `@XmlRootElement` gives Java callers. CR-002's `wml` wrapper stays, sin
 every scoped element, not only these, and its wrapping is harmless for a now-global one.
 `getElementInfo`'s fallback to `##global` is at `jsonix-factory.js:6086` in `@docx4j/jsonix` 3.4.1.
 
+
+## 8. Readiness (2026-10-18)
+
+**Proposal 1 is ready to implement.** Checked against the mapping at 0.3.2: all 61 names resolve
+to a type the WML mapping has, none is already global, and each is bound to one type across its
+scopes (the two homonyms, `t` and `rPr`, are `m:` elements of the math module under the same local
+name, distinct QNames). The facade's one scopeless `getElementInfo` call, `bindsIgnorable`'s
+lookup for a literal root, gains answers for the 61 and is unaffected (none binds
+`mc:Ignorable`). Section 7 settles the route.
+
+**Proposal 2 needs a docx4j CR, and must land first or together.** Two findings:
+
+- The attribute belongs in docx4j's schema, not the compiler or `bindings.xjb`: `modules/` is
+  generated from `../docx4j/xsd/vml/vml-main.xsd`, whose `CT_Shapetype` (line 662) and every
+  other VML type lack an any-attribute (no VML xsd has one), so the fix is an `xsd:anyAttribute`
+  on the core attribute group, or a declared `w14:anchorId`, in docx4j, then a regeneration
+  here, the shape of CR-040. That also closes docx4j's own loss (section 3). Which VML elements
+  Word writes `w14:anchorId` on decides the form: in the corpus here it is `v:shapetype` only,
+  the `v:shape` beside it carrying none; core-ts's four files say the same.
+- **Shipping proposal 1 alone regresses the facade's round trip.** The facade keeps every
+  branch (resolution is core-ts's and the fidelity test's, not the unmarshaller's), and the
+  fidelity corpus holds the case: `loadAndSave.docx`'s `document.xml` has a `w:pict` Fallback
+  over a `v:shapetype` with `w14:anchorId`, which round-trips whole today and would not with
+  `w:pict` typed. CR-004 would report it, and recording it in `KNOWN` would be recording a loss
+  this CR introduced. So either docx4j's VML change regenerates here before or with proposal 1,
+  or proposal 1 ships without `w:pict` (60 elements; the Choice's `w:drawing` typed, the
+  Fallback's `w:pict` DOM until the regeneration), which costs core-ts phase 2 the 9 typed
+  `w:pict`s meanwhile. The choice is Jason's.
