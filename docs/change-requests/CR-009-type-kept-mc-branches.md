@@ -308,6 +308,9 @@ elements - nothing added, dropped or changed. Bare-element marshalling over 8,08
 differ by `xsi:type` and its declaration only, and XML saved with the old `xsi:type` still
 unmarshals and re-marshals to the new form (2,574 each way), so scripts saved before the change
 read back. No core-ts test or golden expects the `xsi:type`; the editor may marshal bare `w:tbl`
-or `w:tc`, and has been told. core-ts's own range (`^0.3.2`) does not admit 0.4.0, so it takes the
-release by a deliberate range raise, flipping its announcer to the typed form, at Jason's word.
+or `w:tc`, and has been told. core-ts's range (`^0.3.2`) did not admit 0.4.0; at Jason's word it
+raised to `^0.4.0` in `779b824` (2026-10-18, lockfile resolving 0.4.0 from npm), flipping its
+announcer to the typed form: `mce.test.mjs` asserts the typed `w:drawing` and `w:pict` and the
+`v:shapetype`'s `w14:anchorId` through a save, and fails on 0.3.2. Suite 838/838, typecheck green;
+core-ts CR-010 section 10.4 records the acceptance.
 
