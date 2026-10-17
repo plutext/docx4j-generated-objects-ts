@@ -159,7 +159,8 @@ The comparison above treats both as equal.
 
 - **Every lax wildcard in the model sees these declarations,** not only `mc:Choice` and
   `mc:Fallback`. Counted over the mappings' `propertyInfos` of `type: 'anyElement'`, the context
-  has 31, of which 28 allow a typed object (the core-ts survey counted 29); among them `a:graphicData` (`GraphicData.any`), the content of
+  has 31, of which 28 allow a typed object (the runtime's built-in `xs:anyType` adds a 29th typed
+  one in a live context, declared by no module); among them `a:graphicData` (`GraphicData.any`), the content of
   `w:pict` and `w:object` (`CTPictureBase.anyAndAny`), and the extension lists' `ext`
   (`CTExtension.any` in chart, chartex, w16 and pml). Across the corpus nothing changed
   with branches resolved, so the effect today is confined to kept branches. A file whose extension
