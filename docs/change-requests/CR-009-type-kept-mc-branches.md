@@ -4,7 +4,7 @@
 **Requested by:** `plutext/docx4j-core-ts` CR-010 phase 2 (Jason asked for phase 2 in the core-ts
 session, 2026-10-17). CR-010 keeps `mc:AlternateContent` and saves every branch, docx4j CR-021's
 policy. Its phase 1 is done (core-ts `6b178af`); phase 3 puts the content API over kept branches.
-**Depends on:** nothing new. The measurements below ran on 0.3.2 and `@docx4j/jsonix` 3.4.1.
+**Depends on:** for proposal 1, nothing new; for proposal 2 and so for typing `w:pict` (section 8), docx4j CR-048 (`CR-048-vml-attributes-word-writes.md`, drafted 2026-10-18, undecided) and the regeneration it brings. The measurements below ran on 0.3.2 and `@docx4j/jsonix` 3.4.1.
 **Counterpart:** docx4j's `@XmlRootElement` classes and unscoped `ObjectFactory` `@XmlElementDecl`s,
 which its JAXB context types in a lax wildcard.
 
@@ -229,3 +229,15 @@ lookup for a literal root, gains answers for the 61 and is unaffected (none bind
   or proposal 1 ships without `w:pict` (60 elements; the Choice's `w:drawing` typed, the
   Fallback's `w:pict` DOM until the regeneration), which costs core-ts phase 2 the 9 typed
   `w:pict`s meanwhile. The choice is Jason's.
+
+**docx4j CR-048 (2026-10-18).** docx4j's own fixtures (36 VML parts in 29 files, 1,839 `v:`
+elements) widen the picture: `w14:anchorId` lost on `v:shape` (32, Word 16 regenerating a
+Fallback from its Choice), `v:shapetype` (13) and `v:rect` (1); `o:gfxdata` lost on `v:oval` (4)
+and `v:rect` (2), which ECMA admits on `CT_Shape` only; [MS-DOCX] 2.2.6 documents `w14:anchorId`
+on `w:pict` and `w:object` only, so VML placement is a named departure. CR-048 proposes explicit
+`<xsd:attribute ref="w14:anchorId"/>` references (the form `wml.xsd` uses for `CT_Picture` and
+`CT_Object`, which the compiler already generates), no any-attribute, `o:spt` left `xsd:float`;
+this package's position, sent the same day: the broad set (every VML shape type plus `v:group`)
+and `o:gfxdata` on the types lacking it, since optional attributes cost nothing here and the
+"seen" set keeps moving.
+
