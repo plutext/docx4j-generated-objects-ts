@@ -45,6 +45,29 @@ const sameNumber = (a, b) => {
 };
 
 /**
+ * Whether two attribute values are the same `xsd:base64Binary` written with and without line
+ * breaks: Word wraps `o:gfxdata` at 76 characters with CRLF, the model holds the bytes and writes
+ * them unwrapped (CR-009 typed the `v:shape` inside a kept `w:pict`, which is where this first
+ * showed). The lexical space of `xsd:base64Binary` admits whitespace between the characters, so
+ * this is a spelling, not a value - but only where the two differ by line breaks alone, and what
+ * is left is base64 of whole quanta (a multiple of four characters, padding at the end).
+ *
+ * What it hides, and all it hides: a string-typed attribute of base64 shape losing its line
+ * breaks, which cannot arise between a part and its own re-marshal unless the model typed the
+ * attribute as binary - the same argument as the two rules above. (The canonical line holds the
+ * value JSON-escaped, so the breaks are read back from `\r` and `\n` sequences.)
+ */
+const sameBase64 = (a, b) => {
+  if (a === b) return false;
+  const unescaped = (value) => { try { return JSON.parse(`"${value}"`); } catch { return value; } };
+  const [x, y] = [unescaped(a), unescaped(b)];
+  if (!/[\r\n]/.test(x) && !/[\r\n]/.test(y)) return false;
+  const strip = (value) => value.replace(/[\r\n]/g, '');
+  const bare = strip(x);
+  return bare === strip(y) && bare.length % 4 === 0 && bare.length > 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(bare);
+};
+
+/**
  * The attributes of an element, as sorted `qname=value` strings. Namespace declarations are
  * dropped: which declarations a root carries is CR-001's subject and has its own tests, and
  * `mc:Ignorable` is compared as an ordinary attribute value (it names prefixes, so it is compared
@@ -141,7 +164,7 @@ export function canonicaliseString(xml) {
  * Compare two parts canonically. Returns `{ equal }`, and on a difference the line number and the
  * two lines, plus the element counts, so a failure names what moved rather than only that it did.
  */
-/** Two canonical lines differing only in the lexical form of numeric attribute values. */
+/** Two canonical lines differing only in the lexical form of numeric or base64 attribute values. */
 export const sameLine = (a, b) => {
   if (a === b) return true;
   if (a === undefined || b === undefined) return false;
@@ -151,7 +174,7 @@ export const sameLine = (a, b) => {
   // The line with every value blanked must match, so only the values may differ.
   const blank = (line) => line.replace(/="(?:[^"\\]|\\.)*"/g, '=""');
   if (blank(a) !== blank(b)) return false;
-  return x.every((value, i) => value === y[i] || sameNumber(value, y[i]));
+  return x.every((value, i) => value === y[i] || sameNumber(value, y[i]) || sameBase64(value, y[i]));
 };
 
 /**

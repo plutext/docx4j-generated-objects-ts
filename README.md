@@ -238,6 +238,16 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   [...] is not known in this context". Options are read when the context is built, so call
   `resetContext()` first if one already exists; and a smaller context knows less, so a document
   carrying content its modules do not cover will throw where the full context would type it.
+- **Kept `mc:AlternateContent` branches are typed** (CR-009): the runtime types an element inside a
+  lax wildcard - a kept `mc:Choice` or `mc:Fallback`, a `w:pict` body - only if the context declares
+  it globally, and the generated WordprocessingML mapping declares `w:drawing`, `w:pict`, `w:tbl`,
+  `w:t`, `w:hyperlink` and 56 others only within their parents, where docx4j declares them as root
+  elements. One more mapping, `org_docx4j_wml_globals` (hand-written, no types of its own), declares
+  those 61 globally; `getContext()` includes it and `modulesFor` adds it to any closure holding
+  `org_docx4j_wml`, so a kept branch's `w:drawing` and `w:pict` unmarshal typed, as docx4j's context
+  types them, and marshal back whole. `WML_GLOBAL_ELEMENTS` is the list (local name to type). Two
+  consequences: each of the 61 is now a valid root for `unmarshalString` and `marshalString`, and a
+  `w:tc`, `w:tbl` or `w:drawing` marshalled on its own no longer carries an `xsi:type`.
 - **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
   (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
   Word writes it. The facade's marshal functions declare on the root element the namespaces the

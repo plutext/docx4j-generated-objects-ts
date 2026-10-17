@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 (UMD `.js`, ES module `.mjs`) with TypeScript declarations (`.d.ts`, `.d.mts`), **generated** by
 [jsonix-schema-compiler](https://github.com/plutext/jsonix-schema-compiler) from
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
-code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `helpers/wml.mts` (per-type docx4j decisions,
+code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `wml-globals.mts` (CR-009: one more
+mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
+`w:drawing`/`w:pict`; `getContext` and `modulesFor` add it), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
@@ -59,15 +61,19 @@ There are four tests and no test framework:
   (`unmarshalPackage` types the known parts, `marshalPackage` leaves its input untouched).
   CR-002's block checks `builders/wml`: every wrapper row, the content control inference (nested,
   forced), the tagged form, the sugar, the run mapping round trip, `textOf`, `walk` / `find` /
-  `linkParents`.
+  `linkParents`. CR-009's block checks that each of the 61 resolves globally to its type and that
+  the generated module still declares none of them itself (so a regeneration that does retires the
+  entry), that `modulesFor` adds the mapping with wml and not without, and that a kept Choice's
+  `w:drawing` and Fallback's `w:pict` (over a `v:shapetype` with `w14:anchorId`) unmarshal typed and
+  marshal whole.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
   wrote - every XML part of seventeen documents from docx4j's test resources, under
   `test/fixtures/fidelity/<document>/<part path>`, each directory with a `SOURCE.md` naming the file
   and commit - and compares canonically with `test/lib/canonical.mjs` (QNames not prefixes,
-  attributes sorted, namespace declarations ignored, `1`/`true` and two spellings of one
-  `xsd:double` the same value, whitespace-only text dropped, element order compared **except** under
+  attributes sorted, namespace declarations ignored, `1`/`true`, two spellings of one
+  `xsd:double` and base64 with and without line breaks the same value, whitespace-only text dropped, element order compared **except** under
   the two `xsd:all` roots of `docProps`). Parts are read by their own encoding, since one is UTF-16.
   Every part carrying an `mc:AlternateContent` is also checked with its Choices resolved, as a
   consumer understanding `test/lib/understood.mjs` would resolve them - the stronger check, since

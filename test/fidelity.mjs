@@ -68,6 +68,12 @@ const root = fileURLToPath(new URL('./fixtures/fidelity/', import.meta.url));
   differs('<p v="1"/>', '<p v="1x"/>', 'and a value that is not a number is compared as text');
   differs('<p v="1" w="2"/>', '<p v="1"/>', 'a dropped attribute is not hidden by the numeric rule');
 
+  // CR-009: a typed base64 attribute (o:gfxdata on a kept Fallback's v:shape) is written unwrapped.
+  same('<p g="UEsDBBQA&#13;&#10;BgAI"/>', '<p g="UEsDBBQABgAI"/>', 'the same xsd:base64Binary with and without line breaks');
+  differs('<p g="UEsDBBQA&#13;&#10;BgAI"/>', '<p g="UEsDBBQABgAJ"/>', 'different bytes are a difference');
+  differs('<p g="Hello&#10;World"/>', '<p g="HelloWorld"/>', 'and text of the wrong shape (not whole quanta) is compared as text');
+  differs('<p g="UEsD BBQA"/>', '<p g="UEsDBBQA"/>', 'only line breaks are insignificant, not spaces');
+
   // The line numbers and counts a failure reports must point at the difference.
   const report = compareCanonically('<p><a/><b/></p>', '<p><a/></p>');
   assert.equal(report.line, 3);

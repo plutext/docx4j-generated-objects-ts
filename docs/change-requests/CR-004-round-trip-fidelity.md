@@ -480,3 +480,19 @@ binding, every one carrying `cx:autoUpdate="false"`, without an error, and Word'
 PDFs of those charts match their PDFs of Office's own charts pixel for pixel (docx4j CR-040 section
 7.1). docx4j 17.3.3 also keeps Office's `0` unchanged on load and save of both waterfall fixtures,
 as this binding does. Nothing to change here.
+
+## 14. The corpus's kept branches are typed; a third canonical value rule (2026-10-18)
+
+CR-009 declares globally the 61 WordprocessingML elements docx4j declares as roots, so the
+unresolved check, which always marshalled a kept `mc:Choice`/`mc:Fallback` as the DOM it
+unmarshalled, now marshals typed content there: `loadAndSave.docx`'s text-box Fallback (`w:pict`
+over VML) and every kept `w:drawing`. The 359 checks still pass, which is the measurement CR-009
+section 3 predicted, with two notes. The `v:shapetype`'s `w14:anchorId` survives only because
+docx4j CR-048 regenerated the VML mapping first (`97c43b9`); CR-009 section 8 has the order. And
+one lexical rewrite appeared: `o:gfxdata`, base64 Word wraps with CRLF, is written unwrapped by the
+model's `Base64Binary`. `canonical.mjs` now treats two values that differ by line breaks alone,
+the remainder base64 of whole quanta, as one `xsd:base64Binary` value, beside the boolean and
+double rules and on the same argument (section 7): only the model's own typing can produce the
+two spellings between a part and its re-marshal. Self-checks cover the pair, different bytes, text
+of the wrong shape and spaces, which stay differences.
+

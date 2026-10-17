@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, WML_GLOBAL_ELEMENTS, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -452,11 +452,12 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
   // CR-003 sections 3.2 and 3.3: rows and cells (tbl rebuilt over them), and the inline picture
   // docx4j's createImageInline writes. Attributes are emitted sorted by name (see "What the
-  // declarations promise"), and a standalone w:tc / w:tbl / w:drawing root carries xsi:type.
+  // declarations promise"). A standalone w:tc / w:tbl / w:drawing root carried xsi:type until
+  // CR-009 declared them globally; now it marshals as docx4j's root classes do, without one.
   assert.equal(await marshalString(tc('a', { width: 1000 })),
-    `<w:tc xmlns:w="${W}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="w:CT_Tc"><w:tcPr><w:tcW w:type="dxa" w:w="1000"/></w:tcPr><w:p><w:r><w:t>a</w:t></w:r></w:p></w:tc>`);
+    `<w:tc xmlns:w="${W}"><w:tcPr><w:tcW w:type="dxa" w:w="1000"/></w:tcPr><w:p><w:r><w:t>a</w:t></w:r></w:p></w:tc>`);
   assert.equal(await marshalString(tc([])),
-    `<w:tc xmlns:w="${W}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="w:CT_Tc"><w:p/></w:tc>`,
+    `<w:tc xmlns:w="${W}"><w:p/></w:tc>`,
     'an empty cell still gets the w:p Word requires, and nothing else');
   assert.equal(await marshalString(tr(['a', 'b'], { widths: [100, 200] })),
     `<w:tr xmlns:w="${W}"><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="100"/></w:tcPr><w:p><w:r><w:t>a</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="200"/></w:tcPr><w:p><w:r><w:t>b</w:t></w:r></w:p></w:tc></w:tr>`);
@@ -531,4 +532,32 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(mcBranchOf(undefined), undefined);
 
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
+}
+
+// CR-009: the WordprocessingML elements docx4j declares as roots are declared globally by one more
+// mapping, so a kept mc:Choice or mc:Fallback types its w:drawing and w:pict as docx4j's context does.
+{
+  resetContext();
+  const ctx = await getContext();
+  const names = Object.keys(WML_GLOBAL_ELEMENTS);
+  assert.equal(names.length, 61, 'CR-009 lists 61');
+  const wmlGlobals = new Set(MODULES.org_docx4j_wml.elementInfos.filter((e) => !e.scope).map((e) => e.elementName.localPart ?? e.elementName));
+  for (const [localPart, type] of Object.entries(WML_GLOBAL_ELEMENTS)) {
+    const info = ctx.getElementInfo({ key: `{${W}}${localPart}` }, undefined);
+    assert.equal(info?.typeInfo?.name, `org_docx4j_wml.${type}`, `w:${localPart} resolves globally to ${type}`);
+    assert.ok(!wmlGlobals.has(localPart), `w:${localPart} is not declared globally by the generated module itself (a regeneration that does retires it here)`);
+  }
+  assert.ok(modulesFor('org_docx4j_wml').some((m) => m.name === 'org_docx4j_wml_globals'), 'modulesFor adds the globals to a closure holding wml');
+  assert.ok(!modulesFor('org_docx4j_dml').some((m) => m.name === 'org_docx4j_wml_globals'), 'and not to one without it');
+  const V = 'urn:schemas-microsoft-com:vml';
+  const kept = await unmarshalString(`<w:p xmlns:w="${W}" xmlns:mc="${MC}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:v="${V}" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w14="${W14}"><w:r><mc:AlternateContent><mc:Choice Requires="wps"><w:drawing><wp:inline distT="0"><wp:extent cx="1" cy="2"/></wp:inline></w:drawing></mc:Choice><mc:Fallback><w:pict><v:shapetype id="_x0000_t202" w14:anchorId="7969C50B" o:spt="202" path="m,l,21600r21600,l21600,xe"/></w:pict></mc:Fallback></mc:AlternateContent></w:r></w:p>`);
+  const ac = unwrap(kept).content[0].value.content[0].value;
+  assert.equal(ac.choice[0].any[0].value.TYPE_NAME, 'org_docx4j_wml.Drawing', 'a kept Choice types its w:drawing');
+  assert.equal(ac.fallback.any[0].value.TYPE_NAME, 'org_docx4j_wml.Pict', 'a kept Fallback types its w:pict');
+  assert.equal(ac.fallback.any[0].value.anyAndAny[0].value.TYPE_NAME, 'org_docx4j_vml.CTShapetype', 'and the VML inside it');
+  const written = await marshalString(kept);
+  assert.match(written, /<w:drawing><wp:inline distT="0"><wp:extent cx="1" cy="2"\/><\/wp:inline><\/w:drawing>/, 'the Choice marshals whole');
+  assert.match(written, /<v:shapetype [^>]*w14:anchorId="7969C50B"[^>]*o:spt="202"/, 'the Fallback keeps w14:anchorId (docx4j CR-048) and writes o:spt as read');
+  assert.equal(unwrap(await unmarshalString(`<w:drawing xmlns:w="${W}"/>`)).TYPE_NAME, 'org_docx4j_wml.Drawing', 'each of the 61 is a valid root now, as docx4j\'s root classes are');
+  console.log('CR-009: 61 WordprocessingML elements declared globally; kept mc branches typed as docx4j types them OK');
 }

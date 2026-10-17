@@ -4,7 +4,9 @@
 // disappear (the smoke test fails on a stale registry).
 import { Jsonix } from '@docx4j/jsonix';
 import { MODULES } from './modules.mjs';
+import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
 export { MODULES };
+export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
 import type { PackageElement, Package, Part } from '../modules/org_docx4j_xmlPackage.mjs';
@@ -266,7 +268,9 @@ export function modulesFor(...names: ModuleName[]): Jsonix.Mapping[] {
     for (const dependency of referencedModules(module)) add(dependency);
   };
   for (const name of names) add(name);
-  return [...chosen.values()];
+  const closure = [...chosen.values()];
+  // CR-009: a closure holding wml gets the global declarations it lacks, as the default context does.
+  return chosen.has('org_docx4j_wml') ? [...closure, org_docx4j_wml_globals] : closure;
 }
 
 /**
@@ -305,14 +309,17 @@ let builtContext: Jsonix.Context | undefined;
 
 /**
  * The context over all Office Open XML mappings, built once on first use (the modules are
- * loaded lazily; 104 modules are several megabytes). Parent pointers are on by default, as in
+ * loaded lazily; 104 modules are several megabytes), plus `org_docx4j_wml_globals` (CR-009: the
+ * WordprocessingML elements docx4j declares as roots, so that a kept `mc:Choice` or `mc:Fallback`
+ * types its `w:drawing` or `w:pict` as docx4j does). Parent pointers are on by default, as in
  * docx4j's object model, and so is docx4j's prefix table (`NAMESPACE_PREFIXES`); pass options to
- * change that or anything else.
+ * change that or anything else. A `modules` list of your own gets the globals only if it holds
+ * them: `modulesFor` adds them to any closure containing `org_docx4j_wml`.
  */
 export function getContext(options?: ContextOptions): Promise<Jsonix.Context> {
   if (contextPromise === undefined) {
     const { modules, ...contextOptions } = options ?? {};
-    const mappings = Promise.resolve(typeof modules === 'function' ? modules() : modules ?? Object.values(MODULES));
+    const mappings = Promise.resolve(typeof modules === 'function' ? modules() : modules ?? [...Object.values(MODULES), org_docx4j_wml_globals]);
     contextPromise = mappings.then((loaded) => {
       builtContext = new Jsonix.Context(loaded as Jsonix.Mapping[], { parentPointers: true, namespacePrefixes: NAMESPACE_PREFIXES, ...contextOptions });
       return builtContext;

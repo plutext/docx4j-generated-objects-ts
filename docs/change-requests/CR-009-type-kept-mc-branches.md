@@ -1,6 +1,6 @@
 # CR-009: Type what a kept `mc:AlternateContent` branch holds, as docx4j does
 
-**Status:** Proposed 2026-10-17; proposal 2 implemented 2026-10-18 by regeneration from docx4j CR-048 (`97c43b9`); proposal 1 awaiting Jason's go
+**Status:** Implemented 2026-10-18 (proposal 2 by regeneration from docx4j CR-048, `97c43b9`; proposal 1 in the facade, section 9); unreleased
 **Requested by:** `plutext/docx4j-core-ts` CR-010 phase 2 (Jason asked for phase 2 in the core-ts
 session, 2026-10-17). CR-010 keeps `mc:AlternateContent` and saves every branch, docx4j CR-021's
 policy. Its phase 1 is done (core-ts `6b178af`); phase 3 puts the content API over kept branches.
@@ -251,4 +251,44 @@ keeps `w14:anchorId` on the Fallback's `v:shapetype`, and a `v:rect` with both a
 round-trips through the facade. Word's own saves keep every VML `anchorId` and `gfxdata` (Jason's
 Office check, via the docx4j session). So proposal 2 is done by regeneration, the sequencing
 question of section 8 is moot, and proposal 1 can ship with all 61, `w:pict` included.
+
+## 9. Implementation notes (2026-10-18)
+
+Proposal 1 is `src/wml-globals.mts`: `WML_GLOBAL_ELEMENTS`, the 61 as local name to type
+(lists A and B as data), and `org_docx4j_wml_globals`, the mapping of section 4's recommended form
+(`dependencies: ['org_docx4j_wml']`, no `typeInfos`, one `elementInfos` entry per name by qualified
+type name). `getContext()` passes it beside the 104 generated modules; `modulesFor` appends it to
+any closure holding `org_docx4j_wml`; a caller's own `modules` list gets it only if it includes
+it. Both are exported from the facade. The CR-005 registry and `MODULE_NAMES` are unchanged: it is
+facade code, not a module to pick.
+
+Tests, in the smoke: each of the 61 resolves with no scope to `org_docx4j_wml.<type>`; the
+generated module declares none of them globally itself, so a regeneration that starts to retires
+the entry here (strict in both directions, as the fidelity tables are); `modulesFor` adds the
+mapping with wml and not without; a `w:r` holding an `mc:AlternateContent` whose Choice carries a
+`w:drawing` and whose Fallback a `w:pict` over a `v:shapetype` with `w14:anchorId` unmarshals both
+typed, the VML inside typed too, and marshals whole, the attribute kept (docx4j CR-048) and
+`o:spt` as read; `<w:drawing/>` unmarshals at the root. The nodenext consumer check imports the
+two exports.
+
+Two things the tests exposed, both expected by section 3 and now recorded:
+
+- **A bare `w:tc` no longer carries `xsi:type`.** CR-003's smoke expected
+  `<w:tc xsi:type="w:CT_Tc">` from `marshalString(tc(...))`: with no global declaration the runtime
+  marshalled the root by its type and said so. Now `w:tc`, `w:tbl`, `w:drawing` and the rest are
+  declared, so they marshal as docx4j's root classes do, without one. The expectation changed;
+  `deepCopyAs`'s `xsi:type` on a `w:pPr` inside `w:pPrChange` is a different mechanism (a subtype
+  where the property declares the base) and is unaffected.
+- **The fidelity corpus now types its kept branches**, since the facade keeps every branch and
+  CR-004's unresolved check marshals what it unmarshalled. One line differed: the `v:shape`
+  inside `loadAndSave.docx`'s `w:pict` Fallback writes `o:gfxdata` unwrapped where Word wraps it
+  at 76 characters with CRLF, the same bytes. `test/lib/canonical.mjs` gained a third value rule
+  beside the boolean and double ones, with the same argument: two values differing by line breaks
+  alone, the remainder base64 of whole quanta, are one `xsd:base64Binary`; spaces and text of the
+  wrong shape stay differences, and the self-checks say so. The 359 checks pass; the
+  `v:shapetype`'s `w14:anchorId` round-trips because of CR-048 (without `97c43b9` this line would
+  have reported it lost, section 8).
+
+Not done here: core-ts's survey of section 5 on this build, and its CR-010 phase 2, which this
+unblocks; the 11 non-WordprocessingML roots of section 2 remain a later CR.
 
