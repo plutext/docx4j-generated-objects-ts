@@ -35,7 +35,10 @@ try {
   // bundler can satisfy: it fell back to browser globals and reached for XMLHttpRequest
   // (jsonix-CR-005). The absence of that shim here is the acceptance check for that fix.
   const ran = execFileSync(process.execPath, [join(out, 'app.mjs')], { stdio: 'pipe', cwd: out }).toString().trim();
-  assert.equal(ran, 'org_docx4j_wml.Document 1', 'the bundle unmarshals where nothing of the package is on disk');
+  // The bundle is an ES module, so the runtime inside it runs in strict mode: the o:gfxdata read
+  // and written back is the check for the @docx4j/jsonix ^3.4.2 floor (consumer.mjs).
+  assert.equal(ran, 'org_docx4j_wml.Document 1 1,2,3 true',
+    'the bundle unmarshals where nothing of the package is on disk, base64Binary included in strict mode');
 
   // The require() witness: a CommonJS consumer of the UMD mappings, bundled to cjs, which is the
   // only shape that takes the runtime's UMD footer.
@@ -46,7 +49,7 @@ try {
     'a require() consumer bundled to cjs unmarshals and marshals, with no globals supplied');
 
   console.log(`bundle: esbuild --bundle with no configuration, ${(bundle.length / 1048576).toFixed(1)}MB esm`
-    + ' and a cjs require() consumer, both unmarshalling with nothing beside them');
+    + ' (strict mode, base64Binary read and written) and a cjs require() consumer, both unmarshalling with nothing beside them');
 } finally {
   rmSync(out, { recursive: true, force: true });
 }
