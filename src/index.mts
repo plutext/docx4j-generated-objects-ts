@@ -584,9 +584,19 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
 /**
  * The root's namespace declarations, as docx4j's McIgnorableNamespaceDeclarator leaves them:
  * every declaration that no element or attribute in the tree resolves to is removed unless the
- * root's mc:Ignorable names its prefix, and every prefix mc:Ignorable names that is not declared
- * is added from `table`, or from `IGNORABLE_PREFIX_ALIASES` for a prefix the table cannot produce
- * because its namespace is written as the default (CR-006). A prefix neither resolves is dropped
+ * root's mc:Ignorable or an mc:Choice's Requires names its prefix, and every prefix those name
+ * that is not declared is added from `table`, or from `IGNORABLE_PREFIX_ALIASES` for a prefix the
+ * table cannot produce because its namespace is written as the default (CR-006).
+ *
+ * A Requires prefix counts because it names a namespace, not because anything is in it: Word's
+ * chartex Choice says `Requires="cx1"` (2015/9/8) over content in `cx` (2014), so nothing in the
+ * branch uses cx1 and its declaration went, leaving a Requires no reader can resolve (core-ts,
+ * once its CR-010 phase 4 kept branches by default, 2026-10-19; docx4j CR-049 declares the same).
+ * A declaration below the root that binds the prefix answers for its Choice, as everywhere here.
+ * A Requires prefix nothing resolves is kept, with a warning: dropping it would change which
+ * branch a reader takes.
+ *
+ * An mc:Ignorable prefix neither resolves is dropped
  * from mc:Ignorable with a warning: Word and Excel repair a file whose mc:Ignorable names an undeclared prefix, which is
  * how this was found (@docx4j/core-ts, an Excel acceptance run over xl/workbook.xml, 2026-09-19:
  * the model binds no xr:revisionPtr or xr2:uid, so nothing in the tree used xr2, xr6 or xr10 and
@@ -605,6 +615,7 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
   const use = (prefix: string, namespaceURI: string, shadowed: Set<string>): void => {
     if (!shadowed.has(prefix) && declared.get(prefix)?.value === namespaceURI) used.add(prefix);
   };
+  const required = new Set<string>();
   const walk = (element: Element, shadowed: Set<string>): void => {
     let scope = shadowed;
     if (element !== root) {
@@ -620,6 +631,11 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
     for (const attr of Array.from(element.attributes)) {
       if (attr.namespaceURI && prefixOfDeclaration(attr) === undefined) use(attr.prefix ?? '', attr.namespaceURI, scope);
     }
+    if (element.namespaceURI === MC_NS && element.localName === 'Choice') {
+      for (const prefix of (element.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean)) {
+        if (!scope.has(prefix)) required.add(prefix);
+      }
+    }
     for (const child of Array.from(element.childNodes)) {
       if (child.nodeType === 1) walk(child as Element, scope);   // childNodes: xmldom has no firstElementChild
     }
@@ -627,21 +643,27 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
   walk(root, new Set());
   const ignorable = (root.getAttributeNS(MC_NS, 'Ignorable') ?? '').split(/\s+/).filter(Boolean);
   for (const prefix of ignorable) used.add(prefix);
+  for (const prefix of required) used.add(prefix);
   for (const [prefix, attr] of declared) {
     if (!used.has(prefix) || attr.value === XML_NS) root.removeAttributeNode(attr);
   }
-  if (ignorable.length === 0) return;
+  if (ignorable.length === 0 && required.size === 0) return;
 
   const namespaceFor = new Map(Object.entries(table).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
-  const unresolved: string[] = [];
-  for (const prefix of ignorable) {
-    if (root.getAttributeNode(`xmlns:${prefix}`)) continue;
-    // The table answers "which prefix for this namespace", which has no answer for the namespace
-    // written as the default; the aliases answer "what does this Ignorable prefix mean" (CR-006).
+  // The table answers "which prefix for this namespace", which has no answer for the namespace
+  // written as the default; the aliases answer "what does this prefix mean" (CR-006).
+  const declare = (prefix: string): boolean => {
+    if (root.getAttributeNode(`xmlns:${prefix}`)) return true;
     const namespaceURI = namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix];
-    if (namespaceURI === undefined) { unresolved.push(prefix); continue; }
+    if (namespaceURI === undefined) return false;
     root.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
+    return true;
+  };
+  const unrequired = [...required].filter((prefix) => !declare(prefix));
+  if (unrequired.length > 0) {
+    console.warn(`marshal: an mc:Choice's Requires names ${unrequired.join(', ')}, which no declaration or NAMESPACE_PREFIXES entry resolves; kept`);
   }
+  const unresolved = ignorable.filter((prefix) => !declare(prefix));
   if (unresolved.length > 0) {
     const kept = ignorable.filter((prefix) => !unresolved.includes(prefix));
     // An mc:Ignorable naming a prefix nothing declares is what Word and Excel repair, and the

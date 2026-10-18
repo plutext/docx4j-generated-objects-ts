@@ -90,7 +90,9 @@ There are four tests and no test framework:
   whose roots docx4j deliberately does not bind (sensitivity labels, PowerPoint's 2018 comments,
   Excel's threaded comments, a Power Query blob), which fails if the model ever learns one. Every
   differing line is classified, not only the first, so a recorded loss cannot mask an unrecorded one;
-  the classifier has its own self-checks, as does the canonicaliser.
+  the classifier has its own self-checks, as does the canonicaliser. Since the comparison ignores
+  namespace declarations, every prefix an `mc:Ignorable` or an `mc:Choice`'s `Requires` names in a
+  marshalled part is also checked to resolve where it is written (CR-001 section 3.2).
   Run against 0.1.5's `modules/` the test reports all five losses that release carried.
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
@@ -149,7 +151,8 @@ Check the index before changing facade behaviour: a CR may already specify it. C
 (implemented 2026-09-10) makes docx4j's prefix table (`NAMESPACE_PREFIXES`) the context default;
 the facade's marshal functions derive a per-root table (a `Relationships` root takes the default
 namespace, since the runtime allows one default) and strip unused root `xmlns` declarations,
-keeping what `mc:Ignorable` names. CR-008 (implemented 2026-10-04) has them first append to a
+keeping, and declaring from the table, what `mc:Ignorable` and each `mc:Choice`'s `Requires` name
+(CR-001 sections 3.1 and 3.2). CR-008 (implemented 2026-10-04) has them first append to a
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.

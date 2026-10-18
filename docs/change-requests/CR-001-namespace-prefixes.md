@@ -1,6 +1,6 @@
 # CR-001: The facade ships docx4j's namespace prefix table as the context default
 
-**Status:** Implemented 2026-09-10 (sections 2.1 and 2.3 amended on implementation: one default namespace per marshal, chosen by the root, as docx4j's per-part mappers); section 3.1 added 2026-09-19: mc:Ignorable prefixes are declared, not only kept.
+**Status:** Implemented 2026-09-10 (sections 2.1 and 2.3 amended on implementation: one default namespace per marshal, chosen by the root, as docx4j's per-part mappers); section 3.1 added 2026-09-19: mc:Ignorable prefixes are declared, not only kept; section 3.2 added 2026-10-19: so are the prefixes an mc:Choice's Requires names.
 **Depends on:** `@docx4j/jsonix` 3.2.0 (`Jsonix.Context` option `namespacePrefixes`, already supported)
 **Requested by:** `plutext/docx4j-core-ts` CR-001 (the engine), whose Phase A cannot write a
 Word-readable `document.xml` without this
@@ -251,6 +251,41 @@ and Excel repair.
 Tests (section 4): the workbook above marshals with every `mc:Ignorable` prefix declared; a
 `w:document` whose `mc:Ignorable` names `w15` declares it although nothing uses it; and an
 unresolvable prefix is dropped from `mc:Ignorable`, leaving the rest.
+
+## 3.2 Declaring what an `mc:Choice`'s `Requires` names (2026-10-19)
+
+`Requires` names prefixes as a value, as `mc:Ignorable` does, and ECMA-376 Part 3 requires each to
+be bound where it is written. The pass counted only element and attribute names as uses. Word's
+chartex Choice says `Requires="cx1"` (`.../2015/9/8/chartex`) over content in `cx`
+(`.../2014/chartex`), so nothing in the branch used `cx1`, and the runtime's root declaration of it
+was removed. The saved part named a prefix nothing declared.
+
+- **Found by:** core-ts, 2026-10-19, once its CR-010 phase 4 kept branches by default. Over 483
+  packages the kept load left 18 of 297 `Requires` prefixes undeclared, in 11 packages: `cx1` 11,
+  `x14` 4, and `a14`, `sle15` and `tsle` 1 each. The resolving load writes no Choice and left
+  none.
+- **In this corpus:** 11 of 29, in `waterfall.docx` and `waterfall.pptx`, the two chartex
+  workbooks, the two checkbox worksheets and the slicer and timeline drawings.
+- **Why no test here saw it:** the canonical comparison ignores namespace declarations.
+- **docx4j's record:** it has declared Choice prefixes on save since 6.0.0. `JaxbXmlPart`'s
+  `mcChoiceNamespaces` javadoc says "These must be declared, or Word can't open the docx", and
+  docx4j CR-049 states the same contract. No Office application here has opened one of the
+  affected packages.
+
+The pass now counts every prefix a `Choice`'s `Requires` names as a use of its declaration. It
+declares any that are not declared, from the table or `IGNORABLE_PREFIX_ALIASES`, as it does for
+`mc:Ignorable`. A declaration below the root that binds the prefix answers for its Choice.
+
+A `Requires` prefix nothing resolves is kept, with a warning, where an `mc:Ignorable` one is
+dropped. Dropping a requirement would change which branch a reader takes. All 18 are in
+`NAMESPACE_PREFIXES`.
+
+Tests:
+- `test/smoke.mjs`: a kept Choice with `Requires="cx1"` over a `w:drawing` declares `cx1` on the
+  root, and an unknown `Requires="zz"` is kept and warned about.
+- `test/fidelity.mjs`: every prefix that an `mc:Ignorable` (on any element) or a `Requires` names
+  in a marshalled part must resolve where it is written. That is 631 prefixes over the 359
+  checks. Before the fix it reported the 11.
 
 ## 4. Tests
 

@@ -113,6 +113,44 @@ function takeChoice(xml) {
   return { xml: new XMLSerializer().serializeToString(doc), count: alternates.length };
 }
 
+// ---------------------------------------------------------------- prefixes markup compatibility names
+//
+// What the canonical comparison cannot see, since it ignores namespace declarations: a prefix
+// that an mc:Ignorable or an mc:Choice's Requires names, as a value, must resolve where it is
+// written. The facade once kept only the declarations element and attribute names used, so Word's
+// Requires="cx1" over content in cx (2014) came out naming a prefix nothing declared (core-ts,
+// once its CR-010 phase 4 kept branches by default, 2026-10-19). Every element is read, since a
+// kept branch carries mc:Ignorable below the root (a:srgbClr's, for a14).
+let mcPrefixesChecked = 0;
+function unresolvedMcPrefixes(xml) {
+  const doc = new DOMParser().parseFromString(xml, 'application/xml');
+  const out = [];
+  for (const element of Array.from(doc.getElementsByTagName('*'))) {
+    const named = [['mc:Ignorable', element.getAttributeNS(MC, 'Ignorable')]];
+    if (element.namespaceURI === MC && element.localName === 'Choice') named.push(['Requires', element.getAttribute('Requires')]);
+    for (const [attribute, value] of named) {
+      for (const prefix of (value ?? '').split(/\s+/).filter(Boolean)) {
+        mcPrefixesChecked++;
+        if (!element.lookupNamespaceURI(prefix)) out.push(`${element.tagName}/@${attribute} names ${prefix}, which nothing declares`);
+      }
+    }
+  }
+  return out;
+}
+
+{
+  const CX1 = 'http://schemas.microsoft.com/office/drawing/2015/9/8/chartex';
+  const choice = (rootDeclaration, choiceDeclaration) => `<w:r xmlns:w="w" xmlns:mc="${MC}" ${rootDeclaration}>`
+    + `<mc:AlternateContent><mc:Choice ${choiceDeclaration} Requires="cx1"/></mc:AlternateContent></w:r>`;
+  assert.deepEqual(unresolvedMcPrefixes(choice('', '')), ['mc:Choice/@Requires names cx1, which nothing declares'], 'an undeclared Requires prefix is found');
+  assert.deepEqual(unresolvedMcPrefixes(choice(`xmlns:cx1="${CX1}"`, '')), [], 'declared on the root, it resolves');
+  assert.deepEqual(unresolvedMcPrefixes(choice('', `xmlns:cx1="${CX1}"`)), [], 'declared on the Choice, it resolves');
+  assert.deepEqual(unresolvedMcPrefixes(`<a:srgbClr xmlns:a="a" xmlns:mc="${MC}" mc:Ignorable="a14"/>`),
+    ['a:srgbClr/@mc:Ignorable names a14, which nothing declares'], 'an mc:Ignorable below the root is read too');
+  mcPrefixesChecked = 0;
+  console.log('fidelity: markup compatibility prefix self-checks OK');
+}
+
 // ---------------------------------------------------------------- reading a part
 //
 // Fixtures are the archive's bytes, so a part is read by its own encoding rather than assumed to
@@ -366,6 +404,7 @@ for (const file of parts) {
         + (expectedThrow ? `\n    (KNOWN expects a different throw here: ${expectedThrow})` : ''));
       continue;
     }
+    for (const unresolved of unresolvedMcPrefixes(out)) failures.push(`${label}\n    ${unresolved}`);
     const all = differences(xml, out);
     // Every differing line is classified, not only the first: a line that differs solely by an
     // attribute the model is known not to bind is that finding, recorded once per attribute; the
@@ -428,5 +467,6 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.log(`fidelity: ${checked} parts Office wrote round-trip through the facade unchanged`
-    + (known.length ? `, but for ${known.length} known difference${known.length === 1 ? '' : 's'} above` : ''));
+    + (known.length ? `, but for ${known.length} known difference${known.length === 1 ? '' : 's'} above` : '')
+    + `; every one of ${mcPrefixesChecked} prefixes mc:Ignorable or Requires names resolves`);
 }

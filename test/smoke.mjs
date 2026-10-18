@@ -229,6 +229,23 @@ const unknownOut = declarationsOf(await marshalString(await unmarshalString(
   `<w:document xmlns:w="${W}" xmlns:mc="${MC}" mc:Ignorable="w14 zz"><w:body><w:p/></w:body></w:document>`)));
 assert.deepEqual(unknownOut.ignorable, ['w14'], 'a prefix no table entry resolves is dropped from mc:Ignorable');
 assert.deepEqual(unknownOut.undeclared, []);
+// An mc:Choice's Requires names prefixes too, declared whether or not its branch uses them: Word's
+// chartex Choice says Requires="cx1" (2015/9/8) over content in cx (2014), and with nothing in cx1
+// its declaration was stripped, leaving a Requires no reader resolves (core-ts, once its CR-010
+// phase 4 kept branches by default, 2026-10-19; docx4j CR-049 declares the same).
+{
+  const CX1 = 'http://schemas.microsoft.com/office/drawing/2015/9/8/chartex';
+  const kept = (requires, declaration) => unmarshalString(`<w:document xmlns:w="${W}" xmlns:mc="${MC}"><w:body><w:p><w:r><mc:AlternateContent>`
+    + `<mc:Choice ${declaration} Requires="${requires}"><w:drawing/></mc:Choice><mc:Fallback><w:t>chart</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p></w:body></w:document>`);
+  const choiceXml = await marshalString(await kept('cx1', `xmlns:cx1="${CX1}"`));
+  assert.ok(declarationsOf(choiceXml).declared.includes('cx1'), 'a Requires prefix nothing in its branch uses is declared on the root');
+  assert.match(choiceXml, new RegExp(`xmlns:cx1="${CX1}"`), 'as NAMESPACE_PREFIXES has it');
+  const warn = console.warn, warned = [];
+  console.warn = (message) => warned.push(message);
+  const unknownChoice = await marshalString(await kept('zz', 'xmlns:zz="urn:zz"')).finally(() => { console.warn = warn; });
+  assert.match(unknownChoice, /Requires="zz"/, 'a Requires prefix nothing resolves is kept, since dropping it would change the branch a reader takes');
+  assert.match(warned.join('\n'), /Requires names zz/, 'and warned about');
+}
 
 // CR-006: a prefix mc:Ignorable names that the table cannot produce, because its namespace is
 // written as the default. Excel's slicer cache: x is the SpreadsheetML main namespace, which this
