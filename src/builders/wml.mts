@@ -788,6 +788,12 @@ export function mcBranchOf(value: Mce.AlternateContent | undefined, options: McO
  * w:noBreakHyphen, w:softHyphen and w:sym contribute; runs inside hyperlinks, content controls,
  * fields, insertions and moved-to runs are read; deletions and w:moveFrom are skipped; an
  * mc:AlternateContent contributes its selected branch (`mcBranchOf`); paragraphs are joined with \n.
+ *
+ * Not the text-extraction model (WD 0.14; docx4j CR-046's `Texts`, core-ts CR-012): hidden text is
+ * read, fields are not computed, and there are no options, since hidden text can come from a style
+ * and a field's value from the engine, neither of which a tree helper has. Its output is kept stable,
+ * because core-ts's Office JS readers (`Paragraph.text`, `ContentControl.text`, table and cell text)
+ * match it; docx4j deprecates `TextUtils` with CR-046, but this stays (Jason, 2026-10-19).
  */
 export function textOf(value: Element | object): string {
   const v = isElement(value) ? value.value : value;
