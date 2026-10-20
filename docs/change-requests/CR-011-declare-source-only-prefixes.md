@@ -1,6 +1,6 @@
 # CR-011: Declare from the source the prefixes only the source bound
 
-**Status:** Proposed 2026-10-20; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR"), waiting on that jsonix CR
+**Status:** Proposed 2026-10-20; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR"); jsonix-CR-008 implemented (jsonix 080fbb0, unreleased) and tested here, waiting on its release
 **Requested by:** core-ts, at Jason's word (2026-10-20: "Send this declaration defect to the
 objects session as a CR there"). The editor found it while building ED-009's fixture. core-ts
 reproduced it in core-ts 0.5.0 (main f8617e8) with this package at 0.4.2 and `@docx4j/jsonix`
@@ -8,10 +8,10 @@ reproduced it in core-ts 0.5.0 (main f8617e8) with this package at 0.4.2 and `@d
 its `insertOoxml` forms bring in Choices whose prefix only the inserted OOXML declares. It suggested
 keeping each Choice's record on the Choice itself, which this revision adopts (section 3.1).
 **Depends on:** CR-001 sections 3.1 and 3.2, whose `declare()` this extends. For recording at
-unmarshal, it also depends on a new `@docx4j/jsonix` CR: an unmarshal-side `onElement`, the
+unmarshal, it also depends on **jsonix-CR-008**, an unmarshal-side `onElement` that is the
 counterpart of jsonix-CR-006's marshal one (section 3.2). Jason chose this route on 2026-10-20, and
-core-ts relayed the decision. The request went to the jsonix session the same day; it has not
-answered yet.
+core-ts relayed the decision. The jsonix session filed and implemented it the same day, on jsonix
+master 080fbb0, which is not yet released. Section 2 tests this CR against it.
 **Counterpart:** docx4j records the prefixes at unmarshal. `Docx4jUnmarshallerListener` passes
 each `mc:Choice`'s `Requires`, `Ignorable` and `MustUnderstand` to
 `JaxbXmlPart.addMcChoiceNamespace`, and has since 6.0.0. It records the prefixes only, per part, not
@@ -94,9 +94,14 @@ is within measurement noise.
   something did, the table and the aliases would declare the wrong namespace for it. That is why
   section 3.4 puts the source first.
 
-**A prototype** of section 3, built in a scratch copy and not committed (164 changed lines in
-`src/index.mts`). It stands in for the runtime callback with a wrapper on the Choice class's
-`unmarshal` (section 3.2).
+**A prototype** of section 3, built in a scratch copy and not committed (about 160 changed lines
+in `src/index.mts`). It was first built on `@docx4j/jsonix` 3.4.2, with a wrapper on the Choice
+class's `unmarshal` standing in for the callback. Then it was rebuilt on jsonix-CR-008's real
+callback, on jsonix 080fbb0 linked into a scratch copy, and every result below holds on that build.
+- Unchanged objects 0.4.2 on jsonix 080fbb0: the typecheck and `npm test` pass, and all 341
+  corpus hashes are identical, so the runtime change alone moves nothing.
+- On the real callback, the caller's own unmarshal `onElement` still receives every element in
+  post-order, and the caller's marshal `onElement` every written element.
 - Twelve cases, each run on the prototype and on 0.4.2. On the prototype all twelve behave as
   section 3 says. On 0.4.2, ten of them leave a prefix unbound or drop it from `mc:Ignorable`:
   - the editor's shape, and the probe's;
@@ -156,15 +161,21 @@ The typed Choice and the DOM element it came from are paired only inside the run
 unmarshal reports nothing per element: jsonix-CR-006 gave it `onUnexpectedElement` and
 `onUnexpectedAttribute`, and gave only the marshaller an `onElement`.
 
-So `@docx4j/jsonix` gains an unmarshal-side `onElement(node, value)`, the counterpart of the marshal
-callback, as a new jsonix CR. This is the shape sent to the jsonix session:
+So `@docx4j/jsonix` gains an unmarshal-side `onElement(element, value)`, the counterpart of the marshal
+callback: jsonix-CR-008 (`docs/change-requests/jsonix-CR-008-unmarshal-on-element.md` there). It
+has the shape this CR asked for:
 - **The option:** a per-call option of `createUnmarshaller`, beside the other two callbacks.
 - **When it fires:** once for each element that a class info unmarshals to a typed object, after
   the object is complete. By then its attributes, content and `PARENT` are set, and its children
   have already been reported.
 - **What `node` is:** the source element itself, so `lookupNamespaceURI` sees its ancestors.
 - **Not reported:** simple-typed elements, element wrappers, and wildcard DOM content. That content
-  stays the source node itself in the tree, which section 3.3 relies on.
+  stays the source node itself in the tree, which section 3.3 relies on. The typings promise this.
+- **Under `xsi:type`:** the derived type's object is reported once.
+
+The callback has the same name as the marshal one. So a caller who passes one options object to
+both an unmarshal and a marshal now gets reports from both (measured: 9 and 9 for a nine-element
+part). The facade keeps the two option objects separate.
 
 The facade passes its callback to every unmarshaller it creates, composed with the caller's own.
 That covers `unmarshalString`, `unmarshalNode` and each part of `unmarshalPackage`, and through
