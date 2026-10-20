@@ -59,9 +59,10 @@ already answers:
    keeps a source-only binding only for its `mc:Ignorable`, or for the tree's own use. In the
    editor's shape, the root's `xmlns:zz9` serves its `mc:Ignorable` and the Choice's `Requires`
    alike, so it is written once. A `zz9` the source root declared that `mc:Ignorable` doesn't name
-   moves to the Choice. This goes beyond Jason's rule, which says nothing of a binding both places
-   need; it is for him to confirm. Word's placement for such a prefix isn't measured: check 50's
-   case 5 was resolved by Word, so its Choice wasn't written.
+   moves to the Choice. Jason's rule said nothing of a binding both places need. He confirmed one
+   declaration on the root, for both ports, on 2026-10-20 ("one declaration on the root right").
+   Word's placement for such a prefix isn't measured: check 50's case 5 was resolved by Word, so
+   its Choice wasn't written.
 3. **Otherwise, as before:** the table or the aliases, on the root. A prefix nothing resolves is
    kept, with the existing warning.
 
