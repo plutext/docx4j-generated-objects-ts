@@ -325,7 +325,7 @@ section 3.2's callback, as 0.4.1 raised it to 3.4.2.
   3.5.0; this package's floor is now ^3.5.0.
 - **docx4j:** CR-052 (see the header) covers docx4j's half: moved, copied and built content, and a
   tree set from code. Where a source-only `Requires` prefix is declared is for Jason. There are
-  three places, all equivalent XML; whether Word reads them alike hasn't been checked.
+  three places, all equivalent XML, and Word 365 reads all three alike (core-ts check 50, below).
   - **The root:** this CR, following CR-001's convention.
   - **The `mc:AlternateContent`:** CR-052's D4 recommendation, and what docx4j does for a loaded
     part.
@@ -337,10 +337,21 @@ section 3.2's callback, as 0.4.1 raised it to 3.4.2.
     `mc:Fallback`, and didn't add `zz9` to `mc:Ignorable`. In a WordprocessingML part, Word declares
     nothing on `mc:AlternateContent`.
 
+  Jason ran core-ts's check 50 in Word 365 on 2026-10-20. Its file has five runs, each with a text
+  box as its Choice and plain text as its Fallback. Case 1 is Word's own `Requires="wps"`, declared
+  on the root. Cases 2 to 4 bind the `wps` namespace to another prefix, used on the shape elements
+  too, and declare it on the root, on `mc:AlternateContent` and on `mc:Choice` respectively. Case 5
+  requires `zz9`. Word showed the text box in cases 1 to 4 and the Fallback in case 5. So Word reads
+  this CR's root placement, and the choice between the three is about matching Word's output, not
+  about Word reading them. On save, Word renamed the three aliases to `wps` on the root and resolved
+  case 5. Each kept `mc:Fallback` carried unused copies of the source's declarations outside Word's
+  fixed set: `zz9` and the root alias from the root, and case 3's from its `mc:AlternateContent`.
+
   Either local form would also keep both meanings in section 3.5's case of one prefix bound two
   ways, because the tree doesn't use that prefix. If the ports should agree, the root rule in
   section 3.4 would change, for a prefix the tree doesn't use, to the place Jason chooses. For a
   prefix in the table, which CR-001 governs and this CR doesn't change, the root matches Word in
   WordprocessingML parts but not in chart parts: there Word declares `xmlns:mc` on
   `mc:AlternateContent` and `c14` on the Choice (37 of 37), as Excel and PowerPoint do. core-ts
-  records the counts in its CR-010 section 14.9, and sent them to docx4j-25 for CR-052.
+  records the counts and check 50 in its CR-010 section 14.9, and sent the counts to docx4j-25 for
+  CR-052.
