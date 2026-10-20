@@ -12,14 +12,24 @@ unmarshal, it also depends on **jsonix-CR-008**, an unmarshal-side `onElement` t
 counterpart of jsonix-CR-006's marshal one (section 3.2). Jason chose this route on 2026-10-20, and
 core-ts relayed the decision. The jsonix session filed and implemented it the same day, on jsonix
 master 080fbb0, which is not yet released. Section 2 tests this CR against it.
-**Counterpart:** docx4j records the prefixes at unmarshal. `Docx4jUnmarshallerListener` passes
-each `mc:Choice`'s `Requires`, `Ignorable` and `MustUnderstand` to
-`JaxbXmlPart.addMcChoiceNamespace`, and has since 6.0.0. It records the prefixes only, per part, not
-their namespaces. On marshal, `NamespacePrefixMapperUtils.declareNamespaces` resolves each prefix
-through `NamespacePrefixMappings.getNamespaceURIStatic`, its static table, and otherwise logs "No
-mapping for prefix" and declares nothing. Reading the code, docx4j has the same gap; it has not been
-run here. Since docx4j CR-046, `McSelection.recordRequiresNamespaces` records each `Requires` prefix
-by its namespace, but only to select a branch; the marshal doesn't use it.
+**Counterpart:** docx4j CR-052 (proposed 2026-10-20, drafted by docx4j-25 at this CR's request).
+docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it:
+- **A part saved as loaded already keeps its bindings.** `extraction-probe.docx` saves with all 12
+  `Requires` prefixes resolving, and docx4j writes `xmlns:zz9` and `xmlns:shape2010` on each
+  `mc:AlternateContent`. A root `mc:Ignorable="zz9"` loaded from its package is declared on the root.
+  This package lacks exactly that, and this CR adds it.
+- **Moved, copied or built content does not:**
+  - a Choice built in code with `Requires="cx1"` is undeclared on save, though the table knows `cx1`;
+  - the probe's zz9 paragraphs, moved or deep-copied into another package, are undeclared;
+  - a root `mc:Ignorable="zz9"` set from code is written with no declaration.
+  This package already declares a table prefix such as `cx1` for a built Choice (CR-001 section 3.2).
+  This CR's per-Choice record and its `deepCopy` carry cover the moved and copied cases.
+
+Which docx4j record a loaded part's bindings come from is CR-052's phase 0. There are two
+candidates: CR-046's per-Choice `McSelection.REQUIRES_NAMESPACES`, and the part's
+`addMcChoiceNamespace` string. docx4j-25 rates CR-052 medium priority, high if Word refuses such a
+file. An earlier draft of this header said, from reading the code alone, that docx4j had this CR's
+whole gap. The measurement shows that is true only for content that has moved.
 
 ## 1. Summary
 
@@ -307,5 +317,10 @@ that release, as 0.4.1 did. A patch (0.4.3) fits, but the version and the releas
   keeps a part's private prefixes, and so does content moved between parts.
 - **`@docx4j/jsonix`:** a new CR for the unmarshal-side `onElement` (section 3.2), requested
   2026-10-20.
-- **docx4j:** the same gap, from reading the code (see the header). A docx4j CR could pass the
-  URIs that CR-046's `McSelection` records to the marshal side. Whether to raise one is Jason's call.
+- **docx4j:** CR-052 (see the header) covers docx4j's half: moved, copied and built content, and a
+  tree set from code. One difference from this CR is for Jason. CR-052's D4 recommends declaring a
+  `Requires` prefix on the `mc:AlternateContent`, which is what docx4j does for a loaded part. This
+  CR declares on the root, following CR-001's convention. A local declaration would also keep both
+  meanings in section 3.5's case of one prefix bound two ways, because the tree doesn't use that
+  prefix. Both forms are valid. If the ports should agree, the root rule in section 3.4 would become
+  "on the Choice's `mc:AlternateContent`" for a prefix the tree doesn't use.
