@@ -272,6 +272,8 @@ assert.deepEqual(unknownOut.undeclared, []);
     const editors = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac('')}</w:r></w:p>`, 'xmlns:zz9="urn:zz9" mc:Ignorable="zz9"')));
     assert.ok(onRoot(editors) && /mc:Ignorable="zz9"/.test(editors), 'declared on the root: mc:Ignorable keeps zz9 and the Requires resolves');
     assert.equal(editors.split('xmlns:zz9=').length, 2, 'and the Choice doesn\'t repeat the root\'s binding');
+    const rootOnly = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac('')}</w:r></w:p>`, 'xmlns:zz9="urn:zz9"')));
+    assert.ok(onChoice(rootOnly) && !onRoot(rootOnly), 'a root declaration mc:Ignorable doesn\'t name moves to the Choice');
     const probe = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac()}</w:r><w:r>${ac(`xmlns:shape2010="${WPS}"`, 'shape2010')}</w:r></w:p>`)));
     assert.ok(onChoice(probe) && onChoice(probe, 'shape2010', WPS), 'declared on mc:AlternateContent, and a second prefix for a namespace the table knows: each on its Choice');
     assert.ok(!onRoot(probe) && !onRoot(probe, 'shape2010', WPS), 'not on the root');

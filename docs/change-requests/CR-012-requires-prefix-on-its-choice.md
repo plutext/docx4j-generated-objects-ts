@@ -55,9 +55,13 @@ already answers:
    ahead of its `Requires`, as Word writes it. The source binding is the one the table and the
    aliases wouldn't give (CR-011 section 3.1). So `shape2010` for `wps`, and `w14` bound to another
    namespace, go on the Choice too.
-2. **If the root already declares that same binding,** the Choice doesn't repeat it. In the
+2. **If the marshalled root declares that same binding,** the Choice doesn't repeat it. The root
+   keeps a source-only binding only for its `mc:Ignorable`, or for the tree's own use. In the
    editor's shape, the root's `xmlns:zz9` serves its `mc:Ignorable` and the Choice's `Requires`
-   alike, so it is written once.
+   alike, so it is written once. A `zz9` the source root declared that `mc:Ignorable` doesn't name
+   moves to the Choice. This goes beyond Jason's rule, which says nothing of a binding both places
+   need; it is for him to confirm. Word's placement for such a prefix isn't measured: check 50's
+   case 5 was resolved by Word, so its Choice wasn't written.
 3. **Otherwise, as before:** the table or the aliases, on the root. A prefix nothing resolves is
    kept, with the existing warning.
 
@@ -92,7 +96,8 @@ The smoke's CR-011 block asserts where each declaration goes:
   root. This covers `zz9` and `shape2010` from `mc:AlternateContent`, content moved between trees, a
   `wml()` fragment, a paragraph marshalled alone, `deepCopy`, a flat OPC part, and the caller's
   `onElement` case;
-- the editor's shape declares `zz9` once, on the root;
+- the editor's shape declares `zz9` once, on the root; a root `xmlns:zz9` that `mc:Ignorable`
+  doesn't name moves to the Choice;
 - the superseded table `w14` leaves the root, and the source's `w14` is on the Choice;
 - the tree's `w14:paraId` outside the Choice keeps the root's `w14`, and the Choice declares the
   source's, with no warning;
