@@ -14,7 +14,7 @@ mapping declaring globally the 61 WordprocessingML elements docx4j declares as r
 compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.4.2+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.5.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -65,7 +65,10 @@ There are four tests and no test framework:
   the generated module still declares none of them itself (so a regeneration that does retires the
   entry), that `modulesFor` adds the mapping with wml and not without, and that a kept Choice's
   `w:drawing` and Fallback's `w:pict` (over a `v:shapetype` with `w14:anchorId`) unmarshal typed and
-  marshal whole.
+  marshal whole. CR-011's block checks that a prefix only the source bound is declared from the
+  source: on the root, on `mc:AlternateContent`, a second prefix for a known namespace, after a
+  move between trees, a `wml()` fragment, `deepCopy`, a flat OPC part, a paragraph marshalled
+  alone; the superseded, tree-used and two-ways cases; and that a caller's `onElement` is composed.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -152,7 +155,11 @@ Check the index before changing facade behaviour: a CR may already specify it. C
 the facade's marshal functions derive a per-root table (a `Relationships` root takes the default
 namespace, since the runtime allows one default) and strip unused root `xmlns` declarations,
 keeping, and declaring from the table, what `mc:Ignorable` and each `mc:Choice`'s `Requires` name
-(CR-001 sections 3.1 and 3.2). CR-008 (implemented 2026-10-04) has them first append to a
+(CR-001 sections 3.1 and 3.2). CR-011 (implemented 2026-10-20) declares those from the source's own
+binding first: the facade's unmarshal functions record, through jsonix-CR-008's `onElement`, each
+binding the table and the aliases would not give, on the `mc:Choice`'s typed object and on the
+part root (a module `WeakMap`; `deepCopy` carries it), and the marshal finds them through its
+`onElement`. Unmarshal through the facade too, or nothing is recorded. CR-008 (implemented 2026-10-04) has them first append to a
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.

@@ -251,7 +251,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 - **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
   (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
   Word writes it. The facade's marshal functions declare on the root element the namespaces the
-  tree uses plus every prefix the root's `mc:Ignorable` names, and nothing else; a `Relationships`
+  tree uses plus every prefix the root's `mc:Ignorable` or a kept `mc:Choice`'s `Requires` names,
+  and nothing else; a `Relationships`
   root uses the default namespace, as docx4j's relationships part mapper. To add or change
   prefixes, pass a table before the context is first used:
   `getContext({ namespacePrefixes: { ...NAMESPACE_PREFIXES, 'urn:my-ns': 'my' } })`. A table
@@ -259,8 +260,13 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   the default rather than with a prefix (SpreadsheetML main, as docx4j), so a prefix `mc:Ignorable`
   names for it cannot come from the table; `IGNORABLE_PREFIX_ALIASES` supplies it, and the prefix is
   declared beside the default declaration (Excel writes `mc:Ignorable="x xr10"` on slicer, slicer
-  cache and timeline parts). A prefix neither table resolves is dropped from `mc:Ignorable`, with a
-  warning, since Office repairs a file naming an undeclared prefix.
+  cache and timeline parts). A prefix the source bound that neither table gives, such as a
+  producer's own prefix or a second prefix for a known namespace, is declared from the source's own
+  binding. The facade's unmarshal functions record it on the Choice and on the part root, and it goes
+  with the content when an edit moves it or `deepCopy` copies it (CR-011). A prefix nothing resolves
+  is dropped from `mc:Ignorable` with a warning, since Office repairs a file naming an undeclared
+  prefix. In a `Requires` it is kept, with a warning, since dropping it would change which branch a
+  reader takes.
 - **Extension namespaces are declared ignorable** (CR-008): a part root whose type binds
   `mc:Ignorable` (`w:document`, `w:hdr`, `w:styles`, `worksheet`, ...) lists every namespace of
   `IGNORABLE_EXTENSION_NAMESPACES` its tree uses - `w14`, `w15`, the `w16*`, `wp14`, `x14ac`,

@@ -242,10 +242,81 @@ assert.deepEqual(unknownOut.undeclared, []);
   assert.match(choiceXml, new RegExp(`xmlns:cx1="${CX1}"`), 'as NAMESPACE_PREFIXES has it');
   const warn = console.warn, warned = [];
   console.warn = (message) => warned.push(message);
-  const unknownChoice = await marshalString(await kept('zz', 'xmlns:zz="urn:zz"')).finally(() => { console.warn = warn; });
+  const fromSource = await marshalString(await kept('zz', 'xmlns:zz="urn:zz"'));
+  assert.match(fromSource, /xmlns:zz="urn:zz"/, 'CR-011: a Requires prefix only the source declared is declared from the source');
+  assert.equal(warned.length, 0);
+  const unknownChoice = await marshalString(await kept('zz', '')).finally(() => { console.warn = warn; });
   assert.match(unknownChoice, /Requires="zz"/, 'a Requires prefix nothing resolves is kept, since dropping it would change the branch a reader takes');
   assert.match(warned.join('\n'), /Requires names zz/, 'and warned about');
 }
+
+// CR-011: a prefix only the source bound - one NAMESPACE_PREFIXES and the aliases cannot give, or
+// give for another namespace - is recorded at unmarshal, on the Choice's own object (so it travels
+// wherever an edit moves the Choice) and on the part root (for mc:Ignorable), and declared from
+// that record before the table. The editor's fixture, docx4j's extraction-probe.docx (declared on
+// mc:AlternateContent; shape2010 a second prefix for wps) and core-ts's insertOoxml are the cases.
+{
+  const WPS = 'http://schemas.microsoft.com/office/word/2010/wordprocessingShape';
+  const PKG = 'http://schemas.microsoft.com/office/2006/xmlPackage';
+  const { wml } = await import('../dist/builders/wml.mjs');
+  const ac = (declaration = 'xmlns:zz9="urn:zz9"', requires = 'zz9') => `<mc:AlternateContent ${declaration}><mc:Choice Requires="${requires}"><w:t>round</w:t></mc:Choice><mc:Fallback><w:t>flat</w:t></mc:Fallback></mc:AlternateContent>`;
+  const documentXml = (body, rootDeclarations = '') => `<w:document xmlns:w="${W}" xmlns:mc="${MC}" ${rootDeclarations}><w:body>${body}</w:body></w:document>`;
+  const declares = (xml, prefix = 'zz9', namespaceURI = 'urn:zz9') => xml.includes(`xmlns:${prefix}="${namespaceURI}"`);
+  const warn = console.warn, warned = [];
+  console.warn = (message) => warned.push(String(message));
+  try {
+    const editors = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac('')}</w:r></w:p>`, 'xmlns:zz9="urn:zz9" mc:Ignorable="zz9"')));
+    assert.ok(declares(editors) && /mc:Ignorable="zz9"/.test(editors), 'declared on the root: mc:Ignorable keeps zz9 and the Requires resolves');
+    const probe = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac()}</w:r><w:r>${ac(`xmlns:shape2010="${WPS}"`, 'shape2010')}</w:r></w:p>`)));
+    assert.ok(declares(probe) && declares(probe, 'shape2010', WPS), 'declared on mc:AlternateContent, and a second prefix for a namespace the table knows');
+    assert.equal(warned.length, 0, 'none of that warns');
+
+    // Moved in from another source: a paragraph of another unmarshalled tree, and a wml() fragment.
+    const destination = await unmarshalString(documentXml('<w:p/>'));
+    const source = await unmarshalString(documentXml(`<w:p><w:r>${ac()}</w:r></w:p>`));
+    const moved = source.value.body.content[0];
+    destination.value.body.content.push(moved);
+    const [fragment] = await wml(`<w:p xmlns:shape2010="${WPS}"><w:r>${ac('', 'shape2010')}</w:r></w:p>`);
+    destination.value.body.content.push(fragment);
+    const destinationXml = await marshalString(destination);
+    assert.ok(declares(destinationXml) && declares(destinationXml, 'shape2010', WPS), 'the record travels with the Choice when content moves between trees');
+    assert.ok(declares(await marshalString(moved)), 'a paragraph marshalled on its own declares what its Choice needs');
+    const copied = await unmarshalString(documentXml('<w:p/>'));
+    copied.value.body.content.push(deepCopy(moved, copied.value.body));
+    assert.ok(declares(await marshalString(copied)), 'deepCopy carries the record');
+    assert.match(await marshalString(deepCopy(await unmarshalString(documentXml('<w:p/>', 'xmlns:zz9="urn:zz9" mc:Ignorable="zz9"')))), /mc:Ignorable="zz9"/, 'and the root\'s');
+
+    // A flat OPC part: its root's bindings and its Choices' are its own.
+    const flat = `<pkg:package xmlns:pkg="${PKG}"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${documentXml(`<w:p><w:r>${ac()}</w:r></w:p>`)}</pkg:xmlData></pkg:part></pkg:package>`;
+    assert.match(await marshalPackage(await unmarshalPackage(flat)), /<w:document[^>]*xmlns:zz9="urn:zz9"/, 'a flat OPC part root declares zz9');
+
+    // A table declaration kept only because a Requires names its prefix gives way to the source's.
+    const superseded = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac('xmlns:w14="urn:not-w14"', 'w14')}</w:r></w:p>`)));
+    assert.ok(declares(superseded, 'w14', 'urn:not-w14'), 'the source\'s w14, since nothing in the tree uses w14');
+    assert.equal(warned.length, 0);
+
+    // A declaration the tree uses is never rebound; the source's other meaning is warned about.
+    const clash = await marshalString(await unmarshalString(documentXml(`<w:p w14:paraId="00000001"><w:r>${ac('xmlns:w14="urn:not-w14"', 'w14')}</w:r></w:p>`, `xmlns:w14="${W14}"`)));
+    assert.ok(declares(clash, 'w14', W14), 'w14:paraId keeps the tree\'s w14');
+    assert.equal(warned.length, 1);
+    assert.match(warned.splice(0)[0], /source bound w14 to urn:not-w14, but the tree uses it/);
+
+    // One prefix bound two ways in one part: the first is declared, with a warning.
+    const twoWays = await marshalString(await unmarshalString(documentXml(`<w:p><w:r>${ac('xmlns:zz9="urn:A"')}</w:r><w:r>${ac('xmlns:zz9="urn:B"')}</w:r></w:p>`)));
+    assert.ok(declares(twoWays, 'zz9', 'urn:A'));
+    assert.match(warned.splice(0).join('\n'), /bound zz9 to more than one namespace/);
+
+    // A caller's own onElement still sees every element, on both sides.
+    const unmarshalled = [], marshalled = [];
+    const reported = await unmarshalString(documentXml(`<w:p><w:r>${ac()}</w:r></w:p>`), { onElement: (element) => unmarshalled.push(element.localName) });
+    assert.ok(declares(await marshalString(reported, { onElement: (element) => marshalled.push(element.localName) })));
+    assert.deepEqual(unmarshalled, ['t', 'Choice', 't', 'Fallback', 'AlternateContent', 'r', 'p', 'body', 'document'], 'children first (jsonix-CR-008)');
+    assert.deepEqual(marshalled, ['document', 'body', 'p', 'r', 'AlternateContent', 'Choice', 't', 'Fallback', 't']);
+  } finally {
+    console.warn = warn;
+  }
+}
+console.log('CR-011: prefixes only the source bound are declared from the source, wherever the content goes OK');
 
 // CR-006: a prefix mc:Ignorable names that the table cannot produce, because its namespace is
 // written as the default. Excel's slicer cache: x is the SpreadsheetML main namespace, which this

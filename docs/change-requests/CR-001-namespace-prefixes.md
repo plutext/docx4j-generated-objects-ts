@@ -240,9 +240,10 @@ marshaller declares none of them. Word repairs the same shape.
 The pass (now `fixRootNamespaceDeclarations`) therefore does both halves of docx4j's
 `McIgnorableNamespaceDeclarator`: it removes what the tree does not use and `mc:Ignorable` does not
 name, and it declares every prefix `mc:Ignorable` names that is not declared, taking the namespace
-from the per-root table. A prefix the table cannot resolve is dropped from `mc:Ignorable` with one
-warning, since a declaration cannot be invented and naming an undeclared prefix is the thing Word
-and Excel repair.
+from the per-root table. Since CR-011 (2026-10-20), it uses the source root's own binding first,
+where the table would not give it. A prefix that neither the source nor the table resolves is
+dropped from `mc:Ignorable` with one warning. A declaration can't be invented, and naming an
+undeclared prefix is the thing Word and Excel repair.
 
 `NAMESPACE_PREFIXES` gained the four revision namespaces this uncovered: `xr2`
 (`.../spreadsheetml/2015/revision2`), `xr3` (`.../2016/revision3`), `xr6` (`.../2016/revision6`) and
@@ -274,7 +275,11 @@ was removed. The saved part named a prefix nothing declared.
 
 The pass now counts every prefix a `Choice`'s `Requires` names as a use of its declaration. It
 declares any that are not declared, from the table or `IGNORABLE_PREFIX_ALIASES`, as it does for
-`mc:Ignorable`. A declaration below the root that binds the prefix answers for its Choice.
+`mc:Ignorable`. Since CR-011 (2026-10-20), the Choice's own source binding comes first, where the
+table would not give it. A declaration below the root in the marshalled tree answers for its
+Choice. One the source made below the root is not in the typed tree, so it survives only through
+CR-011's record, as with docx4j's `extraction-probe.docx` and its declarations on
+`mc:AlternateContent`.
 
 A `Requires` prefix nothing resolves is kept, with a warning, where an `mc:Ignorable` one is
 dropped. Dropping a requirement would change which branch a reader takes. All 18 are in
@@ -282,7 +287,8 @@ dropped. Dropping a requirement would change which branch a reader takes. All 18
 
 Tests:
 - `test/smoke.mjs`: a kept Choice with `Requires="cx1"` over a `w:drawing` declares `cx1` on the
-  root, and an unknown `Requires="zz"` is kept and warned about.
+  root, and a `Requires="zz"` that nothing binds is kept and warned about. Since CR-011, a `zz`
+  that the source bound is declared from the source.
 - `test/fidelity.mjs`: every prefix that an `mc:Ignorable` (on any element) or a `Requires` names
   in a marshalled part must resolve where it is written. That is 631 prefixes over the 359
   checks. Before the fix it reported the 11.

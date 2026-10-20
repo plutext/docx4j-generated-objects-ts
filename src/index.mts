@@ -348,15 +348,20 @@ export function getContextSync(): Jsonix.Context {
 
 /**
  * docx4j XmlUtils.unmarshalString: parse XML into a typed element, e.g. unmarshalString<DocumentElement>(xml).
+ * The source's prefix bindings that `NAMESPACE_PREFIXES` cannot give are recorded for the marshal
+ * (CR-011), so the text is parsed here, as the runtime's own unmarshalString does.
  *
  * `options` are for this call only (CR-007): `onUnexpectedElement` and `onUnexpectedAttribute`
  * report what the model dropped, at the point it was dropped. They are never set by default - see
- * the note on `UnmarshallerOptions`.
+ * the note on `UnmarshallerOptions`. An `onElement` (jsonix-CR-008) is called after the facade's
+ * own, which is how a Choice's bindings are recorded.
  */
 export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
   xml: string, options?: Jsonix.UnmarshallerOptions,
 ): Promise<E> {
-  return (await getContext()).createUnmarshaller(options).unmarshalString<E>(xml);
+  const context = await getContext();
+  const doc = Jsonix.DOM.parse(xml);
+  return recordRootBindings(doc, context.createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(doc));
 }
 
 /** docx4j XmlUtils.marshaltoString: serialise an element to XML, with docx4j's prefixes and namespace declarations. */
@@ -369,9 +374,22 @@ export function unwrap<T>(element: Jsonix.TypedNamedValue<T>): T {
   return element.value;
 }
 
-/** docx4j XmlUtils.deepCopy: a structural copy with PARENT re-linked (Jsonix.Util.deepCopy). */
+/** docx4j XmlUtils.deepCopy: a structural copy with PARENT re-linked (Jsonix.Util.deepCopy), each object given its original's CR-011 record. */
 export function deepCopy<T>(value: T, parent?: unknown): T {
-  return Jsonix.Util.deepCopy(value, parent);
+  const copy = Jsonix.Util.deepCopy(value, parent);
+  if (recorded) carryBindings(value, copy, new Set());
+  return copy;
+}
+
+/** The copy has the original's shape, so each record is carried to the object in the same place. */
+function carryBindings(original: unknown, copy: unknown, seen: Set<object>): void {
+  if (typeof original !== 'object' || original === null || typeof copy !== 'object' || copy === null || isNode(original) || seen.has(original)) return;
+  seen.add(original);
+  const bindings = sourceBindings.get(original);
+  if (bindings !== undefined) sourceBindings.set(copy, bindings);
+  for (const key of Object.keys(original)) {
+    if (key !== 'PARENT') carryBindings((original as Record<string, unknown>)[key], (copy as Record<string, unknown>)[key], seen);
+  }
 }
 
 /**
@@ -426,16 +444,92 @@ export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, 
   return copy as T;
 }
 
-/** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context. */
+/** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context, recording the source's bindings as `unmarshalString` does. */
 export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
   node: Node, options?: Jsonix.UnmarshallerOptions,
 ): Promise<E> {
-  return (await getContext()).createUnmarshaller(options).unmarshalDocument<E>(node);
+  return recordRootBindings(node, (await getContext()).createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(node));
 }
 
 /** docx4j XmlUtils.marshaltoW3CDomDocument: the element as a DOM element, with docx4j's prefixes and namespace declarations. */
 export async function marshalNode(element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Promise<Element> {
   return marshalToDocument(await getContext(), element, options).documentElement;
+}
+
+/**
+ * The prefix bindings a source declared, kept for the marshal (CR-011), since the typed tree keeps
+ * no namespace declarations. Two kinds of object have a record: an `mc:Choice`, holding the
+ * binding in scope there of each prefix its `Requires` names, so that it travels with the Choice
+ * wherever an edit moves it; and a part's root value, holding the bindings in scope at the source
+ * root, for its `mc:Ignorable`.
+ */
+const sourceBindings = new WeakMap<object, ReadonlyMap<string, string>>();
+// Until a first record exists, a marshal adds no onElement and a deepCopy no walk.
+let recorded = false;
+
+const CHOICE_TYPE = 'org_docx4j_mce.AlternateContent.Choice';
+
+const TABLE_BY_PREFIX: ReadonlyMap<string, string> = new Map(Object.entries(NAMESPACE_PREFIXES).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
+
+/** Only what the table and the aliases would not give is worth recording: Office's own files leave no record. */
+function sourceOnly(prefix: string, namespaceURI: string): boolean {
+  return (TABLE_BY_PREFIX.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]) !== namespaceURI;
+}
+
+function requiresOf(element: Element): string[] {
+  return (element.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean);
+}
+
+/** The binding in scope at `element` of each prefix its Requires names, or undefined when it names none the source binds. */
+function choiceBindingsAt(element: Element): Map<string, string> | undefined {
+  let bindings: Map<string, string> | undefined;
+  for (const prefix of requiresOf(element)) {
+    const namespaceURI = element.lookupNamespaceURI(prefix);
+    if (namespaceURI && sourceOnly(prefix, namespaceURI)) (bindings ??= new Map()).set(prefix, namespaceURI);
+  }
+  return bindings;
+}
+
+/**
+ * The unmarshaller options with this package's `onElement` (jsonix-CR-008) composed in front of the
+ * caller's: each typed mc:Choice records its source-only bindings as it is built.
+ */
+function recordingOptions(options?: Jsonix.UnmarshallerOptions): Jsonix.UnmarshallerOptions {
+  const callerOnElement = options?.onElement;
+  return {
+    ...options,
+    onElement(element: Element, value: object): void {
+      if ((value as { TYPE_NAME?: string }).TYPE_NAME === CHOICE_TYPE) {
+        const bindings = choiceBindingsAt(element);
+        if (bindings) { sourceBindings.set(value, bindings); recorded = true; }
+      }
+      callerOnElement?.(element, value);
+    },
+  };
+}
+
+function rootValueOf(element: unknown): unknown {
+  return typeof element === 'object' && element !== null && 'name' in element && 'value' in element ? (element as Jsonix.TypedNamedValue).value : element;
+}
+
+/** Records against `element`'s value the bindings in scope at the source root: its own declarations and its ancestors' (a flat OPC part inherits pkg:package's). */
+function recordRootBindings<E extends Jsonix.TypedNamedValue>(node: Node, element: E): E {
+  const root = node.nodeType === 9 ? (node as Document).documentElement : node as Element;
+  const value = rootValueOf(element);
+  if (!root || typeof value !== 'object' || value === null) return element;
+  const bindings = new Map<string, string>();
+  const seen = new Set<string>();
+  for (let n: Node | null = root; n && n.nodeType === 1; n = n.parentNode) {
+    for (const attr of Array.from((n as Element).attributes)) {
+      const prefix = prefixOfDeclaration(attr);
+      if (prefix && !seen.has(prefix)) {
+        seen.add(prefix);
+        if (sourceOnly(prefix, attr.value)) bindings.set(prefix, attr.value);
+      }
+    }
+  }
+  if (bindings.size > 0) { sourceBindings.set(value, bindings); recorded = true; }
+  return element;
 }
 
 function isNode(value: unknown): value is Node {
@@ -471,12 +565,34 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  *
  * Before that, a part root that binds `mc:Ignorable` lists the extension namespaces its tree uses
  * (CR-008). The markup-compatibility elements bind it too, but are never a part's root.
+ *
+ * Once any CR-011 record exists, the marshaller's `onElement`, composed in front of the caller's,
+ * notes each written Choice that has a record. Wildcard DOM content is looked up through its
+ * original node, which is still in its source document.
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Document {
   const table = namespacePrefixesFor(context, element, options?.namespacePrefixes);
-  const doc = context.createMarshaller({ ...options, namespacePrefixes: table }).marshalDocument(element);
+  const choices = new Map<Element, ReadonlyMap<string, string>>();
+  const callerOnElement = options?.onElement;
+  const onElement = !recorded ? callerOnElement : (written: Node, value: unknown): void => {
+    if (isNode(value)) {
+      // Wildcard DOM content: its original is still in its source document, which answers for its Choices.
+      const originals = (value as Element).getElementsByTagNameNS?.(MC_NS, 'Choice');
+      const copies = (written as Element).getElementsByTagNameNS?.(MC_NS, 'Choice');
+      for (let i = 0; originals && copies && i < originals.length && i < copies.length; i++) {
+        const bindings = choiceBindingsAt(originals[i]);
+        if (bindings) choices.set(copies[i], bindings);
+      }
+    } else if (typeof value === 'object' && value !== null) {
+      const bindings = sourceBindings.get(value);
+      if (bindings !== undefined && (value as { TYPE_NAME?: string }).TYPE_NAME === CHOICE_TYPE) choices.set(written as Element, bindings);
+    }
+    callerOnElement?.(written, value);
+  };
+  const doc = context.createMarshaller({ ...options, namespacePrefixes: table, onElement }).marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
-  fixRootNamespaceDeclarations(doc.documentElement, table);
+  const rootValue = rootValueOf(element);
+  fixRootNamespaceDeclarations(doc.documentElement, table, typeof rootValue === 'object' && rootValue !== null ? sourceBindings.get(rootValue) : undefined, choices);
   return doc;
 }
 
@@ -585,8 +701,10 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * The root's namespace declarations, as docx4j's McIgnorableNamespaceDeclarator leaves them:
  * every declaration that no element or attribute in the tree resolves to is removed unless the
  * root's mc:Ignorable or an mc:Choice's Requires names its prefix, and every prefix those name
- * that is not declared is added from `table`, or from `IGNORABLE_PREFIX_ALIASES` for a prefix the
- * table cannot produce because its namespace is written as the default (CR-006).
+ * that is not declared is added: from the source's own binding where one was recorded (CR-011:
+ * `rootSource` for the part root, `choices` for each written Choice), else from `table`, else from
+ * `IGNORABLE_PREFIX_ALIASES` for a prefix the table cannot produce because its namespace is
+ * written as the default (CR-006).
  *
  * A Requires prefix counts because it names a namespace, not because anything is in it: Word's
  * chartex Choice says `Requires="cx1"` (2015/9/8) over content in `cx` (2014), so nothing in the
@@ -595,6 +713,12 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * A declaration below the root that binds the prefix answers for its Choice, as everywhere here.
  * A Requires prefix nothing resolves is kept, with a warning: dropping it would change which
  * branch a reader takes.
+ *
+ * The source comes first because its binding is what the prefix meant: three Excel VML parts of
+ * the fidelity corpus bind `x` to the Excel VML namespace, which the aliases would declare as
+ * SpreadsheetML. A declaration the tree's own elements or attributes use is never rebound; where
+ * the source meant another namespace by it, that is warned about, as is a prefix the source bound
+ * two ways. A declaration kept only because mc:Ignorable or a Requires names it gives way.
  *
  * An mc:Ignorable prefix neither resolves is dropped
  * from mc:Ignorable with a warning: Word and Excel repair a file whose mc:Ignorable names an undeclared prefix, which is
@@ -605,7 +729,7 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * `xmlns:xml` is never written. Declarations below the root shadow the root's, so a part's own
  * declarations inside a flat package count for the part, not for the package root.
  */
-function fixRootNamespaceDeclarations(root: Element, table: Record<string, string>): void {
+function fixRootNamespaceDeclarations(root: Element, table: Record<string, string>, rootSource?: ReadonlyMap<string, string>, choices?: ReadonlyMap<Element, ReadonlyMap<string, string>>): void {
   const declared = new Map<string, Attr>();
   for (const attr of Array.from(root.attributes)) {
     const prefix = prefixOfDeclaration(attr);
@@ -616,6 +740,9 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
     if (!shadowed.has(prefix) && declared.get(prefix)?.value === namespaceURI) used.add(prefix);
   };
   const required = new Set<string>();
+  // What each required prefix meant where it was required: the Choice's own source, else the root's.
+  const meant = new Map<string, string>();
+  const ambiguous = new Set<string>();
   const walk = (element: Element, shadowed: Set<string>): void => {
     let scope = shadowed;
     if (element !== root) {
@@ -632,8 +759,13 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
       if (attr.namespaceURI && prefixOfDeclaration(attr) === undefined) use(attr.prefix ?? '', attr.namespaceURI, scope);
     }
     if (element.namespaceURI === MC_NS && element.localName === 'Choice') {
-      for (const prefix of (element.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean)) {
-        if (!scope.has(prefix)) required.add(prefix);
+      for (const prefix of requiresOf(element)) {
+        if (scope.has(prefix)) continue;
+        required.add(prefix);
+        const namespaceURI = choices?.get(element)?.get(prefix) ?? rootSource?.get(prefix);
+        if (namespaceURI === undefined) continue;
+        if (!meant.has(prefix)) meant.set(prefix, namespaceURI);
+        else if (meant.get(prefix) !== namespaceURI) ambiguous.add(prefix);
       }
     }
     for (const child of Array.from(element.childNodes)) {
@@ -641,20 +773,44 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
     }
   };
   walk(root, new Set());
+  const usedByTree = new Set(used);
   const ignorable = (root.getAttributeNS(MC_NS, 'Ignorable') ?? '').split(/\s+/).filter(Boolean);
+  for (const prefix of ignorable) {
+    const namespaceURI = rootSource?.get(prefix);
+    if (namespaceURI === undefined) continue;
+    if (!meant.has(prefix)) meant.set(prefix, namespaceURI);
+    else if (meant.get(prefix) !== namespaceURI) ambiguous.add(prefix);
+  }
+  // A prefix the tree uses keeps the tree's binding, so only the clash below is reported for it.
+  const twoWays = [...ambiguous].filter((prefix) => !usedByTree.has(prefix));
+  if (twoWays.length > 0) {
+    console.warn(`marshal: the source bound ${twoWays.join(', ')} to more than one namespace where mc:Ignorable or a Requires names it; the first is declared`);
+  }
   for (const prefix of ignorable) used.add(prefix);
   for (const prefix of required) used.add(prefix);
   for (const [prefix, attr] of declared) {
-    if (!used.has(prefix) || attr.value === XML_NS) root.removeAttributeNode(attr);
+    // A declaration kept only because mc:Ignorable or a Requires names its prefix gives way to the
+    // source's binding, which is what that prefix meant (CR-011).
+    const superseded = !usedByTree.has(prefix) && meant.has(prefix) && meant.get(prefix) !== attr.value;
+    if (!used.has(prefix) || attr.value === XML_NS || superseded) root.removeAttributeNode(attr);
   }
   if (ignorable.length === 0 && required.size === 0) return;
 
   const namespaceFor = new Map(Object.entries(table).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
   // The table answers "which prefix for this namespace", which has no answer for the namespace
   // written as the default; the aliases answer "what does this prefix mean" (CR-006).
+  // The source's own binding comes first: it is what the prefix meant (CR-011).
+  const clashed = new Set<string>();
   const declare = (prefix: string): boolean => {
-    if (root.getAttributeNode(`xmlns:${prefix}`)) return true;
-    const namespaceURI = namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix];
+    const existing = root.getAttributeNode(`xmlns:${prefix}`);
+    if (existing) {
+      if (meant.has(prefix) && meant.get(prefix) !== existing.value && !clashed.has(prefix)) {
+        clashed.add(prefix);
+        console.warn(`marshal: the source bound ${prefix} to ${meant.get(prefix)}, but the tree uses it for ${existing.value}; mc:Ignorable or a Requires naming it now means the latter`);
+      }
+      return true;
+    }
+    const namespaceURI = meant.get(prefix) ?? namespaceFor.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix];
     if (namespaceURI === undefined) return false;
     root.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
     return true;
@@ -678,16 +834,17 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
  * A flat OPC package, as Office JS `getOoxml()` returns it: `pkg:part/pkg:xmlData` content is
  * DOM in the schema (`processContents="skip"`); this unmarshals each XML part whose root element
  * the model knows (`w:document`, `w:styles`, relationships, ...) to a typed element, leaving the
- * rest as DOM. Reverse with `marshalPackage` before `insertOoxml()`.
+ * rest as DOM, and records each part's source bindings as `unmarshalString` does (CR-011).
+ * Reverse with `marshalPackage` before `insertOoxml()`.
  */
 export async function unmarshalPackage(ooxml: string): Promise<PackageElement> {
   const pkg = await unmarshalString<PackageElement>(ooxml);
-  const unmarshaller = (await getContext()).createUnmarshaller();
+  const unmarshaller = (await getContext()).createUnmarshaller(recordingOptions());
   for (const part of pkg.value.part ?? []) {
     const any = part.xmlData?.any;
     if (part.xmlData && isNode(any)) {
       try {
-        part.xmlData.any = unmarshaller.unmarshalDocument(any);
+        part.xmlData.any = recordRootBindings(any, unmarshaller.unmarshalDocument(any));
       } catch {
         // root element unknown to the model: keep the DOM
       }

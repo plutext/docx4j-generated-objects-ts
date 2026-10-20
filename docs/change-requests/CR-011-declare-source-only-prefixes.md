@@ -1,6 +1,6 @@
 # CR-011: Declare from the source the prefixes only the source bound
 
-**Status:** Proposed 2026-10-20; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR"); jsonix-CR-008 implemented (jsonix 080fbb0, unreleased) and tested here, waiting on its release
+**Status:** Implemented 2026-10-20 (unreleased), on `@docx4j/jsonix` 3.5.0's jsonix-CR-008; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR")
 **Requested by:** core-ts, at Jason's word (2026-10-20: "Send this declaration defect to the
 objects session as a CR there"). The editor found it while building ED-009's fixture. core-ts
 reproduced it in core-ts 0.5.0 (main f8617e8) with this package at 0.4.2 and `@docx4j/jsonix`
@@ -10,8 +10,8 @@ keeping each Choice's record on the Choice itself, which this revision adopts (s
 **Depends on:** CR-001 sections 3.1 and 3.2, whose `declare()` this extends. For recording at
 unmarshal, it also depends on **jsonix-CR-008**, an unmarshal-side `onElement` that is the
 counterpart of jsonix-CR-006's marshal one (section 3.2). Jason chose this route on 2026-10-20, and
-core-ts relayed the decision. The jsonix session filed and implemented it the same day, on jsonix
-master 080fbb0, which is not yet released. Section 2 tests this CR against it.
+core-ts relayed the decision. The jsonix session filed and implemented it the same day, and released
+it in `@docx4j/jsonix` 3.5.0 (tag 6807bbe), which is this package's floor (`^3.5.0`) from this CR.
 **Counterpart:** docx4j CR-052 (proposed 2026-10-20, drafted by docx4j-25 at this CR's request).
 docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it:
 - **A part saved as loaded already keeps its bindings.** `extraction-probe.docx` saves with all 12
@@ -65,15 +65,15 @@ Office declares only the prefixes it knows, so none of Office's own files has th
 branches kept. Keeping branches is core-ts's default load since its 0.5.0. With `mcePreprocess` the
 Fallback is taken, so no Choice is written, but the `mc:Ignorable` entry is still dropped.
 
-**Proposed** (section 3):
+**Implemented** (section 3):
 - **record** each source binding that the table and the aliases would not give. A Choice's
   bindings are kept on the Choice itself, so they go wherever an edit moves it. The root's bindings
   are kept on the root, for its `mc:Ignorable`;
 - **find** the records at marshal through the marshaller's `onElement`;
 - **declare** from them before the table.
 
-Nothing changes for Office's files: in a prototype, the corpus hashes are identical, and the cost
-is within measurement noise.
+Nothing changes for Office's files: the corpus hashes are identical to 0.4.2's, and the cost is
+within measurement noise.
 
 ## 2. Measured (2026-10-20)
 
@@ -104,10 +104,11 @@ is within measurement noise.
   something did, the table and the aliases would declare the wrong namespace for it. That is why
   section 3.4 puts the source first.
 
-**A prototype** of section 3, built in a scratch copy and not committed (about 160 changed lines
-in `src/index.mts`). It was first built on `@docx4j/jsonix` 3.4.2, with a wrapper on the Choice
-class's `unmarshal` standing in for the callback. Then it was rebuilt on jsonix-CR-008's real
-callback, on jsonix 080fbb0 linked into a scratch copy, and every result below holds on that build.
+**The implementation** of section 3 is in `src/index.mts`. Before it, a prototype was built in a
+scratch copy: first on `@docx4j/jsonix` 3.4.2, with a wrapper on the Choice class's `unmarshal`
+standing in for the callback, then on jsonix-CR-008's real callback (jsonix 080fbb0, linked). The
+results below were measured on the prototype and hold on the implementation, which runs on the
+published 3.5.0.
 - Unchanged objects 0.4.2 on jsonix 080fbb0: the typecheck and `npm test` pass, and all 341
   corpus hashes are identical, so the runtime change alone moves nothing.
 - On the real callback, the caller's own unmarshal `onElement` still receives every element in
@@ -241,9 +242,9 @@ Each is given once per prefix per marshal.
 
 ### 3.6 Release
 
-This fix changes output only for parts with these shapes, as 0.4.2 did. It waits for the
-`@docx4j/jsonix` release that carries section 3.2's callback, and raises this package's floor to
-that release, as 0.4.1 did. A patch (0.4.3) fits, but the version and the release are Jason's.
+This fix changes output only for parts with these shapes, as 0.4.2 did. It raises this package's
+floor to `@docx4j/jsonix` ^3.5.0, which carries section 3.2's callback, as 0.4.1 raised it to 3.4.2.
+A patch (0.4.3) fits, but the version and the release are Jason's.
 
 ## 4. Not proposed
 
@@ -264,14 +265,15 @@ that release, as 0.4.1 did. A patch (0.4.3) fits, but the version and the releas
 
 ## 5. Tests
 
-- **Smoke, in CR-001 section 3.2's block:**
-  - **The case that pins the defect today:** `kept('zz', 'xmlns:zz="urn:zz"')` asserts the
-    `Requires` is kept and warned about. It changes to "declared from the source, no warning". The
-    "nothing resolves" case becomes a Choice whose source declares nothing.
-- **Smoke, new cases:** the twelve of section 2, with these checks:
-  - **nothing recorded for the table's own bindings:** a part whose bindings are all the table's
-    leaves no record, so marshal installs no `onElement` and `deepCopy` does no walk;
-  - **a caller's `onElement` is still called** for every element.
+- **Smoke, in CR-001 section 3.2's block:** `kept('zz', 'xmlns:zz="urn:zz"')` asserted that the
+  `Requires` was kept and warned about, which pinned the defect. It now asserts the prefix is
+  declared from the source with no warning. The "nothing resolves" case is now a Choice whose
+  source declares nothing.
+- **Smoke, CR-011's block:**
+  - the twelve cases of section 2, with the warnings each should or shouldn't give;
+  - a caller's `onElement` on both sides, the unmarshal one seeing children before parents.
+  - Not tested: that a part with only the table's bindings leaves no record. That is internal state,
+    and section 2's cost measurement is what shows it.
 - **Fidelity:** unchanged. The corpus never triggers the rule, which section 2 measured, and its
   prefix-resolution check (631) holds. The probe isn't a part Office wrote, so it belongs in the
   smoke's inline cases, not in the corpus.
