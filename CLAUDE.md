@@ -69,6 +69,8 @@ There are four tests and no test framework:
   source: on the root, on `mc:AlternateContent`, a second prefix for a known namespace, after a
   move between trees, a `wml()` fragment, `deepCopy`, a flat OPC part, a paragraph marshalled
   alone; the superseded, tree-used and two-ways cases; and that a caller's `onElement` is composed.
+  It also checks where each declaration goes (CR-012): a `Requires` prefix on its Choice, ahead of
+  `Requires` and not on the root, unless the root declares that binding already.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -159,7 +161,10 @@ keeping, and declaring from the table, what `mc:Ignorable` and each `mc:Choice`'
 binding first: the facade's unmarshal functions record, through jsonix-CR-008's `onElement`, each
 binding the table and the aliases would not give, on the `mc:Choice`'s typed object and on the
 part root (a module `WeakMap`; `deepCopy` carries it), and the marshal finds them through its
-`onElement`. Unmarshal through the facade too, or nothing is recorded. CR-008 (implemented 2026-10-04) has them first append to a
+`onElement`. Unmarshal through the facade too, or nothing is recorded. CR-012 (implemented
+2026-10-20, Jason's choice of Word's placement for both ports) declares such a `Requires` prefix
+on the `mc:Choice` that names it, not on the root, unless the root already declares that binding;
+`mc:Ignorable` prefixes, and `Requires` prefixes the table or aliases give, stay on the root. CR-008 (implemented 2026-10-04) has them first append to a
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.

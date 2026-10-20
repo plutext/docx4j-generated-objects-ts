@@ -276,7 +276,8 @@ was removed. The saved part named a prefix nothing declared.
 The pass now counts every prefix a `Choice`'s `Requires` names as a use of its declaration. It
 declares any that are not declared, from the table or `IGNORABLE_PREFIX_ALIASES`, as it does for
 `mc:Ignorable`. Since CR-011 (2026-10-20), the Choice's own source binding comes first, where the
-table would not give it. A declaration below the root in the marshalled tree answers for its
+table would not give it, and since CR-012 that binding is declared on the Choice, not the root, as
+Word writes it. A declaration below the root in the marshalled tree answers for its
 Choice. One the source made below the root is not in the typed tree, so it survives only through
 CR-011's record, as with docx4j's `extraction-probe.docx` and its declarations on
 `mc:AlternateContent`.
@@ -288,7 +289,7 @@ dropped. Dropping a requirement would change which branch a reader takes. All 18
 Tests:
 - `test/smoke.mjs`: a kept Choice with `Requires="cx1"` over a `w:drawing` declares `cx1` on the
   root, and a `Requires="zz"` that nothing binds is kept and warned about. Since CR-011, a `zz`
-  that the source bound is declared from the source.
+  that the source bound is declared from the source, and since CR-012 on its Choice.
 - `test/fidelity.mjs`: every prefix that an `mc:Ignorable` (on any element) or a `Requires` names
   in a marshalled part must resolve where it is written. That is 631 prefixes over the 359
   checks. Before the fix it reported the 11.

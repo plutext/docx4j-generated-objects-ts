@@ -24,6 +24,10 @@ docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it:
   - a root `mc:Ignorable="zz9"` set from code is written with no declaration.
   This package already declares a table prefix such as `cx1` for a built Choice (CR-001 section 3.2).
   This CR's per-Choice record and its `deepCopy` carry cover the moved and copied cases.
+**Placement:** this CR, and 0.4.3, declare every source-only prefix on the part root. Since CR-012
+(2026-10-20, Jason: "(c) placement", for both ports), a `Requires` prefix only the source bound is
+declared on the `mc:Choice` that names it, as Word writes it. An `mc:Ignorable` prefix stays on the
+root. Section 3.5's two warnings changed with it.
 
 Which docx4j record a loaded part's bindings come from is CR-052's phase 0. There are two
 candidates: CR-046's per-Choice `McSelection.REQUIRES_NAMESPACES`, and the part's
@@ -233,12 +237,14 @@ Each is given once per prefix per marshal.
 - **Nothing resolves a prefix:** the existing two warnings, with the same wording. This now means
   no source bound the prefix either.
 - **New, the tree's namespace wins:** the source bound a named prefix to one namespace, but the tree
-  uses the prefix for another. Root declarations can't keep both meanings. Declaring it on the Choice
-  would also rebind the Choice's content. So the warning says the `Requires` or `mc:Ignorable` now
-  means the tree's namespace.
-- **New, one prefix bound two ways:** two of a part's Choices, or a Choice and the root, mean
-  different namespaces by one prefix that the tree doesn't use. A root declaration can carry only
-  one of them, so the first is declared, with this warning. Nothing measured binds a prefix two ways.
+  uses the prefix for another. In 0.4.3, root declarations couldn't keep both meanings, so the
+  warning says the `Requires` or `mc:Ignorable` now means the tree's namespace. Since CR-012 a
+  `Requires` prefix is declared on its Choice. So for a `Requires` it warns only where the Choice's
+  own content uses the prefix, which a declaration there would rebind.
+- **One prefix bound two ways, 0.4.3 only:** two of a part's Choices, or a Choice and the root,
+  meant different namespaces by one prefix that the tree doesn't use. A root declaration could
+  carry only one of them, so the first was declared, with this warning. CR-012's Choice
+  declarations keep both, and the warning is gone. Nothing measured binds a prefix two ways.
 
 ### 3.6 Release
 
@@ -324,34 +330,8 @@ section 3.2's callback, as 0.4.1 raised it to 3.4.2.
 - **`@docx4j/jsonix`:** jsonix-CR-008, the unmarshal-side `onElement` (section 3.2), released in
   3.5.0; this package's floor is now ^3.5.0.
 - **docx4j:** CR-052 (see the header) covers docx4j's half: moved, copied and built content, and a
-  tree set from code. Where a source-only `Requires` prefix is declared is for Jason. There are
-  three places, all equivalent XML, and Word 365 reads all three alike (core-ts check 50, below).
-  - **The root:** this CR, following CR-001's convention.
-  - **The `mc:AlternateContent`:** CR-052's D4 recommendation, and what docx4j does for a loaded
-    part.
-  - **The `mc:Choice` that names it:** what Word does. core-ts counted, over 2,728 Word 365 saves
-    (24,075 WordprocessingML parts, 2026-10-20), where Word declares. A `Requires` prefix in Word's
-    fixed root set goes on the root, 664 of 664. One outside it goes on the Choice: `zz9`, 3 of 3,
-    in Word's resaves of docx4j's probes (build 16.0.20326), whose sources declare it on
-    `mc:AlternateContent`. Word moved the declaration onto the Choice and onto a sibling
-    `mc:Fallback`, and didn't add `zz9` to `mc:Ignorable`. In a WordprocessingML part, Word declares
-    nothing on `mc:AlternateContent`.
-
-  Jason ran core-ts's check 50 in Word 365 on 2026-10-20. Its file has five runs, each with a text
-  box as its Choice and plain text as its Fallback. Case 1 is Word's own `Requires="wps"`, declared
-  on the root. Cases 2 to 4 bind the `wps` namespace to another prefix, used on the shape elements
-  too, and declare it on the root, on `mc:AlternateContent` and on `mc:Choice` respectively. Case 5
-  requires `zz9`. Word showed the text box in cases 1 to 4 and the Fallback in case 5. So Word reads
-  this CR's root placement, and the choice between the three is about matching Word's output, not
-  about Word reading them. On save, Word renamed the three aliases to `wps` on the root and resolved
-  case 5. Each kept `mc:Fallback` carried unused copies of the source's declarations outside Word's
-  fixed set: `zz9` and the root alias from the root, and case 3's from its `mc:AlternateContent`.
-
-  Either local form would also keep both meanings in section 3.5's case of one prefix bound two
-  ways, because the tree doesn't use that prefix. If the ports should agree, the root rule in
-  section 3.4 would change, for a prefix the tree doesn't use, to the place Jason chooses. For a
-  prefix in the table, which CR-001 governs and this CR doesn't change, the root matches Word in
-  WordprocessingML parts but not in chart parts: there Word declares `xmlns:mc` on
-  `mc:AlternateContent` and `c14` on the Choice (37 of 37), as Excel and PowerPoint do. core-ts
-  records the counts and check 50 in its CR-010 section 14.9, and sent the counts to docx4j-25 for
-  CR-052.
+  tree set from code. Its D4 recommended declaring a `Requires` prefix on `mc:AlternateContent`,
+  where this CR declared it on the root. Jason chose a third place for both ports on 2026-10-20: the
+  `mc:Choice` that names it, which is Word's own placement. Word reads all three alike. CR-012 makes
+  the change here, and its section 2 holds core-ts's counts over 2,728 Word 365 saves and its check
+  50 in Word.
