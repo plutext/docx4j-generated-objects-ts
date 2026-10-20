@@ -1,6 +1,6 @@
 # CR-011: Declare from the source the prefixes only the source bound
 
-**Status:** Proposed 2026-10-20
+**Status:** Proposed 2026-10-20; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR"), waiting on that jsonix CR
 **Requested by:** core-ts, at Jason's word (2026-10-20: "Send this declaration defect to the
 objects session as a CR there"). The editor found it while building ED-009's fixture. core-ts
 reproduced it in core-ts 0.5.0 (main f8617e8) with this package at 0.4.2 and `@docx4j/jsonix`
@@ -9,7 +9,9 @@ its `insertOoxml` forms bring in Choices whose prefix only the inserted OOXML de
 keeping each Choice's record on the Choice itself, which this revision adopts (section 3.1).
 **Depends on:** CR-001 sections 3.1 and 3.2, whose `declare()` this extends. For recording at
 unmarshal, it also depends on a new `@docx4j/jsonix` CR: an unmarshal-side `onElement`, the
-counterpart of jsonix-CR-006's marshal one (section 3.2). Not yet filed.
+counterpart of jsonix-CR-006's marshal one (section 3.2). Jason chose this route on 2026-10-20, and
+core-ts relayed the decision. The request went to the jsonix session the same day; it has not
+answered yet.
 **Counterpart:** docx4j records the prefixes at unmarshal. `Docx4jUnmarshallerListener` passes
 each `mc:Choice`'s `Requires`, `Ignorable` and `MustUnderstand` to
 `JaxbXmlPart.addMcChoiceNamespace`, and has since 6.0.0. It records the prefixes only, per part, not
@@ -152,20 +154,27 @@ located errors of `@docx4j/jsonix` 3.4.0 are unchanged.
 
 The typed Choice and the DOM element it came from are paired only inside the runtime. Its
 unmarshal reports nothing per element: jsonix-CR-006 gave it `onUnexpectedElement` and
-`onUnexpectedAttribute`, and gave only the marshaller an `onElement`. Two ways to get the pair:
+`onUnexpectedAttribute`, and gave only the marshaller an `onElement`.
 
-1. **Recommended: an unmarshal-side `onElement(node, value)` in `@docx4j/jsonix`.** This is the
-   counterpart of the marshal callback, a new jsonix CR. The facade would set it on the
-   unmarshallers it creates, composed with the caller's own. CR-011 would then wait for that jsonix
-   release, and this package's floor would rise to it.
-2. **What the prototype does:** when the context is built, wrap the `unmarshal` of the
-   `org_docx4j_mce.AlternateContent.Choice` class info, and read `input.node` before it runs. This
-   needs no runtime release, so it could ship in a patch now. But it depends on internals: the
-   method's signature and `Jsonix.XML.Input`'s `node`. Today the facade only *reads* one internal,
-   `TypeInfo.properties`, and has noted it as a candidate for a jsonix typings CR. It patches none.
-   The smoke would catch a runtime change that broke the wrapper.
+So `@docx4j/jsonix` gains an unmarshal-side `onElement(node, value)`, the counterpart of the marshal
+callback, as a new jsonix CR. This is the shape sent to the jsonix session:
+- **The option:** a per-call option of `createUnmarshaller`, beside the other two callbacks.
+- **When it fires:** once for each element that a class info unmarshals to a typed object, after
+  the object is complete. By then its attributes, content and `PARENT` are set, and its children
+  have already been reported.
+- **What `node` is:** the source element itself, so `lookupNamespaceURI` sees its ancestors.
+- **Not reported:** simple-typed elements, element wrappers, and wildcard DOM content. That content
+  stays the source node itself in the tree, which section 3.3 relies on.
 
-The choice between them is Jason's: (1) is the cleaner design, (2) is the faster release.
+The facade passes its callback to every unmarshaller it creates, composed with the caller's own.
+That covers `unmarshalString`, `unmarshalNode` and each part of `unmarshalPackage`, and through
+`unmarshalNode` also `builders/wml`'s `wml()` and core-ts. An unmarshaller a caller creates directly
+from the context records nothing, which is one more reason to unmarshal through the facade.
+
+The rejected alternative, which the prototype used to stand in for the callback, is a wrapper on
+the `unmarshal` of the `org_docx4j_mce.AlternateContent.Choice` class info. It would have shipped
+without a runtime release, but it patches runtime internals: the method's signature and
+`Jsonix.XML.Input`'s `node`. Jason chose the callback (2026-10-20).
 
 ### 3.3 Finding the records at marshal, and carrying them across a copy
 
@@ -211,9 +220,9 @@ Each is given once per prefix per marshal.
 
 ### 3.6 Release
 
-This fix changes output only for parts with these shapes, as 0.4.2 did. With section 3.2's way 2, it
-is a patch (0.4.3). With way 1 it waits for the runtime release, and raises the floor as 0.4.1 did.
-Both choices are Jason's.
+This fix changes output only for parts with these shapes, as 0.4.2 did. It waits for the
+`@docx4j/jsonix` release that carries section 3.2's callback, and raises this package's floor to
+that release, as 0.4.1 did. A patch (0.4.3) fits, but the version and the release are Jason's.
 
 ## 4. Not proposed
 
@@ -266,7 +275,6 @@ Both choices are Jason's.
   most a paragraph: run and paragraph properties, a style, a cell's properties, a content control.
   Its `pkg.clone()` saves the package and loads it again, and never copies a tree. The marshal cost
   falls on save.
-- **Way 2 of section 3.2** depends on runtime internals, as that section says.
 - **Records go with typed objects.** A Choice rebuilt from scratch, for instance from a
   `toSource` (CR-003 phase B) or by hand, has no record, and warns as it does today.
 
@@ -286,6 +294,7 @@ Both choices are Jason's.
 - **The editor:** ED-009's fixture keeps its declarations when saved.
 - **Office JS add-ins using this package alone:** an `unmarshalString`/`marshalString` round trip
   keeps a part's private prefixes, and so does content moved between parts.
-- **`@docx4j/jsonix`,** under way 1 of section 3.2: a new CR for the unmarshal-side `onElement`.
+- **`@docx4j/jsonix`:** a new CR for the unmarshal-side `onElement` (section 3.2), requested
+  2026-10-20.
 - **docx4j:** the same gap, from reading the code (see the header). A docx4j CR could pass the
   URIs that CR-046's `McSelection` records to the marshal side. Whether to raise one is Jason's call.
