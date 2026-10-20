@@ -88,7 +88,7 @@ a CR-011 record exists.
 - **A chart-part rule.** Word declares `c14` on the Choice there, but `c14` is in the table, so it
   stays on the root (Jason: "chart parts follow the same rule").
 - **`mc:Ignorable` on a Choice, `MustUnderstand`, `ProcessContent`:** still not declared (CR-011
-  section 4).
+  section 4). docx4j declares the first two (section 7).
 
 ## 5. Tests
 
@@ -122,8 +122,15 @@ corpus hashes are identical to 0.4.3's.
 
 - **core-ts:** no code change; its survey's four copies of docx4j's probe move their two
   declarations from the root to the Choices.
-- **docx4j:** CR-052's D4 takes the same rule. Two details for the ports to agree on: a binding the
-  root already declares isn't repeated on the Choice, and the declaration goes ahead of `Requires`.
+- **docx4j:** CR-052 section 4 takes the same rule (docx4j 4b9c71288, 2026-10-21, unpushed):
+  - one declaration on the root when the root's `mc:Ignorable` needs the same binding;
+  - nothing on `mc:Fallback`;
+  - the narrowed clash rule.
+
+  docx4j goes one step further, as its D1 (b): a Choice's own `mc:Ignorable` and `MustUnderstand`
+  follow the `Requires` rule on that Choice. This package doesn't declare those (section 4), and no
+  part in the fidelity corpus carries either. The ports differ there; whether this package should
+  follow is for Jason.
 
 ## 8. Release
 

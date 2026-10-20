@@ -13,12 +13,14 @@ counterpart of jsonix-CR-006's marshal one (section 3.2). Jason chose this route
 core-ts relayed the decision. The jsonix session filed and implemented it the same day, and released
 it in `@docx4j/jsonix` 3.5.0 (tag 6807bbe), which is this package's floor (`^3.5.0`) from this CR.
 **Counterpart:** docx4j CR-052 (proposed 2026-10-20, drafted by docx4j-25 at this CR's request).
-docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it:
-- **A part saved as loaded already keeps its bindings.** `extraction-probe.docx` saves with all 12
-  `Requires` prefixes resolving, and docx4j writes `xmlns:zz9` and `xmlns:shape2010` on each
-  `mc:AlternateContent`. A root `mc:Ignorable="zz9"` loaded from its package is declared on the root.
-  This package lacks exactly that, and this CR adds it.
-- **Moved, copied or built content does not:**
+docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it, and corrected the
+first point in CR-052's phase 0 (docx4j 4b9c71288, 2026-10-21):
+- **A part docx4j unmarshals loses its bindings, moved or not.** `extraction-probe.docx` first
+  saved with all 12 `Requires` prefixes resolving, but only because docx4j had never unmarshalled
+  the part, so its save copied the bytes. Once unmarshalled, docx4j loses `zz9` and `shape2010`
+  without any move. This package marshals from the records every time, so the correction doesn't
+  touch it.
+- **Moved, copied or built content loses them too:**
   - a Choice built in code with `Requires="cx1"` is undeclared on save, though the table knows `cx1`;
   - the probe's zz9 paragraphs, moved or deep-copied into another package, are undeclared;
   - a root `mc:Ignorable="zz9"` set from code is written with no declaration.
@@ -29,11 +31,9 @@ docx4j-25 measured docx4j on VERSION_17_3_4 at cf1abf001 before drafting it:
 declared on the `mc:Choice` that names it, as Word writes it. An `mc:Ignorable` prefix stays on the
 root. Section 3.5's two warnings changed with it.
 
-Which docx4j record a loaded part's bindings come from is CR-052's phase 0. There are two
-candidates: CR-046's per-Choice `McSelection.REQUIRES_NAMESPACES`, and the part's
-`addMcChoiceNamespace` string. docx4j-25 rates CR-052 medium priority, high if Word refuses such a
-file. An earlier draft of this header said, from reading the code alone, that docx4j had this CR's
-whole gap. The measurement shows that is true only for content that has moved.
+An earlier draft of this header said, from reading the code alone, that docx4j had this CR's whole
+gap. The first measurement said only moved content did; phase 0 shows any unmarshalled part does,
+so CR-052's phase 1 is wider than first stated. Phase 0 also checked Word (section 1).
 
 ## 1. Summary
 
@@ -46,8 +46,16 @@ declarations are rebuilt on marshal (CR-001 section 3):
 
 A prefix that neither has can't be declared. Since 0.4.2 it is kept in a `Requires` with a warning,
 and dropped from `mc:Ignorable` with a warning. The source declared it, but that declaration is
-gone by then. The part then names a prefix it never declares, which ECMA-376 Part 3 forbids. Whether
-Word refuses such a file hasn't been checked.
+gone by then. The part then names a prefix it never declares, which ECMA-376 Part 3 forbids. Word
+365 doesn't refuse such a file: it offers to repair it, and the repair succeeds. Opened through
+automation, without `OpenAndRepair`, the file fails to open. This is docx4j CR-052's phase 0, Jason's
+run on 2026-10-21, over `~/vbShares/Office 2016/cr052-word-check/c52-1` to `c52-4`:
+- Word's chartex chart with `xmlns:cx1` removed;
+- `zz9` undeclared;
+- `shape2010` undeclared;
+- docx4j's own re-save.
+
+The control, `c52-0`, opened cleanly.
 
 Four shapes, all from the requests:
 - **Declared on the root:** `xmlns:zz9="urn:example:zz9" mc:Ignorable="zz9"`, with a
