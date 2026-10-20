@@ -262,7 +262,10 @@ Both choices are Jason's.
   saw the source's meaning, so it is the right one to keep.
 - **Once a record exists in the process,** every marshal runs the `onElement` and every `deepCopy`
   walks. That costs about 5 to 8% on marshal and 60% on a whole-document `deepCopy` (section 2).
-  Paragraph-sized copies are what core-ts makes, and they are cheap either way.
+  core-ts says the `deepCopy` cost doesn't reach it (2026-10-20). Its `deepCopy` calls copy at
+  most a paragraph: run and paragraph properties, a style, a cell's properties, a content control.
+  Its `pkg.clone()` saves the package and loads it again, and never copies a tree. The marshal cost
+  falls on save.
 - **Way 2 of section 3.2** depends on runtime internals, as that section says.
 - **Records go with typed objects.** A Choice rebuilt from scratch, for instance from a
   `toSource` (CR-003 phase B) or by hand, has no record, and warns as it does today.
