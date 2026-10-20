@@ -321,12 +321,26 @@ section 3.2's callback, as 0.4.1 raised it to 3.4.2.
 - **The editor:** ED-009's fixture keeps its declarations when saved.
 - **Office JS add-ins using this package alone:** an `unmarshalString`/`marshalString` round trip
   keeps a part's private prefixes, and so does content moved between parts.
-- **`@docx4j/jsonix`:** a new CR for the unmarshal-side `onElement` (section 3.2), requested
-  2026-10-20.
+- **`@docx4j/jsonix`:** jsonix-CR-008, the unmarshal-side `onElement` (section 3.2), released in
+  3.5.0; this package's floor is now ^3.5.0.
 - **docx4j:** CR-052 (see the header) covers docx4j's half: moved, copied and built content, and a
-  tree set from code. One difference from this CR is for Jason. CR-052's D4 recommends declaring a
-  `Requires` prefix on the `mc:AlternateContent`, which is what docx4j does for a loaded part. This
-  CR declares on the root, following CR-001's convention. A local declaration would also keep both
-  meanings in section 3.5's case of one prefix bound two ways, because the tree doesn't use that
-  prefix. Both forms are valid. If the ports should agree, the root rule in section 3.4 would become
-  "on the Choice's `mc:AlternateContent`" for a prefix the tree doesn't use.
+  tree set from code. Where a source-only `Requires` prefix is declared is for Jason. There are
+  three places, all equivalent XML; whether Word reads them alike hasn't been checked.
+  - **The root:** this CR, following CR-001's convention.
+  - **The `mc:AlternateContent`:** CR-052's D4 recommendation, and what docx4j does for a loaded
+    part.
+  - **The `mc:Choice` that names it:** what Word does. core-ts counted, over 2,728 Word 365 saves
+    (24,075 WordprocessingML parts, 2026-10-20), where Word declares. A `Requires` prefix in Word's
+    fixed root set goes on the root, 664 of 664. One outside it goes on the Choice: `zz9`, 3 of 3,
+    in Word's resaves of docx4j's probes (build 16.0.20326), whose sources declare it on
+    `mc:AlternateContent`. Word moved the declaration onto the Choice and onto a sibling
+    `mc:Fallback`, and didn't add `zz9` to `mc:Ignorable`. In a WordprocessingML part, Word declares
+    nothing on `mc:AlternateContent`.
+
+  Either local form would also keep both meanings in section 3.5's case of one prefix bound two
+  ways, because the tree doesn't use that prefix. If the ports should agree, the root rule in
+  section 3.4 would change, for a prefix the tree doesn't use, to the place Jason chooses. For a
+  prefix in the table, which CR-001 governs and this CR doesn't change, the root matches Word in
+  WordprocessingML parts but not in chart parts: there Word declares `xmlns:mc` on
+  `mc:AlternateContent` and `c14` on the Choice (37 of 37), as Excel and PowerPoint do. core-ts
+  records the counts in its CR-010 section 14.9, and sent them to docx4j-25 for CR-052.
