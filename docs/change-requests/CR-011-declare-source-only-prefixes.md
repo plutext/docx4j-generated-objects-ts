@@ -1,6 +1,6 @@
 # CR-011: Declare from the source the prefixes only the source bound
 
-**Status:** Implemented 2026-10-20 (unreleased), on `@docx4j/jsonix` 3.5.0's jsonix-CR-008; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR")
+**Status:** Implemented 2026-10-20, released in 0.4.3 (2026-10-20), on `@docx4j/jsonix` 3.5.0's jsonix-CR-008; the runtime route decided 2026-10-20 (Jason: "objects CR-011: the jsonix CR")
 **Requested by:** core-ts, at Jason's word (2026-10-20: "Send this declaration defect to the
 objects session as a CR there"). The editor found it while building ED-009's fixture. core-ts
 reproduced it in core-ts 0.5.0 (main f8617e8) with this package at 0.4.2 and `@docx4j/jsonix`
@@ -242,9 +242,13 @@ Each is given once per prefix per marshal.
 
 ### 3.6 Release
 
-This fix changes output only for parts with these shapes, as 0.4.2 did. It raises this package's
-floor to `@docx4j/jsonix` ^3.5.0, which carries section 3.2's callback, as 0.4.1 raised it to 3.4.2.
-A patch (0.4.3) fits, but the version and the release are Jason's.
+Released in 0.4.3 (tag 3b4f4ba, 2026-10-20), a patch, as 0.4.2 was: the fix changes output only
+for parts with these shapes. It raised this package's floor to `@docx4j/jsonix` ^3.5.0, which carries
+section 3.2's callback, as 0.4.1 raised it to 3.4.2.
+- **core-ts's go:** core-ts tested 9ecd17a first. 877 of 878 tests passed, the one failure being
+  its pin of the old behaviour. Its survey of 750 packages differed only in the four copies of
+  docx4j's probe, each by the two root declarations it gains.
+- **Release step 6:** the npm tarball's hashes are identical to the tree's.
 
 ## 4. Not proposed
 
