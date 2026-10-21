@@ -65,7 +65,9 @@ There are four tests and no test framework:
   the generated module still declares none of them itself (so a regeneration that does retires the
   entry), that `modulesFor` adds the mapping with wml and not without, and that a kept Choice's
   `w:drawing` and Fallback's `w:pict` (over a `v:shapetype` with `w14:anchorId`) unmarshal typed and
-  marshal whole. CR-011's block checks that a prefix only the source bound is declared from the
+  marshal whole. docx4j CR-051's block checks that the block, row and cell content lists name
+  `mc:AlternateContent` (docx4j 1cff2cd5c), and that one at each level unmarshals typed and marshals
+  whole. CR-011's block checks that a prefix only the source bound is declared from the
   source: on the root, on `mc:AlternateContent`, a second prefix for a known namespace, after a
   move between trees, a `wml()` fragment, `deepCopy`, a flat OPC part, a paragraph marshalled
   alone; the superseded, tree-used and two-ways cases; and that a caller's `onElement` is composed.

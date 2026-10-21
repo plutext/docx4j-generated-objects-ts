@@ -666,3 +666,33 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(unwrap(await unmarshalString(`<w:drawing xmlns:w="${W}"/>`)).TYPE_NAME, 'org_docx4j_wml.Drawing', 'each of the 61 is a valid root now, as docx4j\'s root classes are');
   console.log('CR-009: 61 WordprocessingML elements declared globally; kept mc branches typed as docx4j types them OK');
 }
+
+// docx4j CR-051 (xsd 1cff2cd5c): mc:AlternateContent is admitted in EG_ContentBlockContent,
+// EG_ContentRowContent and EG_ContentCellContent, where every desktop Word reads it. The runtime
+// already typed it there, since an elementRefs property resolves an element it doesn't list
+// among the context's global ones; the regeneration lists it, and the declarations admit it.
+{
+  for (const local of ['Body', 'CTCustomXmlBlock', 'CTFtnEdn', 'CTTxbxContent', 'Comments.Comment', 'Hdr', 'Ftr', 'SdtContentBlock', 'Tc', 'Tbl', 'CTSdtContentRow', 'CTCustomXmlRow', 'Tr', 'CTSdtContentCell', 'CTCustomXmlCell']) {
+    const typeInfo = MODULES.org_docx4j_wml.typeInfos.find((t) => t.localName === local);
+    const refs = typeInfo.propertyInfos.find((pi) => pi.name === 'content').elementTypeInfos;
+    assert.ok(refs.some((r) => r.elementName.localPart === 'AlternateContent' && r.elementName.namespaceURI === MC), `${local}'s content lists mc:AlternateContent`);
+  }
+  const branch = (choice, fallback) => `<mc:AlternateContent><mc:Choice Requires="w14">${choice}</mc:Choice><mc:Fallback>${fallback}</mc:Fallback></mc:AlternateContent>`;
+  const block = branch('<w:p><w:r><w:t>new</w:t></w:r></w:p>', '<w:p><w:r><w:t>old</w:t></w:r></w:p>');
+  const cell = branch('<w:tc><w:p/></w:tc>', '<w:tc><w:p/></w:tc>');
+  const row = branch(`<w:tr>${cell}</w:tr>`, '<w:tr><w:tc><w:p/></w:tc></w:tr>');
+  const xml = `<w:document xmlns:w="${W}" xmlns:mc="${MC}" xmlns:w14="${W14}"><w:body>${block}<w:tbl>${row}</w:tbl></w:body></w:document>`;
+  const doc = await unmarshalString(xml);
+  const [blockAc, tbl] = doc.value.body.content;
+  assert.equal(blockAc.value.TYPE_NAME, 'org_docx4j_mce.AlternateContent', 'block level: in w:body');
+  assert.equal(blockAc.value.PARENT, doc.value.body);
+  assert.equal(blockAc.value.choice[0].any[0].value.TYPE_NAME, 'org_docx4j_wml.P', 'its branches typed (CR-009)');
+  const rowAc = tbl.value.content[0];
+  assert.equal(rowAc.value.TYPE_NAME, 'org_docx4j_mce.AlternateContent', 'row level: in w:tbl');
+  const tr = rowAc.value.choice[0].any[0];
+  assert.equal(tr.value.TYPE_NAME, 'org_docx4j_wml.Tr');
+  assert.equal(tr.value.content[0].value.TYPE_NAME, 'org_docx4j_mce.AlternateContent', 'cell level: in w:tr');
+  const written = await marshalString(doc);
+  assert.ok(written.includes(`<w:body>${block}<w:tbl>${row}</w:tbl></w:body>`), 'all three marshal back as read');
+  console.log('docx4j CR-051: mc:AlternateContent listed at block, row and cell level, typed and marshalled whole OK');
+}

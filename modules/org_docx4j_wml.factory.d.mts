@@ -2,8 +2,8 @@
 import type * as M from './org_docx4j_wml.js';
 import type { XmlQName, XmlCalendar, XmlDuration, XmlDomNode, XmlAnyElement, XmlAnyAttributes } from './org_docx4j_wml.js';
 import type * as Dep_org_docx4j_math from './org_docx4j_math.js';
-import type * as Dep_org_docx4j_w15 from './org_docx4j_w15.js';
 import type * as Dep_org_docx4j_mce from './org_docx4j_mce.js';
+import type * as Dep_org_docx4j_w15 from './org_docx4j_w15.js';
 import type * as Dep_org_docx4j_w14 from './org_docx4j_w14.js';
 import type * as Dep_org_docx4j_w15symex from './org_docx4j_w15symex.js';
 import type * as Dep_org_docx4j_customxml from './org_docx4j_customxml.js';

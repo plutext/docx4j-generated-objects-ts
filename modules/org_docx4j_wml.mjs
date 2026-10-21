@@ -107,6 +107,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
             }],
@@ -813,6 +819,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }, {
@@ -925,6 +937,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }, {
@@ -1056,6 +1074,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }, {
@@ -2173,6 +2197,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
@@ -3687,6 +3717,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }]
@@ -3789,6 +3825,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }]
@@ -5480,6 +5522,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
             }],
@@ -5847,6 +5895,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
             }],
@@ -6207,6 +6261,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
             }],
@@ -6338,6 +6398,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
@@ -9164,6 +9230,12 @@ export const org_docx4j_wml = {
               },
               typeInfo: 'org_docx4j_math.CTOMath'
             }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
+            }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
             }],
@@ -9962,6 +10034,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }]
@@ -10137,6 +10215,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }, {
               elementName: 'altChunk',
               typeInfo: '.CTAltChunk'
@@ -10409,6 +10493,12 @@ export const org_docx4j_wml = {
                 namespaceURI: 'http:\/\/schemas.openxmlformats.org\/officeDocument\/2006\/math'
               },
               typeInfo: 'org_docx4j_math.CTOMath'
+            }, {
+              elementName: {
+                localPart: 'AlternateContent',
+                namespaceURI: 'http:\/\/schemas.openxmlformats.org\/markup-compatibility\/2006'
+              },
+              typeInfo: 'org_docx4j_mce.AlternateContent'
             }],
           type: 'elementRefs'
         }, {
