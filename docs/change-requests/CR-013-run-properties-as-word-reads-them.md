@@ -4,9 +4,10 @@
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
-**Depends on:** the parse half of core-ts CR-015 section 6, which core-ts raised with jsonix-d2 on 2026-10-24 and
-which isn't filed yet: an `ST_OnOff` value read by Word's rule, and a value outside its enumeration kept loading.
-Sections 3.1, 3.2, 3.5 and 3.6 depend on its design. Sections 3.3 and 3.4 depend on nothing.
+**Depends on:** jsonix-CR-010 (proposed 2026-10-24, jsonix 4864682, its J1 to J3 for Jason) for sections 3.1, 3.2,
+3.5 and 3.6. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
+and a value its type can't print to `onUnprintableValue`. The facade sets both, with Word's rules. Sections 3.3 and
+3.4 depend on nothing.
 **Counterpart:** docx4j CR-060 (proposed, 38ccaedeb), the same rules in Java; core-ts CR-015 and docx4j-python's
 CR are drafted in parallel.
 
@@ -25,7 +26,7 @@ This package's part:
   `w:highlight` and `w:color` raw today. It should read them as Word does, and do the same for the on/off and
   enumeration values once they load.
 - A colour table that core-ts can share, rather than keep a copy.
-- Whatever the facade needs so that the runtime's leniency applies to WordprocessingML only.
+- jsonix-CR-010's two callbacks, set by the facade with Word's rules, for WordprocessingML only.
 
 ## 2. What this package does (measured 2026-10-24, at 1e4e895)
 
@@ -46,20 +47,30 @@ Each value was unmarshalled as a run's `w:rPr` through `unmarshalString`, then r
 
 ### 3.1 On/off
 
-No change here if the parse gives Word's boolean (core-ts CR-015's D1 (a)): `on()` is already right, and so is every
-reader in core-ts. If the runtime keeps the source string instead, `on()` takes Word's rule: off only for `false`,
-`"false"`, `"off"` or `"0"`, exactly.
+The facade's `onInvalidValue` (section 3.5) returns `true` for a refused `Boolean` in `org_docx4j_wml`. The
+runtime already reads `false`, `0` and `off` as false, and refuses only what Word reads as on (`yes`, `FALSE`,
+`" false"`, `""`). The model then holds Word's boolean, so `on()` is already right, and so is every reader in
+core-ts (core-ts CR-015's D1 (a)). A save writes `true`, which Word reads the same way, as jsonix-CR-007's `off`
+is saved `false`.
 
 ### 3.2 Enumerations
 
-If the runtime drops a value outside the enumeration, leaving the attribute absent, `readRunOptions` already reads
-it as Word does: `w:u` reads `None`, and `w:vertAlign` reads neither superscript nor subscript. docx4j CR-060's D3
-("read as absent") does the same. The generated declarations also stay the literal unions they are. That is the
-form this package would ask for.
+The facade's `onInvalidValue` either keeps a refused enumeration value as its string, or drops it, leaving the
+attribute absent. Which one is core-ts CR-015's D1/D2, and jsonix-CR-010 section 5.4's question, for Jason:
+- **Drop:** `readRunOptions` already reads it as Word does: `w:u` reads `None`, and `w:vertAlign` reads neither
+  superscript nor subscript. docx4j CR-060's D3 ("read as absent") does the same, and the model stays inside its
+  declared types. But `<w:u w:val="Single"/>` saves as `<w:u/>`. Over a style that underlines, that shows the
+  style's underline (Word's S11), which changes meaning if core-ts's D5 finds that an invalid value overrides a
+  style.
+- **Keep** (jsonix-d2's recommendation until D5 is measured): a save writes the source's spelling back, through
+  the facade's `onUnprintableValue`, so it means to Word what the source meant, whatever D5 finds. The cost is a
+  typed property holding a string outside its declared union, such as `'Single'` where the declaration says
+  `UnderlineEnumeration`. Every reader must then treat a non-member as unset. A TypeScript `switch` over the union
+  meets a value it can't name, and the declarations don't say so.
 
-If the runtime keeps the string, `readRunOptions` changes in one place: underline's fallback becomes `None`, not
-`Mixed`. Every valid `ST_Underline` value has an Office JS name (`UNDERLINE_TO_WML` covers all seventeen besides
-`none`), so the fallback is reached only by an invalid value. `vertAlign` already compares exactly.
+`readRunOptions` changes in one place either way: underline's fallback becomes `None`, not `Mixed`. Every valid
+`ST_Underline` value has an Office JS name (`UNDERLINE_TO_WML` covers all seventeen besides `none`), so the
+fallback is reached only by an invalid value. `vertAlign` already compares exactly.
 
 ### 3.3 `w:highlight`
 
@@ -87,36 +98,46 @@ of keeping a second table. If docx4j adds the same table (CR-060's D5), the test
 While there: `RunFormatting.color`'s comment says "or a theme name", but `readRunOptions` reads only `w:color/@w:val`.
 The comment is corrected.
 
-### 3.5 The facade's part of the parse
+### 3.5 The facade sets jsonix-CR-010's callbacks
 
-This depends on the runtime's design, which is jsonix-d2's:
-- **(a) A global rule** (Word's on/off for every `Boolean`, every enumeration lenient): nothing changes here.
-- **(b) Per mapping:** the WordprocessingML mappings (`org_docx4j_wml` and CR-009's `org_docx4j_wml_globals`) are
-  marked lenient. That could be done by the compiler, or by the facade before it builds its context.
-- **(c) Per call:** an unmarshaller option. The facade sets it in `unmarshalPackage` by content type, and in
-  `unmarshalString`/`unmarshalNode` by the root's namespace. core-ts passes it itself through CR-007's per-call
-  options where it unmarshals a part.
+Every facade unmarshal (`unmarshalString`, `unmarshalNode`, `unmarshalPackage`) passes an `onInvalidValue`. Every
+facade marshal passes an `onUnprintableValue`, if the enumerations are kept. Each is scoped by
+`classInfo.module.name === 'org_docx4j_wml'`:
+- **On/off:** a refused `Boolean` gives `true` (section 3.1).
+- **Enumerations:** a refused value is kept or dropped (section 3.2). On marshal, a kept string is written back.
+- **Anything else rethrows,** so it fails as today. That covers other simple types in wml, and every type of
+  every other mapping, such as DrawingML (`wp:`, `a:`, `pic:`), VML and w14 inside a `document.xml`, which Word's
+  rule isn't measured for.
 
-This package's preference is (b). A WordprocessingML part also holds DrawingML (`wp:`, `a:`, `pic:`) and VML,
-whose booleans Word's rule isn't measured for. Per-part scoping, as in (c), would apply it to them too.
+Scoping by the class's mapping, not by the part, needs no per-part choice. A `document.xml` gets Word's rule for
+its WordprocessingML and today's strictness for the DrawingML it holds. CR-009's `org_docx4j_wml_globals`
+declares elements of `org_docx4j_wml`'s types, so their class infos answer `org_docx4j_wml` too.
+
+A caller's own `onInvalidValue` or `onUnprintableValue`, passed through CR-007's per-call options, takes precedence.
+The facade's are exported (`wordInvalidValue`, `wordUnprintableValue`) for a caller that wants to compose them.
+
+Word's enumeration rule is measured for `w:u`, `w:vertAlign` and `w:em` only, and `w:highlight` is a string here.
+Whether every wml enumeration is lenient, or only those three, is O4.
 
 ### 3.6 What a save writes (core-ts CR-015's D2, Jason's)
 
 The rule is that a save never changes meaning:
 - `applyRunOptions` already writes only valid forms.
-- An on/off or enumeration value read leniently is written in the runtime's form, whatever its design: as
-  `"true"`/`"false"`, and an invalid enumeration value dropped.
-- **If D2 (a):** an element left with no required value is written bare. That is `w:vertAlign` or `w:em` whose
-  invalid value the parse dropped, and `w:highlight` whose value is missing or outside its list. Word repairs a
-  file with one, dropping the element. The facade's marshal can drop them first. That is a tree rule, so it would
-  live here, and every consumer gets it. Office never writes such an element, so the fidelity corpus can't move.
+- An on/off value read leniently is written `"true"`.
+- An invalid enumeration value is written back as read if kept, or not written if dropped (section 3.2).
+- **If D2 (a):** Word repairs a file with a `w:vertAlign` or `w:em` whose value is missing or invalid, or a
+  `w:highlight` whose value is missing or outside its list, by dropping the element. The facade's marshal can drop
+  them first. That is a tree rule, so it would live here, and every consumer gets it. Office never writes such an
+  element, so the fidelity corpus can't move.
 
 ## 4. Not proposed
 
 - **Word's own save form:** on bare, off dropped or `0`, names and lower-case hex as upper-case hex. That is
   core-ts's D2 (c), possible later; neither changes meaning.
 - **Office JS's own answers** for these values (core-ts's D4, its check 60), and rendering.
-- **The parse itself:** that's the runtime's, or the compiler's under (b).
+- **The callback mechanism itself:** that's jsonix-CR-010's.
+- **Widening the generated enumeration declarations** to admit a kept string. That's a compiler question, if
+  keeping is chosen and a consumer asks.
 
 ## 5. Decisions (for Jason)
 
@@ -127,7 +148,13 @@ The rule is that a save never changes meaning:
   own table. **Recommendation:** yes.
 - **O3. Dropping valueless `w:highlight`, `w:vertAlign` and `w:em` on marshal**, if D2 (a): in the facade, or in
   core-ts. **Recommendation:** the facade.
-- **The scoping (section 3.5)** is the runtime's design. This package's preference is per mapping.
+- **O4. Which wml enumerations are lenient:** every one (a refused value anywhere in `org_docx4j_wml` loads), or
+  only `w:u`, `w:vertAlign` and `w:em`, the ones Word was measured for. Refusing the part is the worse half
+  (core-ts CR-015 section 1). But every reader of another enumeration (`w:fldChar/@w:fldCharType`, say) must then
+  treat a non-member as unset. **Recommendation:** every one, read as unset, since Word opened every measured case
+  and a part that fails can't be read at all.
+- **Keep or drop** an invalid enumeration value is core-ts's D1/D2 and jsonix-CR-010's section 5.4, not decided
+  here.
 
 ## 6. Tests
 
@@ -139,9 +166,14 @@ Smoke, a block of its own:
     `darkYellow`, `rebeccapurple`, `"dark red"`, `F00`, `0xFF0000`, `GG0000`, `""`) read per O1.
   - `wordColor` itself.
   - The table's 140 names, and the seven excluded spellings missing from it.
-- **With the runtime:** each on/off value of core-ts CR-015's rule 1 reads as Word does. So does each invalid
-  `w:u`/`w:vertAlign`/`w:em`, through unmarshal and `readRunOptions`. Until the runtime lands, each such value is
-  asserted to fail the part, with the upstream commit cited, so that the fix announces itself.
+- **With the runtime:**
+  - Each on/off value of core-ts CR-015's rule 1 reads as Word does, and so does each invalid
+    `w:u`/`w:vertAlign`/`w:em`, through unmarshal and `readRunOptions`.
+  - The same values in a DrawingML attribute of the same part still fail.
+  - A caller's own callback takes precedence.
+  - If kept, the value saves as read; if dropped, the attribute goes.
+  - Until jsonix-CR-010 is released, each such value is asserted to fail the part, with the upstream commit cited,
+    so that the fix announces itself.
 - **The probes:** the marker paragraphs' `document.xml` from `onoff-fun/` are extracted as fixtures, with a
   `SOURCE.md` naming each file. Extracted part XML only, never the archives, and never edited by hand. Each marker
   then reads as Word read it.
@@ -156,8 +188,8 @@ Smoke, a block of its own:
 ## 8. Phases and release
 
 - **Phase A**, with no dependency: sections 3.3 and 3.4, with O1 and O2. Half a day.
-- **Phase B**, once the runtime lands: section 3.1 or 3.2 (whichever its design needs), section 3.5, and the probe
-  fixtures. Half a day, plus a regeneration if the compiler marks the mappings.
+- **Phase B**, once jsonix-CR-010 is released: sections 3.1, 3.2 and 3.5, with O4 and the keep-or-drop decision,
+  and the probe fixtures, with the runtime floor raised to that release. Half a day.
 - **Phase C**, if D2 (a) and O3: section 3.6's drop on marshal. Two hours.
 
 Each phase is a patch, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, possibly a raised runtime
