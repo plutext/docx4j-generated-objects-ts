@@ -8,8 +8,14 @@ core-ts and docx4j-python against the same rules and probes).
 3.5 and 3.6. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
 and a value its type can't print to `onUnprintableValue`. The facade sets both, with Word's rules. Sections 3.3 and
 3.4 depend on nothing.
-**Counterpart:** docx4j CR-060 (proposed, 38ccaedeb), the same rules in Java; core-ts CR-015 and docx4j-python's
-CR are drafted in parallel.
+**Counterpart:** docx4j CR-060, the same rules in Java, implemented through phase 3 on `VERSION_17_3_5`
+(868a1797b, unpushed, 2026-10-24):
+- an `OnOffAdapter` on 46 of `wml.xsd`'s 48 boolean attributes, as annox annotations. A regeneration from that xsd
+  is byte-identical to this package's `modules/`, checked 2026-10-24;
+- a value outside an enumeration read as absent;
+- marshal-only adapters that leave out a `w:highlight`, `w:vertAlign` or `w:em` whose value is missing or invalid.
+
+core-ts CR-015 and docx4j-python's CR are drafted in parallel.
 
 ## 1. Summary
 
@@ -154,7 +160,8 @@ The rule is that a save never changes meaning:
   treat a non-member as unset. **Recommendation:** every one, read as unset, since Word opened every measured case
   and a part that fails can't be read at all.
 - **Keep or drop** an invalid enumeration value is core-ts's D1/D2 and jsonix-CR-010's section 5.4, not decided
-  here.
+  here. docx4j reads it as absent, which is the same as dropping. Keeping would make the ports differ on save for
+  `w:u`, whose source spelling this package would write back where docx4j writes a bare `<w:u/>`.
 
 ## 6. Tests
 
