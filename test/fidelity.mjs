@@ -116,8 +116,8 @@ function takeChoice(xml) {
 // ---------------------------------------------------------------- prefixes markup compatibility names
 //
 // What the canonical comparison cannot see, since it ignores namespace declarations: a prefix
-// that an mc:Ignorable or an mc:Choice's Requires names, as a value, must resolve where it is
-// written. The facade once kept only the declarations element and attribute names used, so Word's
+// that an mc:Ignorable, an mc:MustUnderstand or an mc:Choice's Requires names, as a value, must
+// resolve where it is written. The facade once kept only the declarations element and attribute names used, so Word's
 // Requires="cx1" over content in cx (2014) came out naming a prefix nothing declared (core-ts,
 // once its CR-010 phase 4 kept branches by default, 2026-10-19). Every element is read, since a
 // kept branch carries mc:Ignorable below the root (a:srgbClr's, for a14).
@@ -126,7 +126,7 @@ function unresolvedMcPrefixes(xml) {
   const doc = new DOMParser().parseFromString(xml, 'application/xml');
   const out = [];
   for (const element of Array.from(doc.getElementsByTagName('*'))) {
-    const named = [['mc:Ignorable', element.getAttributeNS(MC, 'Ignorable')]];
+    const named = [['mc:Ignorable', element.getAttributeNS(MC, 'Ignorable')], ['mc:MustUnderstand', element.getAttributeNS(MC, 'MustUnderstand')]];
     if (element.namespaceURI === MC && element.localName === 'Choice') named.push(['Requires', element.getAttribute('Requires')]);
     for (const [attribute, value] of named) {
       for (const prefix of (value ?? '').split(/\s+/).filter(Boolean)) {
@@ -147,6 +147,8 @@ function unresolvedMcPrefixes(xml) {
   assert.deepEqual(unresolvedMcPrefixes(choice('', `xmlns:cx1="${CX1}"`)), [], 'declared on the Choice, it resolves');
   assert.deepEqual(unresolvedMcPrefixes(`<a:srgbClr xmlns:a="a" xmlns:mc="${MC}" mc:Ignorable="a14"/>`),
     ['a:srgbClr/@mc:Ignorable names a14, which nothing declares'], 'an mc:Ignorable below the root is read too');
+  assert.deepEqual(unresolvedMcPrefixes(choice('', `xmlns:cx1="${CX1}" mc:MustUnderstand="w14"`)),
+    ['mc:Choice/@mc:MustUnderstand names w14, which nothing declares'], 'and an mc:MustUnderstand');
   mcPrefixesChecked = 0;
   console.log('fidelity: markup compatibility prefix self-checks OK');
 }
@@ -468,5 +470,5 @@ if (failures.length) {
 } else {
   console.log(`fidelity: ${checked} parts Office wrote round-trip through the facade unchanged`
     + (known.length ? `, but for ${known.length} known difference${known.length === 1 ? '' : 's'} above` : '')
-    + `; every one of ${mcPrefixesChecked} prefixes mc:Ignorable or Requires names resolves`);
+    + `; every one of ${mcPrefixesChecked} prefixes mc:Ignorable, mc:MustUnderstand or Requires names resolves`);
 }

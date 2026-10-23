@@ -247,7 +247,7 @@ Each is given once per prefix per marshal.
 - **New, the tree's namespace wins:** the source bound a named prefix to one namespace, but the tree
   uses the prefix for another. In 0.4.3, root declarations couldn't keep both meanings, so the
   warning says the `Requires` or `mc:Ignorable` now means the tree's namespace. Since CR-012 a
-  `Requires` prefix is declared on its Choice. So for a `Requires` it warns only where the Choice's
+  prefix a Choice names is declared on that Choice. So for one it warns only where the Choice's
   own content uses the prefix, which a declaration there would rebind.
 - **One prefix bound two ways, 0.4.3 only:** two of a part's Choices, or a Choice and the root,
   meant different namespaces by one prefix that the tree doesn't use. A root declaration could
@@ -276,8 +276,9 @@ section 3.2's callback, as 0.4.1 raised it to 3.4.2.
   record on the Choice needs nothing.
 - **One registry for the whole process** of every prefix seen. It would leak one document's
   bindings into another's marshal.
-- **`MustUnderstand`, a Choice's own `mc:Ignorable`, and `ProcessContent`.** The facade doesn't
-  declare their prefixes today, and no part in the corpus carries any of them.
+- **`ProcessContent`.** The facade doesn't declare its prefixes, and no part in the corpus carries
+  it. A Choice's own `mc:Ignorable` and `mc:MustUnderstand` were not declared either, until CR-012
+  (2026-10-24, docx4j CR-052's D1 (b)).
 - **Merging an inserted root's `mc:Ignorable` into the destination's.** core-ts's `insertOoxml`
   doesn't do it. That is a separate question, and core-ts hasn't raised it.
 

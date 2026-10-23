@@ -459,9 +459,9 @@ export async function marshalNode(element: Jsonix.TypedNamedValue, options?: Jso
 /**
  * The prefix bindings a source declared, kept for the marshal (CR-011), since the typed tree keeps
  * no namespace declarations. Two kinds of object have a record: an `mc:Choice`, holding the
- * binding in scope there of each prefix its `Requires` names, so that it travels with the Choice
- * wherever an edit moves it; and a part's root value, holding the bindings in scope at the source
- * root, for its `mc:Ignorable`.
+ * binding in scope there of each prefix its `Requires`, its own `mc:Ignorable` and its
+ * `mc:MustUnderstand` name, so that it travels with the Choice wherever an edit moves it; and a
+ * part's root value, holding the bindings in scope at the source root, for its `mc:Ignorable`.
  */
 const sourceBindings = new WeakMap<object, ReadonlyMap<string, string>>();
 // Until a first record exists, a marshal adds no onElement and a deepCopy no walk.
@@ -476,14 +476,23 @@ function sourceOnly(prefix: string, namespaceURI: string): boolean {
   return (TABLE_BY_PREFIX.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]) !== namespaceURI;
 }
 
-function requiresOf(element: Element): string[] {
-  return (element.getAttribute('Requires') ?? '').split(/\s+/).filter(Boolean);
+type ChoiceAttribute = 'Requires' | 'mc:Ignorable' | 'mc:MustUnderstand';
+
+/** The prefixes an mc:Choice names, each with the attribute naming it: its Requires, then its own mc:Ignorable and mc:MustUnderstand (docx4j CR-052's D1 (b)). */
+function namedOnChoice(element: Element): [string, ChoiceAttribute][] {
+  const named: [string, ChoiceAttribute][] = [];
+  const lists: [ChoiceAttribute, string | null][] = [['Requires', element.getAttribute('Requires')],
+    ['mc:Ignorable', element.getAttributeNS(MC_NS, 'Ignorable')], ['mc:MustUnderstand', element.getAttributeNS(MC_NS, 'MustUnderstand')]];
+  for (const [attribute, value] of lists) {
+    for (const prefix of (value ?? '').split(/\s+/).filter(Boolean)) named.push([prefix, attribute]);
+  }
+  return named;
 }
 
-/** The binding in scope at `element` of each prefix its Requires names, or undefined when it names none the source binds. */
+/** The binding in scope at `element` of each prefix it names, or undefined when it names none the source binds. */
 function choiceBindingsAt(element: Element): Map<string, string> | undefined {
   let bindings: Map<string, string> | undefined;
-  for (const prefix of requiresOf(element)) {
+  for (const [prefix] of namedOnChoice(element)) {
     const namespaceURI = element.lookupNamespaceURI(prefix);
     if (namespaceURI && sourceOnly(prefix, namespaceURI)) (bindings ??= new Map()).set(prefix, namespaceURI);
   }
@@ -711,7 +720,8 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * of its Requires, unless the root already declares that binding (CR-012). That is Word's
  * placement: over 2,728 Word 365 saves it declared every Requires prefix of its own fixed set on
  * the root, and docx4j's private zz9 on the Choice, having read it on mc:AlternateContent; Word
- * reads all three places alike (core-ts, 2026-10-20). 0.4.3 declared it on the root.
+ * reads all three places alike (core-ts, 2026-10-20). 0.4.3 declared it on the root. A Choice's own
+ * mc:Ignorable and mc:MustUnderstand prefixes follow its Requires, as docx4j's do (its CR-052, D1 (b)).
  *
  * A Requires prefix counts because it names a namespace, not because anything is in it: Word's
  * chartex Choice says `Requires="cx1"` (2015/9/8) over content in `cx` (2014), so nothing in the
@@ -719,14 +729,16 @@ function prefixOfDeclaration(attr: Attr): string | undefined {
  * once its CR-010 phase 4 kept branches by default, 2026-10-19; docx4j CR-049 declares the same).
  * A declaration below the root that binds the prefix answers for its Choice, as everywhere here.
  * A Requires prefix nothing resolves is kept, with a warning: dropping it would change which
- * branch a reader takes.
+ * branch a reader takes. So is a Choice's mc:MustUnderstand prefix, which a reader that doesn't
+ * understand it must refuse; one in the Choice's mc:Ignorable is dropped from it, as from the root's.
  *
  * The source comes first because its binding is what the prefix meant: three Excel VML parts of
  * the fidelity corpus bind `x` to the Excel VML namespace, which the aliases would declare as
  * SpreadsheetML. A declaration the tree's own elements or attributes use is never rebound: where
  * the source meant another namespace by a prefix the root's tree uses, for mc:Ignorable, or the
- * Choice's own content uses, for a Requires, that is warned about. A use elsewhere in the tree
- * doesn't stop a Choice declaring its own binding, so a prefix bound two ways keeps both meanings.
+ * Choice's own content uses, for a prefix the Choice names, that is warned about. A use elsewhere
+ * in the tree doesn't stop a Choice declaring its own binding, so a prefix bound two ways keeps
+ * both meanings.
  * A root declaration kept only because mc:Ignorable names it gives way to the source's.
  *
  * An mc:Ignorable prefix neither resolves is dropped
@@ -748,14 +760,17 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
   const use = (prefix: string, namespaceURI: string, shadowed: Set<string>): void => {
     if (!shadowed.has(prefix) && declared.get(prefix)?.value === namespaceURI) used.add(prefix);
   };
-  const required = new Set<string>();
-  // The Requires prefixes only the source bound, each declared on its Choice (CR-012).
+  // The prefixes a Choice names that go on the root: by Requires or mc:MustUnderstand (kept if
+  // nothing resolves them), and by the Choice's own mc:Ignorable (dropped from it if nothing does).
+  const required = new Map<string, ChoiceAttribute>();
+  const choiceIgnorable: { choice: Element; prefix: string }[] = [];
+  // The prefixes a Choice names that only the source bound, each declared on its Choice (CR-012).
   const local: { choice: Element; prefix: string; namespaceURI: string }[] = [];
   const clashed = new Set<string>();
   const clash = (prefix: string, meant: string, tree: string): void => {
     if (clashed.has(prefix)) return;
     clashed.add(prefix);
-    console.warn(`marshal: the source bound ${prefix} to ${meant}, but the tree uses it for ${tree}; mc:Ignorable or a Requires naming it now means the latter`);
+    console.warn(`marshal: the source bound ${prefix} to ${meant}, but the tree uses it for ${tree}; an mc:Ignorable, Requires or mc:MustUnderstand naming it now means the latter`);
   };
   const walk = (element: Element, shadowed: Set<string>): void => {
     let scope = shadowed;
@@ -773,9 +788,9 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
       if (attr.namespaceURI && prefixOfDeclaration(attr) === undefined) use(attr.prefix ?? '', attr.namespaceURI, scope);
     }
     if (element.namespaceURI === MC_NS && element.localName === 'Choice') {
-      for (const prefix of requiresOf(element)) {
+      for (const [prefix, attribute] of namedOnChoice(element)) {
         if (scope.has(prefix)) continue;
-        // What the prefix meant where it was required: the Choice's own source, else the root's.
+        // What the prefix meant where the Choice named it: the Choice's own source, else the root's.
         const namespaceURI = choices?.get(element)?.get(prefix) ?? rootSource?.get(prefix);
         if (namespaceURI !== undefined) {
           const tree = otherUse(element, prefix, namespaceURI);
@@ -785,7 +800,8 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
           }
           clash(prefix, namespaceURI, tree);
         }
-        required.add(prefix);
+        if (attribute === 'mc:Ignorable') choiceIgnorable.push({ choice: element, prefix });
+        else if (!required.has(prefix)) required.set(prefix, attribute);
       }
     }
     for (const child of Array.from(element.childNodes)) {
@@ -796,7 +812,8 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
   const usedByTree = new Set(used);
   const ignorable = (root.getAttributeNS(MC_NS, 'Ignorable') ?? '').split(/\s+/).filter(Boolean);
   for (const prefix of ignorable) used.add(prefix);
-  for (const prefix of required) used.add(prefix);
+  for (const prefix of required.keys()) used.add(prefix);
+  for (const { prefix } of choiceIgnorable) used.add(prefix);
   for (const [prefix, attr] of declared) {
     // A declaration kept only because mc:Ignorable names its prefix gives way to the source's
     // binding, which is what that prefix meant (CR-011). One a Requires named has gone to its Choice.
@@ -804,15 +821,15 @@ function fixRootNamespaceDeclarations(root: Element, table: Record<string, strin
     const superseded = !usedByTree.has(prefix) && meant !== undefined && meant !== attr.value;
     if (!used.has(prefix) || attr.value === XML_NS || superseded) root.removeAttributeNode(attr);
   }
-  if (ignorable.length > 0 || required.size > 0) declareOnRoot(root, table, ignorable, required, rootSource, clash);
+  if (ignorable.length > 0 || required.size > 0 || choiceIgnorable.length > 0) declareOnRoot(root, table, ignorable, required, choiceIgnorable, rootSource, clash);
   // After the root's, so that a binding the root declares isn't repeated on a Choice.
   for (const { choice, prefix, namespaceURI } of local) {
-    if (root.getAttributeNode(`xmlns:${prefix}`)?.value === namespaceURI) continue;
-    // Ahead of Requires, as Word writes it.
-    const requires = choice.getAttributeNode('Requires');
-    if (requires) choice.removeAttributeNode(requires);
+    if (root.getAttributeNode(`xmlns:${prefix}`)?.value === namespaceURI || choice.getAttributeNode(`xmlns:${prefix}`)) continue;
+    // Ahead of Requires and the Choice's other attributes, as Word writes it.
+    const after = Array.from(choice.attributes).filter((attr) => prefixOfDeclaration(attr) === undefined);
+    for (const attr of after) choice.removeAttributeNode(attr);
     choice.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
-    if (requires) choice.setAttributeNode(requires);
+    for (const attr of after) choice.setAttributeNode(attr);
   }
 }
 
@@ -832,8 +849,10 @@ function otherUse(element: Element, prefix: string, namespaceURI: string): strin
   return undefined;
 }
 
-/** `fixRootNamespaceDeclarations`'s declarations on the root: the mc:Ignorable prefixes, and the Requires prefixes no source bound. */
-function declareOnRoot(root: Element, table: Record<string, string>, ignorable: string[], required: ReadonlySet<string>, rootSource: ReadonlyMap<string, string> | undefined, clash: (prefix: string, meant: string, tree: string) => void): void {
+/** `fixRootNamespaceDeclarations`'s declarations on the root: the mc:Ignorable prefixes, and the prefixes a Choice names that no source bound. */
+function declareOnRoot(root: Element, table: Record<string, string>, ignorable: string[], required: ReadonlyMap<string, ChoiceAttribute>,
+  choiceIgnorable: readonly { choice: Element; prefix: string }[], rootSource: ReadonlyMap<string, string> | undefined,
+  clash: (prefix: string, meant: string, tree: string) => void): void {
   const namespaceFor = new Map(Object.entries(table).map(([namespaceURI, prefix]) => [prefix, namespaceURI]));
   // The table answers "which prefix for this namespace", which has no answer for the namespace
   // written as the default; the aliases answer "what does this prefix mean" (CR-006).
@@ -850,9 +869,28 @@ function declareOnRoot(root: Element, table: Record<string, string>, ignorable: 
     root.setAttributeNS(XMLNS_NS, `xmlns:${prefix}`, namespaceURI);
     return true;
   };
-  const unrequired = [...required].filter((prefix) => !declare(prefix));
-  if (unrequired.length > 0) {
-    console.warn(`marshal: an mc:Choice's Requires names ${unrequired.join(', ')}, which no declaration or NAMESPACE_PREFIXES entry resolves; kept`);
+  const unrequired = [...required].filter(([prefix]) => !declare(prefix));
+  for (const attribute of ['Requires', 'mc:MustUnderstand']) {
+    const prefixes = unrequired.filter(([, by]) => by === attribute).map(([prefix]) => prefix);
+    if (prefixes.length > 0) console.warn(`marshal: an mc:Choice's ${attribute} names ${prefixes.join(', ')}, which no declaration or NAMESPACE_PREFIXES entry resolves; kept`);
+  }
+  // A Choice's own mc:Ignorable naming a prefix nothing declares is dropped from it, as the root's is.
+  const dropped = new Map<Element, Set<string>>();
+  for (const { choice, prefix } of choiceIgnorable) {
+    if (declare(prefix)) continue;
+    let prefixes = dropped.get(choice);
+    if (!prefixes) dropped.set(choice, prefixes = new Set());
+    prefixes.add(prefix);
+  }
+  if (dropped.size > 0) {
+    const all = new Set([...dropped.values()].flatMap((prefixes) => [...prefixes]));
+    console.warn(`marshal: an mc:Choice's mc:Ignorable names ${[...all].join(', ')}, which no declaration or NAMESPACE_PREFIXES entry resolves; dropped`);
+    for (const [choice, prefixes] of dropped) {
+      const attr = choice.getAttributeNodeNS(MC_NS, 'Ignorable')!;
+      const kept = attr.value.split(/\s+/).filter((prefix) => prefix && !prefixes.has(prefix));
+      if (kept.length > 0) choice.setAttributeNS(MC_NS, attr.name, kept.join(' '));
+      else choice.removeAttributeNode(attr);
+    }
   }
   const unresolved = ignorable.filter((prefix) => !declare(prefix));
   if (unresolved.length > 0) {

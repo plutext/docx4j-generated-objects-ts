@@ -72,7 +72,8 @@ There are four tests and no test framework:
   move between trees, a `wml()` fragment, `deepCopy`, a flat OPC part, a paragraph marshalled
   alone; the superseded, tree-used and two-ways cases; and that a caller's `onElement` is composed.
   It also checks where each declaration goes (CR-012): a `Requires` prefix on its Choice, ahead of
-  `Requires` and not on the root, unless the root declares that binding already.
+  `Requires` and not on the root, unless the root declares that binding already; the same for a
+  Choice's own `mc:Ignorable` and `mc:MustUnderstand`, and what happens to one nothing resolves.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -98,8 +99,9 @@ There are four tests and no test framework:
   Excel's threaded comments, a Power Query blob), which fails if the model ever learns one. Every
   differing line is classified, not only the first, so a recorded loss cannot mask an unrecorded one;
   the classifier has its own self-checks, as does the canonicaliser. Since the comparison ignores
-  namespace declarations, every prefix an `mc:Ignorable` or an `mc:Choice`'s `Requires` names in a
-  marshalled part is also checked to resolve where it is written (CR-001 section 3.2).
+  namespace declarations, every prefix an `mc:Ignorable`, an `mc:MustUnderstand` or an `mc:Choice`'s
+  `Requires` names in a marshalled part is also checked to resolve where it is written (CR-001
+  section 3.2).
   Run against 0.1.5's `modules/` the test reports all five losses that release carried.
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
@@ -165,8 +167,10 @@ binding the table and the aliases would not give, on the `mc:Choice`'s typed obj
 part root (a module `WeakMap`; `deepCopy` carries it), and the marshal finds them through its
 `onElement`. Unmarshal through the facade too, or nothing is recorded. CR-012 (implemented
 2026-10-20, Jason's choice of Word's placement for both ports) declares such a `Requires` prefix
-on the `mc:Choice` that names it, not on the root, unless the root already declares that binding;
-`mc:Ignorable` prefixes, and `Requires` prefixes the table or aliases give, stay on the root. CR-008 (implemented 2026-10-04) has them first append to a
+on the `mc:Choice` that names it, not on the root, unless the root already declares that binding,
+and treats a Choice's own `mc:Ignorable` and `mc:MustUnderstand` as its `Requires` (docx4j CR-052's
+D1 (b), Jason 2026-10-24); a root's `mc:Ignorable` prefixes, and the prefixes the table or aliases
+give, stay on the root. CR-008 (implemented 2026-10-04) has them first append to a
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.

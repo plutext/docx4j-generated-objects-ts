@@ -1,6 +1,6 @@
 # CR-012: Declare a source-only Requires prefix on its mc:Choice, as Word does
 
-**Status:** Implemented 2026-10-20, not yet released; the placement decided 2026-10-20 (Jason: "(c) placement", for both ports)
+**Status:** Implemented 2026-10-20, not yet released; the placement decided 2026-10-20 (Jason: "(c) placement", for both ports); a Choice's own `mc:Ignorable` and `mc:MustUnderstand` added 2026-10-24 (Jason: "D1 (b): yes")
 **Requested by:** Jason, through core-ts, which relayed the decision and measured Word's placement
 (its CR-010 section 14.9, core-ts 2621f89).
 **Depends on:** CR-011 (released in 0.4.3), whose records this places. Nothing new in the runtime.
@@ -17,8 +17,12 @@ puts it on the `mc:Choice` that names it. Jason chose Word's placement for both 
 - nothing is copied onto `mc:Fallback`;
 - chart parts follow the same rule.
 
-This changes output only for parts with a source-only `Requires` prefix. The fidelity corpus has
-none, and its 341 parts marshal byte-identically to 0.4.3.
+A Choice's own `mc:Ignorable` and `mc:MustUnderstand` follow its `Requires`, as docx4j's do (its
+CR-052, D1 (b); Jason, 2026-10-24). Until now their prefixes weren't declared at all.
+
+This changes output only for parts with a source-only prefix that a Choice names, or with a
+Choice's own `mc:Ignorable` or `mc:MustUnderstand`. The fidelity corpus has neither, and its 341
+parts marshal byte-identically to 0.4.3.
 
 ## 2. Measured
 
@@ -49,10 +53,10 @@ source's declarations outside Word's fixed set.
 
 ## 3. Implemented
 
-In `fixRootNamespaceDeclarations`, for each `Requires` prefix that no declaration below the root
-already answers:
+In `fixRootNamespaceDeclarations`, for each prefix a Choice names that no declaration below the
+root already answers, by its `Requires`, its own `mc:Ignorable` or its `mc:MustUnderstand`:
 1. **A source binding**, from the Choice's record or else the root's, is declared on that Choice,
-   ahead of its `Requires`, as Word writes it. The source binding is the one the table and the
+   ahead of its `Requires` and its other attributes, as Word writes it. The source binding is the one the table and the
    aliases wouldn't give (CR-011 section 3.1). So `shape2010` for `wps`, and `w14` bound to another
    namespace, go on the Choice too.
 2. **If the marshalled root declares that same binding,** the Choice doesn't repeat it. The root
@@ -63,8 +67,25 @@ already answers:
    declaration on the root, for both ports, on 2026-10-20 ("one declaration on the root right").
    Word's placement for such a prefix isn't measured: check 50's case 5 was resolved by Word, so
    its Choice wasn't written.
-3. **Otherwise, as before:** the table or the aliases, on the root. A prefix nothing resolves is
-   kept, with the existing warning.
+3. **Otherwise, as before:** the table or the aliases, on the root. A prefix nothing resolves:
+   - in `Requires`, is kept, with the existing warning;
+   - in `mc:MustUnderstand`, is kept, with the same warning naming that attribute. Dropping it
+     would let a reader that doesn't understand the namespace go on where it must refuse;
+   - in the Choice's own `mc:Ignorable`, is dropped from it, with a warning, as one in the root's
+     `mc:Ignorable` is (CR-001). An undeclared prefix there identifies no namespace, and Office
+     repairs a root that names one.
+
+**A Choice's own `mc:Ignorable` and `mc:MustUnderstand`** (added 2026-10-24, Jason: "D1 (b): yes",
+for parity with docx4j). The unmarshal records their source-only bindings with the `Requires`
+ones, on the Choice's object, so they travel and copy the same way. On docx4j's
+`aChoicesOwnIgnorableAndMustUnderstandAreDeclared` input, `<mc:Choice Requires="wps"
+mc:Ignorable="zz9" mc:MustUnderstand="w14">` under an `mc:AlternateContent` declaring all three,
+`wps` and `w14` go on the root and `zz9` on the Choice, as in docx4j. Before, this package wrote
+neither `zz9` nor `w14`, and stripped the table's `w14` from the root, with no warning.
+
+A Choice's declarations now go ahead of all its attributes, not only `Requires`. A typed Choice
+writes `Requires`, `mc:Ignorable` and `mc:MustUnderstand` in that order, and moving only `Requires`
+behind a declaration would have reordered them.
 
 The root's own rules don't change. A declaration kept only because `mc:Ignorable` names its prefix
 still gives way to the root's source binding. One a `Requires` named, from the table, now goes,
@@ -74,6 +95,7 @@ since the Choice declares the source's.
 - **The tree's namespace wins** now applies only where the Choice's own content writes the prefix
   for another namespace, since a declaration there would rebind that content, and to a root's
   `mc:Ignorable`. A use elsewhere in the tree no longer stops a Choice declaring its own binding.
+  Its text now says "an mc:Ignorable, Requires or mc:MustUnderstand naming it now means the latter".
 - **One prefix bound two ways** is gone. Each Choice declares its own binding, and a Choice's
   binding and the root's `mc:Ignorable` binding are both kept.
 
@@ -87,8 +109,9 @@ a CR-011 record exists.
 - **Copies on `mc:Fallback`.** Word's are unused, and the rule says no.
 - **A chart-part rule.** Word declares `c14` on the Choice there, but `c14` is in the table, so it
   stays on the root (Jason: "chart parts follow the same rule").
-- **`mc:Ignorable` on a Choice, `MustUnderstand`, `ProcessContent`:** still not declared (CR-011
-  section 4). docx4j declares the first two (section 7).
+- **`ProcessContent`, and the own `mc:Ignorable` and `mc:MustUnderstand` of `mc:AlternateContent`
+  and `mc:Fallback`:** not declared. docx4j doesn't declare them either: its CR-052 section 4 keeps
+  `mc:AlternateContent`'s outside D1 (b). No part in the corpus carries any of them.
 
 ## 5. Tests
 
@@ -104,10 +127,20 @@ The smoke's CR-011 block asserts where each declaration goes:
   source's, with no warning;
 - **new:** a Choice whose own content writes `w14:paraId` keeps the tree's `w14`, with the warning;
 - two Choices binding `zz9` two ways keep both, and so do a root `mc:Ignorable` and a Choice, with
-  no warning.
+  no warning;
+- a Choice's own `mc:Ignorable` and `mc:MustUnderstand`, on docx4j's input: `wps` and `w14` on the
+  root, `zz9` on the Choice ahead of its attributes, which keep their order, and on the Choice when
+  its paragraph is marshalled alone;
+- an `mc:MustUnderstand` prefix nothing resolves is kept, and an `mc:Ignorable` one is dropped from
+  the Choice (the attribute too, where it named nothing else), each with its warning.
+
+The fidelity test's resolution check now reads `mc:MustUnderstand` on every element too, with a
+self-check. It already read `mc:Ignorable` on every element.
 
 `npm test` and the typecheck pass. Fidelity passes: 359 checks, 631 prefixes resolve. The 341
-corpus hashes are identical to 0.4.3's.
+corpus hashes are identical to 0.4.3's. On docx4j's fixtures, nothing changes: in the probe's
+`document.xml`, `zz9` is on each of 3 Choices and `shape2010` on its Choice, with `wps` and `w14`
+on the root; in the charts, `c14` and `cx1` are on the root. Nothing is undeclared, and nothing warns.
 
 ## 6. Risks
 
@@ -127,13 +160,16 @@ corpus hashes are identical to 0.4.3's.
   - nothing on `mc:Fallback`;
   - the narrowed clash rule.
 
-  docx4j goes one step further, as its D1 (b): a Choice's own `mc:Ignorable` and `MustUnderstand`
-  follow the `Requires` rule on that Choice. This package doesn't declare those (section 4), and no
-  part in the fidelity corpus carries either. The ports differ there; whether this package should
-  follow is for Jason.
+  docx4j's D1 (b), a Choice's own `mc:Ignorable` and `mc:MustUnderstand` following the `Requires`
+  rule on that Choice, is here too since 2026-10-24 (section 3). Within it one difference
+  remains: a prefix in a Choice's own `mc:Ignorable` that nothing resolves. docx4j keeps it
+  undeclared, with a warning; this package drops it, with a warning, as it does from a root's
+  `mc:Ignorable`. It arises only where neither the source, the table nor the aliases binds the
+  prefix.
 
 ## 8. Release
 
-A patch, 0.4.4, as 0.4.3 was: the output changes only for parts with a source-only `Requires` prefix.
+A patch, 0.4.4, as 0.4.3 was: the output changes only for parts with a source-only prefix that a
+Choice names, or with a Choice's own `mc:Ignorable` or `mc:MustUnderstand`.
 There is no API change, and the runtime floor is unchanged. It needs core-ts's go on the pushed
 `main` commit.

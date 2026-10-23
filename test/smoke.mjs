@@ -256,7 +256,8 @@ assert.deepEqual(unknownOut.undeclared, []);
 // that record before the table. The editor's fixture, docx4j's extraction-probe.docx (declared on
 // mc:AlternateContent; shape2010 a second prefix for wps) and core-ts's insertOoxml are the cases.
 // CR-012: a Requires prefix so declared goes on its mc:Choice, ahead of Requires, as Word writes it,
-// unless the root already declares that binding; an mc:Ignorable prefix stays on the root.
+// unless the root already declares that binding; an mc:Ignorable prefix stays on the root. A
+// Choice's own mc:Ignorable and mc:MustUnderstand follow its Requires (docx4j CR-052's D1 (b)).
 {
   const WPS = 'http://schemas.microsoft.com/office/word/2010/wordprocessingShape';
   const PKG = 'http://schemas.microsoft.com/office/2006/xmlPackage';
@@ -323,6 +324,24 @@ assert.deepEqual(unknownOut.undeclared, []);
     assert.ok(onRoot(rootAndChoice, 'zz9', 'urn:A') && onChoice(rootAndChoice, 'zz9', 'urn:B'));
     assert.equal(warned.length, 0);
 
+    // A Choice's own mc:Ignorable and mc:MustUnderstand, as Requires: docx4j's
+    // aChoicesOwnIgnorableAndMustUnderstandAreDeclared, whose table prefixes go on the root.
+    const own = `<w:p><w:r><mc:AlternateContent xmlns:zz9="urn:zz9" xmlns:wps="${WPS}" xmlns:w14="${W14}"><mc:Choice Requires="wps" mc:Ignorable="zz9" mc:MustUnderstand="w14"><w:t>round</w:t></mc:Choice><mc:Fallback><w:t>flat</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p>`;
+    const ownDocument = await unmarshalString(documentXml(own));
+    const ownXml = await marshalString(ownDocument);
+    assert.ok(onRoot(ownXml, 'wps', WPS) && onRoot(ownXml, 'w14', W14), 'the table\'s wps and w14 on the root');
+    assert.match(ownXml, /<mc:Choice xmlns:zz9="urn:zz9" Requires="wps" mc:Ignorable="zz9" mc:MustUnderstand="w14">/, 'the source\'s zz9 on the Choice, ahead of its attributes, which keep their order');
+    assert.ok(!onRoot(ownXml), 'not on the root');
+    assert.ok(onChoice(await marshalString(ownDocument.value.body.content[0])), 'the record travels with the Choice');
+    assert.equal(warned.length, 0);
+    const unresolved = await marshalString(await unmarshalString(documentXml(`<w:p><w:r><mc:AlternateContent><mc:Choice Requires="w14" mc:Ignorable="w14 qq" mc:MustUnderstand="rr"><w:t>round</w:t></mc:Choice><mc:Fallback><w:t>flat</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p>`
+      + `<w:p><w:r><mc:AlternateContent><mc:Choice Requires="w14" mc:Ignorable="qq"><w:t>round</w:t></mc:Choice><mc:Fallback><w:t>flat</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p>`)));
+    assert.match(unresolved, /mc:Ignorable="w14" mc:MustUnderstand="rr">/, 'a MustUnderstand prefix nothing resolves is kept, and an Ignorable one dropped from the Choice');
+    assert.match(unresolved, /<mc:Choice Requires="w14">/, 'with its mc:Ignorable, where it named nothing else');
+    assert.deepEqual(warned.splice(0), [
+      'marshal: an mc:Choice\'s mc:MustUnderstand names rr, which no declaration or NAMESPACE_PREFIXES entry resolves; kept',
+      'marshal: an mc:Choice\'s mc:Ignorable names qq, which no declaration or NAMESPACE_PREFIXES entry resolves; dropped']);
+
     // A caller's own onElement still sees every element, on both sides.
     const unmarshalled = [], marshalled = [];
     const reported = await unmarshalString(documentXml(`<w:p><w:r>${ac()}</w:r></w:p>`), { onElement: (element) => unmarshalled.push(element.localName) });
@@ -333,7 +352,7 @@ assert.deepEqual(unknownOut.undeclared, []);
     console.warn = warn;
   }
 }
-console.log('CR-011, CR-012: prefixes only the source bound are declared from the source, a Requires prefix on its Choice, wherever the content goes OK');
+console.log('CR-011, CR-012: prefixes only the source bound are declared from the source, a Requires prefix on its Choice (and its own mc:Ignorable and mc:MustUnderstand), wherever the content goes OK');
 
 // CR-006: a prefix mc:Ignorable names that the table cannot produce, because its namespace is
 // written as the default. Excel's slicer cache: x is the SpreadsheetML main namespace, which this

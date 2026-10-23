@@ -264,10 +264,11 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   producer's own prefix or a second prefix for a known namespace, is declared from the source's own
   binding. The facade's unmarshal functions record it on the Choice and on the part root, and it goes
   with the content when an edit moves it or `deepCopy` copies it (CR-011). A `Requires` prefix so
-  declared goes on the `mc:Choice` that names it, as Word writes it (CR-012). A prefix nothing resolves
+  declared goes on the `mc:Choice` that names it, as Word writes it, and so does one a Choice's own
+  `mc:Ignorable` or `mc:MustUnderstand` names (CR-012). A prefix nothing resolves
   is dropped from `mc:Ignorable` with a warning, since Office repairs a file naming an undeclared
-  prefix. In a `Requires` it is kept, with a warning, since dropping it would change which branch a
-  reader takes.
+  prefix. In a `Requires` or `mc:MustUnderstand` it is kept, with a warning, since dropping it would
+  change what a reader does.
 - **Extension namespaces are declared ignorable** (CR-008): a part root whose type binds
   `mc:Ignorable` (`w:document`, `w:hdr`, `w:styles`, `worksheet`, ...) lists every namespace of
   `IGNORABLE_EXTENSION_NAMESPACES` its tree uses - `w14`, `w15`, the `w16*`, `wp14`, `x14ac`,
