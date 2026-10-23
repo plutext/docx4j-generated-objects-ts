@@ -255,12 +255,12 @@ export const org_docx4j_wml = {
         }, {
           name: 'frame',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'shadow',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'space',
@@ -300,7 +300,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'chapNum',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'heading',
@@ -313,7 +313,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'noLabel',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'numFmt',
@@ -473,7 +473,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'sep',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'space',
@@ -1399,7 +1399,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'decorated',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'val',
@@ -1471,7 +1471,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'all',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -1528,12 +1528,12 @@ export const org_docx4j_wml = {
         }, {
           name: 'enforcement',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'formatting',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'hash',
@@ -1592,7 +1592,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'combine',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'combineBrackets',
@@ -1605,12 +1605,12 @@ export const org_docx4j_wml = {
         }, {
           name: 'vert',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'vertCompress',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -1950,7 +1950,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'anchorLock',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'dropCap',
@@ -2224,7 +2224,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'customMarkFollows',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'id',
@@ -4072,7 +4072,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'multiLine',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -4732,12 +4732,12 @@ export const org_docx4j_wml = {
         }, {
           name: 'dirty',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'fldLock',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'instr',
@@ -5387,27 +5387,22 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'comments',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'formatting',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'inkAnnotations',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'insDel',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'markup',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }]
     }, {
@@ -5679,7 +5674,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'recommended',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'salt',
@@ -5710,7 +5705,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'nlCheck',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'vendorID',
@@ -6002,7 +5997,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'dirty',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'fldCharType',
@@ -6012,7 +6007,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'fldLock',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -6053,7 +6048,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'subsetted',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -6510,7 +6505,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'tentative',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'tplc',
@@ -6522,7 +6517,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'legacy',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'legacyIndent',
@@ -6557,7 +6552,7 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: '_null',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           attributeName: 'null',
           type: 'attribute'
         }, {
@@ -7356,7 +7351,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'history',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'tgtFrame',
@@ -7632,7 +7627,6 @@ export const org_docx4j_wml = {
         }, {
           name: 'afterAutospacing',
           typeInfo: 'Boolean',
-          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'afterLines',
@@ -7645,7 +7639,6 @@ export const org_docx4j_wml = {
         }, {
           name: 'beforeAutospacing',
           typeInfo: 'Boolean',
-          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'beforeLines',
@@ -9858,7 +9851,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'defLockedState',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'defQFormat',
@@ -9868,7 +9861,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'defSemiHidden',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }, {
           name: 'defUIPriority',
@@ -9877,7 +9870,7 @@ export const org_docx4j_wml = {
         }, {
           name: 'defUnhideWhenUsed',
           typeInfo: 'Boolean',
-          defaultValue: true,
+          defaultValue: false,
           type: 'attribute'
         }]
     }, {
@@ -9886,7 +9879,6 @@ export const org_docx4j_wml = {
       propertyInfos: [{
           name: 'locked',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'name',
@@ -9899,7 +9891,6 @@ export const org_docx4j_wml = {
         }, {
           name: 'semiHidden',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }, {
           name: 'uiPriority',
@@ -9908,7 +9899,6 @@ export const org_docx4j_wml = {
         }, {
           name: 'unhideWhenUsed',
           typeInfo: 'Boolean',
-          defaultValue: true,
           type: 'attribute'
         }]
     }, {
