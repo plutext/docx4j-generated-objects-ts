@@ -33,7 +33,8 @@ A bug found while checking, in the published 0.1.2:
   `<w:r><w:t>kept </w:t></w:r><w:moveTo><w:r><w:t>moved</w:t></w:r></w:moveTo><w:ins><w:r><w:t> inserted</w:t></w:r></w:ins>`
   it returns `"kept  inserted"`. **Fixed 2026-09-16** ahead of the rest of this CR, with the
   `runItemsOf` of section 3.4: `textOf` now reads `w:moveTo` and skips `w:moveFrom`, and
-  `runItemsOf` is exported. That part of phase A is therefore done; the rest is unimplemented.
+  `runItemsOf` is exported. That part of phase A was released first, in 0.1.3; the rest followed
+  the same day, in 0.1.4 (section 4).
 
 Two corrections to the core-ts notes, checked 2026-09-16 against 0.1.2:
 
@@ -240,13 +241,13 @@ Two notes, both settled with the docx4j session (2026-09-19):
 
 ## 4. Phases
 
-- **A**: sections 2 and 3.1 to 3.6. Ports of running code; core-ts deletes its copies. In the order
-  core-ts asked for (2026-09-16), by the size of the copy each removes: `sdt` / `sdtPr` /
-  `nextSdtId` / `sdtProperty` / `sdtKindOf` (its phase E `insert.mts`), then `tr` / `tc` and
-  `inlinePicture` (phase C), then `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F),
-  then `walkAll`; section 3.8 (`mcBranchOf`) followed docx4j CR-021. The `runItemsOf` part landed
-  early with the `textOf` fix (section 1), and section
-  **phase A is complete as of 2026-09-16**: sections 2, 3.1 to 3.6 are all implemented.
+- **A**: sections 2 and 3.1 to 3.6, ports of running code. **Complete 2026-09-16**, released in
+  0.1.4; core-ts deleted its copies (41fb374). Done in the order core-ts asked for (2026-09-16), by
+  the size of the copy each removes: `sdt` / `sdtPr` / `nextSdtId` / `sdtProperty` / `sdtKindOf`
+  (its phase E `insert.mts`), then `tr` / `tc` and `inlinePicture` (phase C), then
+  `rPrToElements` / `rPrFromElements` and `deepCopyAs` (phase F), then `walkAll`. The `runItemsOf`
+  part landed first, with the `textOf` fix (section 1), in 0.1.3. Section 3.8 (`mcBranchOf`)
+  followed on 2026-09-19, after docx4j CR-021.
 - **B**: section 3.7. New code with its own design questions (literal formatting, calendars, QNames).
   No deadline: core-ts's `toApiScript` fallback works with marshalled XML.
 
