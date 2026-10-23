@@ -4,8 +4,9 @@
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
-**Depends on:** jsonix-CR-010 (proposed 2026-10-24, jsonix 4864682, its J1 to J3 for Jason) for sections 3.1, 3.2,
-3.5 and 3.6. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
+**Depends on:** jsonix-CR-010 for sections 3.1, 3.2, 3.5 and 3.6. Jason decided its J1 to J3 as recommended. It is
+implemented and pushed (jsonix master 5df33ad, CI green, 2026-10-24) but not released; npm's latest is 3.6.0, so
+phase B waits for the release. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
 and a value its type can't print to `onUnprintableValue`. The facade sets both, with Word's rules. Sections 3.3 and
 3.4 depend on nothing.
 **Counterpart:** docx4j CR-060, the same rules in Java, implemented through phase 3 on `VERSION_17_3_5`
@@ -114,6 +115,13 @@ facade marshal passes an `onUnprintableValue`, if the enumerations are kept. Eac
 - **Anything else rethrows,** so it fails as today. That covers other simple types in wml, and every type of
   every other mapping, such as DrawingML (`wp:`, `a:`, `pic:`), VML and w14 inside a `document.xml`, which Word's
   rule isn't measured for.
+
+The rule covers every `Boolean` in `org_docx4j_wml`, including the two that docx4j's `OnOffAdapter` leaves strict:
+`w:writingStyle/@w:checkStyle` and `w:readModeInkLockDown/@w:actualPg`, both in the settings part. docx4j leaves
+them out for a Java reason: they are required, so they bind to a primitive `boolean`, which an adapter can't bind.
+They are `ST_OnOff` in the spec, and Word's reading of them is unmeasured in either port. Applying Word's rule
+keeps `settings.xml` loading where docx4j would refuse it, so this is a known difference between the ports rather
+than one to match.
 
 Scoping by the class's mapping, not by the part, needs no per-part choice. A `document.xml` gets Word's rule for
 its WordprocessingML and today's strictness for the DrawingML it holds. CR-009's `org_docx4j_wml_globals`
