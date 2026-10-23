@@ -4,9 +4,10 @@
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
-**Depends on:** jsonix-CR-010 for sections 3.1, 3.2, 3.5 and 3.6. Jason decided its J1 to J3 as recommended. It is
-implemented and pushed (jsonix master 5df33ad, CI green, 2026-10-24) but not released; npm's latest is 3.6.0, so
-phase B waits for the release. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
+**Depends on:** jsonix-CR-010 for sections 3.1, 3.2, 3.5 and 3.6. Jason decided its J1 to J3 as recommended. It
+was released in `@docx4j/jsonix` 3.7.0 (tag d4e8af8, 2026-10-24), so phase B raises the floor to ^3.7.0. A scratch
+prototype of phase B on the npm tarball reads all 174 markers of the 20 probes as Word's saves do, and the 341
+corpus hashes don't move. It hands an attribute value its type refuses to a per-call `onInvalidValue` instead of failing the part,
 and a value its type can't print to `onUnprintableValue`. The facade sets both, with Word's rules. Sections 3.3 and
 3.4 depend on nothing.
 **Counterpart:** docx4j CR-060, the same rules in Java, implemented through phase 3 on `VERSION_17_3_5`
