@@ -53,8 +53,8 @@ const pageColour = (doc) => (doc.background === undefined ? 'auto' : (wordColor(
  * style's red, drawn black but dropped.
  */
 const WORD_DREW = {
-  'props-enum-styles M6_HIGHLIGHT_GREEN': { highlight: '#008000' },
-  'highlight-char-styles H7_CHAR_STYLE_DIRECT_GREEN': { highlight: '#008000' },
+  'props-enum-styles M6_HIGHLIGHT_GREEN': { highlight: '#00FF00' },
+  'highlight-char-styles H7_CHAR_STYLE_DIRECT_GREEN': { highlight: '#00FF00' },
   'colour-elsewhere-styles U4_UNDERLINE_AUTO': { uColor: 'auto' },
 };
 

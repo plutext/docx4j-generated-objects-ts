@@ -511,7 +511,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(readRunOptions(applyRunOptions({}, { underline: false })).underline, 'None');
   assert.equal(applyRunOptions({}, { color: 'auto' }).color.val, 'auto');
   assert.deepEqual(applyRunOptions(applyRunOptions({}, { bold: true, underline: 'Double', name: 'A', color: 'auto', highlightColor: 'yellow', style: 'S' }), { bold: false, underline: 'None', name: '', color: '', highlightColor: null, style: '' }), {}, 'each removal value deletes its property');
-  assert.throws(() => applyRunOptions({}, { highlightColor: '#123456' }), /Not a highlight colour/);
+  assert.throws(() => applyRunOptions({}, { highlightColor: 'darkYellow' }), /Not a highlight colour/);
   assert.deepEqual(readRunOptions(undefined), { bold: false, italic: false, underline: 'None', strikeThrough: false, doubleStrikeThrough: false, subscript: false, superscript: false, name: '', size: 0, color: '', highlightColor: null, style: '' });
   assert.deepEqual({ ...r('x', { bold: true, size: 12 }).value.rPr, TYPE_NAME: undefined }, { ...applyRunOptions({}, { bold: true, size: 12 }), TYPE_NAME: undefined }, 'r() writes w:rPr through applyRunOptions');
   // Traversal.
@@ -909,4 +909,82 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const flatColour = `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData><w:document xmlns:w="${W_}"><w:body><w:p><w:r><w:rPr><w:color w:val="red"/></w:rPr></w:r></w:p></w:body></w:document></pkg:xmlData></pkg:part></pkg:package>`;
   assert.match(await marshalPackage(await unmarshalPackage(flatColour)), /<w:color w:val="FF0000"\/>/, 'marshalPackage');
   console.log('CR-013 phase C: colours in their normal form, the repaired elements left out, in run, paragraph mark, revision and style properties; the tree unchanged; the report, the opt-out and a caller\'s adapters OK');
+}
+
+// CR-014: the highlight palette as Word and Office JS read it. core-ts's check 61 (Word 365 through Office JS: 18
+// reads, 45 writes) and check 62 (7,225 colours written to font.highlightColor), copied under test/fixtures/check61/
+// and check62/.
+{
+  const { applyRunOptions, readRunOptions } = await import('../dist/builders/wml.mjs');
+  const { HIGHLIGHT_COLORS, highlightNameForColor, WORD_COLOR_NAMES } = await import('../dist/helpers/wml.mjs');
+  const check61 = JSON.parse(readFileSync(new URL('./fixtures/check61/61-highlights-word365.json', import.meta.url), 'utf8'));
+  const check62 = JSON.parse(readFileSync(new URL('./fixtures/check62/62-highlight-snap-word365.json', import.meta.url), 'utf8'));
+  assert.deepEqual([check61.reads.length, check61.writes.length, check62.points.length], [18, 45, 7225]);
+
+  // Reads: the sixteen names in Word's palette, as font.highlightColor reads them; none and a shading alone, no highlight.
+  const palette = Object.fromEntries(HIGHLIGHT_COLORS.map(([name, hex]) => [name, '#' + hex]));
+  assert.deepEqual(palette, Object.fromEntries(check61.reads.filter((x) => x.highlightColor !== null).map((x) => [x.name, x.highlightColor])), "HIGHLIGHT_COLORS is Word's palette");
+  for (const { name, highlightColor } of check61.reads) {
+    const rPr = name === 'shd' ? { shd: { val: 'clear', color: 'auto', fill: 'FFFF00' } } : { highlight: { val: name } };
+    assert.equal(highlightHexValue(name === 'shd' ? undefined : name) ?? null, highlightColor, `highlightHexValue ${name}`);
+    assert.equal(readRunOptions(rPr).highlightColor, highlightColor, `read ${name}`);
+  }
+
+  // Writes: what Word stores and reads back for each value Office JS was given; refused as Office JS refuses; null removes.
+  for (const w of check61.writes) {
+    const before = { highlight: { val: 'red' } };
+    if (w.value === null) {
+      assert.deepEqual(applyRunOptions(before, { highlightColor: null }), {}, 'null removes');
+    } else if (w.set !== undefined) {
+      assert.match(w.set, /InvalidArgument/);
+      assert.equal(highlightNameForColor(w.value), undefined, w.value);
+      assert.throws(() => applyRunOptions(before, { highlightColor: w.value }), /Not a highlight colour/, w.value);
+    } else {
+      assert.equal(highlightNameForColor(w.value), w.stored.highlight, `stored for ${w.value}`);
+      const rPr = applyRunOptions(before, { highlightColor: w.value });
+      assert.deepEqual(rPr, { highlight: { val: w.stored.highlight } }, `written for ${w.value}`);
+      assert.equal(readRunOptions(rPr).highlightColor, w.highlightColor, `read back for ${w.value}`);
+    }
+    assert.equal(w.stored.shd, null, 'never a shading');
+  }
+
+  // The snap (H4 (c)): every colour of check 62 is stored as Word stored it, the hex in either case.
+  const nameOf = Object.fromEntries(HIGHLIGHT_COLORS.map(([name, hex]) => [hex, name]));
+  let stored = 0;
+  for (const [hex, read, extra] of check62.points) {
+    const word = nameOf[read];
+    assert.ok(word !== undefined && (extra === undefined || extra.stored === word), `${hex}: Word's read and store agree`);
+    if (extra !== undefined) stored++;
+    assert.equal(highlightNameForColor('#' + hex), word, `#${hex}`);
+    assert.equal(highlightNameForColor('#' + hex.toLowerCase()), word, `#${hex.toLowerCase()}`);
+  }
+  assert.equal(stored, 75, 'the stored names spot-checked through getOoxml');
+  // Every palette value round-trips through the run mapping.
+  for (const [name, hex] of HIGHLIGHT_COLORS) assert.equal(readRunOptions(applyRunOptions({}, { highlightColor: '#' + hex.toLowerCase() })).highlightColor, '#' + hex, name);
+  // A colour check 62 didn't measure follows the rule: the hue sectors, the dark bound and the grey bands.
+  const measured = new Set(check62.points.map(([hex]) => hex));
+  for (const [hex, name] of [['FF0012', 'magenta'], ['C00001', 'darkRed'], ['C10001', 'red'], ['3F3F40', 'black'], ['404041', 'darkGray'], ['A0A0A1', 'lightGray'], ['E0E0E1', 'white'], ['FFD701', 'yellow'], ['123457', 'darkCyan']]) {
+    assert.ok(!measured.has(hex), `${hex} is unmeasured`);
+    assert.equal(highlightNameForColor('#' + hex), name, `#${hex}`);
+  }
+
+  // Names (H3): CSS Color 3's 147, in any case, each stored as its colour is; the seven spellings Word's w:color refuses too.
+  const extra = { darkgrey: 'darkgray', darkslategrey: 'darkslategray', dimgrey: 'dimgray', grey: 'gray', lightgray: 'lightgrey', lightslategrey: 'lightslategray', slategrey: 'slategray' };
+  const css = [...Object.keys(WORD_COLOR_NAMES), ...Object.keys(extra)];
+  assert.equal(new Set(css).size, 147);
+  for (const name of css) {
+    const stored = highlightNameForColor('#' + WORD_COLOR_NAMES[extra[name] ?? name]);
+    for (const spelling of [name, name.toUpperCase(), name[0].toUpperCase() + name.slice(1)]) assert.equal(highlightNameForColor(spelling), stored, spelling);
+  }
+  for (const [name, stored] of [['green', 'darkGreen'], ['lime', 'green'], ['olive', 'darkYellow'], ['navy', 'darkBlue'], ['teal', 'darkCyan'], ['silver', 'lightGray'], ['gray', 'darkGray'], ['darkGray', 'darkGray'], ['lightGray', 'lightGray'], ['gold', 'yellow'], ['DarkMagenta', 'darkMagenta']]) {
+    assert.equal(highlightNameForColor(name), stored, name);
+  }
+  // Refused: no CSS name (a highlight name CSS lacks; CSS 4's), a hex without its #, three digits, other forms; a padded name.
+  for (const value of ['darkYellow', 'none', 'rebeccapurple', 'transparent', 'FFFF00', '#FF0', '#FFFF000', 'rgb(255, 255, 0)', '#GGGGGG', ' yellow', '', 'constructor', '__proto__']) {
+    assert.equal(highlightNameForColor(value), undefined, JSON.stringify(value));
+  }
+  assert.equal(highlightNameForColor(' #ffff00 '), 'yellow', 'a hex is trimmed');
+  assert.equal(highlightNameForColor(undefined), undefined);
+  assert.deepEqual(applyRunOptions({ highlight: { val: 'red' } }, { highlightColor: '' }), {}, "'' removes");
+  console.log("CR-014: Word's palette read (check 61's 18 reads), Office JS's input written (its 45 writes), the snap on check 62's 7,225 colours, CSS's 147 names OK");
 }

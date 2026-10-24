@@ -149,7 +149,10 @@ a typed element marshals in place, a string is escaped as text and `wml.raw(xml)
 verbatim; the plain form `wml(xml, { wrapper, preprocess })` takes options. `p`, `r`, `t`, `br`,
 `tab` and `tbl` build content over `el`; run options use the names of Office JS `Word.Font`
 (`bold`, `name`, `size`, `highlightColor`, ...) through `applyRunOptions` / `readRunOptions`, the
-one mapping to `w:rPr` that `@docx4j/core-ts`'s `Font` view shares. `textOf` reads the text back;
+one mapping to `w:rPr` that `@docx4j/core-ts`'s `Font` view shares. As in Office JS, a highlight
+reads in Word's palette, and `highlightColor` takes a CSS colour name or any `#RRGGBB`. It stores
+the highlight Word stores (CR-014, measured in Word 365): `'green'` is CSS's `#008000`, so dark
+green. `'darkYellow'`, which is no CSS name, throws. `textOf` reads the text back;
 `runItemsOf` gives a holder's run-level list under whichever property name the model uses
 (`w:ins`, `w:del`, `w:moveFrom`, `w:moveTo`, a run-level content control);
 `walk`, `find` and `linkParents` are `TraversalUtil`, `ClassFinder` and what the unmarshaller does
@@ -311,8 +314,10 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.
-- **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`),
-  `isCustomStyle`, and `WORD_COLOR_NAMES` / `wordColor`, a colour value as Word 365 reads it (docx4j's `WordColorValues`).
+- **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): Word's highlight palette (`HIGHLIGHT_COLORS`,
+  docx4j's `Highlight` table since 17.3.5), `highlightNameForColor` (the highlight Word stores for a colour Office JS
+  writes), `isQFormat` (via `PARENT`), `isCustomStyle`, and `WORD_COLOR_NAMES` / `wordColor`, a colour value as Word
+  365 reads it (docx4j's `WordColorValues`).
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
   the run mapping, `tr` / `tc`, `inlinePicture`, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for
   content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `mcBranchOf`, `textOf`,

@@ -11,7 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `wml-globals.mts` (CR-009: one more
 mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
 `w:drawing`/`w:pict`; `getContext` and `modulesFor` add it), `helpers/wml.mts` (per-type docx4j decisions,
-compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
+compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
+highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
 [`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.8.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0). This is the counterpart of docx4j's
@@ -83,6 +84,10 @@ There are six tests and no test framework:
   and a paragraph mark's former properties) and adds a style, the document defaults, a border, a
   pattern and the page colour; the tree unchanged, the 19 records and their paths, the opt-out per
   call and process-wide, a caller's adapters asked first, `marshalNode` and `marshalPackage`.
+  CR-014's block holds `HIGHLIGHT_COLORS`, `readRunOptions`, `highlightNameForColor` and `applyRunOptions` to
+  core-ts's checks 61 (Word 365 through Office JS: 18 reads, 45 writes) and 62 (7,225 colours written to
+  `font.highlightColor`, every one stored as Word stored it), copied to `test/fixtures/check61/` and `check62/`
+  with a `SOURCE.md` each, and checks CSS's 147 names and the forms refused.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -135,7 +140,7 @@ There are six tests and no test framework:
   from `src/` with the `.mjs` extension. Its `@ts-expect-error` lines go unused, and fail, if those types
   resolve to `any`.
 
-Fixtures are extracted part XML, never archives (no zip dependency) and never edited by hand; they
+Fixtures are extracted part XML (and core-ts's Word measurements as JSON, CR-014), never archives (no zip dependency) and never edited by hand; they
 cost consumers nothing, since `files` ships `dist/` and `modules/` only.
 
 `typecheck` has `skipLibCheck: false` and includes every generated `.d.ts`, so it is also the check
@@ -205,7 +210,10 @@ reads highlight and colour through `helpers/wml`'s `wordColor`. Its phase C has 
 marshal write run properties in their normal form through jsonix-CR-011's `onAttributeValue` and
 `omitElement`, keyed by type (`normalising` in `src/index.mts`; `normaliseOnSave`,
 `setNormaliseOnSave`, `onNormalised`). The rules are Jason's probes'; docx4j CR-060 and CR-061 are
-the Java port, value for value, core-ts CR-015 the consumer.
+the Java port, value for value, core-ts CR-015 the consumer. CR-014 (implemented 2026-10-24) gives
+`HIGHLIGHT_COLORS` Word's palette (`WdColorIndex`, as Office JS reads it) and has `applyRunOptions` take Office JS's
+`font.highlightColor` input (a CSS name or any `#RRGGBB`), stored as Word stores it: `highlightNameForColor`'s
+rule (Windows' integer HLS hue sectors, a dark bound, grey bands) with check 62's 149 grey-edge answers as data.
 
 ## What the declarations promise
 

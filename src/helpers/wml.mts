@@ -1,17 +1,22 @@
 // Hand-written helpers next to the generated WordprocessingML declarations (CR-007, item 5).
 // They carry the docx4j decisions that its ModifyGeneratedSources adds to the generated Java:
-// the w:highlight colour table (Highlight.setVal / getHexVal), the LsdException.isQFormat()
+// the w:highlight colour table (Highlight.getHexVal; Word's palette, CR-014), the LsdException.isQFormat()
 // fallback to the latent styles' defQFormat (needs parent pointers, jsonix-CR-002), and the
-// Style.isCustomStyle() rule (docx4j issue 641); and a colour value as Word 365 reads it, with
-// the names it reads (CR-013, docx4j's WordColorValues). Compiled to dist/helpers/wml.mjs by `npm run build`.
+// Style.isCustomStyle() rule (docx4j issue 641); a colour value as Word 365 reads it, with
+// the names it reads (CR-013, docx4j's WordColorValues); and the highlight Word 365 stores for a
+// colour Office JS writes (CR-014). Compiled to dist/helpers/wml.mjs by `npm run build`.
 import type { Highlight, Style, Styles } from '../../modules/org_docx4j_wml.mjs';
 
-/** w:highlight names and their sRGB values, as in docx4j (darkYellow uses gold). */
+/**
+ * w:highlight names and their sRGB values: Word's palette (`WdColorIndex`), as Word 365 draws a highlight and
+ * Office JS's `font.highlightColor` reads it (CR-014, core-ts check 61). docx4j's `Highlight` has the same since
+ * 17.3.5; before, both had CSS's colours of the same names, and gold for darkYellow.
+ */
 export const HIGHLIGHT_COLORS: ReadonlyArray<readonly [name: string, hex: string]> = [
-  ['black', '000000'], ['blue', '0000FF'], ['cyan', '00FFFF'], ['green', '008000'],
+  ['black', '000000'], ['blue', '0000FF'], ['cyan', '00FFFF'], ['green', '00FF00'],
   ['magenta', 'FF00FF'], ['red', 'FF0000'], ['yellow', 'FFFF00'], ['white', 'FFFFFF'],
-  ['darkBlue', '00008B'], ['darkCyan', '008B8B'], ['darkGreen', '006400'], ['darkMagenta', '8B008B'],
-  ['darkRed', '8B0000'], ['darkYellow', 'FFD700'], ['darkGray', 'A9A9A9'], ['lightGray', 'D3D3D3'],
+  ['darkBlue', '000080'], ['darkCyan', '008080'], ['darkGreen', '008000'], ['darkMagenta', '800080'],
+  ['darkRed', '800000'], ['darkYellow', '808000'], ['darkGray', '808080'], ['lightGray', 'C0C0C0'],
 ];
 
 /** The `#RRGGBB` value of a highlight, or undefined for an unknown name (docx4j `Highlight.getHexVal()`). */
@@ -19,22 +24,6 @@ export function highlightHexValue(highlight: Pick<Highlight, 'val'> | string | u
   const val = typeof highlight === 'string' ? highlight : highlight?.val;
   const entry = HIGHLIGHT_COLORS.find(([name]) => name === val);
   return entry ? '#' + entry[1] : undefined;
-}
-
-/**
- * The highlight name for a colour: a known name is returned as is, `#RRGGBB` is looked up in the
- * table; anything else (including rgb()) is undefined, as docx4j refuses it (`Highlight.setVal`).
- */
-export function highlightNameForColor(color: string | undefined): string | undefined {
-  if (color === undefined) return undefined;
-  if (HIGHLIGHT_COLORS.some(([name]) => name === color)) return color;
-  const trimmed = color.trim();
-  if (trimmed.startsWith('#')) {
-    const hex = trimmed.substring(1).toUpperCase();
-    const entry = HIGHLIGHT_COLORS.find(([, value]) => value === hex);
-    return entry ? entry[0] : undefined;
-  }
-  return undefined;
 }
 
 /**
@@ -97,6 +86,95 @@ export function wordColor(value: string | undefined): string | undefined {
   if (/^[0-9A-Fa-f]{6}$/.test(hex)) return '#' + hex.toUpperCase();
   const named = WORD_COLOR_NAMES[trimmed.toLowerCase()];
   return named === undefined ? undefined : '#' + named;
+}
+
+/**
+ * CSS Color 3's 147 names, lower-case, to RRGGBB: what Office JS's `font.highlightColor` takes as a name (CR-014 H3).
+ * Word's 140 (`WORD_COLOR_NAMES`) and the seven spellings its `w:color` reading refuses.
+ */
+const CSS_COLOR_NAMES: Readonly<Record<string, string>> = Object.freeze(Object.assign(Object.create(null) as Record<string, string>, WORD_COLOR_NAMES, {
+  darkgrey: 'A9A9A9', darkslategrey: '2F4F4F', dimgrey: '696969', grey: '808080', lightgray: 'D3D3D3',
+  lightslategrey: '778899', slategrey: '708090',
+}));
+
+/**
+ * Windows' `ColorRGBToHLS` (shlwapi) hue and saturation, integers out of 240, by which Word snaps a colour to a
+ * highlight: hue 0 is red, 40 yellow, 80 green, 120 cyan, 160 blue and 200 magenta.
+ */
+function hueAndSaturation(r: number, g: number, b: number): [hue: number, saturation: number] {
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), sum = max + min, diff = max - min;
+  if (diff === 0) return [160, 0];
+  const lightness = Math.trunc((sum * 240 + 255) / 510);
+  const saturation = lightness <= 120
+    ? Math.trunc((diff * 240 + (sum >> 1)) / sum)
+    : Math.trunc((diff * 240 + ((510 - sum) >> 1)) / (510 - sum));
+  const part = (c: number) => Math.trunc(((max - c) * 40 + (diff >> 1)) / diff);
+  const hue = r === max ? part(b) - part(g) : g === max ? 80 + part(r) - part(b) : 160 + part(g) - part(r);
+  return [hue < 0 ? hue + 240 : hue, saturation];
+}
+
+/** The hue sectors, each below its bound, with their bright and dark highlights (CR-014 section 2.1). */
+const HUE_SECTORS: ReadonlyArray<readonly [below: number, bright: string, dark: string]> = [
+  [20, 'red', 'darkRed'], [61, 'yellow', 'darkYellow'], [101, 'green', 'darkGreen'],
+  [141, 'cyan', 'darkCyan'], [180, 'blue', 'darkBlue'], [240, 'magenta', 'darkMagenta'],
+];
+
+/**
+ * Word's answer for the 149 colours of core-ts's check 62 that `snappedHighlight`'s rule puts on the other side of
+ * the grey edge (CR-014 H4 (c)). All are low-saturation colours of the 16-level grid; no measure tried separates them.
+ */
+const GREY_EDGE: ReadonlyMap<string, string> = new Map(Object.entries({
+  darkGray: `333399 334499 335599 336699 443399 553399 663399 6666CC 6677CC 6688CC 6699CC 7766CC 8866CC 9966CC`,
+  lightGray: `9999DD 99AADD 99BBDD 99CCDD 99DDCC 99DDDD AA99DD BB99DD CC99DD CCCCEE CCDDEE CCEECC CCEEDD CCEEEE DD99CC
+    DD99DD DDCCEE EECCDD EECCEE`,
+  red: `884444 885544 994444 995544 995555 996644 AA4444 AA5544 AA5555 AA6644 AA6655 AA6666 AA7755 BB4444 BB5544
+    BB5555 BB6644 BB6655 BB6666 BB7744 BB7755 BB7766 BB7777 BB8866 BB8877 CC7777 CC8877 CC8888 CC9977 CC9988
+    CC9999 CCAA99 DDAAAA DDBBAA DDBBBB`,
+  yellow: `77AA44 88AA44 88BB44 88BB55 997744 998844 999944 99AA44 99BB44 99BB55 AA7744 AA8844 AA9944 AAAA44 AABB44
+    AABB55 AACC77 BB8844 BB8855 BB9944 BB9955 BB9966 BBAA44 BBAA55 BBAA66 BBBB44 BBBB55 BBBB66 BBCC77 CCAA77
+    CCAA88 CCBB77 CCBB88 CCCC77 CCCC88 DDCCAA DDDDAA`,
+  green: `44BB44 44BB55 44BB66 55BB44 66AA44 66BB44 77BB44 77BB55 77CC77 88CC77 99CC77`,
+  magenta: `BB4455 BB4466`,
+  darkRed: `221111 442222 552222 553322 663333 664433 773333 774433 883333 884433 885533`,
+  darkYellow: `443322 445522 554422 555522 665533 667733 668833 775533 776633 777733 778833 886633 887733 888833`,
+  darkGreen: `225522 335522 338833 338844 448833 558833`,
+}).flatMap(([name, colours]) => colours.split(/\s+/).map((hex): [string, string] => [hex, name])));
+
+/**
+ * The highlight Word 365 stores for a colour outside its palette, `RRGGBB` upper-case (CR-014 section 2.1, fitted to
+ * core-ts's check 62, 7,225 colours). A grey, by HLS saturation below 120, is banded by `(max + min) / 2` at 40, A0
+ * and E0; a colour is its hue's sector, dark where `max + min` is at most C0. `#A9A9A9`, CSS's `darkgray`, is alone
+ * `darkGray`: Word appears to match a CSS name first. Exact on every colour check 62 measured, with `GREY_EDGE`.
+ */
+function snappedHighlight(hex: string): string {
+  const measured = GREY_EDGE.get(hex);
+  if (measured !== undefined) return measured;
+  if (hex === 'A9A9A9') return 'darkGray';
+  const r = parseInt(hex.substring(0, 2), 16), g = parseInt(hex.substring(2, 4), 16), b = parseInt(hex.substring(4), 16);
+  const sum = Math.max(r, g, b) + Math.min(r, g, b);
+  const [hue, saturation] = hueAndSaturation(r, g, b);
+  if (saturation < 120) {
+    const lightness = sum >> 1;
+    return lightness < 0x40 ? 'black' : lightness < 0xA0 ? 'darkGray' : lightness < 0xE0 ? 'lightGray' : 'white';
+  }
+  const [, bright, dark] = HUE_SECTORS.find(([below]) => hue < below) ?? HUE_SECTORS[HUE_SECTORS.length - 1];
+  return sum <= 0xC0 ? dark : bright;
+}
+
+/**
+ * The highlight Word 365 stores for a colour written to Office JS's `font.highlightColor` (CR-014 section 3.2; core-ts
+ * checks 61 and 62): a CSS colour name in any case (`green` is CSS's `#008000`, so `darkGreen`), or `#RRGGBB` in any
+ * case, trimmed. A palette value gives its own name, and any other colour the one of the sixteen Word snaps it to
+ * (`snappedHighlight`). Anything else is undefined: `darkYellow`, which is no CSS name and which Office JS refuses,
+ * a hex without its `#`, `rgb()`. `applyRunOptions` stores this name.
+ */
+export function highlightNameForColor(color: string | undefined): string | undefined {
+  if (color === undefined) return undefined;
+  const trimmed = color.trim();
+  const hex = CSS_COLOR_NAMES[color.toLowerCase()]
+    ?? (/^#[0-9A-Fa-f]{6}$/.test(trimmed) ? trimmed.substring(1).toUpperCase() : undefined);
+  if (hex === undefined) return undefined;
+  return HIGHLIGHT_COLORS.find(([, value]) => value === hex)?.[0] ?? snappedHighlight(hex);
 }
 
 /**

@@ -263,7 +263,11 @@ export interface RunOptions {
   size?: number;
   /** '#RRGGBB' or 'auto'; '' removes w:color. */
   color?: string;
-  /** A highlight name or one of its '#RRGGBB' values (helpers/wml); null or '' removes; anything else throws. */
+  /**
+   * What Office JS's `font.highlightColor` takes: a CSS colour name in any case, or '#RRGGBB'. It is stored as the
+   * highlight Word stores for it (helpers/wml `highlightNameForColor`): 'green' is CSS's #008000, so darkGreen. null
+   * or '' removes; anything else ('darkYellow', rgb()) throws.
+   */
   highlightColor?: string | null;
   /** w:rStyle; '' removes. */
   style?: string;
@@ -278,7 +282,7 @@ export interface RunFormatting {
   size: number;
   /** w:color/@w:val as Word reads it (helpers/wml `wordColor`): '#RRGGBB' or 'auto'; '' when not set directly, or set to a value Word reads as absent. */
   color: string;
-  /** '#RRGGBB'; null when there is none, or its value is not a highlight name (Word reads it as none). */
+  /** '#RRGGBB' in Word's palette, as Office JS reads it; null when there is none, or its value is not a highlight name (Word reads it as none). */
   highlightColor: string | null;
   /** '' when not set. */
   style: string;
@@ -310,7 +314,7 @@ export function applyRunOptions(rPr: M.RPr, opts: RunOptions): M.RPr {
     if (opts.highlightColor === null || opts.highlightColor === '') delete rPr.highlight;
     else {
       const name = highlightNameForColor(opts.highlightColor);
-      if (!name) throw new Error(`Not a highlight colour: ${opts.highlightColor} (use a highlight name or one of its #RRGGBB values)`);
+      if (!name) throw new Error(`Not a highlight colour: ${opts.highlightColor} (use a CSS colour name or #RRGGBB, as Office JS's font.highlightColor takes)`);
       rPr.highlight = { val: name };
     }
   }
@@ -325,8 +329,8 @@ function on(v: M.BooleanDefaultTrue | undefined): boolean {
 /**
  * Reads the direct formatting of run properties in the same vocabulary; the inverse of applyRunOptions.
  * Values are read as Word 365 reads them (CR-013): a w:highlight outside ST_HighlightColor is no
- * highlight, a w:color by `wordColor`, and a w:u value outside ST_Underline (kept by a caller's own
- * onInvalidValue, or set by hand) no underline.
+ * highlight, and one inside it Word's palette value (CR-014), a w:color by `wordColor`, and a w:u value
+ * outside ST_Underline (kept by a caller's own onInvalidValue, or set by hand) no underline.
  */
 export function readRunOptions(rPr: M.RPr | undefined): RunFormatting {
   const u = rPr?.u?.val;
