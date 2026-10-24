@@ -354,10 +354,12 @@ export function getContextSync(): Jsonix.Context {
  * `options` are for this call only (CR-007): `onUnexpectedElement` and `onUnexpectedAttribute`
  * report what the model dropped, at the point it was dropped. They are never set by default - see
  * the note on `UnmarshallerOptions`. An `onElement` (jsonix-CR-008) is called after the facade's
- * own, which is how a Choice's bindings are recorded.
+ * own, which is how a Choice's bindings are recorded. `onInvalidValue` is `wordInvalidValue`
+ * unless the caller passes one, so Word's own WordprocessingML loads as Word 365 reads it (CR-013),
+ * and `onWordReading` is told of each value so read.
  */
 export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
-  xml: string, options?: Jsonix.UnmarshallerOptions,
+  xml: string, options?: UnmarshalOptions,
 ): Promise<E> {
   const context = await getContext();
   const doc = Jsonix.DOM.parse(xml);
@@ -446,7 +448,7 @@ export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, 
 
 /** docx4j XmlUtils.unmarshal(Node): a DOM element or document, through the shared context, recording the source's bindings as `unmarshalString` does. */
 export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
-  node: Node, options?: Jsonix.UnmarshallerOptions,
+  node: Node, options?: UnmarshalOptions,
 ): Promise<E> {
   return recordRootBindings(node, (await getContext()).createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(node));
 }
@@ -501,12 +503,15 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
 
 /**
  * The unmarshaller options with this package's `onElement` (jsonix-CR-008) composed in front of the
- * caller's: each typed mc:Choice records its source-only bindings as it is built.
+ * caller's: each typed mc:Choice records its source-only bindings as it is built. And
+ * `wordInvalidValue` as the `onInvalidValue` (CR-013), unless the caller passes one, reporting to
+ * `onWordReading` when the caller asks.
  */
-function recordingOptions(options?: Jsonix.UnmarshallerOptions): Jsonix.UnmarshallerOptions {
-  const callerOnElement = options?.onElement;
+function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
+  const { onWordReading, ...runtimeOptions } = options ?? {};
+  const callerOnElement = runtimeOptions.onElement;
   return {
-    ...options,
+    ...runtimeOptions,
     onElement(element: Element, value: object): void {
       if ((value as { TYPE_NAME?: string }).TYPE_NAME === CHOICE_TYPE) {
         const bindings = choiceBindingsAt(element);
@@ -514,6 +519,84 @@ function recordingOptions(options?: Jsonix.UnmarshallerOptions): Jsonix.Unmarsha
       }
       callerOnElement?.(element, value);
     },
+    onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
+// CR-013: attribute values read as Word 365 reads them
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Word's own WordprocessingML mappings, whose refused attribute values `wordInvalidValue` reads as
+ * Word does (CR-013 section 3.5; the extension mappings are core-ts CR-015's D10). CR-009's
+ * `org_docx4j_wml_globals` declares elements of wml's types, so its class infos answer `org_docx4j_wml`.
+ */
+const WORD_READ_MODULES: ReadonlySet<string> = new Set(['org_docx4j_wml', 'org_docx4j_w14', 'org_docx4j_w15', 'org_docx4j_w15symex', 'org_docx4j_w16', 'org_docx4j_w16cex', 'org_docx4j_w16cid']);
+
+/** What the runtime's boolean reads (jsonix-CR-007): exactly these, case and spacing as written. Also `w:u`'s on/off words. */
+const BOOLEAN_FORMS: ReadonlySet<string> = new Set(['true', 'false', '1', '0', 'on', 'off']);
+
+/**
+ * The facade's `onInvalidValue` (jsonix-CR-010), set on every facade unmarshal unless the caller
+ * passes one (CR-013 section 3.5): an attribute value of Word's own WordprocessingML that the type
+ * refuses is read as Word 365 reads it, rather than failing the part.
+ * - A refused boolean is on (`true`): Word reads only exactly `false`, `off` and `0` as off, and the
+ *   runtime already reads those, so what reaches here (`yes`, `FALSE`, `" false"`, `""`) is on.
+ *   That includes w14's `CT_OnOff` (`w14:checked`). w14's own `ST_OnOff` enumeration
+ *   (`CT_LinearShadeProperties/@scaled`, `CT_StyleSet/@val`) is a string in the mapping, which
+ *   writes it on the property where the runtime doesn't read it: never refused, held as written.
+ * - A refused enumeration value is dropped, so the attribute is absent, as Word reads it (a style's
+ *   value shows through); except `w:u`'s `true`, `false`, `on`, `off`, `1` and `0`, exactly, which
+ *   Word reads as `'none'`.
+ * - Anything else is refused as before (the error is rethrown): other simple types, and every type
+ *   of every other mapping (DrawingML, VML, SpreadsheetML, ...), whose Word reading is unmeasured.
+ * Exported for a caller with its own `onInvalidValue` that wants to compose it.
+ */
+export function wordInvalidValue(text: string, propertyInfo: Jsonix.AttributePropertyInfo, classInfo: Jsonix.ClassInfo, node: Element, error: Error): unknown {
+  if (!WORD_READ_MODULES.has(classInfo.module.name)) throw error;
+  const typeInfo = propertyInfo.typeInfo;
+  if (typeInfo.name === 'Boolean') return true;
+  if (typeInfo.CLASS_NAME !== 'Jsonix.Model.EnumLeafInfo') throw error;
+  if (typeInfo.name === 'org_docx4j_wml.UnderlineEnumeration' && BOOLEAN_FORMS.has(text)) return 'none';
+  return undefined;
+}
+
+/** A value read by Word's rule, as `onWordReading` receives it (CR-013 section 3.5, core-ts CR-015's D8). */
+export interface WordReading {
+  /** The element carrying the attribute, in the source document. */
+  readonly element: Element;
+  readonly attribute: Jsonix.XML.QName;
+  /** The attribute's text, as written. */
+  readonly text: string;
+  /** What the model holds instead: `true` for a boolean; `'none'` for `w:u`'s on/off words; undefined where the value was dropped. */
+  readonly value: boolean | string | undefined;
+  /** `'value.kept.exact'` when the text, trimmed of XML whitespace, is a form its type reads (`" false"`), else `'value.kept.invalid'` (`"yes"`, `"Single"`). */
+  readonly kind: 'value.kept.exact' | 'value.kept.invalid';
+}
+
+/** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */
+export interface UnmarshalOptions extends Jsonix.UnmarshallerOptions {
+  /**
+   * Called for each attribute value `wordInvalidValue` read by Word's rule rather than refused,
+   * after it was read. Not called when the caller passes its own `onInvalidValue`.
+   */
+  onWordReading?(reading: WordReading): void;
+}
+
+function readOnceTrimmed(text: string, typeInfo: Jsonix.TypeInfo): boolean {
+  const trimmed = text.replace(/^[ \t\r\n]+|[ \t\r\n]+$/g, '');
+  return typeInfo.name === 'Boolean' ? BOOLEAN_FORMS.has(trimmed) : Object.values((typeInfo as Jsonix.EnumLeafInfo).keys).includes(trimmed);
+}
+
+function reportingWordReadings(onWordReading: (reading: WordReading) => void): NonNullable<Jsonix.UnmarshallerOptions['onInvalidValue']> {
+  return (text, propertyInfo, classInfo, node, error) => {
+    const value = wordInvalidValue(text, propertyInfo, classInfo, node, error) as boolean | string | undefined;
+    onWordReading({
+      element: node, attribute: propertyInfo.attributeName, text, value,
+      kind: readOnceTrimmed(text, propertyInfo.typeInfo) ? 'value.kept.exact' : 'value.kept.invalid',
+    });
+    return value;
   };
 }
 

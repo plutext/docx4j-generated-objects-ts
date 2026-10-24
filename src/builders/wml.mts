@@ -30,7 +30,7 @@ import {
   createGraphic, createGraphicData, createCTBlip, createCTBlipFillProperties, createCTStretchInfoProperties, createCTRelativeRect,
   createCTShapeProperties, createCTTransform2D, createCTPoint2D, createCTPresetGeometry2D, createCTGeomGuideList, createCTNonVisualPictureProperties,
 } from '../../modules/org_docx4j_dml.factory.mjs';
-import { highlightHexValue, highlightNameForColor } from '../helpers/wml.mjs';
+import { highlightHexValue, highlightNameForColor, wordColor } from '../helpers/wml.mjs';
 
 /** A `{ name, value }` pair as content arrays hold them. */
 export type Element<T = unknown> = TypedNamedValue<T>;
@@ -276,9 +276,9 @@ export interface RunFormatting {
   name: string;
   /** Points; 0 when not set directly. */
   size: number;
-  /** '#RRGGBB', 'auto' or a theme name; '' when not set directly. */
+  /** w:color/@w:val as Word reads it (helpers/wml `wordColor`): '#RRGGBB' or 'auto'; '' when not set directly, or set to a value Word reads as absent. */
   color: string;
-  /** '#RRGGBB'; null when there is none. */
+  /** '#RRGGBB'; null when there is none, or its value is not a highlight name (Word reads it as none). */
   highlightColor: string | null;
   /** '' when not set. */
   style: string;
@@ -322,7 +322,12 @@ function on(v: M.BooleanDefaultTrue | undefined): boolean {
   return v !== undefined && v.val !== false;
 }
 
-/** Reads the direct formatting of run properties in the same vocabulary; the inverse of applyRunOptions. */
+/**
+ * Reads the direct formatting of run properties in the same vocabulary; the inverse of applyRunOptions.
+ * Values are read as Word 365 reads them (CR-013): a w:highlight outside ST_HighlightColor is no
+ * highlight, a w:color by `wordColor`, and a w:u value outside ST_Underline (kept by a caller's own
+ * onInvalidValue, or set by hand) no underline.
+ */
 export function readRunOptions(rPr: M.RPr | undefined): RunFormatting {
   const u = rPr?.u?.val;
   const font = rPr?.rFonts;
@@ -331,15 +336,15 @@ export function readRunOptions(rPr: M.RPr | undefined): RunFormatting {
   return {
     bold: on(rPr?.b),
     italic: on(rPr?.i),
-    underline: u === undefined || u === 'none' ? 'None' : (WML_TO_UNDERLINE.get(u) ?? 'Mixed'),
+    underline: u === undefined ? 'None' : (WML_TO_UNDERLINE.get(u) ?? 'None'),
     strikeThrough: on(rPr?.strike),
     doubleStrikeThrough: on(rPr?.dstrike),
     subscript: rPr?.vertAlign?.val === 'subscript',
     superscript: rPr?.vertAlign?.val === 'superscript',
     name: font?.ascii ?? font?.hAnsi ?? '',
     size: rPr?.sz?.val === undefined ? 0 : rPr.sz.val / 2,
-    color: color === undefined ? '' : /^[0-9A-Fa-f]{6}$/.test(color) ? '#' + color.toUpperCase() : color,
-    highlightColor: h === undefined || h === 'none' ? null : (highlightHexValue(h) ?? h),
+    color: color === undefined ? '' : (wordColor(color) ?? ''),
+    highlightColor: highlightHexValue(h) ?? null,
     style: rPr?.rStyle?.val ?? '',
   };
 }

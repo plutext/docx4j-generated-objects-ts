@@ -2,12 +2,13 @@
 // through the package's own name and exports map. The repository's tsconfigs use moduleResolution bundler,
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
-import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from '@docx4j/generated-objects-ts';
+import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals, wordInvalidValue } from '@docx4j/generated-objects-ts';
+import type { WordReading } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
 import { p, r, textOf, find } from '@docx4j/generated-objects-ts/builders/wml';
-import { isCustomStyle, highlightHexValue } from '@docx4j/generated-objects-ts/helpers/wml';
+import { isCustomStyle, highlightHexValue, wordColor, WORD_COLOR_NAMES } from '@docx4j/generated-objects-ts/helpers/wml';
 
 export async function consume(xml: string): Promise<string> {
   const doc = unwrap(await unmarshalString<DocumentElement>(xml));
@@ -17,10 +18,14 @@ export async function consume(xml: string): Promise<string> {
   void getContext({ modules: modulesFor('org_docx4j_wml') });
   // CR-007: per-call options, typed by the runtime's own interfaces.
   void unmarshalString('<w:p/>', { onUnexpectedAttribute: (name) => void name.localPart });
+  // CR-013: the facade's onWordReading beside the runtime's options, and its onInvalidValue to compose.
+  const readings: WordReading[] = [];
+  void unmarshalString('<w:p/>', { onWordReading: (reading) => readings.push(reading), onInvalidValue: wordInvalidValue });
+  const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
   // CR-008: the extension namespaces, a readonly list of URIs.
   const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
@@ -30,3 +35,5 @@ export async function consume(xml: string): Promise<string> {
 export const notANumber: number = p('x').value;
 // @ts-expect-error a highlight's val is a colour name, not a number (with Highlight as any, val would be any)
 highlightHexValue({ val: 1 });
+// @ts-expect-error a reading's kind is one of two (with WordReading as any, anything would do)
+export const notAKind: WordReading['kind'] = 'value.dropped';

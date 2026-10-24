@@ -11,10 +11,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `wml-globals.mts` (CR-009: one more
 mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
 `w:drawing`/`w:pict`; `getContext` and `modulesFor` add it), `helpers/wml.mts` (per-type docx4j decisions,
-compiler CR-007) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
+compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.5.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.7.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -26,7 +26,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, then the nodenext consumer check, then node test/smoke.mjs
+npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -52,7 +52,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are four tests and no test framework:
+There are six tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -74,6 +74,11 @@ There are four tests and no test framework:
   It also checks where each declaration goes (CR-012): a `Requires` prefix on its Choice, ahead of
   `Requires` and not on the root, unless the root declares that binding already; the same for a
   Choice's own `mc:Ignorable` and `mc:MustUnderstand`, and what happens to one nothing resolves.
+  CR-013's block checks `readRunOptions`' highlight and colour readings, `wordColor`, the table's 140
+  names (held to docx4j's `WordColorValues` when `../docx4j` is checked out), and the facade's
+  `onInvalidValue`: refused booleans on, refused enumeration values dropped, `w:u`'s on/off words
+  `none`, the scope (w14's `CT_OnOff`; DrawingML and other simple types still fail), every facade
+  unmarshal, the `onWordReading` record and a caller's own callback taking precedence.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -102,7 +107,18 @@ There are four tests and no test framework:
   namespace declarations, every prefix an `mc:Ignorable`, an `mc:MustUnderstand` or an `mc:Choice`'s
   `Requires` names in a marshalled part is also checked to resolve where it is written (CR-001
   section 3.2).
-  Run against 0.1.5's `modules/` the test reports all five losses that release carried.
+  Run against 0.1.5's `modules/` the test reports all five losses that release carried. A part that
+  reaches CR-013's `onWordReading` fails too: Office writes only values the runtime reads.
+- `test/word365.mjs` (runtime, CR-013) reads Word 365's run property probes (rounds 1 to 6 of
+  2026-10-24, `test/fixtures/word365-probes/`, each probe's `word/document.xml` beside Word's save
+  of it): each marker run's direct toggles, underline and its colour, `vertAlign`, `em`, colour and
+  highlight must read as in Word's save, the oracle, as docx4j's `RunPropertiesWord365Test` has it.
+  376 markers, 373 equal; the three differences (Word's save drops a direct `w:u` repeating a
+  style's) and the three readings Word's PDFs give where its save changed what it drew are stated,
+  strict both ways. A save and reload must keep every reading.
+- `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
+  esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
+  `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
 - `test/nodenext/consumer.mts` (compile-only, via `npm test` after the build) imports every public
   path by the package's own name under `module`/`moduleResolution: nodenext`, as a Node ES module
   consumer does. The repository's tsconfigs use `bundler`, which accepts extensionless relative
@@ -174,6 +190,12 @@ give, stay on the root. CR-008 (implemented 2026-10-04) has them first append to
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.
+CR-013 (phases A and B implemented 2026-10-24; phase C, a save normaliser, waits for jsonix-CR-011's
+marshal-side adapters) reads run properties as Word 365 reads them: every facade unmarshal passes
+`wordInvalidValue` as the runtime's `onInvalidValue` unless the caller passes one, scoped by
+`classInfo.module.name` to Word's own WordprocessingML mappings, and `readRunOptions` reads
+highlight and colour through `helpers/wml`'s `wordColor`. The rules are Jason's probes'; docx4j
+CR-060 and CR-061 are the Java port, core-ts CR-015 the consumer.
 
 ## What the declarations promise
 

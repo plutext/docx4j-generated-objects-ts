@@ -173,7 +173,8 @@ resetContext();
     { namespacePrefixes: { ...NAMESPACE_PREFIXES, [SML_]: 'sx' } });
   assert.match(rels, /^<Relationships xmlns="/, "CR-001's per-root rule still applies over a caller's table");
 
-  // The facade sets no callback of its own: a drop is some callers' mechanism (CR-007 section 6).
+  // The facade sets no reporting callback of its own: a drop is some callers' mechanism (CR-007 section 6). Its
+  // onInvalidValue (CR-013) reads a value as Word does, and reports only to an onWordReading the caller passes.
   const sheet = `<worksheet xmlns="${SML_}" xmlns:xr="${XR_}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="xr"><sheetData><row r="1"><c r="A1" xr:uid="{1}"/></row></sheetData></worksheet>`;
   let fired = false;
   await unmarshalString(sheet);                                    // no options: silent
@@ -714,4 +715,118 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const written = await marshalString(doc);
   assert.ok(written.includes(`<w:body>${block}<w:tbl>${row}</w:tbl></w:body>`), 'all three marshal back as read');
   console.log('docx4j CR-051: mc:AlternateContent listed at block, row and cell level, typed and marshalled whole OK');
+}
+
+// CR-013: run properties read as Word 365 reads them (Jason's probes, 2026-10-24; test/word365.mjs reads the probes
+// themselves). Phase A, helpers/wml's colour table and readRunOptions; phase B, the facade's onInvalidValue.
+{
+  const { readRunOptions } = await import('../dist/builders/wml.mjs');
+  const { WORD_COLOR_NAMES, wordColor } = await import('../dist/helpers/wml.mjs');
+  const { wordInvalidValue } = await import('../dist/index.mjs');
+  const W_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const W14_ = 'http://schemas.microsoft.com/office/word/2010/wordml';
+  const WP_ = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
+
+  // Phase A, without the runtime: w:highlight outside ST_HighlightColor (case-exact) is none, as Word repairs it.
+  for (const val of ['YELLOW', 'bogus', 'none']) assert.equal(readRunOptions({ highlight: { val } }).highlightColor, null, `highlight ${val}`);
+  assert.equal(readRunOptions({ highlight: { val: 'yellow' } }).highlightColor, '#FFFF00');
+  // w:color: hex with #, any case, padded; exactly auto; the names Word reads; anything else as if absent.
+  const color = (val) => readRunOptions({ color: { val } }).color;
+  for (const val of ['FF0000', 'ff0000', '#ff0000', '#FF0000', ' FF0000 ', 'FF0000 ', ' #Ff0000', 'red', 'RED', 'Red', ' red ']) assert.equal(color(val), '#FF0000', `color ${JSON.stringify(val)}`);
+  assert.equal(color('auto'), 'auto');
+  for (const [val, hex] of [['darkGray', '#A9A9A9'], ['lightgrey', '#D3D3D3'], ['lightgoldenrodyellow', '#FAFAD2'], ['Navy', '#000080'], ['DarkRed', '#8B0000'], ['papayawhip', '#FFEFD5'], ['dimgray', '#696969']]) assert.equal(color(val), hex, val);
+  for (const val of ['Auto', 'AUTO', ' auto', 'auto ', '#auto', 'grey', 'lightGray', 'darkYellow', 'darkgrey', 'rebeccapurple', 'transparent', 'windowtext', 'dark red', '#red', 'F00', '0xFF0000', 'FF00000', 'FF000', 'GG0000', '', ' ']) {
+    assert.equal(color(val), '', `color ${JSON.stringify(val)} reads as absent`);
+  }
+  assert.equal(readRunOptions({}).color, '', 'absent');
+  // wordColor itself: the same rule; undefined where Word rejects the value, for the caller's place to read.
+  assert.equal(wordColor(undefined), undefined);
+  assert.equal(wordColor('auto'), 'auto');
+  assert.equal(wordColor('\t#00ff7f\n'), '#00FF7F', 'trimmed as Java trims');
+  assert.equal(wordColor(' SpringGreen '), '#00FF7F', 'a name, trimmed, in any case (docx4j CR-060 D7)');
+  for (const val of ['Auto', 'grey', 'F00', '', 'constructor', 'toString', '__proto__']) assert.equal(wordColor(val), undefined, JSON.stringify(val));
+  // The table: 140 classic HTML names, lower-case, to RRGGBB; CSS 3's 147 less six grey spellings and lightgray.
+  const names = Object.keys(WORD_COLOR_NAMES);
+  assert.equal(names.length, 140);
+  assert.ok(Object.isFrozen(WORD_COLOR_NAMES) && Object.getPrototypeOf(WORD_COLOR_NAMES) === null);
+  assert.ok(names.every((n) => /^[a-z]+$/.test(n)) && Object.values(WORD_COLOR_NAMES).every((h) => /^[0-9A-F]{6}$/.test(h)));
+  for (const n of ['grey', 'darkgrey', 'darkslategrey', 'dimgrey', 'lightslategrey', 'slategrey', 'lightgray']) assert.ok(!(n in WORD_COLOR_NAMES), `${n} is not a name Word reads`);
+  for (const n of ['lightgrey', 'gray', 'darkgray', 'darkslategray', 'dimgray', 'lightslategray', 'slategray']) assert.ok(n in WORD_COLOR_NAMES, n);
+  // Held to docx4j's WordColorValues, name for name and value for value, where docx4j is checked out beside.
+  const java = new URL('../../docx4j/docx4j-generated-objects/src/main/java/org/docx4j/wml/WordColorValues.java', import.meta.url);
+  let docx4jTable = 'not checked (no ../docx4j)';
+  try {
+    const source = readFileSync(java, 'utf8');
+    const body = source.slice(source.indexOf('HTML = table(') + 'HTML = table('.length);
+    const strings = [...body.slice(0, body.indexOf(');')).matchAll(/"([^"]*)"/g)].map((m) => m[1]);
+    const pairs = Object.fromEntries(strings.flatMap((s, i) => i % 2 === 0 ? [[s, strings[i + 1]]] : []));
+    assert.deepEqual({ ...WORD_COLOR_NAMES }, pairs, "WORD_COLOR_NAMES is docx4j's WordColorValues table");
+    docx4jTable = "docx4j's WordColorValues";
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e;
+  }
+  // underline: a value outside ST_Underline (set by hand, or kept by a caller's own onInvalidValue) is no underline.
+  assert.equal(readRunOptions({ u: { val: 'bogus' } }).underline, 'None', 'not Mixed');
+  assert.equal(readRunOptions({ u: {} }).underline, 'None', 'a bare w:u');
+
+  // Phase B, with the runtime: on/off (core-ts CR-015 rule 1). Off is exactly false, off or 0; anything else is on.
+  const rPrOf = async (inner, options) => unwrap(await unmarshalString(`<w:rPr xmlns:w="${W_}" xmlns:w14="${W14_}">${inner}</w:rPr>`, options));
+  for (const val of ['true', '1', 'on', 'yes', 'FALSE', 'False', 'OFF', ' false', 'false ', '00', 'no', '', ' ']) {
+    assert.equal(readRunOptions(await rPrOf(`<w:b w:val="${val}"/>`)).bold, true, `w:b ${JSON.stringify(val)} is on`);
+  }
+  for (const val of ['false', 'off', '0']) assert.equal(readRunOptions(await rPrOf(`<w:b w:val="${val}"/>`)).bold, false, `w:b ${val} is off`);
+  assert.equal((await rPrOf('<w:caps w:val="yes"/>')).caps.val, true, 'every wml boolean, not only w:b');
+  // An enumeration value outside its list is dropped (as if absent, so a style's value shows): w:u, w:vertAlign, w:em.
+  const invalid = await rPrOf('<w:u w:val="Single" w:color="FF0000"/><w:vertAlign w:val="Superscript"/><w:em w:val="DOT"/>');
+  assert.deepEqual([invalid.u.val, invalid.u.color, invalid.vertAlign.val, invalid.em.val], [undefined, 'FF0000', undefined, undefined]);
+  const read = readRunOptions(invalid);
+  assert.deepEqual([read.underline, read.superscript, read.subscript], ['None', false, false]);
+  assert.equal((await rPrOf('<w:u w:val="bogus"/>')).u.val, undefined);
+  // Except w:u's on/off words, exactly, which Word reads as none (round 6); True and yes are invalid like any other.
+  for (const val of ['true', 'false', 'on', 'off', '1', '0']) {
+    const rPr = await rPrOf(`<w:u w:val="${val}"/>`);
+    assert.equal(rPr.u.val, 'none', `w:u ${val} is none`);
+    assert.match(await marshalString({ name: { namespaceURI: W_, localPart: 'rPr' }, value: rPr }), /<w:u w:val="none"\/>/, `and saves as none`);
+  }
+  for (const val of ['True', 'TRUE', 'yes', 'no']) assert.equal((await rPrOf(`<w:u w:val="${val}"/>`)).u.val, undefined, `w:u ${val} is absent`);
+  // A dropped value isn't written; a refused boolean is written true, which Word reads the same. (The valueless
+  // w:vertAlign and w:em are what phase C's normaliser will leave out, as Word's repair does.)
+  const written = await marshalString(await unmarshalString(`<w:rPr xmlns:w="${W_}"><w:b w:val="yes"/><w:u w:val="Single"/><w:vertAlign w:val="Superscript"/><w:em w:val="DOT"/></w:rPr>`));
+  assert.match(written, /><w:b w:val="true"\/><w:u\/><w:vertAlign\/><w:em\/><\/w:rPr>$/, 'no refused value is written back');
+  // Scope (core-ts CR-015's D10): Word's own WordprocessingML mappings. w14's CT_OnOff is a boolean, so TRUE is on.
+  const checkbox = unwrap(await unmarshalString(`<w:sdtPr xmlns:w="${W_}" xmlns:w14="${W14_}"><w14:checkbox><w14:checked w14:val="TRUE"/></w14:checkbox></w:sdtPr>`));
+  assert.equal(checkbox.rPrOrAliasOrLock[0].value.checked.val, true, 'w14:checked TRUE is on');
+  // w14's own ST_OnOff enumeration is written on the property, where the runtime doesn't read it: a string, never refused.
+  // (If a regeneration types them as an enumeration, this fails, and wordInvalidValue needs their rule: CR-013 section 3.5.)
+  const w14 = await rPrOf('<w14:textFill><w14:gradFill><w14:lin w14:ang="0" w14:scaled="on"/></w14:gradFill></w14:textFill><w14:stylisticSets><w14:styleSet w14:id="1" w14:val="yes"/></w14:stylisticSets>');
+  assert.deepEqual([w14.textFill.gradFill.lin.scaled, w14.stylisticSets.styleSet[0].val], ['on', 'yes']);
+  // Every other mapping stays strict: a DrawingML boolean or a wml integer in the same part still fails it.
+  const inDocument = (inner) => `<w:document xmlns:w="${W_}" xmlns:wp="${WP_}"><w:body><w:p><w:r><w:rPr><w:b w:val="yes"/></w:rPr>${inner}</w:r></w:p></w:body></w:document>`;
+  await assert.rejects(unmarshalString(inDocument('<w:drawing><wp:anchor behindDoc="FALSE"/></w:drawing>')), /behindDoc/, 'wp:anchor behindDoc="FALSE" fails the part');
+  await assert.rejects(unmarshalString(inDocument('<w:drawing><wp:inline><wp:docPr id="1" name="x" hidden="yes"/></wp:inline></w:drawing>')), /hidden/, 'wp:docPr hidden="yes" too');
+  await assert.rejects(rPrOf('<w:sz w:val="big"/>'), /sz\/@w:val/, 'a refused wml integer is refused as before');
+  // Every facade unmarshal: a flat OPC package and a wml() fragment.
+  const flatBold = `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${inDocument('')}</pkg:xmlData></pkg:part></pkg:package>`;
+  const flatPart = (await unmarshalPackage(flatBold)).value.part[0].xmlData.any;
+  assert.equal(flatPart.value.body.content[0].value.content[0].value.rPr.b.val, true, 'unmarshalPackage');
+  const { wml } = await import('../dist/builders/wml.mjs');
+  assert.equal((await wml('<w:r><w:rPr><w:i w:val="yes"/></w:rPr></w:r>'))[0].value.rPr.i.val, true, 'wml()');
+  // The record (core-ts CR-015's D8, O6): onWordReading, the data for the caller's warnings; nothing to the console.
+  const readings = [];
+  await rPrOf('<w:b w:val=" false"/><w:i w:val="yes"/><w:u w:val="true"/><w:vertAlign w:val=" superscript"/><w:em w:val="DOT"/><w:sz w:val="24"/>', { onWordReading: (r) => readings.push(r) });
+  assert.deepEqual(readings.map((r) => [r.element.localName, r.attribute.localPart, r.text, r.value, r.kind]), [
+    ['b', 'val', ' false', true, 'value.kept.exact'],
+    ['i', 'val', 'yes', true, 'value.kept.invalid'],
+    ['u', 'val', 'true', 'none', 'value.kept.invalid'],
+    ['vertAlign', 'val', ' superscript', undefined, 'value.kept.exact'],
+    ['em', 'val', 'DOT', undefined, 'value.kept.invalid'],
+  ]);
+  // A caller's own onInvalidValue takes precedence, and onWordReading is then not called; wordInvalidValue composes.
+  const mine = [];
+  const own = await rPrOf('<w:b w:val="yes"/><w:u w:val="Single"/>', { onInvalidValue: (text) => { mine.push(text); return text === 'yes' ? false : 'double'; }, onWordReading: () => assert.fail('not called') });
+  assert.deepEqual([own.b.val, own.u.val, mine], [false, 'double', ['yes', 'Single']]);
+  const composed = await rPrOf('<w:b w:val="yes"/>', { onInvalidValue: (...args) => { mine.push('composed'); return wordInvalidValue(...args); } });
+  assert.deepEqual([composed.b.val, mine.at(-1)], [true, 'composed']);
+  await assert.rejects(rPrOf('<w:b w:val="yes"/>', { onInvalidValue: (text, p, c, n, error) => { throw error; } }), /w:b\/@w:val/, "a caller can restore the runtime's strictness");
+  console.log(`CR-013: colours (${docx4jTable}), highlight, on/off, enumerations and w:u's on/off words read as Word 365 reads them; the scope, the record and the caller's precedence OK`);
 }

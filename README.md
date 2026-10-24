@@ -226,11 +226,28 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `onUnexpectedElement` and `onUnexpectedAttribute` to be told what the model dropped and where,
   `onElement` to record what a marshal wrote, `namespacePrefixes` for one call's table. These are
   the opposite of `getContext`'s options, which are read once when the context is built: nothing
-  here touches the shared context, and `resetContext()` is not involved. **No callback is set by
-  default and none should be**: for some callers a drop is the mechanism rather than a fault, so
-  reporting belongs to whoever asked for it. A caller's `namespacePrefixes` replaces the context's
+  here touches the shared context, and `resetContext()` is not involved. **No reporting callback is
+  set by default and none should be**: for some callers a drop is the mechanism rather than a fault,
+  so reporting belongs to whoever asked for it. (The facade does set `onInvalidValue`, which reads a
+  value rather than reports it: see the next item.) A caller's `namespacePrefixes` replaces the context's
   table for that call, with the per-root rule applied over it; note that a root unmarshalled from
   input keeps the prefix its input used, so a table governs names that carry none.
+- **Run properties as Word 365 reads them** (CR-013): Word is lenient where the schema is strict,
+  and the facade's unmarshal functions read Word's own WordprocessingML (the `wml`, `w14`, `w15`,
+  `w15symex`, `w16`, `w16cex` and `w16cid` mappings) as Word does, through the runtime's
+  `onInvalidValue`, rather than failing the part. A boolean the runtime refuses (`yes`, `FALSE`,
+  `" false"`, `""`) is on, since Word reads only exactly `false`, `off` and `0` as off; it is saved
+  `true`. A value outside an enumeration (`w:u="Single"`, `w:vertAlign="bogus"`) is dropped, so the
+  attribute is absent and a style's value shows through, as in Word; but `w:u`'s `true`, `false`,
+  `on`, `off`, `1` and `0` read as `none`, as Word reads them. Any other refused value, and every
+  value of every other mapping (DrawingML, VML, SpreadsheetML, ...), fails the part as before.
+  `onWordReading`, an unmarshal option, is told of each value so read, for a caller's warnings; a
+  caller's own `onInvalidValue` replaces the facade's, and `wordInvalidValue` is exported to
+  compose with. `readRunOptions` reads a `w:highlight` outside `ST_HighlightColor` as none, and
+  `w:color` by `wordColor`: hex in any case with an optional `#` and padding, exactly `auto`, or
+  one of the 140 classic HTML names Word reads (`WORD_COLOR_NAMES`); anything else as unset. Each
+  rule was measured in Word 365, on probe documents that `test/word365.mjs` reads against Word's own
+  saves of them.
 - **A smaller context**: `getContext({ modules: modulesFor('org_docx4j_wml') })` builds a context
   over one root's modules and their closure - twelve modules for WordprocessingML, which reads a
   Word 365 `document.xml` - instead of all 103. `modulesFor` follows the type references in the
@@ -282,8 +299,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   as underscores (docx4j's `org.docx4j.wml` is `org_docx4j_wml`). Each has `<module>.js` (UMD),
   `<module>.mjs` (ES module), `<module>.d.ts` (declarations) and `<module>.d.mts` (typed re-export
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.
-- **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`) and
-  `isCustomStyle`.
+- **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): docx4j's highlight colour table, `isQFormat` (via `PARENT`),
+  `isCustomStyle`, and `WORD_COLOR_NAMES` / `wordColor`, a colour value as Word 365 reads it (docx4j's `WordColorValues`).
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
   the run mapping, `tr` / `tc`, `inlinePicture`, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for
   content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `mcBranchOf`, `textOf`,
