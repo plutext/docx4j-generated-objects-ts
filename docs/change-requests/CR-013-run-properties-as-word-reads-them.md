@@ -1,6 +1,6 @@
 # CR-013: Run properties read as Word reads them (`readRunOptions`, a colour table, the facade's part of the parse)
 
-**Status:** Implemented 2026-10-24, not yet released: phases A and B on `main` (7feac7f), phase C on the branch `cr-013-phase-c` (with `@docx4j/jsonix` ^3.8.0), for Jason to merge into 0.4.4 or release later
+**Status:** Implemented 2026-10-24, all three phases on `main` for the next release (Jason, 2026-10-24), not yet released (with `@docx4j/jsonix` ^3.8.0)
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
@@ -46,7 +46,7 @@ This package's part:
 - **Phase B** (implemented): jsonix-CR-010's `onInvalidValue`, set by the facade with Word's rules for Word's own
   WordprocessingML mappings, so the on/off and enumeration values load and read as Word reads them. It also records
   what was read so.
-- **Phase C** (implemented, on a branch): a save normaliser in the facade's marshal, as docx4j's CR-060 and CR-061
+- **Phase C** (implemented): a save normaliser in the facade's marshal, as docx4j's CR-060 and CR-061
   write, value for value: marshal-only, on by default, with an opt-out (core-ts CR-015's D2).
 
 ## 2. What this package did before (measured 2026-10-24, at 1e4e895)
@@ -353,7 +353,7 @@ and its saved run the last run of the same paragraph in the save holding its tex
 **The corpus:** the 341 marshal hashes are identical to 0.4.3's (`test/lib/marshal-hashes.mjs` against the npm
 tarball, both on jsonix 3.7.0), and `test/fidelity.mjs` fails a part that reaches `onWordReading`. None does.
 
-**The normaliser (phase C)**, tested on the branch (2026-10-24):
+**The normaliser (phase C)**, tested (2026-10-24):
 - The smoke, a block of its own, writes docx4j's `ColourNormalFormTest` synthetic cases the same:
   - a rejected value beside a theme colour, written `auto`;
   - a revision's former properties, with the run colour, highlight, `vertAlign` and `em` left out, the underline
@@ -403,7 +403,8 @@ tarball, both on jsonix 3.7.0), and `test/fidelity.mjs` fails a part that reache
   0.4.4 (Jason, 2026-10-24).
 - **Phase C**, after A (`wordColor`), B (the invalid values load) and jsonix-CR-011's release (3.8.0): section 3.6's
   normaliser, its opt-out and its report, with the runtime floor raised to ^3.8.0. Implemented 2026-10-24 on the
-  branch `cr-013-phase-c`, so that `main` stays the 0.4.4 candidate until Jason chooses.
+  branch `cr-013-phase-c` (9bd7289), and taken into the next release by Jason the same day: `main` was pushed at
+  phases A and B (7feac7f), then fast-forwarded to it.
 
 Phases A and B are patches, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, a raised runtime
 floor. Phase C changes marshal output by default for parts with colours outside the normal form. That may make it a
