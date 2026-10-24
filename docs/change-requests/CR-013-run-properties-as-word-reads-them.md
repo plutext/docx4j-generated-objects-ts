@@ -7,8 +7,9 @@ core-ts and docx4j-python against the same rules and probes).
 **Depends on:** jsonix-CR-010 for sections 3.1, 3.2, 3.5 and 3.6. It hands an attribute value its type refuses to
 a per-call `onInvalidValue` instead of failing the part, and a value its type can't print to `onUnprintableValue`;
 the facade sets them with Word's rules. Jason decided its J1 to J3 as recommended, and it was released in
-`@docx4j/jsonix` 3.7.0 (tag d4e8af8, 2026-10-24), so phase B raises the floor to ^3.7.0. Sections 3.3 and 3.4
-depend on nothing.
+`@docx4j/jsonix` 3.7.0 (tag d4e8af8, 2026-10-24), so phase B raises the floor to ^3.7.0. Section 3.6, phase C,
+depends on jsonix-CR-011 (proposed 2026-10-24, jsonix c6cdb97, its K1 to K3 for Jason): marshal-side adapters,
+requested for it at Jason's word. Sections 3.3 and 3.4 depend on nothing.
 **Counterpart:** docx4j CR-060, the same rules in Java, implemented through phase 3 on `VERSION_17_3_5`
 (868a1797b, unpushed, 2026-10-24):
 - an `OnOffAdapter` on 46 of `wml.xsd`'s 48 boolean attributes, as annox annotations. A regeneration from that xsd
@@ -68,7 +69,10 @@ Each value was unmarshalled as a run's `w:rPr` through `unmarshalString`, then r
 
 The facade's `onInvalidValue` (section 3.5) returns `true` for a refused `Boolean` in `org_docx4j_wml`. The
 runtime already reads `false`, `0` and `off` as false, and refuses only what Word reads as on (`yes`, `FALSE`,
-`" false"`, `""`). The model then holds Word's boolean, so `on()` is already right, and so is every reader in
+`" false"`, `""`). That relies on jsonix comparing the text exactly, with none of the whitespace collapse XSD
+gives `xs:boolean`: a conforming parse would read `" false"` as false, where Word reads it as on. jsonix records
+the exact comparison as part of its contract (jsonix-CR-010 section 13, jsonix 5258d81), with tests that fail if
+the parse ever collapses or folds case, for booleans and enumerations alike. The model then holds Word's boolean, so `on()` is already right, and so is every reader in
 core-ts (core-ts CR-015's D1 (a)). A save writes `true`, which Word reads the same way, as jsonix-CR-007's `off`
 is saved `false`.
 
@@ -178,10 +182,17 @@ reading, and never writes content the schema rejects. Two parts are already sett
 - **An invalid enumeration value** is already absent from the model, so it isn't written. `w:u`'s on/off words
   are written `none`, as Word saves them, and any other invalid `w:u` is written bare.
 
-The rest is the normaliser: a pass over the marshalled DOM, in `marshalToDocument` beside
-`fixRootNamespaceDeclarations`. It works on WordprocessingML elements wherever they sit, including a revision's
-former properties (`w:rPrChange/w:rPr`, a paragraph mark's), which Reject All restores (D9). It writes docx4j
-CR-060 with CR-061's normal form, value for value:
+The rest is the normaliser, on jsonix-CR-011's marshal-side adapters, as docx4j's is on JAXB's `XmlAdapter`s:
+- **`onAttributeValue`**, called after a value prints, rewrites the colour attributes by their class and property
+  (`CT_Color.val`, `CT_Underline`'s colour, `CT_Shd`'s fill and colour, `CT_Background`'s colour, `CT_Border`'s
+  colour). It is given the owning object, so `CT_Color.val` can see a theme attribute beside it.
+- **`omitElement`**, called before an element is written, leaves out a `w:highlight`, `w:vertAlign` or `w:em` with
+  a missing or invalid value, and a `w:color` whose value is rejected and that has no theme attribute.
+
+Both are keyed by type, not by element name, so a `CT_Border` is caught under any of its dozen element names, and
+both are scoped by `classInfo.module.name` as `onInvalidValue` is. `omitElement` covers every typed element path,
+so a revision's former properties (`w:rPrChange/w:rPr`, a paragraph mark's), which Reject All restores (D9), come
+for free. It writes docx4j CR-060 with CR-061's normal form, value for value:
 
 | Where | Accepted | `auto` | Rejected, or missing |
 |---|---|---|---|
@@ -203,6 +214,12 @@ docx4j's implementation (aaadd93f9 to 5163c2986, unpushed) and its tests, `Colou
 
 **Marshal-only** (docx4j's D6): the tree in memory keeps the source's value, and only the output is normalised.
 So a caller's reading of the tree is the same before and after a save.
+
+**Not reached:** WordprocessingML held as DOM. That happens only beneath an element the model doesn't know, such
+as a producer's own element inside a kept `mc:Choice`; a `w:sdt` there is typed, as `SdtBlock`. jsonix-CR-011's
+hooks don't see DOM, and docx4j's adapters don't either, so it is written as read in both ports. None of the 317
+parts of the corpus and the probes holds a phase C target as DOM (checked 2026-10-24). No mapping here has an
+element map.
 
 **The opt-out** (docx4j's D1 and D2):
 - A process-wide default, `setNormaliseOnSave(false)`, and a per-call marshal option, `normaliseOnSave`. core-ts's
@@ -317,8 +334,8 @@ Smoke, a block of its own:
 - **Phase A**, with no dependency: sections 3.3 and 3.4. Half a day.
 - **Phase B**, on jsonix 3.7.0: sections 3.1, 3.2 and 3.5, the scope of D10, the record, and the probe fixtures,
   with the runtime floor raised to ^3.7.0. With O4 and O6. Half a day.
-- **Phase C**, after A (`wordColor`) and B (the invalid values load): section 3.6's normaliser, its opt-out and its
-  report. One day.
+- **Phase C**, after A (`wordColor`), B (the invalid values load) and jsonix-CR-011's release: section 3.6's
+  normaliser, its opt-out and its report, with the runtime floor raised to that release. One day.
 
 Phases A and B are patches, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, a raised runtime
 floor. Phase C changes marshal output by default for parts with colours outside the normal form. That may make it a
