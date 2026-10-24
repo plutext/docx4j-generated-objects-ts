@@ -59,6 +59,32 @@ usually given for `WdColorIndex`.
 
 Over the 63 cases, today's `readRunOptions`/`applyRunOptions` differ from Word in 39; core-ts pins those 39.
 
+### 2.1 Check 62: Word's snap, measured (Jason, 2026-10-24)
+
+Jason asked why the full hex range shouldn't be allowed, and asked core-ts for a grid "so we can see whether there is
+a simple rule". Check 62 (core-ts `test/fixtures/check62/`, the same Word 365) wrote 7,225 colours:
+- the 16-level grid (every CSS three-digit hex colour);
+- the grey ramp in steps of 1;
+- each single-channel ramp, with the other two at `00` and at `FF`;
+- ±8 around `#A9A9A9` and `#123456`.
+
+Every colour was accepted, and each was stored as one of the sixteen. The 75 names spot-checked through `getOoxml`
+agree with the colour read back.
+
+The rule, as far as it is simple (fitted 2026-10-24; 7,075 of 7,225 agree):
+- **Hue** is Windows' `ColorRGBToHLS` hue, an integer from 0 to 239. The sectors are red below 20, yellow 20 to 60,
+  green 61 to 100, cyan 101 to 140, blue 141 to 179, and magenta 180 and above. So magenta takes 270° to 360°, and
+  `#FF0011` is magenta. Every hue decision in the data fits.
+- **Dark or bright:** dark where `max + min ≤ C0` (HLS lightness at most a quarter), else bright. So `#010000` is
+  `darkRed`, and `#884444` is `red`. Every decision fits.
+- **Greys:** by `(max + min) / 2`. `00` to `3F` is `black`, `40` to `9F` `darkGray`, `A0` to `DF` `lightGray`, and
+  `E0` to `FF` `white`, the midpoints between the palette greys. The one exception is `#A9A9A9`, CSS's `darkgray`,
+  alone `darkGray`: Word appears to match a CSS name before any rule.
+- **Grey or colour:** not simple. HLS saturation below 120 of 240 gives a grey, and that is the best single test, but
+  149 points still differ. No measure tried separates them exactly: HLS and HSV saturation, chroma, Lab chroma and
+  chroma over L, YCbCr chroma. The boundary bends with hue (a blue needs more chroma than a red to stay a colour) and
+  with lightness. All 149 are low-saturation colours, which Word puts one side or the other of the grey edge.
+
 ## 3. Proposal
 
 ### 3.1 `HIGHLIGHT_COLORS` takes Word's palette
@@ -92,8 +118,8 @@ Over check 61's 63 cases, the shim would then agree with Word in all 63.
 
 ## 4. Not proposed
 
-- **Word's snapping rule** for an arbitrary hex, until core-ts's check 62 measures it (H4). Until then such a value
-  is refused, as today.
+- **Word's exact grey-or-colour test** for a low-saturation hex (section 2.1). H4 (c) uses check 62's answers where
+  measured and the nearest simple rule between.
 - **Office JS's other colour forms** (`rgb()`, a hex without `#`). They are unmeasured, so they stay refused.
 - **docx4j's table:** its `getHexVal()`/`setVal()` are docx4j's to change. Its HTML and PDF draw the nine highlights in
   CSS's colours today, `darkYellow` gold where Word draws `#808000`.
@@ -110,21 +136,23 @@ Over check 61's 63 cases, the shim would then agree with Word in all 63.
   green, as in Office JS) and `'darkYellow'` (refused, as in Office JS; `'#808000'` sets it).
 - **H3. The name list:** CSS's 147, measured only as far as `lightgray`; or `WORD_COLOR_NAMES` plus `lightgray` alone.
   **Recommendation:** CSS's 147. Office JS is a web API, and the one extra spelling measured is CSS's.
-- **H4. A hex outside the palette,** which Office JS accepts and Word snaps to one of the sixteen:
-  - (a) the ten measured snaps as data, and every other value refused;
-  - (b) every hex accepted, by Word's rule, once a grid check has measured it;
-  - (c) every hex accepted now, by nearest RGB, an approximation that differs from Word for some greys and
-    in-between colours.
+- **H4. A hex outside the palette,** which Office JS accepts and Word snaps to one of the sixteen (section 2.1):
+  - (a) refuse it, except check 61's ten measured points;
+  - (b) accept every hex by section 2.1's rule, with `#A9A9A9`'s exception. It agrees with Word on 7,075 of
+    check 62's 7,225 points; the 150 that differ are low-saturation colours at the grey edge;
+  - (c) as (b), with check 62's 149 grey-edge differences as a table of Word's answers. It agrees on every measured
+    point, which includes all 4,096 CSS three-digit colours, and uses the rule between them;
+  - (d) measure the grey edge more finely (a check 63), in the hope of a rule.
 
-  Refusing (a) is loud where a guess (c) would silently store another highlight than Office JS. Jason asked
-  (2026-10-24) why the full hex range shouldn't be allowed, and asked core-ts to write **check 62**, a grid of Word's
-  snaps, "so we can see whether there is a simple rule". **Recommendation:** (b). Use the rule if one fits every point
-  of check 62. If none does, use the grid as a lookup table: exact on the grid, nearest grid point between. Until
-  then, (a).
+  **Recommendation:** (c). It's exact wherever measured, and elsewhere wrong only for a low-saturation colour near
+  the grey edge, where Word's own choice looks arbitrary. (d) only if that edge matters to a consumer.
 
 ## 6. Tests
 
-- check 61's JSON copied as a fixture (`test/fixtures/check61/`, with a `SOURCE.md` naming core-ts's file and commit).
+- check 61's and check 62's JSON copied as fixtures (`test/fixtures/check61/`, `check62/`, each with a `SOURCE.md`
+  naming core-ts's file and commit).
+- **The snap:** a test holds `highlightNameForColor` to all 7,225 of check 62's points (H4 (c)), or to the 7,075 the rule
+  gives with the 150 others listed (H4 (b)).
 - **Reads:** a smoke test holds `HIGHLIGHT_COLORS` and `readRunOptions` to check 61's 18 reads.
 - **Writes:** a smoke test holds `highlightNameForColor` and `applyRunOptions` to its 45 writes: the stored name, the
   read-back, `InvalidArgument` as a throw, and `null` as removal.
