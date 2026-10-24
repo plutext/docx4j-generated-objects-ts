@@ -108,13 +108,15 @@ is what Word shows after the repair. It needs no runtime change, since the model
 - **`wordColor(value)`:** returns `'#RRGGBB'`, `'auto'` or `undefined`.
   - Exactly `auto` gives `'auto'`, untrimmed and case-sensitive (round 6).
   - Six hex digits in any case, with an optional `#` and surrounding whitespace trimmed, give upper-case `#RRGGBB`.
-  - A table name, case-insensitive, gives its value. Trimming is measured for hex only, so names aren't trimmed.
+  - A table name, case-insensitive and trimmed, gives its value. Trimming is measured for hex only; names are
+    trimmed too for parity with docx4j's `WordColorValues.normalise` (core-ts CR-015's D7).
   - Anything else gives `undefined`. Word reads such a value as absent in `w:color` and `w:u/@w:color`, but as
     automatic in a fill or a border colour (round 6), so the caller applies its own place's rule.
 
 `readRunOptions`' `color` then reads `''` when `w:color` is absent or unusable, and otherwise `wordColor(val)` (O1,
 section 5). core-ts's `ResolvedColor.ofHex` and `WordColors` can call `wordColor` instead of keeping a second table.
-docx4j has the same table as `ColorTables.HTML` (CR-060's D5), and a test holds the two name lists equal.
+docx4j has the same table, 140 names, in `org.docx4j.wml.WordColorValues` (CR-060's D5; `ColorTables.HTML`
+before 17.3.5). `WORD_COLOR_NAMES` is copied from it, and a test holds the two name lists equal.
 
 While there: `RunFormatting.color`'s comment says "or a theme name", but `readRunOptions` reads only `w:color/@w:val`.
 The comment is corrected.
