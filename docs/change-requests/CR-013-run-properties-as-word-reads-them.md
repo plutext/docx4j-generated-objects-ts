@@ -144,7 +144,8 @@ A caller's own `onInvalidValue` or `onUnprintableValue`, passed through CR-007's
 The facade's are exported (`wordInvalidValue`, `wordUnprintableValue`) for a caller that wants to compose them.
 
 Word's enumeration rule is measured for `w:u`, `w:vertAlign` and `w:em` only, and `w:highlight` is a string here.
-Whether every wml enumeration is lenient, or only those three, is O4.
+Whether every wml enumeration is lenient, or only those three, is O4. Whether Word's own extension mappings join
+`org_docx4j_wml` in the lenient set is O5.
 
 ### 3.6 What a save writes (core-ts CR-015's D2, Jason's)
 
@@ -165,6 +166,9 @@ The rule is that a save never changes meaning:
 - **Office JS's own answers** for these values (core-ts's D4, its check 60), and rendering.
 - **The callback mechanism itself:** that's jsonix-CR-010's.
 - **Widening the generated enumeration declarations** to admit a kept string. Dropping makes it unnecessary.
+- **A save normaliser** for colours. If one is added later: an unusable `w:color/@w:val` beside a `w:themeColor`
+  must be written `auto`, not dropped, since `val` is required in `CT_Color`. Without a theme it is dropped
+  (docx4j-python's review, through core-ts).
 - **A character style's highlight,** which Word doesn't draw (round 6). That is style resolution, which belongs
   to core-ts and docx4j; `readRunOptions` reads direct formatting only.
 
@@ -182,6 +186,20 @@ The rule is that a save never changes meaning:
   (core-ts CR-015 section 1). But every reader of another enumeration (`w:fldChar/@w:fldCharType`, say) must then
   treat a non-member as unset. With dropping, no reader meets one: the attribute is absent. **Recommendation:**
   every one, since Word opened every measured case and a part that fails can't be read at all.
+- **O5. Word's own extension mappings in the lenient set** (core-ts CR-015's D10, proposed 2026-10-24): `org_docx4j_w14`,
+  `w15`, `w15symex`, `w16`, `w16cex` and `w16cid` alongside `org_docx4j_wml`. Scoped to `org_docx4j_wml` alone, a
+  `w14:checked w:val="TRUE"` still fails its part, where docx4j-python reads it by Word's rule. Neither round measured
+  w14. In this package, only w14 has on/off attributes:
+  - `CT_OnOff.val`, a `Boolean` (`w14:checkbox/w14:checked`, `w14:conflictMode`, `w14:discardImageEditingData`).
+    It takes the `Boolean` rule.
+  - Two on/off values typed as an anonymous enumeration of `true`, `false`, `0` and `1`:
+    `CT_LinearShadeProperties/@scaled`, and `CT_StyleSet/@val` (`w14:stylisticSets`). Under the enumeration rule
+    they would be dropped. The `Boolean` rule mapped onto the members would read them as Word reads on/off: `'false'`
+    for exactly `false`, `off` or `0`, else `'true'`.
+  - w14's 13 other enumerations (ligatures, number forms, text effects) would become lenient too.
+  The other five mappings have no booleans and one enumeration between them. DrawingML, VML, SpreadsheetML and
+  PresentationML stay strict. **Recommendation:** with D10, if Jason agrees, and with the on/off enumerations read by
+  the `Boolean` rule.
 - **Keep or drop** an invalid enumeration value is core-ts CR-015's D2, Jason's. This CR assumes D2 (a), drop,
   which core-ts recommends and round 5 confirmed keeps meaning (section 3.2).
 
