@@ -181,14 +181,16 @@ CR-060 with CR-061's normal form, value for value:
 
 | Where | Accepted | `auto` | Rejected, or missing |
 |---|---|---|---|
-| `w:color/@w:val` | upper-case `RRGGBB` | `auto` | the `w:color` dropped; beside a `w:themeColor`, `w:val="auto"`, since `w:val` is required and the theme wins |
+| `w:color/@w:val` | upper-case `RRGGBB` | `auto` | the `w:color` dropped where it has no theme attribute; beside a `w:themeColor`, or a `w:themeTint` or `w:themeShade` without one, kept with `w:val="auto"`, since `w:val` is required |
 | `w:u/@w:color` | upper-case `RRGGBB` | `auto` | the attribute dropped; the `w:u` keeps its `w:val` |
 | `w:shd/@w:fill`, `w:shd/@w:color`, `w:background/@w:color`, a border's `w:color` | upper-case `RRGGBB` | `auto` | `auto` |
 | `w:highlight`, `w:vertAlign`, `w:em` | kept | | the element dropped, as Word's repair does |
 
 "Accepted" is `wordColor`'s: a name, hex in any case, with an optional `#` and padding. A value already in the
 normal form is written as it is. The theme attributes are untouched. `w:shd/@w:color` and `w:background/@w:color`
-follow the fill's rule, pending docx4j CR-061 phase 3's Word check.
+follow the fill's rule, pending docx4j CR-061 phase 3: Jason's Word check of docx4j's saves, and a round 7 probe of
+those two attributes. docx4j's implementation (aaadd93f9, unpushed) and its tests, `ColourNormalFormTest` and
+`ColourNormalFormOptOutTest` in core-tests, are the reference for each case.
 
 **Marshal-only** (docx4j's D6): the tree in memory keeps the source's value, and only the output is normalised.
 So a caller's reading of the tree is the same before and after a save.
@@ -276,7 +278,8 @@ Smoke, a block of its own:
 - **The normaliser (phase C):**
   - Each row of section 3.6's table, in a run's `w:rPr`, a paragraph mark's, a style's and a `w:rPrChange`'s former
     properties. That covers a name, lower-case hex, `#` and padding written upper-case; `auto` kept; `Auto` and
-    `F00` dropped from `w:color`, and written `auto` beside a `w:themeColor`; a rejected underline colour dropped;
+    `F00` dropped from `w:color`, and written `auto` beside a `w:themeColor`, and beside a `w:themeTint` or
+    `w:themeShade` alone; a rejected underline colour dropped;
     a rejected fill or border colour written `auto`; a valueless or invalid `w:highlight`, `w:vertAlign` and `w:em`
     dropped.
   - The tree is unchanged after the marshal.
@@ -285,6 +288,7 @@ Smoke, a block of its own:
   - Every probe saved and reread reads as the probe did, as Word's PDFs show for U4 and H7, the two saves in which
     Word changed meaning.
   - The fidelity corpus's 341 hashes don't move.
+  - The cases of docx4j's `ColourNormalFormTest` and `ColourNormalFormOptOutTest`, written the same.
 - **The record (phase B):** `onWordReading` receives `value.kept.exact` for `" false"` and `value.kept.invalid` for
   `"yes"`.
 - **The scope (phase B):** `w14:checked w:val="TRUE"` reads true; w14's `scaled="on"` reads `'true'`; a DrawingML
