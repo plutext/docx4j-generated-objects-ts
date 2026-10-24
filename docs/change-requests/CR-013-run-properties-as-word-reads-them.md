@@ -1,6 +1,6 @@
 # CR-013: Run properties read as Word reads them (`readRunOptions`, a colour table, the facade's part of the parse)
 
-**Status:** Proposed 2026-10-24, at core-ts's request; not scheduled, implementation waits for Jason
+**Status:** Proposed 2026-10-24, at core-ts's request; its rules decided 2026-10-24 with core-ts CR-015's D1 to D11 (Jason: "CR-015 D1 to D11 decided as now recommended"), O4 and O6 open; implementation waits for Jason's go
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
@@ -16,7 +16,8 @@ depend on nothing.
 - a value outside an enumeration read as absent;
 - marshal-only adapters that leave out a `w:highlight`, `w:vertAlign` or `w:em` whose value is missing or invalid.
 
-core-ts CR-015 and docx4j-python's CR are drafted in parallel.
+docx4j CR-061 (accepted 2026-10-24) writes colours in their normal form on save, which phase C follows value for
+value. core-ts CR-015 (D1 to D11 decided) and docx4j-python's CR-018 are the other ports.
 
 ## 1. Summary
 
@@ -35,11 +36,13 @@ and docx4j CR-060 sections 1, 12 and 13 give them in full.
     automatic, overriding the style, in `w:shd/@w:fill` and a border's `w:color`.
 
 This package's part:
-- `builders/wml`'s `readRunOptions`, which core-ts's `Font`, `toApiScript` and `spanEdits` read through, reads
-  `w:highlight` and `w:color` raw today. It should read them as Word does, and do the same for the on/off and
-  enumeration values once they load.
-- A colour table that core-ts can share, rather than keep a copy.
-- jsonix-CR-010's two callbacks, set by the facade with Word's rules, for WordprocessingML only.
+- **Phase A:** `builders/wml`'s `readRunOptions`, which core-ts's `Font`, `toApiScript` and `spanEdits` read through,
+  reads `w:highlight` and `w:color` raw today. It should read them as Word does, through a colour table that core-ts
+  shares rather than keeps a copy of.
+- **Phase B:** jsonix-CR-010's `onInvalidValue`, set by the facade with Word's rules for Word's own WordprocessingML
+  mappings, so the on/off and enumeration values load and read as Word reads them. It also records what was read so.
+- **Phase C:** a save normaliser in the facade's marshal, as docx4j's CR-060 and CR-061 write, value for value:
+  marshal-only, on by default, with an opt-out (core-ts CR-015's D2).
 
 ## 2. What this package does (measured 2026-10-24, at 1e4e895)
 
@@ -80,10 +83,9 @@ of the enumeration, since Word reads them as none (round 6). So:
 - docx4j CR-060 reads invalid values as absent (its D3), so the ports agree on save. That includes `w:u true`,
   which Word itself saves as `none`.
 
-Dropping is core-ts CR-015's D2 (a), recommended there and confirmed by round 5; it is Jason's decision. The
-alternative is keeping each invalid value's spelling and writing it back through `onUnprintableValue` (D2 (b),
-jsonix-CR-010 section 5.4). That would put strings outside the declared unions into the model, and make the ports
-differ on save.
+Dropping is decided: core-ts CR-015's D1 and D2, as docx4j does (Jason, 2026-10-24). The alternative, keeping
+each invalid value's spelling and writing it back through `onUnprintableValue`, was set aside. It would have put
+strings outside the declared unions into the model, and made the ports differ on save.
 
 `readRunOptions` also changes underline's fallback to `None`, not `Mixed`, for an object built by hand with an
 invalid value. Every valid `ST_Underline` value has an Office JS name (`UNDERLINE_TO_WML` covers all seventeen
@@ -119,15 +121,21 @@ The comment is corrected.
 
 ### 3.5 The facade sets jsonix-CR-010's callbacks
 
-Every facade unmarshal (`unmarshalString`, `unmarshalNode`, `unmarshalPackage`) passes an `onInvalidValue`. A facade
-marshal passes an `onUnprintableValue` only if Jason chooses to keep invalid values (section 3.2). Each is scoped
-by `classInfo.module.name === 'org_docx4j_wml'`:
-- **On/off:** a refused `Boolean` gives `true` (section 3.1).
+Every facade unmarshal (`unmarshalString`, `unmarshalNode`, `unmarshalPackage`) passes an `onInvalidValue`. No
+`onUnprintableValue` is needed, since dropping keeps every value inside its type. The callback is scoped by
+`classInfo.module.name`. The scope is `org_docx4j_wml` and, by extension, Word's own WordprocessingML mappings:
+`org_docx4j_w14`, `w15`, `w15symex`, `w16`, `w16cex` and `w16cid` (core-ts CR-015's D10, decided).
+- **On/off:** a refused `Boolean` gives `true` (section 3.1). In w14 that is `CT_OnOff.val`
+  (`w14:checkbox/w14:checked`, `w14:conflictMode`, `w14:discardImageEditingData`).
+- **w14's two on/off values typed as an anonymous enumeration** of `true`, `false`, `0` and `1`
+  (`CT_LinearShadeProperties/@scaled`, and `CT_StyleSet/@val` in `w14:stylisticSets`) take the `Boolean` rule,
+  mapped onto the members: `'false'` for exactly `false`, `off` or `0`, else `'true'`.
 - **Enumerations:** a refused value is dropped, but for `w:u`'s six on/off words, which give `'none'`
   (section 3.2).
-- **Anything else rethrows,** so it fails as today. That covers other simple types in wml, and every type of
-  every other mapping, such as DrawingML (`wp:`, `a:`, `pic:`), VML and w14 inside a `document.xml`, which Word's
-  rule isn't measured for.
+- **Anything else rethrows,** so it fails as today. That covers other simple types in those mappings, and every
+  type of every other mapping: DrawingML (`wp:`, `a:`, `pic:`), VML, SpreadsheetML and PresentationML, which
+  Word's rule isn't measured for. Neither round measured w14; refusing a part is worse than an unmeasured reading
+  by Word's rule (D10's reason).
 
 The rule covers every `Boolean` in `org_docx4j_wml`, including the two that docx4j's `OnOffAdapter` leaves strict:
 `w:writingStyle/@w:checkStyle` and `w:readModeInkLockDown/@w:actualPg`, both in the settings part. docx4j leaves
@@ -140,68 +148,99 @@ Scoping by the class's mapping, not by the part, needs no per-part choice. A `do
 its WordprocessingML and today's strictness for the DrawingML it holds. CR-009's `org_docx4j_wml_globals`
 declares elements of `org_docx4j_wml`'s types, so their class infos answer `org_docx4j_wml` too.
 
-A caller's own `onInvalidValue` or `onUnprintableValue`, passed through CR-007's per-call options, takes precedence.
-The facade's are exported (`wordInvalidValue`, `wordUnprintableValue`) for a caller that wants to compose them.
+A caller's own `onInvalidValue`, passed through CR-007's per-call options, takes precedence. The facade's is
+exported (`wordInvalidValue`) for a caller that wants to compose it.
+
+**The record** (core-ts CR-015's D8). Each value read by Word's rule is reported to a facade option,
+`onWordReading(record)`. The record holds:
+- the source element and the attribute's name;
+- the text as read, and the value the model holds instead (`true`, `'none'`, or none if dropped);
+- its kind: `'value.kept.exact'` if the text would be a lexical form once trimmed (`" false"`, `" yellow"`), else
+  `'value.kept.invalid'` (`"yes"`, `"Yellow"`, `"bogus"`). jsonix doesn't collapse whitespace, so both kinds reach
+  the callback, and the facade tells them apart by trimming.
+
+core-ts turns each record into a `PartWarning` on the part, since the part is core-ts's to know. Whether the facade
+raises warnings itself or hands over the data is O6.
 
 Word's enumeration rule is measured for `w:u`, `w:vertAlign` and `w:em` only, and `w:highlight` is a string here.
-Whether every wml enumeration is lenient, or only those three, is O4. Whether Word's own extension mappings join
-`org_docx4j_wml` in the lenient set is O5.
+Whether every enumeration in the scope is lenient, or only those three, is O4.
 
-### 3.6 What a save writes (core-ts CR-015's D2, Jason's)
+### 3.6 What a save writes: the normaliser (core-ts CR-015's D2, decided)
 
-The rule is that a save never changes meaning:
-- `applyRunOptions` already writes only valid forms.
-- An on/off value read leniently is written `"true"`.
-- An invalid enumeration value is not written (dropped, section 3.2). `w:u`'s on/off words are written `none`, as
-  Word saves them.
-- **If D2 (a):** Word repairs a file with a `w:vertAlign` or `w:em` whose value is missing or invalid, or a
-  `w:highlight` whose value is missing or outside its list, by dropping the element. The facade's marshal can drop
-  them first. That is a tree rule, so it would live here, and every consumer gets it. Office never writes such an
-  element, so the fidelity corpus can't move.
+Jason's principle: "they are entitled to assume we don't write dodgy content". A save never changes Word's
+reading, and never writes content the schema rejects. Two parts are already settled by the parse:
+- **On/off** is written `true`/`false`, as jsonix writes a boolean, and a bare value stays bare. That holds with
+  the normaliser on or off (D11: the ports agree on readings, not on spelling).
+- **An invalid enumeration value** is already absent from the model, so it isn't written. `w:u`'s on/off words
+  are written `none`, as Word saves them, and any other invalid `w:u` is written bare.
+
+The rest is the normaliser: a pass over the marshalled DOM, in `marshalToDocument` beside
+`fixRootNamespaceDeclarations`. It works on WordprocessingML elements wherever they sit, including a revision's
+former properties (`w:rPrChange/w:rPr`, a paragraph mark's), which Reject All restores (D9). It writes docx4j
+CR-060 with CR-061's normal form, value for value:
+
+| Where | Accepted | `auto` | Rejected, or missing |
+|---|---|---|---|
+| `w:color/@w:val` | upper-case `RRGGBB` | `auto` | the `w:color` dropped; beside a `w:themeColor`, `w:val="auto"`, since `w:val` is required and the theme wins |
+| `w:u/@w:color` | upper-case `RRGGBB` | `auto` | the attribute dropped; the `w:u` keeps its `w:val` |
+| `w:shd/@w:fill`, `w:shd/@w:color`, `w:background/@w:color`, a border's `w:color` | upper-case `RRGGBB` | `auto` | `auto` |
+| `w:highlight`, `w:vertAlign`, `w:em` | kept | | the element dropped, as Word's repair does |
+
+"Accepted" is `wordColor`'s: a name, hex in any case, with an optional `#` and padding. A value already in the
+normal form is written as it is. The theme attributes are untouched. `w:shd/@w:color` and `w:background/@w:color`
+follow the fill's rule, pending docx4j CR-061 phase 3's Word check.
+
+**Marshal-only** (docx4j's D6): the tree in memory keeps the source's value, and only the output is normalised.
+So a caller's reading of the tree is the same before and after a save.
+
+**The opt-out** (docx4j's D1 and D2):
+- A process-wide default, `setNormaliseOnSave(false)`, and a per-call marshal option, `normaliseOnSave`. core-ts's
+  per-package setting (`pkg.normaliseOnSave`) passes the per-call option.
+- Off means colours are written as read, and the `w:highlight`/`w:vertAlign`/`w:em` drop is off.
+- On/off and `w:u`, being settled at the parse, are written the same either way.
+
+**The report** (D8): each rewrite is passed to a marshal option, `onNormalised(record)`. The record holds the
+written element's path, the attribute (or the element, if dropped), the value before and the value after (none if
+dropped). core-ts adds the part and gathers the records into its save report (`value.normalised`).
+
+**A part never unmarshalled** is copied byte for byte by core-ts, as now.
+
+**The fidelity corpus can't move.** A scan of all 341 parts (2026-10-24) found no colour outside the normal form
+(Office writes upper-case hex), and Office never writes a valueless or invalid `w:highlight`, `w:vertAlign` or
+`w:em`. The test holds the hashes to that.
 
 ## 4. Not proposed
 
-- **Word's own save form:** on bare, off dropped or `0`, names and lower-case hex as upper-case hex. That is
-  core-ts's D2 (c), possible later; neither changes meaning.
+- **Word's spelling of on/off** (bare, and off as `0` or dropped). Word reads `true`/`false` exactly, and the
+  ports agree on readings, not on bytes (core-ts CR-015's D11).
 - **Office JS's own answers** for these values (core-ts's D4, its check 60), and rendering.
 - **The callback mechanism itself:** that's jsonix-CR-010's.
 - **Widening the generated enumeration declarations** to admit a kept string. Dropping makes it unnecessary.
-- **A save normaliser** for colours. If one is added later: an unusable `w:color/@w:val` beside a `w:themeColor`
-  must be written `auto`, not dropped, since `val` is required in `CT_Color`. Without a theme it is dropped
-  (docx4j-python's review, through core-ts).
 - **A character style's highlight,** which Word doesn't draw (round 6). That is style resolution, which belongs
   to core-ts and docx4j; `readRunOptions` reads direct formatting only.
 
-## 5. Decisions (for Jason)
+## 5. Decisions
 
-- **O1. An unusable `w:color` in `readRunOptions`:** `''`, as if not set, or `'auto'`. Rounds 5 and 6 answered it:
-  over a style's colour, an unusable value is as if absent and the style's colour shows. Only exactly `auto`
-  overrides. **Recommendation:** `''`.
-- **O2. The colour table's home:** `helpers/wml`, exported, with core-ts calling `wordColor` rather than keeping its
-  own table. **Recommendation:** yes.
-- **O3. Dropping valueless `w:highlight`, `w:vertAlign` and `w:em` on marshal**, if D2 (a): in the facade, or in
-  core-ts. **Recommendation:** the facade.
+**Settled by core-ts CR-015's D1 to D11** (Jason, 2026-10-24), where they overlap:
+- **O1, an unusable `w:color` in `readRunOptions`:** `''`, as if absent (D5, D7: an unusable run colour is absent
+  over a style).
+- **O2, the colour table:** `helpers/wml`'s `WORD_COLOR_NAMES`, held to docx4j's `ColorTables.HTML`, with core-ts
+  calling `wordColor` (D3).
+- **O3, the drop on marshal:** in the facade, as the normaliser (D2: "objects CR-013.C grown into the normaliser").
+- **O5, Word's extension mappings in the lenient set:** yes, with w14's on/off enumerations read by the `Boolean`
+  rule (D10).
+- **Keep or drop:** drop (D1, D2), with `w:u`'s on/off words read as `none` (D6).
+
+**Open, for Jason:**
 - **O4. Which wml enumerations are lenient:** every one (a refused value anywhere in `org_docx4j_wml` loads), or
   only `w:u`, `w:vertAlign` and `w:em`, the ones Word was measured for. Refusing the part is the worse half
   (core-ts CR-015 section 1). But every reader of another enumeration (`w:fldChar/@w:fldCharType`, say) must then
   treat a non-member as unset. With dropping, no reader meets one: the attribute is absent. **Recommendation:**
   every one, since Word opened every measured case and a part that fails can't be read at all.
-- **O5. Word's own extension mappings in the lenient set** (core-ts CR-015's D10, proposed 2026-10-24): `org_docx4j_w14`,
-  `w15`, `w15symex`, `w16`, `w16cex` and `w16cid` alongside `org_docx4j_wml`. Scoped to `org_docx4j_wml` alone, a
-  `w14:checked w:val="TRUE"` still fails its part, where docx4j-python reads it by Word's rule. Neither round measured
-  w14. In this package, only w14 has on/off attributes:
-  - `CT_OnOff.val`, a `Boolean` (`w14:checkbox/w14:checked`, `w14:conflictMode`, `w14:discardImageEditingData`).
-    It takes the `Boolean` rule.
-  - Two on/off values typed as an anonymous enumeration of `true`, `false`, `0` and `1`:
-    `CT_LinearShadeProperties/@scaled`, and `CT_StyleSet/@val` (`w14:stylisticSets`). Under the enumeration rule
-    they would be dropped. The `Boolean` rule mapped onto the members would read them as Word reads on/off: `'false'`
-    for exactly `false`, `off` or `0`, else `'true'`.
-  - w14's 13 other enumerations (ligatures, number forms, text effects) would become lenient too.
-  The other five mappings have no booleans and one enumeration between them. DrawingML, VML, SpreadsheetML and
-  PresentationML stay strict. **Recommendation:** with D10, if Jason agrees, and with the on/off enumerations read by
-  the `Boolean` rule.
-- **Keep or drop** an invalid enumeration value is core-ts CR-015's D2, Jason's. This CR assumes D2 (a), drop,
-  which core-ts recommends and round 5 confirmed keeps meaning (section 3.2).
+- **O6. The record and the report** (D8): the facade hands the data to callbacks (`onWordReading`, `onNormalised`),
+  and core-ts makes the `PartWarning`s and its save report; or the facade raises warnings itself. This package has
+  no warnings model, so raising means `console.warn` per value, which is noise to an Office JS add-in. docx4j
+  only logs at DEBUG. **Recommendation:** callbacks, with nothing written to the console.
 
 ## 6. Tests
 
@@ -234,20 +273,41 @@ Smoke, a block of its own:
     The test states those three from the PDF, as docx4j's does.
   - After a save and reload, all 323 read the same. The 341 corpus hashes don't move, and no corpus part reaches
     either callback.
-- **If O3:** a marshalled valueless `w:vertAlign` is dropped, and the fidelity corpus's 341 hashes don't move.
+- **The normaliser (phase C):**
+  - Each row of section 3.6's table, in a run's `w:rPr`, a paragraph mark's, a style's and a `w:rPrChange`'s former
+    properties. That covers a name, lower-case hex, `#` and padding written upper-case; `auto` kept; `Auto` and
+    `F00` dropped from `w:color`, and written `auto` beside a `w:themeColor`; a rejected underline colour dropped;
+    a rejected fill or border colour written `auto`; a valueless or invalid `w:highlight`, `w:vertAlign` and `w:em`
+    dropped.
+  - The tree is unchanged after the marshal.
+  - The opt-out, both process-wide and per call, writes colours as read and keeps the three elements.
+  - `onNormalised` receives one record per rewrite.
+  - Every probe saved and reread reads as the probe did, as Word's PDFs show for U4 and H7, the two saves in which
+    Word changed meaning.
+  - The fidelity corpus's 341 hashes don't move.
+- **The record (phase B):** `onWordReading` receives `value.kept.exact` for `" false"` and `value.kept.invalid` for
+  `"yes"`.
+- **The scope (phase B):** `w14:checked w:val="TRUE"` reads true; w14's `scaled="on"` reads `'true'`; a DrawingML
+  boolean in the same part still fails.
 
 ## 7. Consumers
 
 - **core-ts:** its `Font`, `toApiScript` and `spanEdits` read through `readRunOptions`, and its CR-015 depends on this.
-  With O2 it drops its own colour table in favour of `wordColor`.
+  It drops its own colour table in favour of `wordColor` (O2). It passes `pkg.normaliseOnSave` as the marshal option,
+  and turns `onWordReading` and `onNormalised` records into its `PartWarning`s and save report (O6).
+- **Every consumer that marshals through the facade:** colours outside the normal form are written in it, on by
+  default. The meaning to Word is unchanged, and Office-written parts are untouched.
 - **Office JS add-ins using this package alone:** the same readings, through `readRunOptions`.
 
 ## 8. Phases and release
 
-- **Phase A**, with no dependency: sections 3.3 and 3.4, with O1 and O2. Half a day.
-- **Phase B**, once jsonix-CR-010 is released: sections 3.1, 3.2 and 3.5, with O4 and the keep-or-drop decision,
-  and the probe fixtures, with the runtime floor raised to that release. Half a day.
-- **Phase C**, if D2 (a) and O3: section 3.6's drop on marshal. Two hours.
+- **Phase A**, with no dependency: sections 3.3 and 3.4. Half a day.
+- **Phase B**, on jsonix 3.7.0: sections 3.1, 3.2 and 3.5, the scope of D10, the record, and the probe fixtures,
+  with the runtime floor raised to ^3.7.0. With O4 and O6. Half a day.
+- **Phase C**, after A (`wordColor`) and B (the invalid values load): section 3.6's normaliser, its opt-out and its
+  report. One day.
 
-Each phase is a patch, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, possibly a raised runtime
-floor. No API is removed.
+Phases A and B are patches, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, a raised runtime
+floor. Phase C changes marshal output by default for parts with colours outside the normal form. That may make it a
+minor, as CR-009's behaviour and output change made 0.4.0; or a patch, as CR-008's added `mc:Ignorable` was in
+0.3.1. Jason's call. No API is removed.
