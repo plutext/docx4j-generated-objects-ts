@@ -1,6 +1,6 @@
 # CR-012: Declare a source-only Requires prefix on its mc:Choice, as Word does
 
-**Status:** Implemented 2026-10-20, not yet released; the placement decided 2026-10-20 (Jason: "(c) placement", for both ports); a Choice's own `mc:Ignorable` and `mc:MustUnderstand` added 2026-10-24 (Jason: "D1 (b): yes")
+**Status:** Implemented 2026-10-20, released in 0.5.0 (2026-10-24); the placement decided 2026-10-20 (Jason: "(c) placement", for both ports); a Choice's own `mc:Ignorable` and `mc:MustUnderstand` added 2026-10-24 (Jason: "D1 (b): yes")
 **Requested by:** Jason, through core-ts, which relayed the decision and measured Word's placement
 (its CR-010 section 14.9, core-ts 2621f89).
 **Depends on:** CR-011 (released in 0.4.3), whose records this places. Nothing new in the runtime.
@@ -169,7 +169,8 @@ on the root; in the charts, `c14` and `cx1` are on the root. Nothing is undeclar
 
 ## 8. Release
 
-A patch, 0.4.4, as 0.4.3 was: the output changes only for parts with a source-only prefix that a
-Choice names, or with a Choice's own `mc:Ignorable` or `mc:MustUnderstand`.
-There is no API change, and the runtime floor is unchanged. It needs core-ts's go on the pushed
-`main` commit.
+Released in 0.5.0 (2026-10-24, tag 0.5.0 = 2c18fbb). On its own this would have been a patch, as 0.4.3 was: the
+output changes only for parts with a source-only prefix that a Choice names, or with a Choice's own `mc:Ignorable`
+or `mc:MustUnderstand`, and there is no API change. 0.5.0 is a minor because CR-013's phase C, released with it,
+changes save output by default. core-ts confirmed it on b2c9163, where its one failing test asserted the old
+placement (`mce.test.mjs`).

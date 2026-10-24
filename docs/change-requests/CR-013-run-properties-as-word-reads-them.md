@@ -1,6 +1,6 @@
 # CR-013: Run properties read as Word reads them (`readRunOptions`, a colour table, the facade's part of the parse)
 
-**Status:** Implemented 2026-10-24, all three phases on `main` for the next release (Jason, 2026-10-24), not yet released (with `@docx4j/jsonix` ^3.8.0)
+**Status:** Implemented 2026-10-24, released in 0.5.0 (2026-10-24, with `@docx4j/jsonix` ^3.8.0)
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
@@ -399,14 +399,17 @@ tarball, both on jsonix 3.7.0), and `test/fidelity.mjs` fails a part that reache
 
 - **Phase A**, with no dependency: sections 3.3 and 3.4. Implemented 2026-10-24.
 - **Phase B**, on jsonix 3.7.0: sections 3.1, 3.2 and 3.5, the scope of D10, the record, and the probe fixtures,
-  with the runtime floor raised to ^3.7.0. With O4 and O6. Implemented 2026-10-24, with phase A, on `main` for
-  0.4.4 (Jason, 2026-10-24).
+  with the runtime floor raised to ^3.7.0. With O4 and O6. Implemented 2026-10-24, with phase A, on `main`
+  (Jason, 2026-10-24).
 - **Phase C**, after A (`wordColor`), B (the invalid values load) and jsonix-CR-011's release (3.8.0): section 3.6's
   normaliser, its opt-out and its report, with the runtime floor raised to ^3.8.0. Implemented 2026-10-24 on the
   branch `cr-013-phase-c` (9bd7289), and taken into the next release by Jason the same day: `main` was pushed at
   phases A and B (7feac7f), then fast-forwarded to it.
 
-Phases A and B are patches, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, a raised runtime
-floor. Phase C changes marshal output by default for parts with colours outside the normal form. That may make it a
-minor, as CR-009's behaviour and output change made 0.4.0; or a patch, as CR-008's added `mc:Ignorable` was in
-0.3.1. Jason's call. No API is removed.
+All three phases were released together in 0.5.0 (2026-10-24, tag 0.5.0 = 2c18fbb), with CR-012 and the CR-051
+and CR-059 regenerations. It is a minor, Jason's choice: phase C changes marshal output by default for parts with
+colours outside the normal form, as CR-009's change of behaviour and output made 0.4.0 a minor. Phases A and B
+alone would have been patches, as 0.3.1 and 0.4.1 were. No API is removed. core-ts confirmed the candidate,
+b2c9163, with its CR-015 code: 1,541 of 1,541 tests passed. Over 8,896 parts, 2 differed from 0.4.3, both as
+intended. After the publish, the npm tarball marshals the 341 corpus parts as the tree does, and passes the smoke
+and `test/word365.mjs`.
