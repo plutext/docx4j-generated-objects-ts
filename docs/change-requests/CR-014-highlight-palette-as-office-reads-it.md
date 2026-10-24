@@ -52,7 +52,9 @@ usually given for `WdColorIndex`.
   - Any other value snaps to a palette entry. CSS's values of the seven dark and grey names (`#00008B` and so on) snap
     to the same names, `#FFD700` and `#FF8000` to `yellow`, and `#123456` to `darkCyan`.
   - The snap is not the nearest in RGB: `#A9A9A9` goes to `darkGray` though `lightGray` is nearer, and `#123456` to
-    `darkCyan` though `darkBlue` is nearer. Ten points don't give the rule.
+    `darkCyan` though `darkBlue` is nearer. No simple rule fits all ten: nearest RGB (euclidean, Manhattan,
+    max-channel), luma-weighted RGB, HLS distance and per-channel thresholds to `00`, `80` and `FF` each get 8 at best,
+    always missing those two (tried 2026-10-24).
 - **`null`** removes the highlight.
 
 Over the 63 cases, today's `readRunOptions`/`applyRunOptions` differ from Word in 39; core-ts pins those 39.
@@ -90,8 +92,8 @@ Over check 61's 63 cases, the shim would then agree with Word in all 63.
 
 ## 4. Not proposed
 
-- **Word's snapping rule** for an arbitrary hex. It needs a grid check (H4 (b)). Until then such a value is refused,
-  as today.
+- **Word's snapping rule** for an arbitrary hex, until core-ts's check 62 measures it (H4). Until then such a value
+  is refused, as today.
 - **Office JS's other colour forms** (`rgb()`, a hex without `#`). They are unmeasured, so they stay refused.
 - **docx4j's table:** its `getHexVal()`/`setVal()` are docx4j's to change. Its HTML and PDF draw the nine highlights in
   CSS's colours today, `darkYellow` gold where Word draws `#808000`.
@@ -108,10 +110,17 @@ Over check 61's 63 cases, the shim would then agree with Word in all 63.
   green, as in Office JS) and `'darkYellow'` (refused, as in Office JS; `'#808000'` sets it).
 - **H3. The name list:** CSS's 147, measured only as far as `lightgray`; or `WORD_COLOR_NAMES` plus `lightgray` alone.
   **Recommendation:** CSS's 147. Office JS is a web API, and the one extra spelling measured is CSS's.
-- **H4. A hex outside the palette:** (a) the ten measured snaps as data, everything else refused; or (b) first a grid
-  check (core-ts check 62) to learn Word's rule, then the rule. **Recommendation:** (a) now. It gives Word's answer for
-  every measured input, including the CSS names `darkBlue` to `lightGray`, which today's callers use. (b) only if a
-  consumer needs arbitrary colours.
+- **H4. A hex outside the palette,** which Office JS accepts and Word snaps to one of the sixteen:
+  - (a) the ten measured snaps as data, and every other value refused;
+  - (b) every hex accepted, by Word's rule, once a grid check has measured it;
+  - (c) every hex accepted now, by nearest RGB, an approximation that differs from Word for some greys and
+    in-between colours.
+
+  Refusing (a) is loud where a guess (c) would silently store another highlight than Office JS. Jason asked
+  (2026-10-24) why the full hex range shouldn't be allowed, and asked core-ts to write **check 62**, a grid of Word's
+  snaps, "so we can see whether there is a simple rule". **Recommendation:** (b). Use the rule if one fits every point
+  of check 62. If none does, use the grid as a lookup table: exact on the grid, nearest grid point between. Until
+  then, (a).
 
 ## 6. Tests
 
