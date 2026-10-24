@@ -2,8 +2,8 @@
 // through the package's own name and exports map. The repository's tsconfigs use moduleResolution bundler,
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
-import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals, wordInvalidValue } from '@docx4j/generated-objects-ts';
-import type { WordReading } from '@docx4j/generated-objects-ts';
+import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals, wordInvalidValue, setNormaliseOnSave } from '@docx4j/generated-objects-ts';
+import type { WordReading, Normalisation } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
@@ -23,9 +23,13 @@ export async function consume(xml: string): Promise<string> {
   void unmarshalString('<w:p/>', { onWordReading: (reading) => readings.push(reading), onInvalidValue: wordInvalidValue });
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
+  // CR-013 phase C: the normaliser's options beside the runtime's, and its process-wide switch.
+  const normalised: Normalisation[] = [];
+  void marshalString(createPElement(createP()), { normaliseOnSave: true, onNormalised: (n) => normalised.push(n), omitElement: () => undefined });
+  setNormaliseOnSave(true);
   // CR-008: the extension namespaces, a readonly list of URIs.
   const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
@@ -37,3 +41,5 @@ export const notANumber: number = p('x').value;
 highlightHexValue({ val: 1 });
 // @ts-expect-error a reading's kind is one of two (with WordReading as any, anything would do)
 export const notAKind: WordReading['kind'] = 'value.dropped';
+// @ts-expect-error a normalisation's after is a string or null (with Normalisation as any, a number would do)
+export const notAfter: Normalisation['after'] = 1;

@@ -1,6 +1,6 @@
 # CR-013: Run properties read as Word reads them (`readRunOptions`, a colour table, the facade's part of the parse)
 
-**Status:** Phases A and B implemented 2026-10-24, not yet released (with `@docx4j/jsonix` ^3.7.0); phase C waits for jsonix-CR-011's release
+**Status:** Implemented 2026-10-24, not yet released: phases A and B on `main` (7feac7f), phase C on the branch `cr-013-phase-c` (with `@docx4j/jsonix` ^3.8.0), for Jason to merge into 0.4.4 or release later
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
@@ -9,8 +9,8 @@ a per-call `onInvalidValue` instead of failing the part, and a value its type ca
 the facade sets them with Word's rules. Jason decided its J1 to J3 as recommended, and it was released in
 `@docx4j/jsonix` 3.7.0 (tag d4e8af8, 2026-10-24), so phase B raised the floor to ^3.7.0. Section 3.6, phase C,
 depends on jsonix-CR-011: marshal-side adapters, requested for it at Jason's word. Jason decided its K1 to K3 as
-recommended, and it was implemented on jsonix master (6c24d4c, 2026-10-24), not yet released. Sections 3.3 and 3.4
-depend on nothing.
+recommended; it was verified here against the jsonix checkout (6c24d4c) and released in `@docx4j/jsonix` 3.8.0 (tag
+206b6dc, 2026-10-24), so phase C raises the floor to ^3.8.0. Sections 3.3 and 3.4 depend on nothing.
 **Counterpart:** docx4j CR-060, the same rules in Java, implemented through phase 3 on `VERSION_17_3_5`
 (868a1797b, unpushed, 2026-10-24):
 - an `OnOffAdapter` on 46 of `wml.xsd`'s 48 boolean attributes, as annox annotations. A regeneration from that xsd
@@ -46,8 +46,8 @@ This package's part:
 - **Phase B** (implemented): jsonix-CR-010's `onInvalidValue`, set by the facade with Word's rules for Word's own
   WordprocessingML mappings, so the on/off and enumeration values load and read as Word reads them. It also records
   what was read so.
-- **Phase C:** a save normaliser in the facade's marshal, as docx4j's CR-060 and CR-061 write, value for value:
-  marshal-only, on by default, with an opt-out (core-ts CR-015's D2).
+- **Phase C** (implemented, on a branch): a save normaliser in the facade's marshal, as docx4j's CR-060 and CR-061
+  write, value for value: marshal-only, on by default, with an opt-out (core-ts CR-015's D2).
 
 ## 2. What this package did before (measured 2026-10-24, at 1e4e895)
 
@@ -196,11 +196,20 @@ reading, and never writes content the schema rejects. Two parts are already sett
   are written `none`, as Word saves them, and any other invalid `w:u` is written bare.
 
 The rest is the normaliser, on jsonix-CR-011's marshal-side adapters, as docx4j's is on JAXB's `XmlAdapter`s:
-- **`onAttributeValue`**, called after a value prints, rewrites the colour attributes by their class and property
-  (`CT_Color.val`, `CT_Underline`'s colour, `CT_Shd`'s fill and colour, `CT_Background`'s colour, `CT_Border`'s
-  colour). It is given the owning object, so `CT_Color.val` can see a theme attribute beside it.
-- **`omitElement`**, called before an element is written, leaves out a `w:highlight`, `w:vertAlign` or `w:em` with
-  a missing or invalid value, and a `w:color` whose value is rejected and that has no theme attribute.
+- **`onAttributeValue`**, called after a value prints, rewrites the colour attributes by the class declaring them
+  and the property: the run colour's `val` (the class `Color`, `w:color` in run properties), `U`'s `color`,
+  `CTShd`'s `fill` and `color`, `CTBorder`'s `color` and `CTBackground`'s `color`. A rejected run colour reaches it
+  only beside a theme attribute, since `omitElement` leaves it out elsewhere, so it is written `auto` there. `CT_Color`'s
+  other class, `CTColor` (`w15:color` on a content control), is written as read, as docx4j's adapter is on the run
+  colour only.
+- **`omitElement`**, called before an element is written, leaves out a `w:highlight` outside `ST_HighlightColor`
+  or with no value, a `w:vertAlign` or `w:em` with no value (the parse dropped an invalid one), and a `w:color` whose
+  value is rejected or missing and that has no theme attribute (`w:themeColor`, `w:themeTint` or `w:themeShade`).
+
+A caller's own `onAttributeValue` and `omitElement` are asked first, and the normaliser applies where they return
+undefined. That differs from `onInvalidValue`, which a caller's replaces, because jsonix-CR-011's adapters fall
+through by design: a caller can add a rule and keep the normaliser, or pass `normaliseOnSave: false` to turn it
+off.
 
 Both are keyed by type, not by element name, so a `CT_Border` is caught under any of its dozen element names, and
 both are scoped by `classInfo.module.name` as `onInvalidValue` is. `omitElement` covers every typed element path,
@@ -240,9 +249,17 @@ element map.
 - Off means colours are written as read, and the `w:highlight`/`w:vertAlign`/`w:em` drop is off.
 - On/off and `w:u`, being settled at the parse, are written the same either way.
 
-**The report** (D8): each rewrite is passed to a marshal option, `onNormalised(record)`. The record holds the
-written element's path, the attribute (or the element, if dropped), the value before and the value after (none if
-dropped). core-ts adds the part and gathers the records into its save report (`value.normalised`).
+**The report** (D8): each value rewritten or left out is passed to a marshal option,
+`onNormalised(normalisation)`. A `Normalisation` holds:
+- `element`: the written element carrying the attribute, or the element a left-out one was left out of;
+- `path`: from the part root, each step after the root with its position, ending in the attribute
+  (`/w:document/w:body[1]/w:p[3]/w:r[1]/w:rPr[1]/w:color[1]/@w:val`) or the left-out element
+  (`.../w:rPr[1]/w:highlight`);
+- `before`: the attribute's text, or the left-out element's `w:val` (undefined where it had none);
+- `after`: the text written, or null where the attribute or element was left out.
+
+The element written is found through the marshaller's `onElement`, and only where `onNormalised` is passed. core-ts
+adds the part, and gathers the records into its save report (`value.normalised`).
 
 **A part never unmarshalled** is copied byte for byte by core-ts, as now.
 
@@ -336,20 +353,38 @@ and its saved run the last run of the same paragraph in the save holding its tex
 **The corpus:** the 341 marshal hashes are identical to 0.4.3's (`test/lib/marshal-hashes.mjs` against the npm
 tarball, both on jsonix 3.7.0), and `test/fidelity.mjs` fails a part that reaches `onWordReading`. None does.
 
-**The normaliser (phase C)**, proposed:
-- Each row of section 3.6's table, in a run's `w:rPr`, a paragraph mark's, a style's and a `w:rPrChange`'s former
-  properties. That covers a name, lower-case hex, `#` and padding written upper-case; `auto` kept; `Auto` and
-  `F00` dropped from `w:color`, and written `auto` beside a `w:themeColor`, and beside a `w:themeTint` or
-  `w:themeShade` alone; a rejected underline colour dropped;
-  a rejected fill or border colour written `auto`; a valueless or invalid `w:highlight`, `w:vertAlign` and `w:em`
-  dropped.
-- The tree is unchanged after the marshal.
-- The opt-out, both process-wide and per call, writes colours as read and keeps the three elements.
-- `onNormalised` receives one record per rewrite.
-- Every probe saved and reread reads as the probe did, as Word's PDFs show for U4 and H7, the two saves in which
-  Word changed meaning.
-- The fidelity corpus's 341 hashes don't move.
-- The cases of docx4j's `ColourNormalFormTest` and `ColourNormalFormOptOutTest`, written the same.
+**The normaliser (phase C)**, tested on the branch (2026-10-24):
+- The smoke, a block of its own, writes docx4j's `ColourNormalFormTest` synthetic cases the same:
+  - a rejected value beside a theme colour, written `auto`;
+  - a revision's former properties, with the run colour, highlight, `vertAlign` and `em` left out, the underline
+    colour written `FF0000` and the fill `auto`;
+  - a former colour named, written `FF0000`;
+  - a paragraph mark's former properties.
+- It adds:
+  - a theme tint alone and a theme shade alone;
+  - a paragraph border under `w:top` and `w:bottom`;
+  - a pattern colour, the page colour, and `w15:color` written as read;
+  - a valueless highlight left out, and `none` kept;
+  - a style's and the document defaults' run properties.
+- The tree is unchanged after the marshal, and keeps the former `red` and the six left-out elements, as docx4j's
+  test has it.
+- The opt-out, per call and process-wide, with a call's setting winning, writes as read with no records.
+- `onNormalised` receives one record per value, 19 for the synthetic document, with their paths. A caller's adapters
+  are asked first, and `marshalNode` and `marshalPackage` normalise too.
+- `test/word365.mjs`, over all 33 probes (round 7 added as fixtures, with docx4j's saves of fifteen):
+  - each probe saved under phase C, 149 values normalised, every colour in the schema's form, docx4j's `outOfForm`;
+  - all 388 markers read again as the probe did, and the page colour as Word read it;
+  - the 251 markers docx4j saved are written as docx4j's saves write them: colour, underline colour, shading,
+    border, highlight, `vertAlign` and `em`, value for value, 0 differ;
+  - Word's saves and docx4j's need no normalising;
+  - docx4j's `eachRuleAsWordSavesIt` and `ColourNormalFormOptOutTest` cases, written the same.
+- The 341 corpus hashes don't move (identical to 0.4.3's with phase C on), and `test/fidelity.mjs` fails a part
+  reaching `onNormalised`. None does.
+- Against Word's own saves, phase C's output differs only in what Word's save does beyond the normal form:
+  - Word drops a bare or redundant `w:u`, an `auto` colour or an automatic shading with nothing beneath;
+  - Word adds `w:highlight w:val="none"` under a character style's highlight;
+  - Word drops the page colour it rejects;
+  - M6, H7 and U4 are Word's own meaning changes.
 
 ## 7. Consumers
 
@@ -366,8 +401,9 @@ tarball, both on jsonix 3.7.0), and `test/fidelity.mjs` fails a part that reache
 - **Phase B**, on jsonix 3.7.0: sections 3.1, 3.2 and 3.5, the scope of D10, the record, and the probe fixtures,
   with the runtime floor raised to ^3.7.0. With O4 and O6. Implemented 2026-10-24, with phase A, on `main` for
   0.4.4 (Jason, 2026-10-24).
-- **Phase C**, after A (`wordColor`), B (the invalid values load) and jsonix-CR-011's release: section 3.6's
-  normaliser, its opt-out and its report, with the runtime floor raised to that release. One day.
+- **Phase C**, after A (`wordColor`), B (the invalid values load) and jsonix-CR-011's release (3.8.0): section 3.6's
+  normaliser, its opt-out and its report, with the runtime floor raised to ^3.8.0. Implemented 2026-10-24 on the
+  branch `cr-013-phase-c`, so that `main` stays the 0.4.4 candidate until Jason chooses.
 
 Phases A and B are patches, as 0.3.1 and 0.4.1 were: a fix to readings, an additive export, a raised runtime
 floor. Phase C changes marshal output by default for parts with colours outside the normal form. That may make it a

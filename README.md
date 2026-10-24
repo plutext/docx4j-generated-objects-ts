@@ -229,7 +229,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   here touches the shared context, and `resetContext()` is not involved. **No reporting callback is
   set by default and none should be**: for some callers a drop is the mechanism rather than a fault,
   so reporting belongs to whoever asked for it. (The facade does set `onInvalidValue`, which reads a
-  value rather than reports it: see the next item.) A caller's `namespacePrefixes` replaces the context's
+  value rather than reports it, and the marshal adapters `onAttributeValue` and `omitElement`, which
+  write run properties in their normal form: see the next two items.) A caller's `namespacePrefixes` replaces the context's
   table for that call, with the per-root rule applied over it; note that a root unmarshalled from
   input keeps the prefix its input used, so a table governs names that carry none.
 - **Run properties as Word 365 reads them** (CR-013): Word is lenient where the schema is strict,
@@ -248,6 +249,17 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   one of the 140 classic HTML names Word reads (`WORD_COLOR_NAMES`); anything else as unset. Each
   rule was measured in Word 365, on probe documents that `test/word365.mjs` reads against Word's own
   saves of them.
+- **What a save writes** (CR-013): the facade's marshal functions write run properties in their
+  normal form, as docx4j does, so a save never writes what the schema rejects and never changes
+  Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
+  upper-case `RRGGBB`, and exactly `auto` is kept. A rejected `w:color` is left out, or written
+  `auto` beside a theme colour; a rejected underline colour is left out; and a rejected fill,
+  pattern, border or page colour is written `auto`. A `w:highlight`, `w:vertAlign` or `w:em` that
+  Word's repair would drop is left out, in revisions' former properties too. Only the output changes:
+  the tree keeps what it read. `normaliseOnSave: false` (a marshal option) or
+  `setNormaliseOnSave(false)` (process-wide) writes as read. `onNormalised` receives each value
+  rewritten or left out, with its path. A caller's own `onAttributeValue` and `omitElement` are asked
+  first. Parts Office wrote are already in this form, so they are written unchanged.
 - **A smaller context**: `getContext({ modules: modulesFor('org_docx4j_wml') })` builds a context
   over one root's modules and their closure - twelve modules for WordprocessingML, which reads a
   Word 365 `document.xml` - instead of all 103. `modulesFor` follows the type references in the

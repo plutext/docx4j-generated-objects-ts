@@ -789,10 +789,11 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     assert.match(await marshalString({ name: { namespaceURI: W_, localPart: 'rPr' }, value: rPr }), /<w:u w:val="none"\/>/, `and saves as none`);
   }
   for (const val of ['True', 'TRUE', 'yes', 'no']) assert.equal((await rPrOf(`<w:u w:val="${val}"/>`)).u.val, undefined, `w:u ${val} is absent`);
-  // A dropped value isn't written; a refused boolean is written true, which Word reads the same. (The valueless
-  // w:vertAlign and w:em are what phase C's normaliser will leave out, as Word's repair does.)
-  const written = await marshalString(await unmarshalString(`<w:rPr xmlns:w="${W_}"><w:b w:val="yes"/><w:u w:val="Single"/><w:vertAlign w:val="Superscript"/><w:em w:val="DOT"/></w:rPr>`));
-  assert.match(written, /><w:b w:val="true"\/><w:u\/><w:vertAlign\/><w:em\/><\/w:rPr>$/, 'no refused value is written back');
+  // A dropped value isn't written; a refused boolean is written true, which Word reads the same. The valueless
+  // w:vertAlign and w:em are left out by phase C's normaliser, as Word's repair does, and kept with it off.
+  const refused = await unmarshalString(`<w:rPr xmlns:w="${W_}"><w:b w:val="yes"/><w:u w:val="Single"/><w:vertAlign w:val="Superscript"/><w:em w:val="DOT"/></w:rPr>`);
+  assert.match(await marshalString(refused, { normaliseOnSave: false }), /><w:b w:val="true"\/><w:u\/><w:vertAlign\/><w:em\/><\/w:rPr>$/, 'no refused value is written back');
+  assert.match(await marshalString(refused), /><w:b w:val="true"\/><w:u\/><\/w:rPr>$/, 'and phase C leaves out the valueless ones');
   // Scope (core-ts CR-015's D10): Word's own WordprocessingML mappings. w14's CT_OnOff is a boolean, so TRUE is on.
   const checkbox = unwrap(await unmarshalString(`<w:sdtPr xmlns:w="${W_}" xmlns:w14="${W14_}"><w14:checkbox><w14:checked w14:val="TRUE"/></w14:checkbox></w:sdtPr>`));
   assert.equal(checkbox.rPrOrAliasOrLock[0].value.checked.val, true, 'w14:checked TRUE is on');
@@ -829,4 +830,83 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.deepEqual([composed.b.val, mine.at(-1)], [true, 'composed']);
   await assert.rejects(rPrOf('<w:b w:val="yes"/>', { onInvalidValue: (text, p, c, n, error) => { throw error; } }), /w:b\/@w:val/, "a caller can restore the runtime's strictness");
   console.log(`CR-013: colours (${docx4jTable}), highlight, on/off, enumerations and w:u's on/off words read as Word 365 reads them; the scope, the record and the caller's precedence OK`);
+}
+
+// CR-013 phase C: what a save writes, run properties in their normal form (docx4j CR-060 with CR-061, value for value;
+// test/word365.mjs holds every probe to docx4j's own saves). On jsonix-CR-011's marshal-side adapters, @docx4j/jsonix 3.8.0.
+{
+  const { setNormaliseOnSave, marshalNode } = await import('../dist/index.mjs');
+  const W_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const W15_ = 'http://schemas.microsoft.com/office/word/2012/wordml';
+  const snapshot = (v) => JSON.stringify(v, (k, x) => (k === 'PARENT' ? undefined : x));
+  const runOf = (xml, marker) => { const i = xml.indexOf(`>${marker}<`); return xml.substring(Math.max(xml.lastIndexOf('<w:r>', i), xml.lastIndexOf('<w:r ', i)), xml.indexOf('</w:r>', i)); };
+  // docx4j's ColourNormalFormTest.synthetic(): a theme colour, a revision's former properties, a paragraph mark's.
+  const rev = ' w:author="A" w:date="2026-10-24T00:00:00Z"';
+  const document = `<w:document xmlns:w="${W_}" xmlns:w15="${W15_}"><w:background w:color="navy"/><w:body>`
+    + '<w:p><w:r><w:rPr><w:color w:val="bogus" w:themeColor="accent1"/></w:rPr><w:t>T1_THEME</w:t></w:r></w:p>'
+    + `<w:p><w:r><w:rPr><w:b/><w:rPrChange w:id="1"${rev}><w:rPr><w:color w:val="F00"/><w:highlight w:val="YELLOW"/><w:vertAlign/><w:em w:val="DOT"/>`
+    + '<w:u w:val="single" w:color="red"/><w:shd w:val="clear" w:color="auto" w:fill="bogus"/></w:rPr></w:rPrChange></w:rPr><w:t>T2_REVISION</w:t></w:r></w:p>'
+    + `<w:p><w:r><w:rPr><w:i/><w:rPrChange w:id="2"${rev}><w:rPr><w:color w:val="red"/><w:highlight w:val="green"/></w:rPr></w:rPrChange></w:rPr><w:t>T3_REVISION_NAME</w:t></w:r></w:p>`
+    + `<w:p><w:pPr><w:rPr><w:b/><w:rPrChange w:id="3"${rev}><w:rPr><w:color w:val="F00"/><w:highlight w:val="bogus"/><w:color w:val="navy"/></w:rPr></w:rPrChange></w:rPr></w:pPr><w:r><w:t>T4_MARK_REVISION</w:t></w:r></w:p>`
+    // and beyond docx4j's: a theme tint or shade alone, a paragraph border, a pattern colour, w15's colour (not normalised, as docx4j).
+    + '<w:p><w:pPr><w:pBdr><w:top w:val="single" w:color="F00"/><w:bottom w:val="single" w:color="lime"/></w:pBdr></w:pPr><w:r><w:rPr><w:color w:val="" w:themeTint="99"/><w:shd w:val="pct50" w:color="Navy" w:fill="ffffff"/><w:highlight w:val="none"/></w:rPr><w:t>T5_TINT</w:t></w:r></w:p>'
+    + '<w:p><w:r><w:rPr><w:color w:val="Auto" w:themeShade="BF"/><w:highlight/></w:rPr><w:t>T6_SHADE</w:t></w:r></w:p>'
+    + '<w:sdt><w:sdtPr><w15:color w:val="red"/></w:sdtPr><w:sdtContent><w:p/></w:sdtContent></w:sdt>'
+    + '</w:body></w:document>';
+  const element = await unmarshalString(document);
+  const before = snapshot(element);
+  const records = [];
+  const xml = await marshalString(element, { onNormalised: (n) => records.push(n) });
+  assert.equal(snapshot(element), before, 'marshal-only: the tree keeps what it read (docx4j D6)');
+  assert.match(runOf(xml, 'T1_THEME'), /<w:color w:themeColor="accent1" w:val="auto"\/>/, 'a rejected value beside a theme colour is auto');
+  const t2 = runOf(xml, 'T2_REVISION');
+  for (const left of ['<w:color', '<w:highlight', '<w:vertAlign', '<w:em']) assert.ok(!t2.includes(left), `a revision's former ${left} is left out`);
+  assert.ok(t2.includes('<w:u w:color="FF0000" w:val="single"/>') && t2.includes('w:fill="auto"'), "a revision's former properties are written as live ones");
+  assert.ok(runOf(xml, 'T3_REVISION_NAME').includes('<w:color w:val="FF0000"/><w:highlight w:val="green"/>'));
+  const mark = xml.substring(xml.lastIndexOf('<w:p>', xml.indexOf('T4_MARK_REVISION')), xml.indexOf('T4_MARK_REVISION'));
+  assert.ok(!mark.includes('F00"') && !mark.includes('<w:highlight') && mark.includes('<w:color w:val="000080"/>'), "a paragraph mark's former properties");
+  assert.ok(xml.includes('<w:pBdr><w:top w:color="auto" w:val="single"/><w:bottom w:color="00FF00" w:val="single"/></w:pBdr>'), 'a CT_Border under any of its names');
+  assert.ok(runOf(xml, 'T5_TINT').includes('<w:color w:themeTint="99" w:val="auto"/><w:highlight w:val="none"/><w:shd w:color="000080" w:fill="FFFFFF" w:val="pct50"/>'), 'beside a theme tint alone; none kept; a pattern colour');
+  assert.ok(runOf(xml, 'T6_SHADE').includes('<w:rPr><w:color w:themeShade="BF" w:val="auto"/></w:rPr>'), 'beside a theme shade alone; a valueless highlight left out');
+  assert.ok(xml.includes('<w:background w:color="000080"/>') && xml.includes('<w15:color w:val="red"/>'), "the page colour; w15's colour as read, as docx4j");
+  const former = (i) => unwrap(element).body.content[i].value.content[0].value.rPr.rPrChange.rPr.egrPrBase;
+  assert.equal(former(2)[0].value.val, 'red', 'the former w:color still reads red in memory');
+  assert.equal(former(1).length, 6, 'and the elements left out are still there');
+  // The report: one record per value rewritten or left out, with where it is and what it was.
+  assert.equal(records.length, 19);
+  const at = (path) => records.find((n) => n.path === path);
+  assert.deepEqual({ ...at('/w:document/w:body[1]/w:p[1]/w:r[1]/w:rPr[1]/w:color[1]/@w:val'), element: undefined }, { element: undefined, path: '/w:document/w:body[1]/w:p[1]/w:r[1]/w:rPr[1]/w:color[1]/@w:val', before: 'bogus', after: 'auto' });
+  const highlight = at('/w:document/w:body[1]/w:p[2]/w:r[1]/w:rPr[1]/w:rPrChange[1]/w:rPr[1]/w:highlight');
+  assert.deepEqual([highlight.before, highlight.after, highlight.element.localName], ['YELLOW', null, 'rPr'], 'an element left out: its parent, its w:val');
+  assert.equal(at('/w:document/w:body[1]/w:p[2]/w:r[1]/w:rPr[1]/w:rPrChange[1]/w:rPr[1]/w:vertAlign').before, undefined);
+  assert.equal(at('/w:document/w:background/@w:color')?.after, undefined, 'positions after the root only');
+  assert.equal(at('/w:document/w:background[1]/@w:color').after, '000080');
+  // A style's run properties and the document defaults.
+  const styles = await unmarshalString(`<w:styles xmlns:w="${W_}"><w:docDefaults><w:rPrDefault><w:rPr><w:color w:val="maroon"/></w:rPr></w:rPrDefault></w:docDefaults>`
+    + '<w:style w:type="character" w:styleId="S"><w:rPr><w:color w:val="F00"/><w:highlight w:val="Yellow"/><w:u w:val="double" w:color="bogus"/></w:rPr></w:style></w:styles>');
+  const stylesXml = await marshalString(styles);
+  assert.ok(stylesXml.includes('<w:rPrDefault><w:rPr><w:color w:val="800000"/></w:rPr></w:rPrDefault>') && stylesXml.includes('<w:rPr><w:u w:val="double"/></w:rPr></w:style>'), 'styles');
+  // The opt-out: per call, and process-wide with a call's setting winning; off writes as read, with no records.
+  const quiet = [];
+  const asRead = await marshalString(element, { normaliseOnSave: false, onNormalised: (n) => quiet.push(n) });
+  assert.ok(asRead.includes('<w:color w:themeColor="accent1" w:val="bogus"/>') && asRead.includes('<w:vertAlign/>') && asRead.includes('<w:background w:color="navy"/>'));
+  setNormaliseOnSave(false);
+  try {
+    assert.equal(await marshalString(element, { onNormalised: (n) => quiet.push(n) }), asRead);
+    assert.equal(await marshalString(element, { normaliseOnSave: true }), xml);
+  } finally {
+    setNormaliseOnSave(true);
+  }
+  assert.equal(quiet.length, 0);
+  // A caller's own adapters are asked first: an answer wins, undefined falls through to the normaliser.
+  const own = await marshalString(element, {
+    onAttributeValue: (value, text, owner, propertyInfo, classInfo) => (classInfo.name === 'org_docx4j_wml.CTBackground' ? 'ABCDEF' : undefined),
+    omitElement: (value, name) => (name.localPart === 'highlight' ? false : undefined),
+  });
+  assert.ok(own.includes('<w:background w:color="ABCDEF"/>') && own.includes('<w:highlight w:val="YELLOW"/>') && own.includes('<w:color w:themeColor="accent1" w:val="auto"/>'));
+  // Every facade marshal: marshalNode, and marshalPackage's typed parts.
+  assert.ok((await marshalNode(element)).getElementsByTagNameNS(W_, 'background')[0].getAttributeNS(W_, 'color') === '000080', 'marshalNode');
+  const flatColour = `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData><w:document xmlns:w="${W_}"><w:body><w:p><w:r><w:rPr><w:color w:val="red"/></w:rPr></w:r></w:p></w:body></w:document></pkg:xmlData></pkg:part></pkg:package>`;
+  assert.match(await marshalPackage(await unmarshalPackage(flatColour)), /<w:color w:val="FF0000"\/>/, 'marshalPackage');
+  console.log('CR-013 phase C: colours in their normal form, the repaired elements left out, in run, paragraph mark, revision and style properties; the tree unchanged; the report, the opt-out and a caller\'s adapters OK');
 }

@@ -14,7 +14,7 @@ mapping declaring globally the 61 WordprocessingML elements docx4j declares as r
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.7.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.8.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -78,7 +78,11 @@ There are six tests and no test framework:
   names (held to docx4j's `WordColorValues` when `../docx4j` is checked out), and the facade's
   `onInvalidValue`: refused booleans on, refused enumeration values dropped, `w:u`'s on/off words
   `none`, the scope (w14's `CT_OnOff`; DrawingML and other simple types still fail), every facade
-  unmarshal, the `onWordReading` record and a caller's own callback taking precedence.
+  unmarshal, the `onWordReading` record and a caller's own callback taking precedence. Its phase C
+  block writes docx4j's `ColourNormalFormTest` synthetic cases the same (a theme colour, revisions'
+  and a paragraph mark's former properties) and adds a style, the document defaults, a border, a
+  pattern and the page colour; the tree unchanged, the 19 records and their paths, the opt-out per
+  call and process-wide, a caller's adapters asked first, `marshalNode` and `marshalPackage`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -108,14 +112,18 @@ There are six tests and no test framework:
   `Requires` names in a marshalled part is also checked to resolve where it is written (CR-001
   section 3.2).
   Run against 0.1.5's `modules/` the test reports all five losses that release carried. A part that
-  reaches CR-013's `onWordReading` fails too: Office writes only values the runtime reads.
-- `test/word365.mjs` (runtime, CR-013) reads Word 365's run property probes (rounds 1 to 6 of
+  reaches CR-013's `onWordReading` or `onNormalised` fails too: Office writes only values the runtime
+  reads, and colours in their normal form.
+- `test/word365.mjs` (runtime, CR-013) reads Word 365's run property probes (rounds 1 to 7 of
   2026-10-24, `test/fixtures/word365-probes/`, each probe's `word/document.xml` beside Word's save
-  of it): each marker run's direct toggles, underline and its colour, `vertAlign`, `em`, colour and
-  highlight must read as in Word's save, the oracle, as docx4j's `RunPropertiesWord365Test` has it.
-  376 markers, 373 equal; the three differences (Word's save drops a direct `w:u` repeating a
-  style's) and the three readings Word's PDFs give where its save changed what it drew are stated,
-  strict both ways. A save and reload must keep every reading.
+  of it and, for fifteen, docx4j's): each marker run's direct toggles, underline and its colour,
+  `vertAlign`, `em`, colour, highlight, shading and border, and the page colour, must read as in
+  Word's save, the oracle, as docx4j's `RunPropertiesWord365Test` has it. 388 markers, 385 equal;
+  the three differences (Word's save drops a direct `w:u` repeating a style's) and the three
+  readings Word's PDFs give where its save changed what it drew are stated, strict both ways. Each
+  probe saved under phase C must read the same again, have every colour in the schema's form, and
+  write the 251 markers docx4j saved as docx4j does, value for value; docx4j's rule and opt-out
+  cases are written the same.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -190,12 +198,14 @@ give, stay on the root. CR-008 (implemented 2026-10-04) has them first append to
 part root's `mc:Ignorable` the Office extension namespaces its tree uses
 (`IGNORABLE_EXTENSION_NAMESPACES`, the twenty Office lists, measured on the fidelity corpus, which
 must not move). Marshal through the facade, not `createMarshaller()` directly, to get that output.
-CR-013 (phases A and B implemented 2026-10-24; phase C, a save normaliser, waits for jsonix-CR-011's
-marshal-side adapters) reads run properties as Word 365 reads them: every facade unmarshal passes
-`wordInvalidValue` as the runtime's `onInvalidValue` unless the caller passes one, scoped by
-`classInfo.module.name` to Word's own WordprocessingML mappings, and `readRunOptions` reads
-highlight and colour through `helpers/wml`'s `wordColor`. The rules are Jason's probes'; docx4j
-CR-060 and CR-061 are the Java port, core-ts CR-015 the consumer.
+CR-013 (implemented 2026-10-24) reads run properties as Word 365 reads them: every facade
+unmarshal passes `wordInvalidValue` as the runtime's `onInvalidValue` unless the caller passes one,
+scoped by `classInfo.module.name` to Word's own WordprocessingML mappings, and `readRunOptions`
+reads highlight and colour through `helpers/wml`'s `wordColor`. Its phase C has every facade
+marshal write run properties in their normal form through jsonix-CR-011's `onAttributeValue` and
+`omitElement`, keyed by type (`normalising` in `src/index.mts`; `normaliseOnSave`,
+`setNormaliseOnSave`, `onNormalised`). The rules are Jason's probes'; docx4j CR-060 and CR-061 are
+the Java port, value for value, core-ts CR-015 the consumer.
 
 ## What the declarations promise
 

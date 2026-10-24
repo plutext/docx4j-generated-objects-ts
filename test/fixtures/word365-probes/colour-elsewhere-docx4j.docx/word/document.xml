@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:cdr="http://schemas.openxmlformats.org/drawingml/2006/chartDrawing" xmlns:c14="http://schemas.microsoft.com/office/drawing/2007/8/2/chart" xmlns:dgm="http://schemas.openxmlformats.org/drawingml/2006/diagram" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:dsp="http://schemas.microsoft.com/office/drawing/2008/diagram" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:xvml="urn:schemas-microsoft-com:office:excel" xmlns:pvml="urn:schemas-microsoft-com:office:powerpoint" xmlns:cppr="http://schemas.microsoft.com/office/2006/coverPageProps" xmlns:odx="http://opendope.org/xpaths" xmlns:odc="http://opendope.org/conditions" xmlns:odq="http://opendope.org/questions" xmlns:oda="http://opendope.org/answers" xmlns:odi="http://opendope.org/components" xmlns:odgm="http://opendope.org/SmartArt/DataHierarchy" xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns:msink="http://schemas.microsoft.com/ink/2010/main" xmlns:cdr14="http://schemas.microsoft.com/office/drawing/2010/chartDrawing" xmlns:c15="http://schemas.microsoft.com/office/drawing/2012/chart" xmlns:cs="http://schemas.microsoft.com/office/drawing/2012/chartStyle" xmlns:ns43="http://www.w3.org/1998/Math/MathML" xmlns:ns44="http://www.w3.org/2003/InkML" xmlns:a13cmd="http://schemas.microsoft.com/office/drawing/2013/main/command" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:c16="http://schemas.microsoft.com/office/drawing/2014/chart" xmlns:dgm1611="http://schemas.microsoft.com/office/drawing/2016/11/diagram" xmlns:c16r3="http://schemas.microsoft.com/office/drawing/2017/03/chart" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:an18="http://schemas.microsoft.com/office/drawing/2018/animation" xmlns:anam3d="http://schemas.microsoft.com/office/drawing/2018/animation/model3d" xmlns:iact="http://schemas.microsoft.com/office/powerpoint/2014/inkAction" xmlns:thm15="http://schemas.microsoft.com/office/thememl/2012/main" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:cei="http://schemas.microsoft.com/office/word/2026/wordml/cei" xmlns:wetp="http://schemas.microsoft.com/office/webextensions/taskpanes/2010/11" xmlns:we="http://schemas.microsoft.com/office/webextensions/webextension/2010/11" xmlns:comp="http://schemas.openxmlformats.org/drawingml/2006/compatibility" xmlns:lc="http://schemas.openxmlformats.org/drawingml/2006/lockedCanvas" xmlns:dgm14="http://schemas.microsoft.com/office/drawing/2010/diagram" xmlns:a15="http://schemas.microsoft.com/office/drawing/2012/main" xmlns:pic14="http://schemas.microsoft.com/office/drawing/2010/picture" xmlns:c16ac="http://schemas.microsoft.com/office/drawing/2014/chart/ac" xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" xmlns:a1611="http://schemas.microsoft.com/office/drawing/2016/11/main" xmlns:dgm1612="http://schemas.microsoft.com/office/drawing/2016/12/diagram" xmlns:a16svg="http://schemas.microsoft.com/office/drawing/2016/SVG/main" xmlns:adec="http://schemas.microsoft.com/office/drawing/2017/decorative" xmlns:a18hc="http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor" xmlns:wp15="http://schemas.microsoft.com/office/word/2012/wordprocessingDrawing">
+    <w:body><!-- Modified by docx4j 17.3.5-SNAPSHOT (Apache licensed) using REFERENCE JAXB in Arch Linux Java 21.0.12 on Linux -->
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">colour names in w:u/@w:color, w:shd/@w:fill and a run border (w:bdr/@w:color); no styles</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">U1 w:u w:val="single" w:color="red": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:u w:val="single" w:color="FF0000"/>
+                </w:rPr>
+                <w:t xml:space="preserve">U1_UNDERLINE_RED</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">U2 w:u w:val="single" w:color="Navy": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:u w:val="single" w:color="000080"/>
+                </w:rPr>
+                <w:t xml:space="preserve">U2_UNDERLINE_NAVY</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">U3 w:u w:val="single" w:color="F00": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:u w:val="single"/>
+                </w:rPr>
+                <w:t xml:space="preserve">U3_UNDERLINE_F00</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">U4 w:u w:val="single" w:color="FF0000" (the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:u w:val="single" w:color="FF0000"/>
+                </w:rPr>
+                <w:t xml:space="preserve">U4_UNDERLINE_HEX</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">S1 w:shd w:val="clear" w:fill="red": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:shd w:val="clear" w:color="auto" w:fill="FF0000"/>
+                </w:rPr>
+                <w:t xml:space="preserve">S1_SHADING_RED</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">S2 w:shd w:val="clear" w:fill="Aqua": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:shd w:val="clear" w:color="auto" w:fill="00FFFF"/>
+                </w:rPr>
+                <w:t xml:space="preserve">S2_SHADING_AQUA</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">S3 w:shd w:val="clear" w:fill="F00": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
+                </w:rPr>
+                <w:t xml:space="preserve">S3_SHADING_F00</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">S4 w:shd w:val="clear" w:fill="FF0000" (the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:shd w:val="clear" w:color="auto" w:fill="FF0000"/>
+                </w:rPr>
+                <w:t xml:space="preserve">S4_SHADING_HEX</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">B1 w:bdr w:val="single" w:color="red": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:bdr w:val="single" w:color="FF0000" w:sz="12" w:space="0"/>
+                </w:rPr>
+                <w:t xml:space="preserve">B1_BORDER_RED</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">B2 w:bdr w:val="single" w:color="F00": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:bdr w:val="single" w:color="auto" w:sz="12" w:space="0"/>
+                </w:rPr>
+                <w:t xml:space="preserve">B2_BORDER_F00</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">B3 w:bdr w:val="single" w:color="FF0000" (the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:bdr w:val="single" w:color="FF0000" w:sz="12" w:space="0"/>
+                </w:rPr>
+                <w:t xml:space="preserve">B3_BORDER_HEX</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+    </w:body>
+</w:document>

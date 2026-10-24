@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:cdr="http://schemas.openxmlformats.org/drawingml/2006/chartDrawing" xmlns:c14="http://schemas.microsoft.com/office/drawing/2007/8/2/chart" xmlns:dgm="http://schemas.openxmlformats.org/drawingml/2006/diagram" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:dsp="http://schemas.microsoft.com/office/drawing/2008/diagram" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:xvml="urn:schemas-microsoft-com:office:excel" xmlns:pvml="urn:schemas-microsoft-com:office:powerpoint" xmlns:cppr="http://schemas.microsoft.com/office/2006/coverPageProps" xmlns:odx="http://opendope.org/xpaths" xmlns:odc="http://opendope.org/conditions" xmlns:odq="http://opendope.org/questions" xmlns:oda="http://opendope.org/answers" xmlns:odi="http://opendope.org/components" xmlns:odgm="http://opendope.org/SmartArt/DataHierarchy" xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns:msink="http://schemas.microsoft.com/ink/2010/main" xmlns:cdr14="http://schemas.microsoft.com/office/drawing/2010/chartDrawing" xmlns:c15="http://schemas.microsoft.com/office/drawing/2012/chart" xmlns:cs="http://schemas.microsoft.com/office/drawing/2012/chartStyle" xmlns:ns43="http://www.w3.org/1998/Math/MathML" xmlns:ns44="http://www.w3.org/2003/InkML" xmlns:a13cmd="http://schemas.microsoft.com/office/drawing/2013/main/command" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:c16="http://schemas.microsoft.com/office/drawing/2014/chart" xmlns:dgm1611="http://schemas.microsoft.com/office/drawing/2016/11/diagram" xmlns:c16r3="http://schemas.microsoft.com/office/drawing/2017/03/chart" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:an18="http://schemas.microsoft.com/office/drawing/2018/animation" xmlns:anam3d="http://schemas.microsoft.com/office/drawing/2018/animation/model3d" xmlns:iact="http://schemas.microsoft.com/office/powerpoint/2014/inkAction" xmlns:thm15="http://schemas.microsoft.com/office/thememl/2012/main" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:cei="http://schemas.microsoft.com/office/word/2026/wordml/cei" xmlns:wetp="http://schemas.microsoft.com/office/webextensions/taskpanes/2010/11" xmlns:we="http://schemas.microsoft.com/office/webextensions/webextension/2010/11" xmlns:comp="http://schemas.openxmlformats.org/drawingml/2006/compatibility" xmlns:lc="http://schemas.openxmlformats.org/drawingml/2006/lockedCanvas" xmlns:dgm14="http://schemas.microsoft.com/office/drawing/2010/diagram" xmlns:a15="http://schemas.microsoft.com/office/drawing/2012/main" xmlns:pic14="http://schemas.microsoft.com/office/drawing/2010/picture" xmlns:c16ac="http://schemas.microsoft.com/office/drawing/2014/chart/ac" xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" xmlns:a1611="http://schemas.microsoft.com/office/drawing/2016/11/main" xmlns:dgm1612="http://schemas.microsoft.com/office/drawing/2016/12/diagram" xmlns:a16svg="http://schemas.microsoft.com/office/drawing/2016/SVG/main" xmlns:adec="http://schemas.microsoft.com/office/drawing/2017/decorative" xmlns:a18hc="http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor" xmlns:wp15="http://schemas.microsoft.com/office/word/2012/wordprocessingDrawing">
+    <w:body><!-- Modified by docx4j 17.3.5-SNAPSHOT (Apache licensed) using REFERENCE JAXB in Arch Linux Java 21.0.12 on Linux -->
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">highlight, vertAlign and em over styles that state them: CharMarked (M) and ParaMarked (P)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M1 the style alone (yellow highlight, superscript, dot emphasis: the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M1_STYLE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M2 direct w:highlight w:val="YELLOW": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M2_HIGHLIGHT_UPPER</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M3 direct w:highlight w:val="bogus": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M3_HIGHLIGHT_BOGUS</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M4 direct &lt;w:highlight/&gt;: </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M4_HIGHLIGHT_BARE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M5 direct w:highlight w:val="none" (removes, the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                    <w:highlight w:val="none"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M5_HIGHLIGHT_NONE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M6 direct w:highlight w:val="green" (green, the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                    <w:highlight w:val="green"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M6_HIGHLIGHT_GREEN</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M7 direct w:vertAlign w:val="Superscript": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M7_VERTALIGN_TITLE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M8 direct &lt;w:vertAlign/&gt;: </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M8_VERTALIGN_BARE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M9 direct w:vertAlign w:val="baseline" (removes, the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                    <w:vertAlign w:val="baseline"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M9_VERTALIGN_BASELINE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M10 direct w:em w:val="DOT": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M10_EM_UPPER</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M11 direct &lt;w:em/&gt;: </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M11_EM_BARE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t xml:space="preserve">M12 direct w:em w:val="none" (removes, the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="CharMarked"/>
+                    <w:em w:val="none"/>
+                </w:rPr>
+                <w:t xml:space="preserve">M12_EM_NONE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="ParaMarked"/>
+            </w:pPr>
+            <w:r>
+                <w:t xml:space="preserve">P1 the style alone (yellow highlight, superscript, dot emphasis: the control): </w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve">P1_STYLE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="ParaMarked"/>
+            </w:pPr>
+            <w:r>
+                <w:t xml:space="preserve">P2 direct w:highlight w:val="YELLOW": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr/>
+                <w:t xml:space="preserve">P2_HIGHLIGHT_UPPER</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="ParaMarked"/>
+            </w:pPr>
+            <w:r>
+                <w:t xml:space="preserve">P4 direct &lt;w:highlight/&gt;: </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr/>
+                <w:t xml:space="preserve">P4_HIGHLIGHT_BARE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="ParaMarked"/>
+            </w:pPr>
+            <w:r>
+                <w:t xml:space="preserve">P7 direct w:vertAlign w:val="Superscript": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr/>
+                <w:t xml:space="preserve">P7_VERTALIGN_TITLE</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="ParaMarked"/>
+            </w:pPr>
+            <w:r>
+                <w:t xml:space="preserve">P10 direct w:em w:val="DOT": </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr/>
+                <w:t xml:space="preserve">P10_EM_UPPER</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> (end)</w:t>
+            </w:r>
+        </w:p>
+    </w:body>
+</w:document>

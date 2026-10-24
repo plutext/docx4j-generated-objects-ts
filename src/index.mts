@@ -5,6 +5,7 @@
 import { Jsonix } from '@docx4j/jsonix';
 import { MODULES } from './modules.mjs';
 import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
+import { wordColor, HIGHLIGHT_COLORS } from './helpers/wml.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -366,8 +367,11 @@ export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.
   return recordRootBindings(doc, context.createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(doc));
 }
 
-/** docx4j XmlUtils.marshaltoString: serialise an element to XML, with docx4j's prefixes and namespace declarations. */
-export async function marshalString(element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Promise<string> {
+/**
+ * docx4j XmlUtils.marshaltoString: serialise an element to XML, with docx4j's prefixes and namespace declarations.
+ * Run properties are written in their normal form (CR-013's normaliser), unless `normaliseOnSave` is false.
+ */
+export async function marshalString(element: Jsonix.TypedNamedValue, options?: MarshalOptions): Promise<string> {
   return serialize(marshalToDocument(await getContext(), element, options));
 }
 
@@ -454,7 +458,7 @@ export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.Ty
 }
 
 /** docx4j XmlUtils.marshaltoW3CDomDocument: the element as a DOM element, with docx4j's prefixes and namespace declarations. */
-export async function marshalNode(element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Promise<Element> {
+export async function marshalNode(element: Jsonix.TypedNamedValue, options?: MarshalOptions): Promise<Element> {
   return marshalToDocument(await getContext(), element, options).documentElement;
 }
 
@@ -662,10 +666,11 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * notes each written Choice that has a record. Wildcard DOM content is looked up through its
  * original node, which is still in its source document.
  */
-function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, options?: Jsonix.MarshallerOptions): Document {
-  const table = namespacePrefixesFor(context, element, options?.namespacePrefixes);
+function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, facadeOptions?: MarshalOptions): Document {
+  const { normaliseOnSave, onNormalised, ...options } = facadeOptions ?? {};
+  const table = namespacePrefixesFor(context, element, options.namespacePrefixes);
   const choices = new Map<Element, ReadonlyMap<string, string>>();
-  const callerOnElement = options?.onElement;
+  const callerOnElement = options.onElement;
   const onElement = !recorded ? callerOnElement : (written: Node, value: unknown): void => {
     if (isNode(value)) {
       // Wildcard DOM content: its original is still in its source document, which answers for its Choices.
@@ -681,11 +686,162 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
     }
     callerOnElement?.(written, value);
   };
-  const doc = context.createMarshaller({ ...options, namespacePrefixes: table, onElement }).marshalDocument(element);
+  const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement };
+  const doc = context.createMarshaller((normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions)
+    .marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
   const rootValue = rootValueOf(element);
   fixRootNamespaceDeclarations(doc.documentElement, table, typeof rootValue === 'object' && rootValue !== null ? sourceBindings.get(rootValue) : undefined, choices);
   return doc;
+}
+
+// ---------------------------------------------------------------------------------------------
+// CR-013 phase C: what a save writes, run properties in their normal form (docx4j CR-060 with CR-061)
+// ---------------------------------------------------------------------------------------------
+
+let normaliseOnSaveByDefault = true;
+
+/**
+ * Whether the facade's marshal functions write run properties in their normal form (CR-013 section
+ * 3.6), for every call that does not say: on unless set off, as docx4j's `docx4j.save.normalise`.
+ * A call's `normaliseOnSave` takes precedence.
+ */
+export function setNormaliseOnSave(on: boolean): void {
+  normaliseOnSaveByDefault = on;
+}
+
+/** A value the normaliser rewrote or left out, as `onNormalised` receives it (CR-013 section 3.6, core-ts CR-015's D8). */
+export interface Normalisation {
+  /** The element written with the rewritten attribute, or the one a left-out element was left out of. */
+  readonly element: Element;
+  /** From the part root: `/w:document/w:body[1]/w:p[3]/w:r[1]/w:rPr[1]/w:color[1]/@w:val`, or `.../w:rPr[1]/w:highlight` for an element left out. */
+  readonly path: string;
+  /** As read: the attribute's text, or the left-out element's `w:val` (undefined where it had none). */
+  readonly before: string | undefined;
+  /** As written: the attribute's new text; null where the attribute or the element was left out. */
+  readonly after: string | null;
+}
+
+/** The facade's marshal options: the runtime's, for this call only (CR-007), and the normaliser's (CR-013). */
+export interface MarshalOptions extends Jsonix.MarshallerOptions {
+  /** Whether this call writes run properties in their normal form; where unset, `setNormaliseOnSave`'s setting, on by default. */
+  normaliseOnSave?: boolean;
+  /** Called for each value the normaliser rewrote or left out. */
+  onNormalised?(normalisation: Normalisation): void;
+}
+
+/**
+ * The colour attributes written in their normal form, by the class declaring them and the property,
+ * with what a value Word rejects becomes: `'auto'`, which Word reads as automatic in a fill, a
+ * pattern, a border or a page colour; or null, leaving out an underline colour, which Word reads as
+ * absent. A run's `w:color` is the third case: left out whole (`leftOutOnSave`), and written `auto`
+ * only beside a theme attribute, since its `w:val` is required.
+ */
+const COLOUR_ATTRIBUTES: ReadonlyMap<string, 'auto' | null> = new Map<string, 'auto' | null>([
+  ['org_docx4j_wml.Color val', 'auto'],
+  ['org_docx4j_wml.U color', null],
+  ['org_docx4j_wml.CTShd fill', 'auto'],
+  ['org_docx4j_wml.CTShd color', 'auto'],
+  ['org_docx4j_wml.CTBorder color', 'auto'],
+  ['org_docx4j_wml.CTBackground color', 'auto'],
+]);
+
+/** ST_HighlightColor: the sixteen names and `none`. */
+const HIGHLIGHT_VALUES: ReadonlySet<string> = new Set([...HIGHLIGHT_COLORS.map(([name]) => name), 'none']);
+
+/** A colour's normal form (docx4j's NormaliseOnSave.plain): exactly `auto` as it is; a value Word accepts as upper-case RRGGBB; else `rejected`. */
+function normalColour(text: string, rejected: 'auto' | null): string | null {
+  if (text === 'auto') return text;
+  const hex = wordColor(text);
+  return hex === undefined ? rejected : hex.substring(1);
+}
+
+/**
+ * The elements a save leaves out, by type: a `w:color` Word reads as absent (its value rejected or
+ * missing, and no theme attribute beside it), and a `w:highlight`, `w:vertAlign` or `w:em` that
+ * Word's repair drops (a highlight outside ST_HighlightColor; a vertAlign or em with no value, the
+ * parse having dropped an invalid one).
+ */
+function leftOutOnSave(value: unknown, typeInfo: Jsonix.TypeInfo): boolean {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as { val?: string; themeColor?: string; themeTint?: string; themeShade?: string };
+  switch (typeInfo.name) {
+    case 'org_docx4j_wml.Color': return wordColor(v.val) === undefined && v.themeColor === undefined && v.themeTint === undefined && v.themeShade === undefined;
+    case 'org_docx4j_wml.Highlight': return v.val === undefined || !HIGHLIGHT_VALUES.has(v.val);
+    case 'org_docx4j_wml.CTVerticalAlignRun':
+    case 'org_docx4j_wml.CTEm': return v.val === undefined;
+    default: return false;
+  }
+}
+
+/** An element's path from the part root, each step after the root with its position among same-named siblings. */
+function pathOf(node: Node): string {
+  const steps: string[] = [];
+  for (let n: Node | null = node; n && n.nodeType === 1; n = n.parentNode) {
+    if (n.parentNode?.nodeType !== 1) { steps.unshift(n.nodeName); continue; }
+    let position = 1;
+    for (let sibling = n.previousSibling; sibling; sibling = sibling.previousSibling) if (sibling.nodeName === n.nodeName) position++;
+    steps.unshift(`${n.nodeName}[${position}]`);
+  }
+  return '/' + steps.join('/');
+}
+
+function qualifiedName(name: Jsonix.XML.QName, table: Readonly<Record<string, string>>): string {
+  const prefix = name.namespaceURI ? (table[name.namespaceURI] ?? name.prefix) : '';
+  return prefix ? `${prefix}:${name.localPart}` : name.localPart;
+}
+
+/** Whether `owner`'s property holds `value`, itself or in a `{ name, value }` pair, alone or in a list. */
+function holds(owner: unknown, property: string, value: unknown): boolean {
+  if (typeof owner !== 'object' || owner === null) return false;
+  const held = (owner as Record<string, unknown>)[property];
+  return [held].flat().some((item) => item === value || (typeof item === 'object' && item !== null && (item as { value?: unknown }).value === value));
+}
+
+/**
+ * The marshaller options with CR-013's normaliser (section 3.6), on jsonix-CR-011's marshal-side
+ * adapters, keyed by type rather than element name and scoped to `org_docx4j_wml`. The caller's own
+ * `onAttributeValue` and `omitElement` are asked first; where they fall through (undefined), the
+ * normaliser applies. Marshal-only: the tree keeps what it read. Where `onNormalised` is passed,
+ * `onElement` also tracks what has been written, so that each record can say where it is.
+ */
+function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onNormalised?: (normalisation: Normalisation) => void): Jsonix.MarshallerOptions {
+  const { onAttributeValue: callerOnAttributeValue, omitElement: callerOmitElement, onElement } = options;
+  const writtenFrom = new WeakMap<Node, unknown>();
+  let lastWritten: Node | undefined;
+  return {
+    ...options,
+    onElement: !onNormalised ? onElement : (element: Node, value: unknown): void => {
+      writtenFrom.set(element, value);
+      lastWritten = element;
+      onElement?.(element, value);
+    },
+    onAttributeValue(value, text, owner, propertyInfo, classInfo) {
+      const callers = callerOnAttributeValue?.(value, text, owner, propertyInfo, classInfo);
+      if (callers !== undefined || classInfo.module.name !== 'org_docx4j_wml') return callers;
+      const rejected = COLOUR_ATTRIBUTES.get(`${classInfo.name} ${propertyInfo.name}`);
+      if (rejected === undefined) return undefined;
+      const normal = normalColour(text, rejected);
+      if (normal === text) return undefined;
+      // The owner's element was the last one opened: its attributes are written before its content.
+      if (onNormalised && lastWritten) {
+        onNormalised({ element: lastWritten as Element, path: `${pathOf(lastWritten)}/@${qualifiedName(propertyInfo.attributeName, table)}`, before: text, after: normal });
+      }
+      return normal;
+    },
+    omitElement(value, name, typeInfo, propertyInfo, classInfo) {
+      const callers = callerOmitElement?.(value, name, typeInfo, propertyInfo, classInfo);
+      if (callers !== undefined || typeInfo.module?.name !== 'org_docx4j_wml' || !leftOutOnSave(value, typeInfo)) return callers;
+      if (onNormalised) {
+        // The owner's element is open, and every element written since is inside it.
+        let parent: Node | null | undefined = lastWritten;
+        while (parent && !holds(writtenFrom.get(parent), propertyInfo.name, value)) parent = parent.parentNode;
+        parent ??= lastWritten;
+        if (parent) onNormalised({ element: parent as Element, path: `${pathOf(parent)}/${qualifiedName(name, table)}`, before: (value as { val?: string }).val, after: null });
+      }
+      return true;
+    },
+  };
 }
 
 /**
