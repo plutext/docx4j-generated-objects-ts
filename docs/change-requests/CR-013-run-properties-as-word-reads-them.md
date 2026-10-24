@@ -1,6 +1,6 @@
 # CR-013: Run properties read as Word reads them (`readRunOptions`, a colour table, the facade's part of the parse)
 
-**Status:** Proposed 2026-10-24, at core-ts's request; its rules decided 2026-10-24 with core-ts CR-015's D1 to D11 (Jason: "CR-015 D1 to D11 decided as now recommended"), O4 and O6 open; implementation waits for Jason's go
+**Status:** Proposed 2026-10-24, at core-ts's request; its rules decided 2026-10-24 with core-ts CR-015's D1 to D11 (Jason: "CR-015 D1 to D11 decided as now recommended"), O4 and O6 decided as recommended (Jason, 2026-10-24); implementation waits for Jason's go
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24, for its CR-015 section 6, which the portfolio
 session asked it to raise here. core-ts's CR was drafted at Jason's word ("yes please", to one CR each in docx4j,
 core-ts and docx4j-python against the same rules and probes).
@@ -160,10 +160,10 @@ exported (`wordInvalidValue`) for a caller that wants to compose it.
   the callback, and the facade tells them apart by trimming.
 
 core-ts turns each record into a `PartWarning` on the part, since the part is core-ts's to know. Whether the facade
-raises warnings itself or hands over the data is O6.
+raises warnings itself or hands over the data was O6: the data, to callbacks (decided).
 
 Word's enumeration rule is measured for `w:u`, `w:vertAlign` and `w:em` only, and `w:highlight` is a string here.
-Whether every enumeration in the scope is lenient, or only those three, is O4.
+Every enumeration in the scope is lenient, not only those three (O4, decided).
 
 ### 3.6 What a save writes: the normaliser (core-ts CR-015's D2, decided)
 
@@ -233,7 +233,7 @@ dropped). core-ts adds the part and gathers the records into its save report (`v
   rule (D10).
 - **Keep or drop:** drop (D1, D2), with `w:u`'s on/off words read as `none` (D6).
 
-**Open, for Jason:**
+**Decided by Jason as recommended** (2026-10-24, "CR-013 O4 and O6 as recommended"):
 - **O4. Which wml enumerations are lenient:** every one (a refused value anywhere in `org_docx4j_wml` loads), or
   only `w:u`, `w:vertAlign` and `w:em`, the ones Word was measured for. Refusing the part is the worse half
   (core-ts CR-015 section 1). But every reader of another enumeration (`w:fldChar/@w:fldCharType`, say) must then
