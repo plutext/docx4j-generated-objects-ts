@@ -1,6 +1,6 @@
 # CR-014: The highlight palette as Word and Office JS read it (`HIGHLIGHT_COLORS`, `readRunOptions`, `applyRunOptions`)
 
-**Status:** Proposed 2026-10-24; H1 to H4 for Jason
+**Status:** Proposed 2026-10-24; H1 to H4 decided as recommended (Jason, 2026-10-24, relayed by core-ts); implementation waits for Jason's go
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24. Its check 60 found the one difference between its
 Word shim and Office JS in this package's highlight table (core-ts CR-015 section 11.6). Its check 61, written at
 Jason's word ("write check 61") and run by him the same day, measured the palette both ways (CR-015 section 12).
@@ -124,7 +124,12 @@ Over check 61's 63 cases, the shim would then agree with Word in all 63.
 - **docx4j's table:** its `getHexVal()`/`setVal()` are docx4j's to change. Its HTML and PDF draw the nine highlights in
   CSS's colours today, `darkYellow` gold where Word draws `#808000`.
 
-## 5. Decisions for Jason
+## 5. Decisions
+
+**Decided as recommended** (Jason, 2026-10-24, in the core-ts session: "accept recs for decisions H1 to H4", relayed by
+core-ts): H1 one table with Word's palette; H2 Office JS's input; H3 CSS's 147 names; H4 (c), section 2.1's rule with
+check 62's 149 grey-edge answers as data, and no check 63 unless a consumer needs it. The options and reasons stand
+below.
 
 - **H1. One table, Word's values.** `HIGHLIGHT_COLORS` (and so `highlightHexValue`) takes Word's palette, rather than
   keeping docx4j's beside a second, Office JS table. **Recommendation:** one table. Word is the authority on what a
