@@ -16,8 +16,10 @@ depend on nothing.
 - a value outside an enumeration read as absent;
 - marshal-only adapters that leave out a `w:highlight`, `w:vertAlign` or `w:em` whose value is missing or invalid.
 
-docx4j CR-061 (accepted 2026-10-24) writes colours in their normal form on save, which phase C follows value for
-value. core-ts CR-015 (D1 to D11 decided) and docx4j-python's CR-018 are the other ports.
+docx4j CR-061 writes colours in their normal form on save, which phase C follows value for value. It was
+completed on 2026-10-24 (5163c2986, unpushed). Word 365 opened docx4j's saves of fifteen probes with no repair
+prompt, and read them at all 251 markers as it read the sources. Its `wml.xsd` annotations
+(`NormaliseOnSave.*`, `UnderlineValueAdapter`) regenerate byte-identically here too. core-ts CR-015 (D1 to D11 decided) and docx4j-python's CR-018 are the other ports.
 
 ## 1. Summary
 
@@ -189,9 +191,14 @@ CR-060 with CR-061's normal form, value for value:
 | `w:highlight`, `w:vertAlign`, `w:em` | kept | | the element dropped, as Word's repair does |
 
 "Accepted" is `wordColor`'s: a name, hex in any case, with an optional `#` and padding. A value already in the
-normal form is written as it is. The theme attributes are untouched. `w:shd/@w:color` and `w:background/@w:color`
-follow the fill's rule, pending docx4j CR-061 phase 3: Jason's Word check of docx4j's saves, and a round 7 probe of
-those two attributes. docx4j's implementation (aaadd93f9, unpushed) and its tests, `ColourNormalFormTest` and
+normal form is written as it is. The theme attributes are untouched. Round 7 (CR-061 phase 3) measured the other
+two:
+- `w:shd/@w:color`, the pattern colour, follows the fill's rule: a rejected value is automatic and saved `auto`.
+- `w:background/@w:color`, the page colour, reads names. Word drops a `w:background` whose colour it rejects, where
+  docx4j writes `w:color="auto"`. Both are valid, and both mean no page colour. This package writes `auto`, value
+  for value with docx4j.
+
+docx4j's implementation (aaadd93f9 to 5163c2986, unpushed) and its tests, `ColourNormalFormTest` and
 `ColourNormalFormOptOutTest` in core-tests, are the reference for each case.
 
 **Marshal-only** (docx4j's D6): the tree in memory keeps the source's value, and only the output is normalised.
