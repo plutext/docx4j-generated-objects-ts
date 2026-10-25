@@ -1,14 +1,14 @@
 # CR-015: A decimal in an integer attribute, read as Word reads it rather than failing the part (`wordInvalidValue`)
 
-**Status:** Proposed 2026-10-26; Word's rule measured (docx4j CR-065's probe, rounds 2 and 3); A2's six forms singly
-wait for an optional round 4
+**Status:** Proposed 2026-10-26; Word's rule measured (docx4j CR-065's probe, phase 0 complete: rounds 2 to 4)
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
 fails here where docx4j repairs it.
 **Depends on:** docx4j CR-065 phase 0, the shared Word probe (registry `docx4j/CR-065.0`):
 - round 2 (Jason, Word 365, 2026-10-26) measured the rule: truncation;
-- round 3 (the same day) measured which text Word reads (N4);
-- an optional round 4 would test A2's six forms one at a time.
+- rounds 3 and 4 (the same day) measured which text Word reads (N4, N8).
+
+Phase 0 is complete.
 
 Nothing new is needed in the runtime: jsonix-CR-010's `onInvalidValue`, through which CR-013 reads Word's values, is in
 `@docx4j/jsonix` ^3.8.0 already.
@@ -45,12 +45,13 @@ Proposed: the facade's `wordInvalidValue`, which every facade unmarshal already 
 3.5), reads a decimal in an integer attribute of Word's own WordprocessingML mappings as its integer part, as Word does.
 - **The model:** it then holds an integer, so a save writes one.
 - **Reporting:** `onWordReading` reports each value read this way.
-- **Text Word refuses.** Word reads only `-?digits[.digits]` and `""`. Any other form (`240,5`, `0x10`, `1e3`, `abc`)
-  makes it refuse the whole document, with no repair offered (round 3). Such a value that reaches the facade is
+- **Text Word refuses.** Word reads a sign, digits and a fraction (`+240.5`, `240.`, `.5`), or `""` as `0`. Any other
+  form makes it refuse the whole document, with no repair offered (rounds 3 and 4). That includes whitespace around
+  the value (`" 240 "`), a comma, hex, an exponent and letters. Such a value that reaches the facade is
   dropped and reported, so the part loads and a save writes a document Word opens (N4). docx4j's CR-065 recommends the
   same.
-- **Forms the runtime reads first.** The runtime's `Number()` reads some forms Word refuses, `0x10` as `16`, before the
-  facade sees them. A strict parse, opt-in through a jsonix CR, would bring them to the same rule (N8, a second
+- **Forms the runtime reads first.** The runtime's `Number()` reads some forms Word refuses, before the facade sees
+  them: `" 240 "` as `240` and `0x10` as `16`. A strict parse, opt-in through a jsonix CR, would bring them to the same rule (N8, a second
   phase).
 
 ## 2. What happens today, and what Word does (measured 2026-10-26)
@@ -111,8 +112,15 @@ prompt, and Word's saves are `families/cr065-{B..I}-word365.docx`. Read here aga
   - **each of the others was refused outright, with no repair offered:** A2 (`240.`, `.5`, `+240`, `+240.5`,
     `" 240.5 "`, `" 240 "`, in one file), A3 (`240,5`), A4 (`0x10`), A5 (`1.5e2`, `2.5e0`, `1e3`) and A7 (`abc`).
 
-  So Word's form is an optional `-`, digits, and optionally `.` and digits; or empty. Which of A2's six Word refuses on
-  its own is an optional round 4, whose six files are on the share.
+  Round 4 (the same day) tried A2's six forms one at a time:
+  - `240.`, `+240` and `+240.5` opened clean and read as `240`;
+  - `.5` read as `0`, the default, so the save wrote nothing;
+  - `" 240.5 "` and `" 240 "` were each refused outright.
+
+  So **Word's form** is an optional `+` or `-`, then digits with an optional `.` and fraction, or a `.` and a fraction,
+  with no whitespace around it; or the empty string, read as `0`. The fraction is truncated toward zero. Anything else
+  refuses the whole document: whitespace around the value, a comma, hex, an exponent, letters. A lone `.` or sign is
+  unmeasured.
 
 So docx4j's repair differs from Word's reading in 7 of the probe's values on its own list: `141.5`, `241.5`,
 `141.99999999999994`, `1.8`, `9001.5`, `400.7` and `11907.5`, each one more than Word's.
@@ -162,12 +170,13 @@ defect, unreported and unmeasured.
 
 ### 3.3 Which text (N4, N8)
 
-**Read by this CR:** Word's form (round 3), with XML whitespace around it trimmed:
-- the pattern is `^[ \t\r\n]*-?\d+(\.\d+)?[ \t\r\n]*$`, then truncated (section 3.4);
-- trimming follows docx4j's CR-065 D3, unless round 4 finds that Word refuses `" 240.5 "` on its own.
+**Read by this CR:** Word's form, exactly (rounds 3 and 4):
+- the pattern is `^[+-]?(\d+(\.\d*)?|\.\d+)$`, then truncated (section 3.4);
+- nothing is trimmed, since Word refuses `" 240.5 "`. docx4j's CR-065 takes the same form, with no trimming (its D3
+  (a)), so the three ports read identically.
 
-**A form Word refuses that reaches the facade (N4).** Examples are `240,5`, `2.5e0`, `+240.5`, `.5` and `abc`. Word
-refuses the whole document for any of them. There are two choices:
+**A form Word refuses that reaches the facade (N4).** Examples are `" 240.5 "`, `240,5`, `2.5e0` and `abc`, and a lone
+`.` or sign, which are unmeasured and outside Word's form. Word refuses the whole document for any of them. There are two choices:
 - **(a) fail the part**, as 0.5.0 does;
 - **(b) drop the attribute, reported.** The kind is `'value.refused'` and the value undefined. The part loads, the
   attribute reads as absent, and a save writes a document Word opens. docx4j's CR-065 recommends the same (its D3).
@@ -177,15 +186,15 @@ that failing could match, since it refuses the document. The report says what wa
 
 **Forms the runtime reads first (N8).** `@docx4j/jsonix` parses an integer with `Number()`, so some forms Word refuses
 never reach `onInvalidValue`:
-- `0x10` reads as `16`, `1e3` as `1000` and `1.5e2` as `150`;
-- `+240`, `240.` and `" 240 "` read as `240`, though Word refused them in A2; round 4 would say which it refuses on its
-  own.
+- `" 240 "` reads as `240`, and `0x10` as `16`;
+- `1e3` reads as `1000`, and `1.5e2` as `150`.
 
-So this package reads documents Word won't open, with values Word never read. By contrast, `""` as `0` and `10206.0` as
-`10206` are Word's own readings. There are two choices:
+So this package reads documents Word won't open, with values Word never read. The runtime's other lenient reads are
+Word's own: `""` as `0`, `+240` and `240.` as `240`, and `10206.0` as `10206`. There are two choices:
 - **(a) leave the runtime as it is.**
-- **(b) a jsonix CR for an opt-in strict integer parse** (an unmarshaller option) that refuses anything outside
-  `xsd:integer`'s lexical form. The forms above would then reach the facade:
+- **(b) a jsonix CR for an opt-in strict integer parse** (an unmarshaller option) that accepts exactly `[+-]?\d+`. Note
+  that `xsd:integer` collapses whitespace, so XSD would read `" 240 "`, but Word refuses it; the option must therefore
+  not trim. The forms above would then reach the facade:
   - Word's own forms, including `""` as `0`, are read as Word reads them;
   - the rest are dropped as in N4 (b);
   - outside Word's mappings, `wordInvalidValue` reads them with `Number()` as today, so nothing changes there.
@@ -274,7 +283,7 @@ The tree keeps `""`, as phase C keeps what it read. This is what Word's save doe
   (178). **Recommendation:** (b).
 - **N3. The rule:** truncation toward zero, as Word's saves show (round 2), in all three ports. Half-even (docx4j's
   XSLT) differs from Word in 7 of the probe's values on docx4j's own list. **Recommendation:** truncation.
-- **N4. A form Word refuses** (round 3), reaching the facade: (a) fail the part; (b) drop the attribute, reported as
+- **N4. A form Word refuses** (rounds 3 and 4), reaching the facade: (a) fail the part; (b) drop the attribute, reported as
   `'value.refused'`. **Recommendation:** (b), as docx4j's CR-065 D3.
 - **N5. Reporting:** new kinds, `'value.truncated'` with a numeric `value` and `'value.refused'`; or reuse
   `'value.kept.invalid'`. **Recommendation:** the new kinds.
@@ -289,10 +298,11 @@ The tree keeps `""`, as phase C keeps what it read. This is what Word's save doe
 ## 6. Tests
 
 - **Fixtures:**
-  - Families A1, A6 and B to I and Word's saves of them, as extracted part XML, under `test/fixtures/cr065-probe/`,
+  - Families A1, A2a to A2d, A6 and B to I and Word's saves of them, as extracted part XML, under
+    `test/fixtures/cr065-probe/`,
     with a `SOURCE.md` naming the share, docx4j-25's builder (docx4j CR-065 phase 0) and Jason's runs. The parts are
     `word/document.xml`, and for I `styles.xml`, `settings.xml` and the header.
-  - The refused families A2 to A5 and A7, without saves. Word's answer for them is the refusal itself.
+  - The refused families A2e, A2f, A3 to A5 and A7, without saves. Word's answer for them is the refusal itself.
   - `test/fixtures/integer-decimals/`: one plain decimal on each of the 178 attributes, generated by a script beside
     it.
   - Never edited by hand.
@@ -307,7 +317,7 @@ The tree keeps `""`, as phase C keeps what it read. This is what Word's save doe
 - **The forms:**
   - each refused family's values are dropped and reported as `'value.refused'`, or read by the runtime first (N8,
     stated until phase 2);
-  - A1 is truncated and A6's `""` is `0`, as in Word's saves.
+  - A1 and A2a to A2d are truncated, and A6's `""` is `0`, as in Word's saves.
 - **The record:** `onWordReading`'s `kind`, `value` and `text`. A caller's own `onInvalidValue` takes precedence.
 - **The save:** an integer is written. With N7, an empty rsid is left out and reported to `onNormalised`, while the
   tree keeps `""`.
@@ -332,6 +342,5 @@ The tree keeps `""`, as phase C keeps what it read. This is what Word's save doe
 - **Changes:** parts that failed now load, `WordReading` gains two kinds, and, with N7, a save leaves out empty rsids.
 - **Version:** under Jason's rule (minors for a substantive change of API or output), a minor.
 - **Timing:** the first phase (N1 to N7) is measured and can be built now. It can ride with CR-014 in 0.6.0 if Jason
-  wants it there. The second phase (N8) waits for a jsonix release, and round 4 can only refine the whitespace and
-  sign forms.
+  wants it there. The second phase (N8) waits for a jsonix release.
 - **Effort:** half a day with the Word fixtures, once N1 to N7 are decided.
