@@ -82,6 +82,12 @@ read. A caller's own `onInvalidValue` replaces the facade's, as for CR-013, and 
 A load-time pass like the MCE preprocessor would have to know each attribute's type, which the mapping already knows
 here. It would also cost a pass over every part, where this costs nothing until a value is refused.
 
+docx4j-python has proposed the opposite for its port: keep the text as written, and round it in its one integer
+reader and in its save normaliser. Here that would put the string `"259.2"` in a property the declarations type
+`number`. Every reader, core-ts's resolver arithmetic among them, would then have to read both types, and the runtime
+can't print it, so every save would depend on the normaliser. In a Python port that keeps raw strings already, the
+choice costs less. Here, the model holding the integer keeps the declarations true.
+
 ### 3.2 Which attributes (N2)
 
 There are two choices:
@@ -206,7 +212,8 @@ changes no reading. This agrees with docx4j for SSRS's files, and writes less th
 
 ## 5. Decisions (for Jason)
 
-- **N1. Where:** the facade's `wordInvalidValue` (CR-013's `onInvalidValue`), or a load-time pass. **Recommendation:**
+- **N1. Where:** the facade's `wordInvalidValue` (CR-013's `onInvalidValue`); a load-time pass; or, as docx4j-python
+  proposes for its port, the text kept and rounded by readers and on save (section 3.1). **Recommendation:**
   `wordInvalidValue`.
 - **N2. Which attributes:** (a) docx4j's list with its conditions; (b) every integer attribute of Word's own mappings
   (178). **Recommendation:** (b).
