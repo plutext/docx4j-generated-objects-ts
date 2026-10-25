@@ -2,7 +2,8 @@
 // or an odd form in an integer attribute. test/fixtures/cr065-probe/ holds each probe part and, for each file Word
 // opened, Word's save of it, with a SOURCE.md. Word's save is the oracle: every value it writes is its reading. So each
 // case read through the facade and written again must write what Word's save wrote, except where stated below. For a
-// file Word refused, the oracle is the refusal: each value is dropped and reported, or read by the runtime first (N8).
+// file Word refused, the oracle is the refusal: each value is dropped and reported (phase 2's strictIntegers brings
+// the forms the runtime's Number() would read, " 240 ", 0x10, 1e3, to the same rule).
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { DOMParser } from '@xmldom/xmldom';
@@ -49,13 +50,8 @@ const KNOWN = {
   G51: 'w:gridCol, recomputed by Word',
 };
 
-/**
- * In the files Word refused, the forms the runtime reads before the facade sees them (its Number()), though Word
- * refuses the document: CR-015's N8, a second phase. Until then, stated with the value read.
- */
-const RUNTIME_READS = { A13: ['16'], A14: ['150'], A16: ['1000'], A19: ['240'] };
-/** The forms of the refused files that reach the facade, dropped and reported as 'value.refused'. */
-const REFUSED = { A11: ' 240.5 ', A12: '240,5', A15: '2.5e0', A18: 'abc' };
+/** The forms of the files Word refused, each dropped and reported as 'value.refused'. */
+const REFUSED = { A11: ' 240.5 ', A12: '240,5', A13: '0x10', A14: '1.5e2', A15: '2.5e0', A16: '1e3', A18: 'abc', A19: ' 240 ' };
 
 const textOf = (p) => Array.from(p.getElementsByTagNameNS(W, 't')).map((t) => t.textContent).join('');
 const elementsAfter = (node) => { const out = []; for (let n = node.nextSibling; n; n = n.nextSibling) if (n.nodeType === 1) { out.push(n); break; } return out; };
@@ -118,7 +114,6 @@ async function read(file, which) {
 
 let equal = 0;
 const differing = {};
-const runtimeRead = {};
 for (const c of CASES) {
   const file = fileOf(c);
   assert.ok(file, `${c.id}: in a probe file`);
@@ -131,11 +126,7 @@ for (const c of CASES) {
   assert.ok(ourScope, `${c.id}: its label`);
   const ourValues = valuesIn(ourScope, c);
   if (!word) {
-    // Word refused the file: each value is dropped and reported, or read by the runtime first.
-    if (c.id in RUNTIME_READS) {
-      runtimeRead[c.id] = ourValues.map((v) => v.split('=')[1]);
-      continue;
-    }
+    // Word refused the file: each value is dropped and reported.
     assert.ok(c.id in REFUSED, `${c.id}: a refused form`);
     assert.deepEqual(ourValues, [], `${c.id}: dropped`);
     const reading = mine.readings.find((r) => r.text === REFUSED[c.id]);
@@ -147,20 +138,22 @@ for (const c of CASES) {
   else differing[c.id] = `${JSON.stringify(ourValues)} vs Word ${JSON.stringify(wordValues)}`;
 }
 assert.deepEqual(Object.keys(differing).sort(), Object.keys(KNOWN).sort(), `the known differences, strict both ways: ${JSON.stringify(differing, null, 1)}`);
-assert.deepEqual(runtimeRead, RUNTIME_READS, 'the runtime reads these first (N8, a second phase)');
 
-// What was reported: each value read by Word's rule, truncated or refused, and nothing for the values the runtime reads.
+// What was reported: each value read by Word's rule, truncated, "" as 0, or refused.
 let truncated = 0;
 let refused = 0;
+let empty = 0;
 for (const { readings } of ours.values()) {
   for (const r of readings) {
     if (r.kind === 'value.refused') { refused++; assert.equal(r.value, undefined); continue; }
+    if (r.kind === 'value.kept.invalid') { empty++; assert.deepEqual([r.text, r.value], ['', 0]); continue; }
     assert.equal(r.kind, 'value.truncated', `${r.attribute.localPart}=${JSON.stringify(r.text)}`);
     assert.equal(r.value, Math.trunc(Number(r.text)) || 0, `${r.attribute.localPart}=${JSON.stringify(r.text)} truncated`);
     truncated++;
   }
 }
 assert.equal(refused, Object.keys(REFUSED).length, 'one record per refused form');
+assert.equal(empty, 5, '"" read as 0: A6, SSRS\'s header, footer and gutter, and an empty pgMar top');
 // SSRS's empty rsids are left out on save, as Word's save leaves them out (N7); the margins read "" as 0, as Word does.
 const ssrs = (await read(fileOf({ id: 'H60' }), 'document')).ours;
 const ssrsSectPr = blockOf(ssrs.doc, 'H60')[1].getElementsByTagNameNS(W, 'sectPr')[0];
@@ -169,4 +162,4 @@ assert.deepEqual(ssrs.normalised.map((n) => [n.path.split('/@')[1], n.before, n.
   [['w:rsidDel', '', null], ['w:rsidR', '', null], ['w:rsidRPr', '', null], ['w:rsidSect', '', null]]);
 
 console.log(`word365 integers (CR-015): ${CASES.length} cases of docx4j CR-065's probe in ${FILES.length} files; ${equal} written as Word's saves write them, ${Object.keys(KNOWN).length} known (a default Word leaves out, gridCol recomputed); `
-  + `${truncated} values truncated and ${refused} refused forms dropped, each reported; ${Object.keys(RUNTIME_READS).length} forms the runtime reads first (N8); SSRS's empty rsids left out OK`);
+  + `${truncated} values truncated, ${empty} "" read as 0 and ${refused} refused forms dropped, each reported; SSRS's empty rsids left out OK`);

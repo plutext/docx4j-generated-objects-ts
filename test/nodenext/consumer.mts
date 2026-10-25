@@ -24,6 +24,8 @@ export async function consume(xml: string): Promise<string> {
   const integerKinds: WordReading['kind'][] = ['value.truncated', 'value.refused'];
   const truncatedTo: WordReading['value'] = 259;
   void unmarshalString('<w:p/>', { onWordReading: (reading) => readings.push(reading), onInvalidValue: wordInvalidValue });
+  // CR-015 phase 2: jsonix-CR-012's strictIntegers, through the facade's options.
+  void unmarshalString('<w:p/>', { strictIntegers: false });
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
   // CR-013 phase C: the normaliser's options beside the runtime's, and its process-wide switch.

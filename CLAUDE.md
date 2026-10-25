@@ -15,7 +15,7 @@ compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-0
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.8.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.9.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -138,8 +138,8 @@ There are seven tests and no test framework:
   outright). Its 64 cases put a decimal or an odd form in an integer attribute: paragraph, run, border, tab, table and
   section properties, a style, the settings and a header. Each case is read through the facade and written again, and
   must write what Word's save wrote, the oracle. 50 are equal, and 6 differences are stated, strict both ways: four
-  truncations to a default Word's save leaves out, and two `w:gridCol` Word recomputes. In the refused files, 4 forms
-  are dropped and reported. Another 4 are read by the runtime's `Number()` first, stated until CR-015's phase 2.
+  truncations to a default Word's save leaves out, and two `w:gridCol` Word recomputes. In the refused files, all 8
+  forms are dropped and reported, four of them through phase 2's `strictIntegers`.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -231,8 +231,10 @@ own mappings as Word 365 does, measured by docx4j CR-065's shared probe:
 - any other form, which makes Word refuse the whole document, is dropped;
 - both are reported as `'value.truncated'` or `'value.refused'`.
 
-Its normaliser also leaves out an empty `w:rsid*` on save. Phase 2 (a jsonix strict integer parse, so that the forms
-`Number()` reads first come to the same rule) waits for jsonix-CR-012 (`strictIntegers`). docx4j CR-065's D3 is the same rule in Java.
+Its normaliser also leaves out an empty `w:rsid*` on save. Phase 2 (implemented the same day) passes jsonix-CR-012's
+`strictIntegers` on every facade unmarshal that uses the facade's own `onInvalidValue`. So the forms the runtime's
+`Number()` would read first (`" 240 "`, `0x10`, `1e3`, `""`, `10206.0`) come to the same rule, and every other mapping
+reads them through `typeInfo.parse`, unchanged. docx4j CR-065's D3 is the same rule in Java.
 
 ## What the declarations promise
 

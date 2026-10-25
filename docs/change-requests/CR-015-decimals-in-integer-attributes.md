@@ -1,7 +1,7 @@
 # CR-015: A decimal in an integer attribute, read as Word reads it rather than failing the part (`wordInvalidValue`)
 
-**Status:** Phase 1 (N1 to N7) implemented 2026-10-26 (Jason: "implement CR-015 as recommended"); phase 2 (N8 (b))
-waits for jsonix-CR-012
+**Status:** Implemented 2026-10-26 (Jason: "implement CR-015 as recommended"): phase 1 (N1 to N7), and phase 2 (N8 (b))
+on `@docx4j/jsonix` 3.9.0's `strictIntegers` (jsonix-CR-012)
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
 fails here where docx4j repairs it.
@@ -9,9 +9,10 @@ fails here where docx4j repairs it.
 - round 2 (Jason, Word 365, 2026-10-26) measured the rule: truncation;
 - rounds 3 and 4 (the same day) measured which text Word reads (N4, N8).
 
-Phase 0 is complete.
+Phase 0 is complete. Phase 2 also depends on jsonix-CR-012's `strictIntegers`, released in `@docx4j/jsonix` 3.9.0
+(tag 612cf08, 2026-10-26), which raised this package's floor to ^3.9.0.
 
-Nothing new is needed in the runtime: jsonix-CR-010's `onInvalidValue`, through which CR-013 reads Word's values, is in
+Phase 1 needed nothing new in the runtime: jsonix-CR-010's `onInvalidValue`, through which CR-013 reads Word's values, is in
 `@docx4j/jsonix` ^3.8.0 already.
 **Counterpart:** docx4j CR-065 (docx4j-25, 2026-10-26). Jason decided its D1 to D6 as recommended, and its D3 is this
 CR's rule: Word's form exactly, truncation, `""` as `0`, other forms dropped with a warning, no trimming. Its phase 1
@@ -53,9 +54,9 @@ reads a decimal in an integer attribute of Word's own WordprocessingML mappings 
   the value (`" 240 "`), a comma, hex, an exponent and letters. Such a value that reaches the facade is
   dropped and reported, so the part loads and a save writes a document Word opens (N4). docx4j's CR-065 recommends the
   same.
-- **Forms the runtime reads first.** The runtime's `Number()` reads some forms Word refuses, before the facade sees
-  them: `" 240 "` as `240` and `0x10` as `16`. A strict parse, opt-in through a jsonix CR, would bring them to the same rule (N8, a second
-  phase).
+- **Forms the runtime would read first.** The runtime's `Number()` reads some forms Word refuses, before the facade
+  sees them: `" 240 "` as `240` and `0x10` as `16`. Phase 2 passes the runtime's opt-in strict parse, so they come to
+  the same rule (N8).
 
 ## 2. What happens today, and what Word does (measured 2026-10-26)
 
@@ -205,25 +206,31 @@ Word's own: `""` as `0`, `+240` and `240.` as `240`, and `10206.0` as `10206`. T
 **Recommendation: (b), as a second phase.** It makes the ports agree, since docx4j's lenient parse drops such forms
 too (its D3). But no producer is known to write them, so it needn't hold back the first phase.
 
-**Phase 2: jsonix-CR-012** (jsonix-d2, drafted 2026-10-26, jsonix 6a83825; proposed, L1 and L2 for Jason). It adds a
-per-call unmarshaller option, `strictIntegers`, off by default.
+**Phase 2: jsonix-CR-012** (jsonix-d2, 2026-10-26; L1 and L2 decided as recommended by Jason; released in
+`@docx4j/jsonix` 3.9.0). It adds a per-call unmarshaller option, `strictIntegers`, off by default.
 - **What it accepts:** with the option on, an attribute of the 13 integer types reads only `/^[+-]?[0-9]+$/`, with no
   trimming. Everything else goes to `onInvalidValue` as written: `""`, `" 240 "`, `240.`, `10206.0`, `0x10`, `1e3`.
 - **Where (L1, recommended):** attribute values only. Word's mappings have no integer element content or integer
   lists, and there `onInvalidValue` can receive the refusal.
 
-The facade will then:
-- **set the option** on every facade unmarshal;
-- **in other mappings,** read a refused value with `propertyInfo.typeInfo.parse(text)`, the runtime's parse unchanged
-  (jsonix-CR-012 section 4.5). That is exactly today's reading there, `0x10` as `16` and a refusal of `1.5`, where
+The facade (phase 2, implemented 2026-10-26):
+- **sets the option** on every facade unmarshal that uses its own `onInvalidValue`. A caller who passes its own
+  `onInvalidValue` keeps the runtime's reading unless it passes `strictIntegers: true` too; otherwise its callback
+  would start receiving `""` and `10206.0`, which it never saw before. `strictIntegers: false` asks for the runtime's
+  reading with the facade's callback;
+- **in other mappings,** reads a refused value with `propertyInfo.typeInfo.parse(text)`, the runtime's parse unchanged
+  (jsonix-CR-012 section 4.5). That is exactly the reading before phase 2, `0x10` as `16` and a refusal of `1.5`, where
   `Number()` would not be;
-- **in Word's mappings,** read Word's forms and `""` as Word does, and drop the rest:
+- **in Word's mappings,** reads Word's forms and `""` as Word does, and drops the rest:
   - `10206.0` and `240.` are reported as `'value.truncated'`. Google Docs' widths, read silently today, are then
     reported: the value is unchanged, and the text is still one the schema refuses;
   - `""` is reported as `'value.kept.invalid'` with the value `0`, Word's reading of an invalid value.
 
-Phase 2's tests are the four `RUNTIME_READS` of `test/word365-integers.mjs`: `" 240 "`, `0x10`, `1.5e2` and `1e3`,
-which become refused forms, dropped and reported.
+It was verified against jsonix master before the release, then against the npm 3.9.0 tarball, whose runtime is
+byte-identical to the verified checkout:
+- the 341 corpus parts marshal identically, with the option off and on;
+- the fallback to the runtime's parse ran 0 times over the corpus, since no Office part has an integer attribute the
+  strict parse refuses.
 
 ### 3.4 The rule: truncation toward zero (N3, measured)
 
@@ -299,9 +306,9 @@ The tree keeps `""`, as phase C keeps what it read. This is what Word's save doe
 
 ## 5. Decisions
 
-**Decided as recommended** (Jason, 2026-10-26: "implement CR-015 as recommended"). N1 to N7 are phase 1, implemented
-the same day. N8 (b) is phase 2: a jsonix CR, which the jsonix session drafts, then the facade's reading of what it
-brings. The options and reasons stand below.
+**Decided as recommended** (Jason, 2026-10-26: "implement CR-015 as recommended"). N1 to N7 are phase 1. N8 (b) is
+phase 2: jsonix-CR-012, released in 3.9.0, and the facade's reading of what it brings. Both were implemented the same
+day. The options and reasons stand below.
 
 - **N1. Where:** the facade's `wordInvalidValue` (CR-013's `onInvalidValue`); a load-time pass; or, as docx4j-python
   proposes for its port, the text kept and rounded by readers and on save (section 3.1). **Recommendation:**
@@ -339,21 +346,27 @@ Phase 1 adds one test, `test/word365-integers.mjs`, and a CR-015 block in the sm
   - 6 are stated, strict both ways. Four are a truncation equal to what lies beneath, which Word's save leaves out:
     `.5`, `""`, `-0.5` and run `w:sz="22.5"` (this package writes the `0` or `22` it read). Two are `w:gridCol`, which
     Word recomputes.
-  - In the refused files, 4 forms are dropped and reported as `'value.refused'`. Another 4 are read by the runtime
-    first and stated until phase 2: `" 240 "`, `0x10`, `1.5e2` and `1e3`.
-  - Every record is `'value.truncated'` with the integer part, or `'value.refused'`.
+  - In the refused files, all 8 forms are dropped and reported as `'value.refused'`. Four of them (`" 240 "`, `0x10`,
+    `1.5e2`, `1e3`) the runtime's `Number()` read until phase 2.
+  - Every record is `'value.truncated'` with the integer part (55, among them `10206.0` and `240.`), `'value.kept.invalid'`
+    for `""` read as `0` (5), or `'value.refused'` (8).
   - Word's saves themselves need neither Word's reading nor the normaliser.
   - SSRS's empty rsids are left out on save, with their records.
   - Rounding instead of truncating fails the test (checked by changing the build).
 - **The scope** (smoke): every integer attribute of Word's own mappings, 178 of them, found from the context, reads
   - Word's forms as their integer part (`7.9`, `-7.9`, `+240.5`, `.5`, `240.`, and `-0.5` as `0`, never `-0`);
-  - each refused form as dropped (`" 7.9 "`, `7,9`, `2.5e0`, `abc`, `.`, `-`, `Infinity`).
+  - each refused form as dropped (`" 7.9 "`, `7,9`, `2.5e0`, `abc`, `.`, `-`, `Infinity`, `" 240 "`, `0x10`, `1e3`), and
+    `""` as `0`.
 
-  Every other mapping's integer attributes still fail, as does a `wp:extent` in a part. This replaces the generated
-  per-attribute fixture first proposed, since the scope is a property of the mapping, which the context lists.
+  Every other mapping's integer attributes read as before phase 2: `0x10`, `""`, `" 240 "` and `1e3` give `16`, `0`,
+  `240` and `1000`, and `7.9` fails with the runtime's error. A `wp:extent` in a part still fails.
+
+  This replaces the generated per-attribute fixture first proposed, since the scope is a property of the mapping,
+  which the context lists.
 - **The record and precedence** (smoke): `onWordReading`'s `kind`, `value` and `text`; the reading without
   `onWordReading`; a caller's own `onInvalidValue` taking precedence; and a refused `wml` dateTime still failing the
-  part. CR-013's block, which held a refused `wml` integer to failing, now holds it to being dropped.
+  part. For phase 2: `" 240 "`, `""`, `10206.0`, `0x10` and `+240` read and reported; `strictIntegers: false` giving
+  the runtime's reading; a caller's own `onInvalidValue` keeping it unless it asks for `strictIntegers`. CR-013's block, which held a refused `wml` integer to failing, now holds it to being dropped.
 - **The save** (smoke): an integer is written, and a caller's own non-integer still throws, with the normaliser on or
   off (N6). An empty rsid is left out and reported with its path, while the tree keeps `""`, and the opt-out writes it.
 - **Found while testing:** phase C's `onNormalised` gave the wrong path for an attribute on an element with content.
@@ -380,5 +393,6 @@ Phase 1 adds one test, `test/word365-integers.mjs`, and a CR-015 block in the sm
 ## 8. Release
 
 - **Changes:** parts that failed now load, `WordReading` gains two kinds, and, with N7, a save leaves out empty rsids.
+  Google Docs' `.0` widths, read silently before, are reported as `'value.truncated'`.
 - **Version:** under Jason's rule (minors for a substantive change of API or output), a minor.
-- **Timing:** phase 1 is implemented, and can go out with CR-014 in 0.6.0. Phase 2 waits for a jsonix release.
+- **Timing:** both phases are implemented, and can go out with CR-014 in 0.6.0. The runtime floor rises to ^3.9.0.

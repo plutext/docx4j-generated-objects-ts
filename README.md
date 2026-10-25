@@ -258,8 +258,11 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   truncated toward zero (`259`, `141`, `-120.5` as `-120`). Word reads a sign, digits and a fraction
   (`+240.5`, `240.`, `.5`). For any other form it refuses the whole document: whitespace around the
   value, a comma, hex, an exponent, letters. Such a value is dropped, so the part loads. `onWordReading`
-  receives each value read this way, as `'value.truncated'` or `'value.refused'`. The rules are
-  docx4j CR-065's shared Word probe's, which `test/word365-integers.mjs` reads against Word's saves.
+  receives each value read this way, as `'value.truncated'` or `'value.refused'` (and `""`, read as 0,
+  as `'value.kept.invalid'`). So that every form reaches these rules, the facade passes the runtime's
+  `strictIntegers` (`@docx4j/jsonix` 3.9.0); a caller's own `onInvalidValue` keeps the runtime's
+  lenient reading unless it passes `strictIntegers: true`. The rules are docx4j CR-065's shared Word
+  probe's, which `test/word365-integers.mjs` reads against Word's saves.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as

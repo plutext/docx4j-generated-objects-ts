@@ -510,7 +510,10 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
  * The unmarshaller options with this package's `onElement` (jsonix-CR-008) composed in front of the
  * caller's: each typed mc:Choice records its source-only bindings as it is built. And
  * `wordInvalidValue` as the `onInvalidValue` (CR-013), unless the caller passes one, reporting to
- * `onWordReading` when the caller asks.
+ * `onWordReading` when the caller asks; with it, jsonix-CR-012's `strictIntegers` (CR-015 phase 2),
+ * so that an integer the runtime's `Number()` would read (`" 240 "`, `0x10`, `""`) reaches Word's
+ * rule. A caller's own `onInvalidValue` keeps the runtime's reading unless it asks for
+ * `strictIntegers` too.
  */
 function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
   const { onWordReading, ...runtimeOptions } = options ?? {};
@@ -525,6 +528,7 @@ function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOption
       callerOnElement?.(element, value);
     },
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
+    strictIntegers: runtimeOptions.strictIntegers ?? runtimeOptions.onInvalidValue === undefined,
   };
 }
 
@@ -553,8 +557,12 @@ const INTEGER_TYPES: ReadonlySet<string> = new Set(['Integer', 'Long', 'Int', 'S
  */
 const WORD_NUMBER = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
 
-/** An integer attribute's text as Word 365 reads it: the integer part, truncated toward zero (never `-0`); undefined for a form Word refuses. */
+/**
+ * An integer attribute's text as Word 365 reads it: `""` as 0; Word's form as its integer part,
+ * truncated toward zero (never `-0`); undefined for a form Word refuses.
+ */
 function wordInteger(text: string): number | undefined {
+  if (text === '') return 0;
   if (!WORD_NUMBER.test(text)) return undefined;
   const value = Math.trunc(Number(text));
   return value === 0 ? 0 : value;
@@ -572,18 +580,24 @@ function wordInteger(text: string): number | undefined {
  * - A refused enumeration value is dropped, so the attribute is absent, as Word reads it (a style's
  *   value shows through); except `w:u`'s `true`, `false`, `on`, `off`, `1` and `0`, exactly, which
  *   Word reads as `'none'`.
- * - A refused integer (CR-015) in Word's form (`259.2`, `-120.5`, `+240.5`, `.5`) is its integer
- *   part, truncated toward zero, as Word 365 reads it; in any other form (`" 240.5 "`, `240,5`,
- *   `2.5e0`, `abc`), for which Word refuses the whole document, it is dropped. The runtime reads
- *   some forms before they get here: `""` as 0 and `10206.0` as 10206, as Word does; `" 240 "`,
- *   `0x10` and `1e3` too, though Word refuses them (CR-015's N8, a second phase).
- * - Anything else is refused as before (the error is rethrown): other simple types, and every type
- *   of every other mapping (DrawingML, VML, SpreadsheetML, ...), whose Word reading is unmeasured.
+ * - A refused integer (CR-015) in Word's form (`259.2`, `-120.5`, `+240.5`, `.5`, `10206.0`) is its
+ *   integer part, truncated toward zero, as Word 365 reads it, and `""` is 0. Any other form
+ *   (`" 240 "`, `240,5`, `0x10`, `1e3`, `abc`), for which Word refuses the whole document, is
+ *   dropped. The facade's unmarshal functions pass jsonix-CR-012's `strictIntegers`, so every text
+ *   but an optional sign and digits arrives here.
+ * - In every other mapping (DrawingML, VML, SpreadsheetML, ...), an integer `strictIntegers` refused
+ *   is read by the runtime's own parse, as before it (`0x10` as 16, `""` as 0), or refused with its
+ *   error. Anything else is refused as before (the error is rethrown): other simple types, whose
+ *   Word reading is unmeasured, and every other type of every other mapping.
  * Exported for a caller with its own `onInvalidValue` that wants to compose it.
  */
 export function wordInvalidValue(text: string, propertyInfo: Jsonix.AttributePropertyInfo, classInfo: Jsonix.ClassInfo, node: Element, error: Error): unknown {
-  if (!WORD_READ_MODULES.has(classInfo.module.name)) throw error;
   const typeInfo = propertyInfo.typeInfo;
+  if (!WORD_READ_MODULES.has(classInfo.module.name)) {
+    // jsonix-CR-012: strictIntegers refused what the runtime's own parse reads; read it as before.
+    if (INTEGER_TYPES.has(typeInfo.name) && typeInfo.parse) return typeInfo.parse(text);
+    throw error;
+  }
   if (typeInfo.name === 'Boolean') return true;
   if (INTEGER_TYPES.has(typeInfo.name)) return wordInteger(text);
   if (typeInfo.CLASS_NAME !== 'Jsonix.Model.EnumLeafInfo') throw error;
@@ -606,8 +620,9 @@ export interface WordReading {
   /**
    * For a boolean or an enumeration, `'value.kept.exact'` when the text, trimmed of XML whitespace,
    * is a form its type reads (`" false"`), else `'value.kept.invalid'` (`"yes"`, `"Single"`). For an
-   * integer (CR-015), `'value.truncated'` (`"259.2"` read as 259), or `'value.refused'` where the
-   * form is one Word refuses the whole document for and the value was dropped.
+   * integer (CR-015), `'value.truncated'` (`"259.2"` read as 259, `"10206.0"` as 10206),
+   * `'value.kept.invalid'` for `""` read as 0, or `'value.refused'` where the form is one Word
+   * refuses the whole document for and the value was dropped.
    */
   readonly kind: 'value.kept.exact' | 'value.kept.invalid' | 'value.truncated' | 'value.refused';
 }
@@ -630,7 +645,7 @@ function reportingWordReadings(onWordReading: (reading: WordReading) => void): N
   return (text, propertyInfo, classInfo, node, error) => {
     const value = wordInvalidValue(text, propertyInfo, classInfo, node, error) as WordReading['value'];
     const kind: WordReading['kind'] = INTEGER_TYPES.has(propertyInfo.typeInfo.name)
-      ? (value === undefined ? 'value.refused' : 'value.truncated')
+      ? (value === undefined ? 'value.refused' : text === '' ? 'value.kept.invalid' : 'value.truncated')
       : (readOnceTrimmed(text, propertyInfo.typeInfo) ? 'value.kept.exact' : 'value.kept.invalid');
     onWordReading({ element: node, attribute: propertyInfo.attributeName, text, value, kind });
     return value;

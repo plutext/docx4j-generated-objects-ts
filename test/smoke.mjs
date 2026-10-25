@@ -993,7 +993,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
 // CR-015: a decimal in an integer attribute of Word's own mappings, read as Word 365 reads it: truncated toward zero; a
 // form Word refuses the whole document for, dropped. test/word365-integers.mjs holds the readings to Word's own saves
-// of docx4j CR-065's probe; here, the scope, the record, a caller's precedence and the save.
+// of docx4j CR-065's probe; here, the scope, the record, a caller's precedence and the save. Phase 2 passes jsonix-CR-012's
+// strictIntegers (@docx4j/jsonix 3.9.0), so the forms the runtime's Number() would read reach the same rule.
 {
   const { wordInvalidValue } = await import('../dist/index.mjs');
   const W_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
@@ -1001,7 +1002,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const WORD = new Set(['org_docx4j_wml', 'org_docx4j_w14', 'org_docx4j_w15', 'org_docx4j_w15symex', 'org_docx4j_w16', 'org_docx4j_w16cex', 'org_docx4j_w16cid']);
   const INTEGERS = new Set(['Integer', 'Long', 'Int', 'Short', 'Byte', 'NonNegativeInteger', 'NonPositiveInteger', 'NegativeInteger', 'PositiveInteger', 'UnsignedLong', 'UnsignedInt', 'UnsignedShort', 'UnsignedByte']);
   const context = await getContext();
-  // The scope: every integer attribute of Word's own mappings, keyed by type; every other mapping's still fails.
+  // The scope: every integer attribute of Word's own mappings, keyed by type; every other mapping's reads as before
+  // strictIntegers, through the runtime's own parse, or fails with its error.
   let word = 0;
   let others = 0;
   for (const classInfo of Object.values(context.typeInfos)) {
@@ -1011,14 +1013,16 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
       const error = new Error('refused');
       if (!WORD.has(classInfo.module.name)) {
         others++;
-        assert.throws(() => wordInvalidValue('7.9', property, classInfo, null, error), (e) => e === error, `${classInfo.name}.${property.name}`);
+        assert.throws(() => wordInvalidValue('7.9', property, classInfo, null, error), /Argument \[7\.9\] must be an integer\./, `${classInfo.name}.${property.name}`);
+        assert.deepEqual(['0x10', '', ' 240 ', '1e3'].map((t) => wordInvalidValue(t, property, classInfo, null, error)), [16, 0, 240, 1000], 'as before strictIntegers');
         continue;
       }
       word++;
       const read = (text) => wordInvalidValue(text, property, classInfo, null, error);
       assert.deepEqual([read('7.9'), read('-7.9'), read('+240.5'), read('.5'), read('240.')], [7, -7, 240, 0, 240], `${classInfo.name}.${property.name}`);
       assert.ok(Object.is(read('-0.5'), 0), 'never -0');
-      for (const refused of [' 7.9 ', '7.9 ', '7,9', '2.5e0', '0x1.8', 'abc', '', '.', '-', 'Infinity', 'NaN']) assert.equal(read(refused), undefined, JSON.stringify(refused));
+      for (const refused of [' 7.9 ', '7.9 ', '7,9', '2.5e0', '0x1.8', 'abc', '.', '-', 'Infinity', 'NaN', ' 240 ', '\t240', '0x10', '1e3', '1.5e2']) assert.equal(read(refused), undefined, JSON.stringify(refused));
+      assert.deepEqual([read(''), read('10206.0')], [0, 10206], '"" as 0, and a decimal with no fraction');
     }
   }
   assert.equal(word, 178, "178 integer attributes on Word's own mappings");
@@ -1038,6 +1042,24 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     ['ind', 'left', '-720.5', -720, 'value.truncated'],
   ].sort((a, b) => readings.findIndex((r) => r.text === a[2]) - readings.findIndex((r) => r.text === b[2])));
   assert.equal(unwrap(await unmarshalString(doc('<w:spacing w:before="120.5"/>'))).body.content[0].value.pPr.spacing.before, 120, 'without onWordReading too');
+  // Phase 2: what the runtime's Number() would read reaches Word's rule, and is reported.
+  const strict = [];
+  const strictRead = unwrap(await unmarshalString(doc('<w:spacing w:before=" 240 " w:after="" w:line="10206.0"/><w:ind w:left="0x10" w:right="+240"/>'), { onWordReading: (r) => strict.push(r) }));
+  const strictPPr = strictRead.body.content[0].value.pPr;
+  assert.deepEqual([strictPPr.spacing.before, strictPPr.spacing.after, strictPPr.spacing.line, strictPPr.ind.left, strictPPr.ind.right], [undefined, 0, 10206, undefined, 240]);
+  assert.deepEqual(strict.map((r) => [r.attribute.localPart, r.text, r.value, r.kind]).sort(), [
+    ['after', '', 0, 'value.kept.invalid'], ['before', ' 240 ', undefined, 'value.refused'],
+    ['left', '0x10', undefined, 'value.refused'], ['line', '10206.0', 10206, 'value.truncated'],
+  ]);
+  // strictIntegers: false asks for the runtime's reading; a caller's own onInvalidValue keeps it unless it asks too.
+  const lenient = unwrap(await unmarshalString(doc('<w:spacing w:before=" 240 " w:line="259.2"/>'), { strictIntegers: false })).body.content[0].value.pPr.spacing;
+  assert.deepEqual([lenient.before, lenient.line], [240, 259]);
+  const callers = [];
+  const theirs = unwrap(await unmarshalString(doc('<w:spacing w:before=" 240 " w:line="259.2"/>'), { onInvalidValue: (text) => { callers.push(text); return 1; } })).body.content[0].value.pPr.spacing;
+  assert.deepEqual([theirs.before, theirs.line, callers], [240, 1, ['259.2']], "a caller's own onInvalidValue: today's reading");
+  callers.length = 0;
+  await unmarshalString(doc('<w:spacing w:before=" 240 "/>'), { onInvalidValue: (text) => { callers.push(text); return 1; }, strictIntegers: true });
+  assert.deepEqual(callers, [' 240 '], 'and strictIntegers when it asks');
   const own = unwrap(await unmarshalString(doc('<w:spacing w:before="120.5"/>'), { onInvalidValue: () => 121, onWordReading: () => assert.fail('not called beside its own') }));
   assert.equal(own.body.content[0].value.pPr.spacing.before, 121, "a caller's own onInvalidValue");
   // Other mappings fail as before: DrawingML's extent.
