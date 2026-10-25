@@ -805,7 +805,9 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const inDocument = (inner) => `<w:document xmlns:w="${W_}" xmlns:wp="${WP_}"><w:body><w:p><w:r><w:rPr><w:b w:val="yes"/></w:rPr>${inner}</w:r></w:p></w:body></w:document>`;
   await assert.rejects(unmarshalString(inDocument('<w:drawing><wp:anchor behindDoc="FALSE"/></w:drawing>')), /behindDoc/, 'wp:anchor behindDoc="FALSE" fails the part');
   await assert.rejects(unmarshalString(inDocument('<w:drawing><wp:inline><wp:docPr id="1" name="x" hidden="yes"/></wp:inline></w:drawing>')), /hidden/, 'wp:docPr hidden="yes" too');
-  await assert.rejects(rPrOf('<w:sz w:val="big"/>'), /sz\/@w:val/, 'a refused wml integer is refused as before');
+  // A refused wml integer is CR-015's: a form Word refuses is dropped. Another simple type still fails the part.
+  assert.equal((await rPrOf('<w:sz w:val="big"/>')).sz.val, undefined, 'a refused wml integer is dropped (CR-015)');
+  await assert.rejects(unmarshalString(`<w:document xmlns:w="${W_}"><w:body><w:p><w:ins w:id="1" w:author="a" w:date="bogus"><w:r><w:t>x</w:t></w:r></w:ins></w:p></w:body></w:document>`), /date/, 'a refused wml dateTime fails as before');
   // Every facade unmarshal: a flat OPC package and a wml() fragment.
   const flatBold = `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${inDocument('')}</pkg:xmlData></pkg:part></pkg:package>`;
   const flatPart = (await unmarshalPackage(flatBold)).value.part[0].xmlData.any;
@@ -987,4 +989,75 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(highlightNameForColor(undefined), undefined);
   assert.deepEqual(applyRunOptions({ highlight: { val: 'red' } }, { highlightColor: '' }), {}, "'' removes");
   console.log("CR-014: Word's palette read (check 61's 18 reads), Office JS's input written (its 45 writes), the snap on check 62's 7,225 colours, CSS's 147 names OK");
+}
+
+// CR-015: a decimal in an integer attribute of Word's own mappings, read as Word 365 reads it: truncated toward zero; a
+// form Word refuses the whole document for, dropped. test/word365-integers.mjs holds the readings to Word's own saves
+// of docx4j CR-065's probe; here, the scope, the record, a caller's precedence and the save.
+{
+  const { wordInvalidValue } = await import('../dist/index.mjs');
+  const W_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const WP_ = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
+  const WORD = new Set(['org_docx4j_wml', 'org_docx4j_w14', 'org_docx4j_w15', 'org_docx4j_w15symex', 'org_docx4j_w16', 'org_docx4j_w16cex', 'org_docx4j_w16cid']);
+  const INTEGERS = new Set(['Integer', 'Long', 'Int', 'Short', 'Byte', 'NonNegativeInteger', 'NonPositiveInteger', 'NegativeInteger', 'PositiveInteger', 'UnsignedLong', 'UnsignedInt', 'UnsignedShort', 'UnsignedByte']);
+  const context = await getContext();
+  // The scope: every integer attribute of Word's own mappings, keyed by type; every other mapping's still fails.
+  let word = 0;
+  let others = 0;
+  for (const classInfo of Object.values(context.typeInfos)) {
+    if (classInfo.CLASS_NAME !== 'Jsonix.Model.ClassInfo' || !classInfo.module) continue;
+    for (const property of classInfo.properties ?? []) {
+      if (property.CLASS_NAME !== 'Jsonix.Model.AttributePropertyInfo' || !INTEGERS.has(property.typeInfo.name)) continue;
+      const error = new Error('refused');
+      if (!WORD.has(classInfo.module.name)) {
+        others++;
+        assert.throws(() => wordInvalidValue('7.9', property, classInfo, null, error), (e) => e === error, `${classInfo.name}.${property.name}`);
+        continue;
+      }
+      word++;
+      const read = (text) => wordInvalidValue(text, property, classInfo, null, error);
+      assert.deepEqual([read('7.9'), read('-7.9'), read('+240.5'), read('.5'), read('240.')], [7, -7, 240, 0, 240], `${classInfo.name}.${property.name}`);
+      assert.ok(Object.is(read('-0.5'), 0), 'never -0');
+      for (const refused of [' 7.9 ', '7.9 ', '7,9', '2.5e0', '0x1.8', 'abc', '', '.', '-', 'Infinity', 'NaN']) assert.equal(read(refused), undefined, JSON.stringify(refused));
+    }
+  }
+  assert.equal(word, 178, "178 integer attributes on Word's own mappings");
+  assert.ok(others > 0);
+  assert.equal(wordInvalidValue('141.99999999999994', { attributeName: {}, typeInfo: { name: 'Integer' } }, { module: { name: 'org_docx4j_wml' } }, null, new Error()), 141, 'the integer part, not the nearest');
+
+  // The record: a truncated value and a refused form, each with its kind; a caller's own onInvalidValue takes precedence.
+  const doc = (pPr, attrs = '') => `<w:document xmlns:w="${W_}" xmlns:wp="${WP_}"><w:body><w:p${attrs}><w:pPr>${pPr}</w:pPr><w:r><w:t>x</w:t></w:r></w:p></w:body></w:document>`;
+  const readings = [];
+  const read = unwrap(await unmarshalString(doc('<w:spacing w:before="120.5" w:after="240,5" w:line="259.2"/><w:ind w:left="-720.5"/>'), { onWordReading: (r) => readings.push(r) }));
+  const pPr = read.body.content[0].value.pPr;
+  assert.deepEqual([pPr.spacing.before, pPr.spacing.after, pPr.spacing.line, pPr.ind.left], [120, undefined, 259, -720]);
+  assert.deepEqual(readings.map((r) => [r.element.localName, r.attribute.localPart, r.text, r.value, r.kind]), [
+    ['spacing', 'after', '240,5', undefined, 'value.refused'],
+    ['spacing', 'before', '120.5', 120, 'value.truncated'],
+    ['spacing', 'line', '259.2', 259, 'value.truncated'],
+    ['ind', 'left', '-720.5', -720, 'value.truncated'],
+  ].sort((a, b) => readings.findIndex((r) => r.text === a[2]) - readings.findIndex((r) => r.text === b[2])));
+  assert.equal(unwrap(await unmarshalString(doc('<w:spacing w:before="120.5"/>'))).body.content[0].value.pPr.spacing.before, 120, 'without onWordReading too');
+  const own = unwrap(await unmarshalString(doc('<w:spacing w:before="120.5"/>'), { onInvalidValue: () => 121, onWordReading: () => assert.fail('not called beside its own') }));
+  assert.equal(own.body.content[0].value.pPr.spacing.before, 121, "a caller's own onInvalidValue");
+  // Other mappings fail as before: DrawingML's extent.
+  await assert.rejects(unmarshalString(`<w:document xmlns:w="${W_}" xmlns:wp="${WP_}"><w:body><w:p><w:r><w:drawing><wp:inline><wp:extent cx="12.5" cy="10"/></wp:inline></w:drawing></w:r></w:p></w:body></w:document>`), /must be an integer/);
+  // The save writes the integer; a caller's own non-integer still throws (N6), with the normaliser or without.
+  assert.ok((await marshalString(await unmarshalString(doc('<w:spacing w:line="259.2"/>')))).includes('<w:spacing w:line="259"/>'));
+  const set = await unmarshalString(doc('<w:spacing w:line="240"/>'));
+  unwrap(set).body.content[0].value.pPr.spacing.line = 259.2;
+  await assert.rejects(marshalString(set), /must be an integer/);
+  await assert.rejects(marshalString(set, { normaliseOnSave: false }), /must be an integer/);
+
+  // N7: an empty rsid is left out on save, as Word's save leaves it out, and reported; the tree keeps it; the opt-out writes it.
+  const ssrs = await unmarshalString(doc('', ' w:rsidR="" w:rsidRDefault="00AB12CD" w:rsidP=""'));
+  const normalised = [];
+  const saved = await marshalString(ssrs, { onNormalised: (n) => normalised.push(n) });
+  assert.ok(saved.includes('<w:p w:rsidRDefault="00AB12CD">'), 'empty rsids left out, a non-empty one kept');
+  assert.deepEqual(normalised.map((n) => [n.path, n.before, n.after]), [
+    ['/w:document/w:body[1]/w:p[1]/@w:rsidP', '', null], ['/w:document/w:body[1]/w:p[1]/@w:rsidR', '', null],
+  ]);
+  assert.equal(unwrap(ssrs).body.content[0].value.rsidR, '', 'the tree keeps what it read');
+  assert.ok((await marshalString(ssrs, { normaliseOnSave: false })).includes('w:rsidR=""'), 'the opt-out writes as read');
+  console.log("CR-015: 178 integer attributes of Word's own mappings read as Word does (truncated; a refused form dropped), other mappings as before; the record, a caller's precedence; the save writes integers and leaves out empty rsids OK");
 }

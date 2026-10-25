@@ -27,7 +27,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, bundle.mjs
+npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -53,7 +53,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are six tests and no test framework:
+There are seven tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -88,6 +88,10 @@ There are six tests and no test framework:
   core-ts's checks 61 (Word 365 through Office JS: 18 reads, 45 writes) and 62 (7,225 colours written to
   `font.highlightColor`, every one stored as Word stored it), copied to `test/fixtures/check61/` and `check62/`
   with a `SOURCE.md` each, and checks CSS's 147 names and the forms refused.
+  CR-015's block checks that every integer attribute of Word's own mappings (178, found from the context) reads Word's
+  forms as their integer part and drops the forms Word refuses, while other mappings still fail. It also checks the
+  record, a caller's precedence, that a save writes integers while a caller's own non-integer still throws, and that
+  an empty rsid is left out on save with its path.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -129,6 +133,13 @@ There are six tests and no test framework:
   probe saved under phase C must read the same again, have every colour in the schema's form, and
   write the 251 markers docx4j saved as docx4j does, value for value; docx4j's rule and opt-out
   cases are written the same.
+- `test/word365-integers.mjs` (runtime, CR-015) reads docx4j CR-065's shared Word probe (Jason, Word 365, rounds 2 to
+  4 of 2026-10-26; `test/fixtures/cr065-probe/`, each probe part beside Word's save of it, and six files Word refused
+  outright). Its 64 cases put a decimal or an odd form in an integer attribute: paragraph, run, border, tab, table and
+  section properties, a style, the settings and a header. Each case is read through the facade and written again, and
+  must write what Word's save wrote, the oracle. 50 are equal, and 6 differences are stated, strict both ways: four
+  truncations to a default Word's save leaves out, and two `w:gridCol` Word recomputes. In the refused files, 4 forms
+  are dropped and reported. Another 4 are read by the runtime's `Number()` first, stated until CR-015's phase 2.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -140,7 +151,7 @@ There are six tests and no test framework:
   from `src/` with the `.mjs` extension. Its `@ts-expect-error` lines go unused, and fail, if those types
   resolve to `any`.
 
-Fixtures are extracted part XML (and core-ts's Word measurements as JSON, CR-014), never archives (no zip dependency) and never edited by hand; they
+Fixtures are extracted part XML (and core-ts's Word measurements as JSON, CR-014; docx4j CR-065's case list, CR-015), never archives (no zip dependency) and never edited by hand; they
 cost consumers nothing, since `files` ships `dist/` and `modules/` only.
 
 `typecheck` has `skipLibCheck: false` and includes every generated `.d.ts`, so it is also the check
@@ -214,6 +225,14 @@ the Java port, value for value, core-ts CR-015 the consumer. CR-014 (implemented
 `HIGHLIGHT_COLORS` Word's palette (`WdColorIndex`, as Office JS reads it) and has `applyRunOptions` take Office JS's
 `font.highlightColor` input (a CSS name or any `#RRGGBB`), stored as Word stores it: `highlightNameForColor`'s
 rule (Windows' integer HLS hue sectors, a dark bound, grey bands) with check 62's 149 grey-edge answers as data.
+CR-015 (phase 1 implemented 2026-10-26) has `wordInvalidValue` read a refused value of any integer attribute of Word's
+own mappings as Word 365 does, measured by docx4j CR-065's shared probe:
+- Word's form (`[+-]?(digits[.digits]|.digits)`, untrimmed) gives its integer part, truncated toward zero;
+- any other form, which makes Word refuse the whole document, is dropped;
+- both are reported as `'value.truncated'` or `'value.refused'`.
+
+Its normaliser also leaves out an empty `w:rsid*` on save. Phase 2 (a jsonix strict integer parse, so that the forms
+`Number()` reads first come to the same rule) waits for a jsonix CR. docx4j CR-065's D3 is the same rule in Java.
 
 ## What the declarations promise
 

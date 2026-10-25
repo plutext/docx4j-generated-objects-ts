@@ -41,7 +41,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "npm run build && tsc -p test/nodenext/tsconfig.json && node test/smoke.mjs && node test/fidelity.mjs && node test/word365.mjs && node test/bundle.mjs",
+    "test": "npm run build && tsc -p test/nodenext/tsconfig.json && node test/smoke.mjs && node test/fidelity.mjs && node test/word365.mjs && node test/word365-integers.mjs && node test/bundle.mjs",
     "prepublishOnly": "npm run typecheck && npm test"
   },
   "keywords": [

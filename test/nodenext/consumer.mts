@@ -20,6 +20,9 @@ export async function consume(xml: string): Promise<string> {
   void unmarshalString('<w:p/>', { onUnexpectedAttribute: (name) => void name.localPart });
   // CR-013: the facade's onWordReading beside the runtime's options, and its onInvalidValue to compose.
   const readings: WordReading[] = [];
+  // CR-015: an integer's kinds and its numeric value.
+  const integerKinds: WordReading['kind'][] = ['value.truncated', 'value.refused'];
+  const truncatedTo: WordReading['value'] = 259;
   void unmarshalString('<w:p/>', { onWordReading: (reading) => readings.push(reading), onInvalidValue: wordInvalidValue });
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
@@ -29,7 +32,7 @@ export async function consume(xml: string): Promise<string> {
   setNormaliseOnSave(true);
   // CR-008: the extension namespaces, a readonly list of URIs.
   const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, integerKinds, truncatedTo, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
@@ -39,7 +42,7 @@ export async function consume(xml: string): Promise<string> {
 export const notANumber: number = p('x').value;
 // @ts-expect-error a highlight's val is a colour name, not a number (with Highlight as any, val would be any)
 highlightHexValue({ val: 1 });
-// @ts-expect-error a reading's kind is one of two (with WordReading as any, anything would do)
+// @ts-expect-error a reading's kind is one of four (with WordReading as any, anything would do)
 export const notAKind: WordReading['kind'] = 'value.dropped';
 // @ts-expect-error a normalisation's after is a string or null (with Normalisation as any, a number would do)
 export const notAfter: Normalisation['after'] = 1;

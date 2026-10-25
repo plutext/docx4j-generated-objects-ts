@@ -252,13 +252,22 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   one of the 140 classic HTML names Word reads (`WORD_COLOR_NAMES`); anything else as unset. Each
   rule was measured in Word 365, on probe documents that `test/word365.mjs` reads against Word's own
   saves of them.
+- **A decimal in an integer attribute** (CR-015): real producers write `w:line="259.2"` or
+  `w:hanging="141.99999999999994"`, which failed the whole part. The facade's unmarshal functions now
+  read it as Word 365 does, in every integer attribute of Word's own mappings: the integer part,
+  truncated toward zero (`259`, `141`, `-120.5` as `-120`). Word reads a sign, digits and a fraction
+  (`+240.5`, `240.`, `.5`). For any other form it refuses the whole document: whitespace around the
+  value, a comma, hex, an exponent, letters. Such a value is dropped, so the part loads. `onWordReading`
+  receives each value read this way, as `'value.truncated'` or `'value.refused'`. The rules are
+  docx4j CR-065's shared Word probe's, which `test/word365-integers.mjs` reads against Word's saves.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
   upper-case `RRGGBB`, and exactly `auto` is kept. A rejected `w:color` is left out, or written
   `auto` beside a theme colour; a rejected underline colour is left out; and a rejected fill,
   pattern, border or page colour is written `auto`. A `w:highlight`, `w:vertAlign` or `w:em` that
-  Word's repair would drop is left out, in revisions' former properties too. Only the output changes:
+  Word's repair would drop is left out, in revisions' former properties too. An empty `w:rsid*`, which
+  the schema rejects, is left out, as Word's save leaves it out (CR-015). Only the output changes:
   the tree keeps what it read. `normaliseOnSave: false` (a marshal option) or
   `setNormaliseOnSave(false)` (process-wide) writes as read. `onNormalised` receives each value
   rewritten or left out, with its path. A caller's own `onAttributeValue` and `omitElement` are asked

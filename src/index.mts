@@ -27,6 +27,7 @@ const XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
 const MC_NS = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
 const RELATIONSHIPS_NS = 'http://schemas.openxmlformats.org/package/2006/relationships';
 const SML_NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+const WML_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 
 /**
  * docx4j's namespace prefix table (org.docx4j.jaxb.NamespacePrefixMappings.getPreferredPrefixStatic,
@@ -541,6 +542,24 @@ const WORD_READ_MODULES: ReadonlySet<string> = new Set(['org_docx4j_wml', 'org_d
 /** What the runtime's boolean reads (jsonix-CR-007): exactly these, case and spacing as written. Also `w:u`'s on/off words. */
 const BOOLEAN_FORMS: ReadonlySet<string> = new Set(['true', 'false', '1', '0', 'on', 'off']);
 
+/** The runtime's integer types: `Jsonix.Schema.XSD.Integer` and its restrictions, by name (CR-015). */
+const INTEGER_TYPES: ReadonlySet<string> = new Set(['Integer', 'Long', 'Int', 'Short', 'Byte', 'NonNegativeInteger',
+  'NonPositiveInteger', 'NegativeInteger', 'PositiveInteger', 'UnsignedLong', 'UnsignedInt', 'UnsignedShort', 'UnsignedByte']);
+
+/**
+ * A number in an integer attribute, in the form Word 365 reads (CR-015 section 3.3, docx4j CR-065's
+ * probe): a sign, digits and a fraction (`+240.5`, `240.`, `.5`), with no whitespace around it. Word
+ * refuses the whole document for any other form: whitespace, a comma, hex, an exponent, letters.
+ */
+const WORD_NUMBER = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
+
+/** An integer attribute's text as Word 365 reads it: the integer part, truncated toward zero (never `-0`); undefined for a form Word refuses. */
+function wordInteger(text: string): number | undefined {
+  if (!WORD_NUMBER.test(text)) return undefined;
+  const value = Math.trunc(Number(text));
+  return value === 0 ? 0 : value;
+}
+
 /**
  * The facade's `onInvalidValue` (jsonix-CR-010), set on every facade unmarshal unless the caller
  * passes one (CR-013 section 3.5): an attribute value of Word's own WordprocessingML that the type
@@ -553,6 +572,11 @@ const BOOLEAN_FORMS: ReadonlySet<string> = new Set(['true', 'false', '1', '0', '
  * - A refused enumeration value is dropped, so the attribute is absent, as Word reads it (a style's
  *   value shows through); except `w:u`'s `true`, `false`, `on`, `off`, `1` and `0`, exactly, which
  *   Word reads as `'none'`.
+ * - A refused integer (CR-015) in Word's form (`259.2`, `-120.5`, `+240.5`, `.5`) is its integer
+ *   part, truncated toward zero, as Word 365 reads it; in any other form (`" 240.5 "`, `240,5`,
+ *   `2.5e0`, `abc`), for which Word refuses the whole document, it is dropped. The runtime reads
+ *   some forms before they get here: `""` as 0 and `10206.0` as 10206, as Word does; `" 240 "`,
+ *   `0x10` and `1e3` too, though Word refuses them (CR-015's N8, a second phase).
  * - Anything else is refused as before (the error is rethrown): other simple types, and every type
  *   of every other mapping (DrawingML, VML, SpreadsheetML, ...), whose Word reading is unmeasured.
  * Exported for a caller with its own `onInvalidValue` that wants to compose it.
@@ -561,6 +585,7 @@ export function wordInvalidValue(text: string, propertyInfo: Jsonix.AttributePro
   if (!WORD_READ_MODULES.has(classInfo.module.name)) throw error;
   const typeInfo = propertyInfo.typeInfo;
   if (typeInfo.name === 'Boolean') return true;
+  if (INTEGER_TYPES.has(typeInfo.name)) return wordInteger(text);
   if (typeInfo.CLASS_NAME !== 'Jsonix.Model.EnumLeafInfo') throw error;
   if (typeInfo.name === 'org_docx4j_wml.UnderlineEnumeration' && BOOLEAN_FORMS.has(text)) return 'none';
   return undefined;
@@ -573,10 +598,18 @@ export interface WordReading {
   readonly attribute: Jsonix.XML.QName;
   /** The attribute's text, as written. */
   readonly text: string;
-  /** What the model holds instead: `true` for a boolean; `'none'` for `w:u`'s on/off words; undefined where the value was dropped. */
-  readonly value: boolean | string | undefined;
-  /** `'value.kept.exact'` when the text, trimmed of XML whitespace, is a form its type reads (`" false"`), else `'value.kept.invalid'` (`"yes"`, `"Single"`). */
-  readonly kind: 'value.kept.exact' | 'value.kept.invalid';
+  /**
+   * What the model holds instead: `true` for a boolean; `'none'` for `w:u`'s on/off words; an integer's
+   * integer part (CR-015); undefined where the value was dropped.
+   */
+  readonly value: boolean | string | number | undefined;
+  /**
+   * For a boolean or an enumeration, `'value.kept.exact'` when the text, trimmed of XML whitespace,
+   * is a form its type reads (`" false"`), else `'value.kept.invalid'` (`"yes"`, `"Single"`). For an
+   * integer (CR-015), `'value.truncated'` (`"259.2"` read as 259), or `'value.refused'` where the
+   * form is one Word refuses the whole document for and the value was dropped.
+   */
+  readonly kind: 'value.kept.exact' | 'value.kept.invalid' | 'value.truncated' | 'value.refused';
 }
 
 /** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */
@@ -595,11 +628,11 @@ function readOnceTrimmed(text: string, typeInfo: Jsonix.TypeInfo): boolean {
 
 function reportingWordReadings(onWordReading: (reading: WordReading) => void): NonNullable<Jsonix.UnmarshallerOptions['onInvalidValue']> {
   return (text, propertyInfo, classInfo, node, error) => {
-    const value = wordInvalidValue(text, propertyInfo, classInfo, node, error) as boolean | string | undefined;
-    onWordReading({
-      element: node, attribute: propertyInfo.attributeName, text, value,
-      kind: readOnceTrimmed(text, propertyInfo.typeInfo) ? 'value.kept.exact' : 'value.kept.invalid',
-    });
+    const value = wordInvalidValue(text, propertyInfo, classInfo, node, error) as WordReading['value'];
+    const kind: WordReading['kind'] = INTEGER_TYPES.has(propertyInfo.typeInfo.name)
+      ? (value === undefined ? 'value.refused' : 'value.truncated')
+      : (readOnceTrimmed(text, propertyInfo.typeInfo) ? 'value.kept.exact' : 'value.kept.invalid');
+    onWordReading({ element: node, attribute: propertyInfo.attributeName, text, value, kind });
     return value;
   };
 }
@@ -746,6 +779,9 @@ const COLOUR_ATTRIBUTES: ReadonlyMap<string, 'auto' | null> = new Map<string, 'a
   ['org_docx4j_wml.CTBackground color', 'auto'],
 ]);
 
+/** `wml`'s `ST_LongHexNumber` revision-session attributes: an empty one is schema-invalid, and Word's save leaves it out (CR-015 N7). */
+const RSID_ATTRIBUTES: ReadonlySet<string> = new Set(['rsidDel', 'rsidP', 'rsidR', 'rsidRDefault', 'rsidRPr', 'rsidSect', 'rsidTr']);
+
 /** ST_HighlightColor: the sixteen names and `none`. */
 const HIGHLIGHT_VALUES: ReadonlySet<string> = new Set([...HIGHLIGHT_COLORS.map(([name]) => name), 'none']);
 
@@ -819,13 +855,22 @@ function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<s
     onAttributeValue(value, text, owner, propertyInfo, classInfo) {
       const callers = callerOnAttributeValue?.(value, text, owner, propertyInfo, classInfo);
       if (callers !== undefined || classInfo.module.name !== 'org_docx4j_wml') return callers;
-      const rejected = COLOUR_ATTRIBUTES.get(`${classInfo.name} ${propertyInfo.name}`);
-      if (rejected === undefined) return undefined;
-      const normal = normalColour(text, rejected);
-      if (normal === text) return undefined;
-      // The owner's element was the last one opened: its attributes are written before its content.
-      if (onNormalised && lastWritten) {
-        onNormalised({ element: lastWritten as Element, path: `${pathOf(lastWritten)}/@${qualifiedName(propertyInfo.attributeName, table)}`, before: text, after: normal });
+      let normal: string | null;
+      if (text === '' && propertyInfo.attributeName.namespaceURI === WML_NS && RSID_ATTRIBUTES.has(propertyInfo.attributeName.localPart)) {
+        normal = null;
+      } else {
+        const rejected = COLOUR_ATTRIBUTES.get(`${classInfo.name} ${propertyInfo.name}`);
+        if (rejected === undefined) return undefined;
+        normal = normalColour(text, rejected);
+        if (normal === text) return undefined;
+      }
+      if (onNormalised) {
+        // The owner's element is open, and every element written since is inside it: the runtime writes an
+        // element's attributes after its content (a w:p's rsids after its runs).
+        let element: Node | null | undefined = lastWritten;
+        while (element && writtenFrom.get(element) !== owner) element = element.parentNode;
+        element ??= lastWritten;
+        if (element) onNormalised({ element: element as Element, path: `${pathOf(element)}/@${qualifiedName(propertyInfo.attributeName, table)}`, before: text, after: normal });
       }
       return normal;
     },
