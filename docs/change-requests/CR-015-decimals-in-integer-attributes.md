@@ -1,6 +1,6 @@
-# CR-015: A decimal in an integer attribute, rounded as docx4j rounds it (`wordInvalidValue`)
+# CR-015: A decimal in an integer attribute, read rather than failing the part (`wordInvalidValue`)
 
-**Status:** Proposed 2026-10-26
+**Status:** Proposed 2026-10-26; the rounding (N3) and other text (N4) wait for the shared Word probe (docx4j-25's)
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
 fails here where docx4j repairs it.
@@ -8,8 +8,13 @@ fails here where docx4j repairs it.
 `@docx4j/jsonix` ^3.8.0 already.
 **Counterpart:** docx4j's `mc-preprocessor.xslt` (`docx4j-core/src/main/resources/org/docx4j/jaxb/`, last changed
 1cff2cd5c). Its rounding templates date from 2014 (Google Docs), 2015, 2017 (`w:hanging="141.99999999999994"`), 2018
-(pandoc 2.2.1, docx4j issue #298) and 2025 (`w:firstLine`, 11.5.7). Extending them past their list (section 3.2) is
-docx4j's to file, with Jason.
+(pandoc 2.2.1, docx4j issue #298) and 2025 (`w:firstLine`, 11.5.7). docx4j-25 confirmed that docx4j fails the part
+outside that list, and proposed docx4j CR-065 to Jason (2026-10-26, not yet opened):
+- phase 1 stops a part that can't be read being replaced by an empty one;
+- phase 2 gives every integer attribute a lenient parse through an xjb `javaType`, the Java counterpart of section
+  3.1's branch.
+
+docx4j-python proposes keeping the text and rounding it in its readers and on save (section 3.1).
 
 ## 1. Summary
 
@@ -24,8 +29,12 @@ integer.`), so the part can be neither read nor re-marshalled. docx4j loads the 
 its eight attribute shapes: it rounds the value half-even and reads the rest typed.
 
 Proposed: the facade's `wordInvalidValue`, which every facade unmarshal already passes to the runtime (CR-013 section
-3.5), rounds a decimal in an integer attribute of Word's own WordprocessingML mappings, half-even, as docx4j does. The
-model then holds an integer, so a save writes one. `onWordReading` reports each value it rounds.
+3.5), rounds a decimal in an integer attribute of Word's own WordprocessingML mappings. The model then holds an
+integer, so a save writes one. `onWordReading` reports each value it rounds.
+
+The rounding rule is Word's, once measured. Half-even, which docx4j's XSLT applies and which section 2 measured, is
+Xalan's `format-number`, not Word's. docx4j-25 is building one Word probe for all three ports, and the ports move
+together on its answer (N3).
 - **docx4j's list:** this matches docx4j value for value.
 - **Other integer attributes:** docx4j fails the part on these, and this package would load it (N2).
 - **Text that is no decimal number** (`240,5`) still fails the part, as it does in docx4j.
@@ -119,29 +128,46 @@ Anything else that the runtime refuses still fails the part, as it does in docx4
 The other choice is to drop such an attribute, as CR-013 drops an invalid enumeration value. Word's reading of such
 text is unmeasured, so failing as before is the conservative choice.
 
-**Recommendation:** fail as before, until a Word probe says otherwise (section 3.4).
+**Recommendation:** fail as before, until the shared probe (section 3.4) says whether Word opens `abc` and `""` at
+all.
 
 The runtime reads some text that never reaches `onInvalidValue` (section 4): `""`, `1e3` and `0x10` give `0`, `1000`
 and `16`.
 
 ### 3.4 Rounding (N3)
 
-The rounding is half-even, as docx4j's `format-number` does it (measured, section 2): `240.5` gives `240`, `241.5`
+docx4j's rounding is half-even, as `format-number` does it (measured, section 2): `240.5` gives `240`, `241.5`
 `242`, `-0.5` `0` (never `-0`) and `141.99999999999994` `142`. In JavaScript, with `f = Math.floor(v)` and
 `d = v - f` (exact for any value a document holds):
 - `d < 0.5` gives `f`;
 - `d > 0.5` gives `f + 1`;
 - a tie gives whichever of the two is even.
 
-Word's own reading is unmeasured: whether it rounds, truncates or ignores a decimal. "As Word reads it", rather than
-"as docx4j repairs it", needs a Word probe, which only Jason can run. As in CR-013's rounds, Word's save would be the
-oracle: a document with each family's decimals at `.2`, `.5` on an even and an odd integer, `.8`, a negative `.5`,
-`141.99999999999994`, and the forms of section 3.3, opened and saved in Word 365. If Word differs, docx4j's XSLT and
-this rule change together.
+That is Xalan's rule, not Word's. Word's own reading is unmeasured: whether it rounds, truncates or ignores a
+decimal, and whether it opens `abc` and `""` at all.
 
-**Recommendation:** half-even now, value for value with docx4j. The probe is worth running only if a consumer needs
-Word's answer for the half-way cases; the reported producers write `.0`, `.2`, `.8` and `.99999999999994`, where every
-rounding rule agrees and truncation doesn't.
+**The shared probe.** docx4j-25 offered (2026-10-26) to build one Word probe for docx4j, core-ts and docx4j-python:
+- **The document:** one docx, a labelled paragraph per case. Jason opens it in Word 365, and Word's save is the
+  oracle, as in CR-013's rounds.
+- **Its families:** twips (`w:before`), signed twips (`w:ind/@w:left`), eighth-points (a border's `w:sz`), half-points
+  (`w:sz`), a decimal number, and a `pct` `w:tcW`.
+- **Its values:** `120.5`, `120.4`, `121.5`, `122.5`, a negative, `1e3`, `""` and `abc`.
+
+This package builds none of its own. The shapes of section 2 that it lacks went to docx4j-25 the same day, among them
+docx4j's own list, `141.99999999999994`, `-0.5`, `-1.5` and `0x10`.
+
+The producers reported so far write `.0`, `.2`, `.8` and `.99999999999994`, where every round-to-nearest rule
+agrees and only truncation differs. So the half-way cases decide little for them, but the probe settles truncation
+and the text Word refuses for all three ports at once.
+
+Two orders are possible:
+- **(a) the probe first:** implement Word's rule, measured, in all three ports together;
+- **(b) half-even now**, as docx4j's XSLT does. It is labelled in this CR, in the code's doc comment and in the
+  registry as a default to be re-measured, and moves with the other ports once Word's rule is known.
+
+**Recommendation: (a).** The probe is one document that Jason opens and saves, and docx4j-25 builds it. The parts
+fail in every port today, so waiting costs nothing new. Releasing half-even first and Word's rule later would change
+a reading twice. If Jason wants the parts to load sooner, (b) is safe for every value producers are known to write.
 
 ### 3.5 Reporting (N5)
 
@@ -170,7 +196,7 @@ That leaves a caller who sets a non-integer itself (`spacing.line = 12.96 * 20`)
 `Argument [259.2] must be an integer.`, through jsonix-CR-010's `onUnprintableValue`, which the facade doesn't set.
 There are two choices:
 - **(a) keep the throw.** A non-integer in an integer property is the caller's bug, and the throw names it;
-- **(b) under the normaliser** (on by default), round it half-even and report it to `onNormalised`. A save then never
+- **(b) under the normaliser** (on by default), round it by N3's rule and report it to `onNormalised`. A save then never
   fails on it, but the caller's bug goes unseen unless they listen.
 
 **Recommendation: (a).** The normaliser writes Word's reading of documents; it is not there to repair a caller's
@@ -208,7 +234,8 @@ changes no reading. This agrees with docx4j for SSRS's files, and writes less th
   Making the parse strict, so that these reach the facade's rules, would be a jsonix CR. It should wait for the Word
   probe, since `""` as `0` already gives SSRS's margins docx4j's reading.
 - **Other mappings' integer attributes** (section 3.2).
-- **docx4j's list.** Extending it to (b), or matching N4 and N7, is docx4j's to file.
+- **docx4j's list.** docx4j's CR-065 replaces it with a lenient parse (header). Matching N4 and N7 there is
+  docx4j's to decide.
 
 ## 5. Decisions (for Jason)
 
@@ -217,10 +244,11 @@ changes no reading. This agrees with docx4j for SSRS's files, and writes less th
   `wordInvalidValue`.
 - **N2. Which attributes:** (a) docx4j's list with its conditions; (b) every integer attribute of Word's own mappings
   (178). **Recommendation:** (b).
-- **N3. Rounding:** half-even as docx4j does, or wait for a Word probe. **Recommendation:** half-even now; the probe
-  only if a consumer needs Word's half-way answer.
+- **N3. Rounding:** (a) the shared Word probe first (docx4j-25's), then Word's rule in all three ports; or (b)
+  half-even now, labelled as a default to be re-measured. **Recommendation:** (a); (b) if the parts should load
+  before the probe is run.
 - **N4. Text that is no decimal number:** fail as before (docx4j fails too), or drop the attribute.
-  **Recommendation:** fail as before.
+  **Recommendation:** fail as before, until the probe says whether Word opens `abc` and `""`.
 - **N5. Reporting:** a new `kind: 'value.rounded'` with a numeric `value`, or reuse `'value.kept.invalid'`.
   **Recommendation:** the new kind.
 - **N6. A caller's non-integer on save:** keep the throw, or round it under the normaliser. **Recommendation:** keep
@@ -261,12 +289,14 @@ changes no reading. This agrees with docx4j for SSRS's files, and writes less th
     widens to `number`.
   - Its corpus survey would say how many parts newly load.
   - Nothing else.
-- **docx4j:** none from this CR. Extending its list, if Jason wants (b) in both ports, is docx4j's.
+- **docx4j:** none from this CR. Its CR-065 phase 2 is the counterpart, and it records this CR's `w:between` border
+  space as one more shape its fixed list misses.
 - **docx4j-python:** keeps the raw string with a `ConverterWarning` (the survey's row 1). Its counterpart is its own.
 
 ## 8. Release
 
 - **Changes:** parts that failed now load, `WordReading` gains a kind, and, with N7, a save leaves out empty rsids.
-- **Version:** under Jason's rule (minors for a substantive change of API or output), a minor. It can ride with CR-014
-  in 0.6.0 (implemented, unreleased).
+- **Version:** under Jason's rule (minors for a substantive change of API or output), a minor.
+- **Timing:** with N3 (a), after the probe. It needn't hold back CR-014's 0.6.0; it rides along only if both are
+  ready together.
 - **Effort:** half a day with the oracle fixtures, once N1 to N7 are decided.
