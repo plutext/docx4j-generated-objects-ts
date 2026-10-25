@@ -4,8 +4,9 @@
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
 fails here where docx4j repairs it.
-**Depends on:** nothing new. jsonix-CR-010's `onInvalidValue`, through which CR-013 reads Word's values, is in
-`@docx4j/jsonix` ^3.8.0 already.
+**Depends on:** docx4j CR-065 phase 0, the shared Word probe (registry `docx4j/CR-065.0`), for N3 and N4: its 65
+cases are built and on the share, and await Jason's run. Nothing new in the runtime: jsonix-CR-010's `onInvalidValue`,
+through which CR-013 reads Word's values, is in `@docx4j/jsonix` ^3.8.0 already.
 **Counterpart:** docx4j's `mc-preprocessor.xslt` (`docx4j-core/src/main/resources/org/docx4j/jaxb/`, last changed
 1cff2cd5c). Its rounding templates date from 2014 (Google Docs), 2015, 2017 (`w:hanging="141.99999999999994"`), 2018
 (pandoc 2.2.1, docx4j issue #298) and 2025 (`w:firstLine`, 11.5.7). docx4j-25 confirmed that docx4j fails the part
