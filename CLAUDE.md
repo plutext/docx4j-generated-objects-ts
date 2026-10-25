@@ -232,7 +232,7 @@ own mappings as Word 365 does, measured by docx4j CR-065's shared probe:
 - both are reported as `'value.truncated'` or `'value.refused'`.
 
 Its normaliser also leaves out an empty `w:rsid*` on save. Phase 2 (a jsonix strict integer parse, so that the forms
-`Number()` reads first come to the same rule) waits for a jsonix CR. docx4j CR-065's D3 is the same rule in Java.
+`Number()` reads first come to the same rule) waits for jsonix-CR-012 (`strictIntegers`). docx4j CR-065's D3 is the same rule in Java.
 
 ## What the declarations promise
 

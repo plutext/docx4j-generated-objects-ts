@@ -1,7 +1,7 @@
 # CR-015: A decimal in an integer attribute, read as Word reads it rather than failing the part (`wordInvalidValue`)
 
 **Status:** Phase 1 (N1 to N7) implemented 2026-10-26 (Jason: "implement CR-015 as recommended"); phase 2 (N8 (b))
-waits for a jsonix CR
+waits for jsonix-CR-012
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
 fails here where docx4j repairs it.
@@ -200,10 +200,30 @@ Word's own: `""` as `0`, `+240` and `240.` as `240`, and `10206.0` as `10206`. T
   not trim. The forms above would then reach the facade:
   - Word's own forms, including `""` as `0`, are read as Word reads them;
   - the rest are dropped as in N4 (b);
-  - outside Word's mappings, `wordInvalidValue` reads them with `Number()` as today, so nothing changes there.
+  - outside Word's mappings, `wordInvalidValue` reads them as today, so nothing changes there.
 
 **Recommendation: (b), as a second phase.** It makes the ports agree, since docx4j's lenient parse drops such forms
 too (its D3). But no producer is known to write them, so it needn't hold back the first phase.
+
+**Phase 2: jsonix-CR-012** (jsonix-d2, drafted 2026-10-26, jsonix 6a83825; proposed, L1 and L2 for Jason). It adds a
+per-call unmarshaller option, `strictIntegers`, off by default.
+- **What it accepts:** with the option on, an attribute of the 13 integer types reads only `/^[+-]?[0-9]+$/`, with no
+  trimming. Everything else goes to `onInvalidValue` as written: `""`, `" 240 "`, `240.`, `10206.0`, `0x10`, `1e3`.
+- **Where (L1, recommended):** attribute values only. Word's mappings have no integer element content or integer
+  lists, and there `onInvalidValue` can receive the refusal.
+
+The facade will then:
+- **set the option** on every facade unmarshal;
+- **in other mappings,** read a refused value with `propertyInfo.typeInfo.parse(text)`, the runtime's parse unchanged
+  (jsonix-CR-012 section 4.5). That is exactly today's reading there, `0x10` as `16` and a refusal of `1.5`, where
+  `Number()` would not be;
+- **in Word's mappings,** read Word's forms and `""` as Word does, and drop the rest:
+  - `10206.0` and `240.` are reported as `'value.truncated'`. Google Docs' widths, read silently today, are then
+    reported: the value is unchanged, and the text is still one the schema refuses;
+  - `""` is reported as `'value.kept.invalid'` with the value `0`, Word's reading of an invalid value.
+
+Phase 2's tests are the four `RUNTIME_READS` of `test/word365-integers.mjs`: `" 240 "`, `0x10`, `1.5e2` and `1e3`,
+which become refused forms, dropped and reported.
 
 ### 3.4 The rule: truncation toward zero (N3, measured)
 
