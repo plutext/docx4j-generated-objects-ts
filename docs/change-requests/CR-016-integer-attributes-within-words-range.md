@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Proposed 2026-10-26; G1 to G6 for Jason
+**Status:** Proposed 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26)
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -155,7 +155,10 @@ caller is a mistake. Non-integers keep today's rounding (`size`) or the marshal'
 - **The other measures a caller sets in this package:** `inlinePicture`'s `cx`/`cy` are DrawingML EMUs, and content
   control ids are decimal numbers, not measured.
 
-## 6. Decisions (for Jason)
+## 6. Decisions
+
+**Decided as recommended** (Jason, 2026-10-26: "CR-016: decisions G1 to G6 as recommended"). The options and reasons
+stand below.
 
 - **G1. The channel:** (a) a new `onOutOfRange` callback on unmarshal and marshal; (b) new kinds on `onWordReading` and
   `onNormalised`. **Recommendation:** (a). The existing records describe a change to the value, and here there is none.
