@@ -75,8 +75,9 @@ cited in CR-066 section 2, ST_TwipsMeasure's are mixed:
 So for an unmeasured one only the certain range holds. A value outside -32768 to 65535 changes in every measured
 attribute.
 
-One correction to CR-066's table: `w:pgMar/@w:top` (and `bottom`) is `ST_SignedTwipsMeasure` in docx4j's `wml.xsd`, as
-in ECMA-376, not `ST_TwipsMeasure`. Word's int16 is its schema type's sign.
+`w:pgMar/@w:top` (and `bottom`) is `ST_SignedTwipsMeasure` in docx4j's `wml.xsd`, as in ECMA-376, so its int16 storage
+matches the schema. CR-066 section 3.1 had it as `ST_TwipsMeasure`, and was corrected on 2026-10-26. `w:trHeight/@w:val`
+is the one measured attribute whose storage sign differs from its schema type.
 
 ## 3. What this package does today (measured 2026-10-26, at 05d87c5)
 
@@ -199,7 +200,7 @@ caller is a mistake. Non-integers keep today's rounding (`size`) or the marshal'
 
 - **core-ts:** its content API's setters can refuse with the exported table, as docx4j-python's CR-022 does at its
   setters. It can also map `onOutOfRange` to part warnings beside its `ValueKeptWarning`. That is its own CR.
-- **docx4j:** CR-066 is the counterpart. The one correction (section 2) is told to docx4j-25.
+- **docx4j:** CR-066 is the counterpart. It cites this CR in its section 8 when its phase 1 is designed.
 - **docx4j-python:** CR-022. It refuses a negative in a schema-unsigned attribute at its setters; this CR refuses only
   where its own builders take a measure (G4).
 
