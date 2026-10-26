@@ -12,7 +12,8 @@ code: a facade with docx4j's names (`index.mts`), the module registry (`modules.
 mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
 `w:drawing`/`w:pict`; `getContext` and `modulesFor` add it), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
-highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
+highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
+attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
 [`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.9.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0). This is the counterpart of docx4j's
@@ -27,7 +28,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, bundle.mjs
+npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -53,7 +54,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are seven tests and no test framework:
+There are eight tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -92,6 +93,10 @@ There are seven tests and no test framework:
   forms as their integer part and drops the forms Word refuses, while other mappings still fail. It also checks the
   record, a caller's precedence, that a save writes integers while a caller's own non-integer still throws, and that
   an empty rsid is left out on save with its path.
+  CR-016's block checks that each entry of `WORD_INTEGER_STORAGE` (51, 26 unmeasured) is an integer `w:` attribute of
+  its class, so a regeneration that renames one fails. It also checks `wordIntegerReading`'s wrap, clamp, rule and
+  certain range, and `onOutOfRange` on read and on save. Nothing is rewritten, with or without the normaliser. The
+  builders' `RangeError` is checked at the boundaries.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -121,8 +126,8 @@ There are seven tests and no test framework:
   `Requires` names in a marshalled part is also checked to resolve where it is written (CR-001
   section 3.2).
   Run against 0.1.5's `modules/` the test reports all five losses that release carried. A part that
-  reaches CR-013's `onWordReading` or `onNormalised` fails too: Office writes only values the runtime
-  reads, and colours in their normal form.
+  reaches CR-013's `onWordReading` or `onNormalised`, or CR-016's `onOutOfRange`, fails too: Office writes only values
+  the runtime reads, colours in their normal form, and integers within its own storage.
 - `test/word365.mjs` (runtime, CR-013) reads Word 365's run property probes (rounds 1 to 7 of
   2026-10-24, `test/fixtures/word365-probes/`, each probe's `word/document.xml` beside Word's save
   of it and, for fifteen, docx4j's): each marker run's direct toggles, underline and its colour,
@@ -140,6 +145,11 @@ There are seven tests and no test framework:
   must write what Word's save wrote, the oracle. 50 are equal, and 6 differences are stated, strict both ways: four
   truncations to a default Word's save leaves out, and two `w:gridCol` Word recomputes. In the refused files, all 8
   forms are dropped and reported, four of them through phase 2's `strictIntegers`.
+- `test/word365-ranges.mjs` (runtime, CR-016) reads docx4j CR-066's round 5 (Jason, Word 365, 2026-10-26;
+  `test/fixtures/cr066-probe/`, six group files beside Word's saves). Its 190 cases put integers at and beyond each
+  attribute's storage width. For each, `wordIntegerReading` must give what Word's save wrote, the oracle, with the rule
+  for `w:spacing/@w:line` and `w:trHeight`; two wrap to a default Word leaves out. `onOutOfRange` must report exactly
+  the 118 cases Word reads differently, on read and on save, and the save must write every value as held.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -235,6 +245,15 @@ Its normaliser also leaves out an empty `w:rsid*` on save. Phase 2 (implemented 
 `strictIntegers` on every facade unmarshal that uses the facade's own `onInvalidValue`. So the forms the runtime's
 `Number()` would read first (`" 240 "`, `0x10`, `1e3`, `""`, `10206.0`) come to the same rule, and every other mapping
 reads them through `typeInfo.parse`, unchanged. docx4j CR-065's D3 is the same rule in Java.
+CR-016 (implemented 2026-10-26) gives Word's storage of each integer attribute (`helpers/wml`'s `WORD_INTEGER_STORAGE`,
+from docx4j CR-066's round 5): int16, uint16, 8 or 5 bits, or int32, with clamps on tab stops and page size, and the
+rule in the sign for exact lines and row heights. `wordIntegerReading` gives what Word reads for a value.
+- **The report:** the facade's `onOutOfRange` reports each value Word would read differently, on read (through the
+  composed unmarshal `onElement`) and on save (an adapter on `onAttributeValue`, outside the normaliser). It never
+  rewrites.
+- **Why per attribute:** docx4j's type-bound print method can be exact only per type, but the adapters know the class
+  and the property, so this report is exact per attribute.
+- **The builders** throw a `RangeError` for a width or size Word can't hold.
 
 ## What the declarations promise
 

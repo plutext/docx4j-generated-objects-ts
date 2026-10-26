@@ -5,7 +5,7 @@
 import { Jsonix } from '@docx4j/jsonix';
 import { MODULES } from './modules.mjs';
 import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
-import { wordColor, HIGHLIGHT_COLORS } from './helpers/wml.mjs';
+import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading } from './helpers/wml.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -516,7 +516,7 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
  * `strictIntegers` too.
  */
 function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
-  const { onWordReading, ...runtimeOptions } = options ?? {};
+  const { onWordReading, onOutOfRange, ...runtimeOptions } = options ?? {};
   const callerOnElement = runtimeOptions.onElement;
   return {
     ...runtimeOptions,
@@ -525,6 +525,7 @@ function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOption
         const bindings = choiceBindingsAt(element);
         if (bindings) { sourceBindings.set(value, bindings); recorded = true; }
       }
+      if (onOutOfRange) reportOutOfRange(element, value, onOutOfRange);
       callerOnElement?.(element, value);
     },
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
@@ -627,6 +628,65 @@ export interface WordReading {
   readonly kind: 'value.kept.exact' | 'value.kept.invalid' | 'value.truncated' | 'value.refused';
 }
 
+// ---------------------------------------------------------------------------------------------
+// CR-016: integer attributes within Word's range
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * A value Word 365 would read differently from the tree (CR-016), as `onOutOfRange` receives it: an integer outside
+ * the width Word stores its attribute in (`helpers/wml`'s `WORD_INTEGER_STORAGE`). The tree keeps the value, and a
+ * save writes it as it is.
+ */
+export interface OutOfRange {
+  /** On read, the element in the source; on save, the element written. */
+  readonly element: Element;
+  readonly attribute: Jsonix.XML.QName;
+  /** On save, from the part root, as `Normalisation`'s: `/w:document/w:body[1]/w:p[3]/w:pPr[1]/w:ind[1]/@w:left`. */
+  readonly path?: string;
+  /** The value the tree holds. */
+  readonly value: number;
+  /** What Word reads for it, and how Word stores the attribute. */
+  readonly wordReads: WordIntegerReading;
+}
+
+/** For each type, its properties in `WORD_INTEGER_STORAGE` (its own and its base types'), with the attribute each is. */
+const rangedByType = new Map<string, readonly (readonly [typeName: string, property: string, attribute: Jsonix.XML.QName])[]>();
+
+function rangedProperties(typeName: string): readonly (readonly [string, string, Jsonix.XML.QName])[] {
+  let found = rangedByType.get(typeName);
+  if (found === undefined) {
+    const list: [string, string, Jsonix.XML.QName][] = [];
+    for (let ti: Jsonix.TypeInfo | undefined = getContextSync().getTypeInfoByName(typeName); ti; ti = ti.baseTypeInfo) {
+      const ranged = WORD_INTEGER_STORAGE[ti.name];
+      if (ranged === undefined) continue;
+      for (const property of (ti as unknown as { properties?: { name: string; attributeName?: Jsonix.XML.QName | null }[] }).properties ?? []) {
+        if (property.attributeName && ranged[property.name] !== undefined) list.push([ti.name, property.name, property.attributeName]);
+      }
+    }
+    rangedByType.set(typeName, found = list);
+  }
+  return found;
+}
+
+/** The reading of an owner's integer property, with the rule beside it where its sign carries one; undefined when it isn't a number or isn't ranged. */
+function readingOf(typeName: string, property: string, owner: unknown, value: unknown): WordIntegerReading | undefined {
+  if (typeof value !== 'number') return undefined;
+  const storage = WORD_INTEGER_STORAGE[typeName]?.[property];
+  const rule = storage?.measured && storage.signRule ? (owner as Record<string, unknown>)[storage.signRule] : undefined;
+  return wordIntegerReading(typeName, property, value, typeof rule === 'string' ? rule : undefined);
+}
+
+/** The read side (CR-016 section 4.2): each ranged property of a typed object Word would read differently. */
+function reportOutOfRange(element: Element, value: object, onOutOfRange: (report: OutOfRange) => void): void {
+  const typeName = (value as { TYPE_NAME?: string }).TYPE_NAME;
+  if (typeof typeName !== 'string') return;
+  for (const [declaring, property, attribute] of rangedProperties(typeName)) {
+    const held = (value as Record<string, unknown>)[property];
+    const reading = readingOf(declaring, property, value, held);
+    if (reading && !reading.kept) onOutOfRange({ element, attribute, value: held as number, wordReads: reading });
+  }
+}
+
 /** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */
 export interface UnmarshalOptions extends Jsonix.UnmarshallerOptions {
   /**
@@ -634,6 +694,11 @@ export interface UnmarshalOptions extends Jsonix.UnmarshallerOptions {
    * after it was read. Not called when the caller passes its own `onInvalidValue`.
    */
   onWordReading?(reading: WordReading): void;
+  /**
+   * Called for each integer attribute value Word 365 would read differently (CR-016): outside the width Word stores
+   * it in. The tree keeps the value as written. Not called unless passed.
+   */
+  onOutOfRange?(report: OutOfRange): void;
 }
 
 function readOnceTrimmed(text: string, typeInfo: Jsonix.TypeInfo): boolean {
@@ -715,7 +780,7 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * original node, which is still in its source document.
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, facadeOptions?: MarshalOptions): Document {
-  const { normaliseOnSave, onNormalised, ...options } = facadeOptions ?? {};
+  const { normaliseOnSave, onNormalised, onOutOfRange, ...options } = facadeOptions ?? {};
   const table = namespacePrefixesFor(context, element, options.namespacePrefixes);
   const choices = new Map<Element, ReadonlyMap<string, string>>();
   const callerOnElement = options.onElement;
@@ -735,7 +800,8 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
     callerOnElement?.(written, value);
   };
   const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement };
-  const doc = context.createMarshaller((normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions)
+  const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions;
+  const doc = context.createMarshaller(onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised)
     .marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
   const rootValue = rootValueOf(element);
@@ -776,6 +842,11 @@ export interface MarshalOptions extends Jsonix.MarshallerOptions {
   normaliseOnSave?: boolean;
   /** Called for each value the normaliser rewrote or left out. */
   onNormalised?(normalisation: Normalisation): void;
+  /**
+   * Called for each integer attribute value written that Word 365 would read differently (CR-016); the value is
+   * written as held, whether or not `normaliseOnSave` is on. Not called unless passed.
+   */
+  onOutOfRange?(report: OutOfRange): void;
 }
 
 /**
@@ -900,6 +971,42 @@ function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<s
         if (parent) onNormalised({ element: parent as Element, path: `${pathOf(parent)}/${qualifiedName(name, table)}`, before: (value as { val?: string }).val, after: null });
       }
       return true;
+    },
+  };
+}
+
+/**
+ * The marshaller options reporting each integer attribute Word would read differently (CR-016 section 4.3), on
+ * jsonix-CR-011's `onAttributeValue`, composed around the options it is given (the normaliser's, or the caller's).
+ * It never changes what is written: it returns what the options it wraps return.
+ */
+function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onOutOfRange: (report: OutOfRange) => void): Jsonix.MarshallerOptions {
+  const { onAttributeValue: innerOnAttributeValue, onElement } = options;
+  const writtenFrom = new WeakMap<Node, unknown>();
+  let lastWritten: Node | undefined;
+  return {
+    ...options,
+    onElement(element: Node, value: unknown): void {
+      writtenFrom.set(element, value);
+      lastWritten = element;
+      onElement?.(element, value);
+    },
+    onAttributeValue(value, text, owner, propertyInfo, classInfo) {
+      const result = innerOnAttributeValue?.(value, text, owner, propertyInfo, classInfo);
+      const reading = readingOf(classInfo.name, propertyInfo.name, owner, value);
+      if (reading && !reading.kept) {
+        // The owner's element is open, and every element written since is inside it.
+        let element: Node | null | undefined = lastWritten;
+        while (element && writtenFrom.get(element) !== owner) element = element.parentNode;
+        element ??= lastWritten;
+        if (element) {
+          onOutOfRange({
+            element: element as Element, attribute: propertyInfo.attributeName,
+            path: `${pathOf(element)}/@${qualifiedName(propertyInfo.attributeName, table)}`, value: value as number, wordReads: reading,
+          });
+        }
+      }
+      return result;
     },
   };
 }

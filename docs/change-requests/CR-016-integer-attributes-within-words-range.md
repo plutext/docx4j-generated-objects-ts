@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Proposed 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26)
+**Status:** Implemented 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26)
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -97,8 +97,18 @@ is the one measured attribute whose storage sign differs from its schema type.
 `helpers/wml` exports Word's storage per attribute, keyed by `TYPE_NAME` and property, as section 2 gives it:
 - **an entry:** the width and sign, plus a clamp (tab stops, page width and height) or a rule (`line` with `lineRule`,
   `trHeight` with `hRule`);
-- **a function** of the type, the property, the value and, for a rule, the owner, giving what Word reads: the value it
-  writes back, and for a rule the rule too. It returns `undefined` for an attribute not in the table.
+- **a function** (`wordIntegerReading`) of the type, the property, the value and, for a rule, the rule beside it,
+  giving what Word reads: its `value`, what its own save `written`, the `rule` for `line` and `trHeight`, whether it
+  is `kept`, and the `storage` for a message. It returns `undefined` for an attribute not in the table.
+- **What it covers:** 51 attributes (`WORD_INTEGER_STORAGE`):
+  - the 44 twips attributes, of which 26 `ST_TwipsMeasure` attributes are unmeasured;
+  - `w:position`, `w:sz` (with `w:szCs` and `w:kern`), text scale, a border's `sz` and `space`, `TblWidth.w` and
+    `w:pgNumType/@w:start`.
+
+  The other `ST_SignedTwipsMeasure` attributes are int16, as every measured one of the type is (CR-066 D7).
+- **`atLeast` lines and `exact` and `auto` row heights** are read by the same storage as the measured `exact` lines and
+  absent row rules: Word's binary format keeps the rule in one sign for both. Round 5 measured `auto` and `exact` lines
+  and absent row rules.
 - **in range** means Word reads the value as written. `before`'s `-1`, Word's own spelling of `65535`, is in range.
 - **Unmeasured ST_TwipsMeasure attributes (G6):** the certain range only. A value outside -32768 to 65535 is reported,
   and the reading is given as unknown, not guessed.
@@ -177,27 +187,37 @@ stand below.
 
 ## 7. Tests
 
-- **Fixtures:**
-  - round 5's six group files and Word's saves of them, as extracted part XML, under `test/fixtures/cr066-probe/`;
-  - `cases.txt`;
-  - a `SOURCE.md` naming the share and docx4j CR-066 section 3.1;
-  - never edited by hand.
+Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in the smoke.
+
+- **Fixtures:** `test/fixtures/cr066-probe/` holds round 5's six group files and Word's saves, as extracted part XML,
+  with `cases.txt`, `families.txt` and a `SOURCE.md` naming the share and docx4j CR-066 section 3.1. Never edited by
+  hand.
 - **Word as the oracle** (`test/word365-ranges.mjs`):
-  - for each of the 190 cases, the table's reading of the written value equals what Word's save wrote, with the rule
-    for `line` and `trHeight`;
-  - the read report fires for exactly the cases whose save differs;
-  - `w:gridCol`, which Word recomputes, is stated.
-- **The certain range:** an unmeasured ST_TwipsMeasure attribute (`w:spacing/@w:after`, `w:gridCol`) is reported
-  outside -32768 to 65535 and not inside it.
-- **Smoke:**
-  - the channel on read and save, with `path` and `wordReads`;
-  - nothing rewritten, and the tree unchanged;
-  - reported with `normaliseOnSave: false`;
-  - not called when not passed;
-  - each builder's `RangeError` and its message, and the values at each boundary accepted.
-- **Fidelity:** a part that reaches `onOutOfRange` fails, as for `onWordReading` and `onNormalised`. Word writes nothing
-  out of its own range.
-- `test/nodenext/consumer.mts`: the callback, the report type and the table's types.
+  - for each of the 190 cases, `wordIntegerReading` gives what Word's save wrote, with the rule for `line` and
+    `trHeight`;
+  - Word left out 2, `w:tblInd` and `w:trHeight` at 65536, which wrap to the default 0;
+  - `kept` is false exactly where Word's save changed the value or its rule. The one exception is `before`'s 65535,
+    which Word reads as written and writes as `-1`;
+  - `onOutOfRange` on read reports exactly those 118 cases. On save it reports the same ones, with paths, and writes
+    every value as held;
+  - dropping the tab stops' clamp fails the test (checked by changing the build).
+- **The table** (smoke):
+  - each of its 51 entries is an integer attribute of its class, in `w`'s namespace, by its local name, so a
+    regeneration that renames one fails;
+  - 26 entries are unmeasured;
+  - the reading of a wrap, a clamp, a rule, `before`'s `-1`, and an unmeasured attribute inside and outside the
+    certain range;
+  - an attribute not in the table gives `undefined`.
+- **The channel** (smoke):
+  - on read, the tree keeps the value;
+  - on save, the value is written as held and reported with its path, with and without `normaliseOnSave`, including a
+    value set by code;
+  - when not passed, nothing is reported.
+- **The builders** (smoke): `tc`, `tr` and `tbl` take 32767 and throw a `RangeError` for 32768, -1, `NaN` and
+  `Infinity`, and for a columns' total over 32767. `applyRunOptions` takes 32767.5 points and throws past it.
+- **Fidelity:** a part that reaches `onOutOfRange`, on read or on save, fails. None does.
+- `test/nodenext/consumer.mts`: `OutOfRange`, `onOutOfRange` on both sides, `WORD_INTEGER_STORAGE` and
+  `wordIntegerReading`.
 
 ## 8. Consumers
 
@@ -211,5 +231,4 @@ stand below.
 
 - **Changes:** new API (the table, its function, `onOutOfRange`), and the builders throw where they wrote a wrong
   number before.
-- **Version:** under Jason's rule, a minor. It can ride with CR-014 and CR-015 in 0.6.0, or follow.
-- **Effort:** a day, with the fixtures.
+- **Version:** under Jason's rule, a minor. It can ride with CR-014 and CR-015 in 0.6.0.

@@ -391,15 +391,22 @@ for (const file of parts) {
     let out;
     const rejectedAtParent = new Set();
     // Office writes only values the runtime reads, and colours in their normal form, so no corpus part reaches
-    // CR-013's rule or its normaliser.
+    // CR-013's rule or its normaliser; and Word writes no integer outside its own storage (CR-016).
     const wordReadings = [];
     const normalised = [];
-    const options = { onWordReading: (r) => wordReadings.push(`${r.element.nodeName}/@${r.attribute.localPart}="${r.text}"`) };
+    const outOfRange = [];
+    const options = {
+      onWordReading: (r) => wordReadings.push(`${r.element.nodeName}/@${r.attribute.localPart}="${r.text}"`),
+      onOutOfRange: (r) => outOfRange.push(`read ${r.element.nodeName}/@${r.attribute.localPart}="${r.value}" (${r.wordReads.storage})`),
+    };
     // The callback is the classifier for a resolved check: it reports an element at the parent
     // that would not accept it, which is what tells kind 2 from kind 1 (CR-004 section 10.1).
     if (label.endsWith('[resolved]')) options.onUnexpectedElement = (name) => rejectedAtParent.add(`{${name.namespaceURI}}${name.localPart}`);
     try {
-      out = await marshalString(await unmarshalString(xml, options), { onNormalised: (n) => normalised.push(`${n.path}: ${n.before} -> ${n.after}`) });
+      out = await marshalString(await unmarshalString(xml, options), {
+        onNormalised: (n) => normalised.push(`${n.path}: ${n.before} -> ${n.after}`),
+        onOutOfRange: (r) => outOfRange.push(`saved ${r.path}="${r.value}" (${r.wordReads.storage})`),
+      });
     } catch (error) {
       // A throw can be a recorded difference too: a part Office wrote that the model cannot read
       // is the same finding as one it reads lossily, and wants the same owner and the same
@@ -412,6 +419,7 @@ for (const file of parts) {
     }
     for (const reading of wordReadings) failures.push(`${label}\n    read by Word's rule (CR-013), which no part Office wrote should need: ${reading}`);
     for (const n of normalised) failures.push(`${label}\n    normalised on save (CR-013), which no part Office wrote should need: ${n}`);
+    for (const r of outOfRange) failures.push(`${label}\n    outside Word's storage (CR-016), which no part Office wrote should hold: ${r}`);
     for (const unresolved of unresolvedMcPrefixes(out)) failures.push(`${label}\n    ${unresolved}`);
     const all = differences(xml, out);
     // Every differing line is classified, not only the first: a line that differs solely by an

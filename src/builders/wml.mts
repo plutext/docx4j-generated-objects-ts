@@ -259,7 +259,7 @@ export interface RunOptions {
   superscript?: boolean;
   /** w:rFonts ascii and hAnsi; the theme font attributes are cleared; '' removes w:rFonts. */
   name?: string;
-  /** Points; w:sz and w:szCs are half-points. */
+  /** Points; w:sz and w:szCs are half-points. A size outside 0 to 32767.5 points, which Word can't hold, throws a RangeError (CR-016). */
   size?: number;
   /** '#RRGGBB' or 'auto'; '' removes w:color. */
   color?: string;
@@ -304,7 +304,12 @@ export function applyRunOptions(rPr: M.RPr, opts: RunOptions): M.RPr {
     if (opts.name === '') delete rPr.rFonts;
     else { rPr.rFonts = { ...rPr.rFonts, ascii: opts.name, hAnsi: opts.name }; delete rPr.rFonts.asciiTheme; delete rPr.rFonts.hAnsiTheme; }
   }
-  if (opts.size !== undefined) { const half = Math.round(opts.size * 2); rPr.sz = { val: half }; rPr.szCs = { val: half }; }
+  if (opts.size !== undefined) {
+    const half = Math.round(opts.size * 2);
+    // w:sz is stored in 16 bits, unsigned (CR-016): Word reads a larger value modulo 65536.
+    if (!(half >= 0 && half <= 65535)) throw new RangeError(`Font size ${opts.size} is outside Word's range: w:sz is stored in 16 bits, 0 to 32767.5 points`);
+    rPr.sz = { val: half }; rPr.szCs = { val: half };
+  }
   if (opts.color !== undefined) {
     const hex = opts.color.startsWith('#') ? opts.color.substring(1) : opts.color;
     if (hex === '') delete rPr.color;
@@ -422,22 +427,31 @@ export function p(textOrRuns: string | Element[], opts?: Omit<RunOptions, 'style
 export interface TableOptions {
   /** The table style (w:tblStyle). */
   style?: string;
-  /** Column widths in twips; equal columns over `width` when absent. */
+  /** Column widths in twips; equal columns over `width` when absent. Each, and their total, within 0 to 32767 (CR-016). */
   widths?: number[];
-  /** The total width in twips when `widths` is absent; default 9026 (A4, 2.54 cm margins). */
+  /** The total width in twips when `widths` is absent; default 9026 (A4, 2.54 cm margins); within 0 to 32767 (CR-016). */
   width?: number;
 }
 
 export interface CellOptions {
-  /** The cell width in twips (`w:tcW`, type dxa); none when absent. */
+  /** The cell width in twips (`w:tcW`, type dxa); none when absent; within 0 to 32767 (CR-016). */
   width?: number;
+}
+
+/**
+ * A width for `w:tblW`, `w:tcW` or `w:gridCol`, in twips, within what Word holds: `TblWidth.w` is stored in 16 bits,
+ * signed, and a width can't be negative, so 0 to 32767 (CR-016). Anything else throws a RangeError.
+ */
+function widthInRange(what: string, width: number): number {
+  if (!(width >= 0 && width <= 32767)) throw new RangeError(`${what} ${width} is outside Word's range: a table or cell width is stored in 16 bits, 0 to 32767 twips`);
+  return width;
 }
 
 /** A table cell: a string is one paragraph, an empty cell still gets the `w:p` Word requires. */
 export function tc(blocks: string | Element[], opts: CellOptions = {}): Element<M.Tc> {
   const content = typeof blocks === 'string' ? [p(blocks)] : (blocks.length > 0 ? blocks : [el.p({})]);
   const value: M.Tc = { content: content as M.Tc['content'] };
-  if (opts.width !== undefined) value.tcPr = { tcW: { w: opts.width, type: 'dxa' } };
+  if (opts.width !== undefined) value.tcPr = { tcW: { w: widthInRange('Cell width', opts.width), type: 'dxa' } };
   return el.tc(value);
 }
 
@@ -454,11 +468,11 @@ export function tr(cells: (string | Element<M.Tc>)[], opts: { widths?: number[] 
 /** A table of text cells: one paragraph per cell, a grid from the widths or equal columns. */
 export function tbl(rows: string[][], opts: TableOptions = {}): Element<M.Tbl> {
   const columns = Math.max(1, opts.widths?.length ?? 0, ...rows.map((row) => row.length));
-  const total = opts.width ?? 9026;
+  const total = widthInRange('Table width', opts.width ?? 9026);
   const equal = Math.floor(total / columns);
   // Given widths as they are; missing ones equal, the last taking the rounding remainder so the grid sums to the table width.
-  const widths = Array.from({ length: columns }, (_, i) => opts.widths?.[i] ?? (i === columns - 1 ? total - equal * (columns - 1) : equal));
-  const tblPr: M.TblPr = { tblW: { w: widths.reduce((a, b) => a + b, 0), type: 'dxa' } };
+  const widths = Array.from({ length: columns }, (_, i) => widthInRange('Column width', opts.widths?.[i] ?? (i === columns - 1 ? total - equal * (columns - 1) : equal)));
+  const tblPr: M.TblPr = { tblW: { w: widthInRange('Table width (the columns\' total)', widths.reduce((a, b) => a + b, 0)), type: 'dxa' } };
   if (opts.style) tblPr.tblStyle = { val: opts.style };
   const value: M.Tbl = {
     tblPr,

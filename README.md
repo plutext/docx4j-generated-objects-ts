@@ -263,6 +263,15 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `strictIntegers` (`@docx4j/jsonix` 3.9.0); a caller's own `onInvalidValue` keeps the runtime's
   lenient reading unless it passes `strictIntegers: true`. The rules are docx4j CR-065's shared Word
   probe's, which `test/word365-integers.mjs` reads against Word's saves.
+- **An integer outside Word's range** (CR-016): Word stores each measure in a fixed width per attribute
+  and reads anything wider modulo it, sometimes then clamped. For example, `w:ind/@w:left="7205001"`
+  reads as `-3959`, and `w:pgSz/@w:w="40000"` as `31681`. It neither refuses nor repairs the document.
+  `onOutOfRange`, an unmarshal and a marshal option, receives each value Word would read differently,
+  with what Word reads. The value is never rewritten: the tree keeps it, and a save writes it as held.
+  `helpers/wml`'s `WORD_INTEGER_STORAGE` and `wordIntegerReading` give Word's storage per attribute, as
+  docx4j CR-066's round 5 measured it, which `test/word365-ranges.mjs` reads against Word's saves. The
+  builders throw a `RangeError` for a table or cell width outside 0 to 32767 twips, and for a run size
+  outside 0 to 32767.5 points.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
@@ -328,8 +337,9 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   for the `.mjs`). Modules reference each other by name, so a context needs all of them.
 - **`@docx4j/generated-objects-ts/helpers/wml`** (`src/helpers/wml.mts`): Word's highlight palette (`HIGHLIGHT_COLORS`,
   docx4j's `Highlight` table since 17.3.5), `highlightNameForColor` (the highlight Word stores for a colour Office JS
-  writes), `isQFormat` (via `PARENT`), `isCustomStyle`, and `WORD_COLOR_NAMES` / `wordColor`, a colour value as Word
-  365 reads it (docx4j's `WordColorValues`).
+  writes), `isQFormat` (via `PARENT`), `isCustomStyle`, `WORD_COLOR_NAMES` / `wordColor`, a colour value as Word
+  365 reads it (docx4j's `WordColorValues`), and `WORD_INTEGER_STORAGE` / `wordIntegerReading`, what Word reads for an
+  integer attribute's value (CR-016).
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
   the run mapping, `tr` / `tc`, `inlinePicture`, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for
   content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `mcBranchOf`, `textOf`,

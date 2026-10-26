@@ -3,12 +3,12 @@
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
 import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals, wordInvalidValue, setNormaliseOnSave } from '@docx4j/generated-objects-ts';
-import type { WordReading, Normalisation } from '@docx4j/generated-objects-ts';
+import type { WordReading, Normalisation, OutOfRange } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
 import { p, r, textOf, find } from '@docx4j/generated-objects-ts/builders/wml';
-import { isCustomStyle, highlightHexValue, wordColor, WORD_COLOR_NAMES } from '@docx4j/generated-objects-ts/helpers/wml';
+import { isCustomStyle, highlightHexValue, wordColor, WORD_COLOR_NAMES, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading } from '@docx4j/generated-objects-ts/helpers/wml';
 
 export async function consume(xml: string): Promise<string> {
   const doc = unwrap(await unmarshalString<DocumentElement>(xml));
@@ -26,6 +26,12 @@ export async function consume(xml: string): Promise<string> {
   void unmarshalString('<w:p/>', { onWordReading: (reading) => readings.push(reading), onInvalidValue: wordInvalidValue });
   // CR-015 phase 2: jsonix-CR-012's strictIntegers, through the facade's options.
   void unmarshalString('<w:p/>', { strictIntegers: false });
+  // CR-016: onOutOfRange on both sides, and the table and its reading.
+  const ranges: OutOfRange[] = [];
+  void unmarshalString('<w:p/>', { onOutOfRange: (r) => ranges.push(r) });
+  void marshalString(createPElement(createP()), { onOutOfRange: (r) => void r.path });
+  const reading: WordIntegerReading | undefined = wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001);
+  const measured: boolean | undefined = WORD_INTEGER_STORAGE['org_docx4j_wml.PPrBase.Ind']?.['left']?.measured;
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
   void marshalString({ name: { namespaceURI: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', localPart: 'p' }, value: paragraphs[0]! }, { onElement: (element, value) => void [element, value] });
   // CR-013 phase C: the normaliser's options beside the runtime's, and its process-wide switch.
@@ -34,7 +40,7 @@ export async function consume(xml: string): Promise<string> {
   setNormaliseOnSave(true);
   // CR-008: the extension namespaces, a readonly list of URIs.
   const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, integerKinds, truncatedTo, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, integerKinds, truncatedTo, ranges, reading, measured, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
@@ -46,5 +52,7 @@ export const notANumber: number = p('x').value;
 highlightHexValue({ val: 1 });
 // @ts-expect-error a reading's kind is one of four (with WordReading as any, anything would do)
 export const notAKind: WordReading['kind'] = 'value.dropped';
+// @ts-expect-error a range report's value is a number (with OutOfRange as any, a string would do)
+export const notAValue: OutOfRange['value'] = '7205001';
 // @ts-expect-error a normalisation's after is a string or null (with Normalisation as any, a number would do)
 export const notAfter: Normalisation['after'] = 1;
