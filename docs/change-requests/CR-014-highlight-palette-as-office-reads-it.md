@@ -1,6 +1,6 @@
 # CR-014: The highlight palette as Word and Office JS read it (`HIGHLIGHT_COLORS`, `readRunOptions`, `applyRunOptions`)
 
-**Status:** Implemented 2026-10-24 (Jason: "Implement CR-014"); H1 to H4 decided as recommended (Jason, 2026-10-24, relayed by core-ts)
+**Status:** Implemented 2026-10-24 (Jason: "Implement CR-014"), released in 0.6.0 (2026-10-26); H1 to H4 decided as recommended (Jason, 2026-10-24, relayed by core-ts)
 **Requested by:** core-ts (session docx4j-core-ts-5b), 2026-10-24. Its check 60 found the one difference between its
 Word shim and Office JS in this package's highlight table (core-ts CR-015 section 11.6). Its check 61, written at
 Jason's word ("write check 61") and run by him the same day, measured the palette both ways (CR-015 section 12).
@@ -195,5 +195,5 @@ A change of readings and of the builder's accepted input:
 - every `#RRGGBB` is accepted;
 - nine values read differently.
 
-Under Jason's rule (minors for a substantive change of API or output), probably a minor (0.6.0); Jason's call. No API
+Under Jason's rule (minors for a substantive change of API or output), a minor: released in 0.6.0 (2026-10-26). No API
 is removed.

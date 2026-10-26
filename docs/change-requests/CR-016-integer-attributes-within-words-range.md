@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Implemented 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in
+**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -267,4 +267,4 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
 
 - **Changes:** new API (the table, its function, `onOutOfRange`), and the builders throw where they wrote a wrong
   number before.
-- **Version:** under Jason's rule, a minor. It can ride with CR-014 and CR-015 in 0.6.0.
+- **Version:** under Jason's rule, a minor: released in 0.6.0 (2026-10-26) with CR-014 and CR-015.

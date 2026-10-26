@@ -1,6 +1,6 @@
 # CR-015: A decimal in an integer attribute, read as Word reads it rather than failing the part (`wordInvalidValue`)
 
-**Status:** Implemented 2026-10-26 (Jason: "implement CR-015 as recommended"): phase 1 (N1 to N7), and phase 2 (N8 (b))
+**Status:** Implemented 2026-10-26 (Jason: "implement CR-015 as recommended"), released in 0.6.0 (2026-10-26): phase 1 (N1 to N7), and phase 2 (N8 (b))
 on `@docx4j/jsonix` 3.9.0's `strictIntegers` (jsonix-CR-012)
 **Requested by:** Jason, through the docx4j-portfolio session (docx4j-portfolio-9d), 2026-10-26. The source is the
 portfolio's survey of 2026-09-21, `docs/broken_producer_repairs_across_ports.md` section 2, row 1, which found the part
@@ -397,4 +397,4 @@ Phase 1 adds one test, `test/word365-integers.mjs`, and a CR-015 block in the sm
 - **Changes:** parts that failed now load, `WordReading` gains two kinds, and, with N7, a save leaves out empty rsids.
   Google Docs' `.0` widths, read silently before, are reported as `'value.truncated'`.
 - **Version:** under Jason's rule (minors for a substantive change of API or output), a minor.
-- **Timing:** both phases are implemented, and can go out with CR-014 in 0.6.0. The runtime floor rises to ^3.9.0.
+- **Released** in 0.6.0 (2026-10-26) with CR-014 and CR-016; the runtime floor rose to ^3.9.0.
