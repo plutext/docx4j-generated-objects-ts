@@ -179,11 +179,11 @@ export function highlightNameForColor(color: string | undefined): string | undef
 }
 
 /**
- * How Word 365 stores an integer attribute (CR-016; docx4j CR-066's round 5, Jason's run of 2026-10-26). Word reads a
- * value modulo its storage width, sometimes then clamped, and neither refuses nor repairs the document. A measured
- * entry gives the width, the sign and any clamp; for `w:spacing/@w:line` and `w:trHeight` the sign carries the rule.
- * An unmeasured one (26 `ST_TwipsMeasure` attributes) is known only to change outside -32768 to 65535, where every
- * measured attribute of its type does.
+ * How Word 365 stores an integer attribute (CR-016; docx4j CR-066's rounds 5 and 6, Jason's runs of 2026-10-26). Word
+ * reads a value modulo its storage width, sometimes then clamped, and neither refuses nor repairs the document. A
+ * measured entry gives the width, the sign and any clamp or rule; an unmeasured one (`w:gridCol`, which Word
+ * recomputes, a numbering level's legacy spacing, which it drops, and an object's original size, not probed) is known
+ * only to change outside -32768 to 65535, where every measured twips attribute does.
  */
 export type WordIntegerStorage =
   | {
@@ -195,27 +195,42 @@ export type WordIntegerStorage =
     readonly max?: number;
     /** The attribute beside it whose rule the sign carries: `lineRule` (exact and atLeast) or `hRule`. */
     readonly signRule?: 'lineRule' | 'hRule';
-    /** How Word's save writes the largest value: `w:spacing/@w:before`'s 65535 as -1. */
+    /** How Word's save writes the largest value: 65535 as -1 (`w:spacing` `before` and `after`, four page margins). */
     readonly maxWrittenAs?: number;
+    /**
+     * Two attributes sharing one signed field (`w:ind`'s `firstLine`, stored as itself, and `hanging`, stored negated):
+     * the sign of what is stored says which Word reads.
+     */
+    readonly pair?: { readonly positive: string; readonly negative: string };
+    /** `w:framePr/@w:h`: the low 15 bits are the height, and bit 15 clears `hRule="exact"`. */
+    readonly heightFlag?: boolean;
+    /** What a negative becomes after the wrap: a width Word computes (`w:col/@w:w`), or -1 (`w:col/@w:space`). */
+    readonly negative?: 'computed' | -1;
   }
   | { readonly measured: false };
 
 const INT16: WordIntegerStorage = { measured: true, bits: 16, signed: true };
 const UINT16: WordIntegerStorage = { measured: true, bits: 16, signed: false };
+/** uint16, with 65535 written -1. */
+const UINT16_MINUS_ONE: WordIntegerStorage = { measured: true, bits: 16, signed: false, maxWrittenAs: -1 };
+const FIRST_LINE_HANGING = { positive: 'firstLine', negative: 'hanging' } as const;
 const UNMEASURED: WordIntegerStorage = { measured: false };
 
 /**
  * Word's storage of each integer attribute of `wml` whose width is known or bounded, by `TYPE_NAME` and property (the
- * attribute's local name). Measured in round 5: `w:ind/@w:left`, `w:spacing` (`before`, `line` under auto and exact),
- * `w:tab/@w:pos`, a border's `sz` and `space`, `w:sz`, `w:position`, the run's `w:spacing`, text scale, `w:tblW`,
- * `w:tcW` and `w:tblInd` under dxa and pct, `w:trHeight`, `w:pgSz`, `w:pgMar/@w:top` and `w:pgNumType/@w:start`.
- * The other `ST_SignedTwipsMeasure` attributes are int16, as every measured one of the type is (CR-066 D7), and a
- * border's other uses store as `w:top`'s. Not here: ids, counts, the `*Chars` and `*Lines` attributes and w14's
- * DrawingML units, whose width is unmeasured.
+ * attribute's local name), from Word's saves of docx4j CR-066's rounds 5 and 6. A class's other uses store as the
+ * measured one: `CTBorder` was measured on paragraph, run, cell, table and page borders, `TblWidth` on `w:tblW`,
+ * `w:tcW`, `w:tblInd`, `w:tblCellSpacing` and the cell margins, `HpsMeasure` on `w:sz`, `w:szCs` and `w:kern`, and
+ * `CTTwipsMeasure` on the settings' `w:defaultTabStop` and `w:hyphenationZone`. `w:ind`'s `start` and `end` are read
+ * as `left` and `right`. Not here: ids, counts, the `*Chars` and `*Lines` attributes and w14's DrawingML units, whose
+ * width is unmeasured.
  */
 export const WORD_INTEGER_STORAGE: Readonly<Record<string, Readonly<Record<string, WordIntegerStorage>>>> = {
-  'org_docx4j_wml.PPrBase.Ind': { left: INT16, right: INT16, start: INT16, end: INT16, firstLine: UNMEASURED, hanging: UNMEASURED },
-  'org_docx4j_wml.PPrBase.Spacing': { before: { ...UINT16, maxWrittenAs: -1 }, after: UNMEASURED, line: { ...INT16, signRule: 'lineRule' } },
+  'org_docx4j_wml.PPrBase.Ind': {
+    left: INT16, right: INT16, start: INT16, end: INT16,
+    firstLine: { ...INT16, pair: FIRST_LINE_HANGING }, hanging: { ...INT16, pair: FIRST_LINE_HANGING },
+  },
+  'org_docx4j_wml.PPrBase.Spacing': { before: UINT16_MINUS_ONE, after: UINT16_MINUS_ONE, line: { ...INT16, signRule: 'lineRule' } },
   'org_docx4j_wml.CTSignedTwipsMeasure': { val: INT16 },
   'org_docx4j_wml.CTSignedHpsMeasure': { val: INT16 },
   'org_docx4j_wml.HpsMeasure': { val: UINT16 },
@@ -225,18 +240,24 @@ export const WORD_INTEGER_STORAGE: Readonly<Record<string, Readonly<Record<strin
   'org_docx4j_wml.TblWidth': { w: INT16 },
   'org_docx4j_wml.CTHeight': { val: { ...INT16, signRule: 'hRule' } },
   'org_docx4j_wml.SectPr.PgSz': { w: { ...UINT16, min: 144, max: 31681 }, h: { ...UINT16, min: 144 } },
-  'org_docx4j_wml.SectPr.PgMar': { top: INT16, bottom: INT16, left: UNMEASURED, right: UNMEASURED, header: UNMEASURED, footer: UNMEASURED, gutter: UNMEASURED },
+  'org_docx4j_wml.SectPr.PgMar': {
+    top: INT16, bottom: INT16, left: UINT16_MINUS_ONE, right: UINT16_MINUS_ONE,
+    header: UINT16_MINUS_ONE, footer: UINT16_MINUS_ONE, gutter: UINT16_MINUS_ONE,
+  },
   'org_docx4j_wml.CTPageNumber': { start: { measured: true, bits: 32, signed: true } },
-  'org_docx4j_wml.CTFramePr': { x: INT16, y: INT16, w: UNMEASURED, h: UNMEASURED, hSpace: UNMEASURED, vSpace: UNMEASURED },
-  'org_docx4j_wml.CTTblPPr': { tblpX: INT16, tblpY: INT16, leftFromText: UNMEASURED, rightFromText: UNMEASURED, topFromText: UNMEASURED, bottomFromText: UNMEASURED },
+  'org_docx4j_wml.CTFramePr': {
+    x: INT16, y: INT16, w: INT16, hSpace: INT16, vSpace: INT16,
+    h: { ...UINT16, heightFlag: true, signRule: 'hRule' },
+  },
+  'org_docx4j_wml.CTTblPPr': { tblpX: INT16, tblpY: INT16, leftFromText: INT16, rightFromText: INT16, topFromText: INT16, bottomFromText: INT16 },
   'org_docx4j_wml.Lvl.Legacy': { legacyIndent: INT16, legacySpace: UNMEASURED },
   'org_docx4j_wml.TblGridCol': { w: UNMEASURED },
-  'org_docx4j_wml.CTColumns': { space: UNMEASURED },
-  'org_docx4j_wml.CTColumn': { w: UNMEASURED, space: UNMEASURED },
-  'org_docx4j_wml.CTFitText': { val: UNMEASURED },
-  'org_docx4j_wml.CTLineNumber': { distance: UNMEASURED },
+  'org_docx4j_wml.CTColumns': { space: INT16 },
+  'org_docx4j_wml.CTColumn': { w: { ...INT16, negative: 'computed' }, space: { ...INT16, negative: -1 } },
+  'org_docx4j_wml.CTFitText': { val: { measured: true, bits: 32, signed: true } },
+  'org_docx4j_wml.CTLineNumber': { distance: INT16 },
   'org_docx4j_wml.CTObject': { dxaOrig: UNMEASURED, dyaOrig: UNMEASURED },
-  'org_docx4j_wml.CTTwipsMeasure': { val: UNMEASURED },
+  'org_docx4j_wml.CTTwipsMeasure': { val: UINT16 },
 };
 
 /** What Word 365 reads for an integer attribute's value (CR-016). */
@@ -245,8 +266,10 @@ export interface WordIntegerReading {
   readonly value: number | null;
   /** The value Word's own save writes: `value`, except `w:spacing/@w:before`'s 65535, written -1. */
   readonly written: number | null;
-  /** For `w:spacing/@w:line` and `w:trHeight`, the rule Word reads with it (`auto`, `exact`, `atLeast`). */
+  /** For `w:spacing/@w:line`, `w:trHeight` and `w:framePr/@w:h`, the rule Word reads with it (`auto`, `exact`, `atLeast`). */
   readonly rule?: 'auto' | 'exact' | 'atLeast';
+  /** For `w:ind`'s `firstLine` and `hanging`, which share one field, the one Word reads it as. */
+  readonly attribute?: string;
   /**
    * Whether Word reads the value, and its rule, as written. For an unmeasured attribute, false only outside
    * -32768 to 65535, where every measured attribute of its type changes.
@@ -266,18 +289,23 @@ function wrapTo(value: number, bits: number, signed: boolean): number {
 function storageOf(s: WordIntegerStorage): string {
   if (!s.measured) return 'unmeasured: changed outside -32768..65535';
   const width = s.bits === 16 || s.bits === 32 ? `${s.signed ? 'int' : 'uint'}${s.bits}` : `${s.bits} bits`;
+  if (s.pair) return `${width}, shared by ${s.pair.positive} (+) and ${s.pair.negative} (-)`;
+  if (s.heightFlag) return '15 bits, bit 15 clearing exact';
+  if (s.negative !== undefined) return `${width}, a negative ${s.negative === 'computed' ? 'computed' : 'written -1'}`;
   if (s.signRule) return `${width}, the sign the rule`;
   if (s.min !== undefined && s.max !== undefined) return s.min === -s.max ? `${width}, then ±${s.max}` : `${width}, then ${s.min}..${s.max}`;
   return s.min !== undefined ? `${width}, then at least ${s.min}` : width;
 }
 
 /**
- * What Word 365 reads for `value` in an integer attribute (CR-016, measured in docx4j CR-066's round 5): the value
- * modulo its storage width, then clamped where Word clamps. For `w:spacing/@w:line` and `w:trHeight` pass the rule
- * beside it (`lineRule`, `hRule`). Under `exact` Word stores the negative, and the sign of what it stores re-derives
- * the rule: `exact 65535` reads as `atLeast 1`, and a `w:trHeight` of 32768 as `exact 32768`. An absent `hRule` is
- * `atLeast`, and `lineRule` `auto`. `atLeast` lines, and `exact` and `auto` row heights, follow the same storage
- * (Word's binary format's `LSPD` and `dyaRowHeight`); round 5 measured `auto` and `exact` lines and absent row rules.
+ * What Word 365 reads for `value` in an integer attribute (CR-016, measured in docx4j CR-066's rounds 5 and 6): the
+ * value modulo its storage width, then clamped where Word clamps. For `w:spacing/@w:line`, `w:trHeight` and
+ * `w:framePr/@w:h` pass the rule beside it (`lineRule`, `hRule`).
+ * - Under `exact` and `atLeast`, a line or a row height keeps its rule in the sign of what is stored (Word stores an
+ *   `exact` one negated): `exact 65535` reads as `atLeast 1`, a `w:trHeight` of 32768 as `exact 32768`. An absent
+ *   `hRule` is `atLeast`, and `lineRule` `auto`; under `auto` a line is plain int16 and a row height is ignored.
+ * - `w:ind`'s `firstLine` and `hanging` are one field: `firstLine` 32768 reads as `hanging` 32768.
+ * - A frame's height keeps 15 bits, and bit 15 clears `exact` (measured under `exact`).
  * Undefined for an attribute not in `WORD_INTEGER_STORAGE`.
  */
 export function wordIntegerReading(typeName: string, property: string, value: number, rule?: string): WordIntegerReading | undefined {
@@ -285,6 +313,26 @@ export function wordIntegerReading(typeName: string, property: string, value: nu
   if (s === undefined) return undefined;
   const storage = storageOf(s);
   if (!s.measured) return { value: null, written: null, kept: value >= -32768 && value <= 65535, storage };
+  if (s.pair) {
+    const stored = wrapTo(property === s.pair.negative ? -value : value, 16, true);
+    const read = Math.abs(stored);
+    const attribute = stored < 0 ? s.pair.negative : s.pair.positive;
+    return { value: read, written: read, attribute, kept: read === value && (attribute === property || value === 0), storage };
+  }
+  if (s.heightFlag) {
+    const stored = wrapTo(value, 16, false);
+    const read = stored & 0x7FFF;
+    const written = (rule ?? 'auto') as 'auto' | 'exact' | 'atLeast';
+    const readRule = stored & 0x8000 ? 'auto' : written;
+    return { value: read, written: read, rule: readRule, kept: read === value && readRule === written, storage };
+  }
+  if (s.signRule === 'hRule' && rule === 'auto') return { value, written: value, rule: 'auto', kept: true, storage: `${storage}; ignored under auto` };
+  if (s.negative !== undefined) {
+    const stored = wrapTo(value, s.bits, s.signed);
+    if (stored >= 0) return { value: stored, written: stored, kept: stored === value, storage };
+    const read = s.negative === 'computed' ? null : s.negative;
+    return { value: read, written: read, kept: read === value, storage };
+  }
   if (s.signRule) {
     const written = (s.signRule === 'lineRule' ? rule ?? 'auto' : rule ?? 'atLeast') as 'auto' | 'exact' | 'atLeast';
     if (s.signRule === 'lineRule' && written === 'auto') {

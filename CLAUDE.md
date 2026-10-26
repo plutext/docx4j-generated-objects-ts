@@ -93,7 +93,7 @@ There are eight tests and no test framework:
   forms as their integer part and drops the forms Word refuses, while other mappings still fail. It also checks the
   record, a caller's precedence, that a save writes integers while a caller's own non-integer still throws, and that
   an empty rsid is left out on save with its path.
-  CR-016's block checks that each entry of `WORD_INTEGER_STORAGE` (51, 26 unmeasured) is an integer `w:` attribute of
+  CR-016's block checks that each entry of `WORD_INTEGER_STORAGE` (51, 4 unmeasured after round 6) is an integer `w:` attribute of
   its class, so a regeneration that renames one fails. It also checks `wordIntegerReading`'s wrap, clamp, rule and
   certain range, and `onOutOfRange` on read and on save. Nothing is rewritten, with or without the normaliser. The
   builders' `RangeError` is checked at the boundaries.
@@ -145,11 +145,16 @@ There are eight tests and no test framework:
   must write what Word's save wrote, the oracle. 50 are equal, and 6 differences are stated, strict both ways: four
   truncations to a default Word's save leaves out, and two `w:gridCol` Word recomputes. In the refused files, all 8
   forms are dropped and reported, four of them through phase 2's `strictIntegers`.
-- `test/word365-ranges.mjs` (runtime, CR-016) reads docx4j CR-066's round 5 (Jason, Word 365, 2026-10-26;
-  `test/fixtures/cr066-probe/`, six group files beside Word's saves). Its 190 cases put integers at and beyond each
-  attribute's storage width. For each, `wordIntegerReading` must give what Word's save wrote, the oracle, with the rule
-  for `w:spacing/@w:line` and `w:trHeight`; two wrap to a default Word leaves out. `onOutOfRange` must report exactly
-  the 118 cases Word reads differently, on read and on save, and the save must write every value as held.
+- `test/word365-ranges.mjs` (runtime, CR-016) reads docx4j CR-066's rounds 5 and 6 (Jason, Word 365, 2026-10-26;
+  `test/fixtures/cr066-probe/` and `cr066-round6/`, the group files and settings singles beside Word's saves).
+  - **The cases:** 652 integer cases at and beyond each attribute's storage width. For each, `wordIntegerReading` must
+    give what Word's save wrote, the oracle: the value, the rule for a line, a row or a frame's height, and the
+    attribute for `firstLine`/`hanging`.
+  - **What it can't compare:** 16 read as 0 and are left out by Word. 30 are stated: `w:gridCol`, which Word recomputes,
+    and `w:wBefore`/`w:wAfter`, which it dropped.
+  - **The report:** `onOutOfRange` must report exactly the 432 cases Word reads differently, on read and on save, and the
+    save must write every value as held.
+  - **Group E:** round 6's group E holds CR-015's no-digit forms to Word's 0.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).

@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Implemented 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26)
+**Status:** Implemented 2026-10-26; G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -65,15 +65,37 @@ No value was refused. A negative in an attribute the schema calls unsigned is ac
 The widths are those of Word's binary format (DOC's `PAP`, `CHP`, `BRC`, `SEP`), so the table is unlikely to move
 between Word versions.
 
-**Unmeasured:** the other ST_TwipsMeasure attributes: `w:gridCol`, the other page margins, `hanging`, `firstLine`,
-`after`, frame and drawing distances. Of the 44 twips attributes of Word's own mappings, derived from docx4j's xsd and
-cited in CR-066 section 2, ST_TwipsMeasure's are mixed:
-- `before` is uint16;
-- `trHeight` is int16 with a rule;
-- `pgSz` is clamped.
+**Round 6** (built at this package's request, Jason's yes; run 2026-10-26, every file opened clean; docx4j CR-066
+section 3.4; `test/fixtures/cr066-round6/`) measured what round 5 left unmeasured or inferred:
+- **`w:ind` `firstLine` and `hanging` are one int16 field** (DOC's `dxaLeft1`). `firstLine` is stored as itself and
+  `hanging` negated, and the sign of what is stored says which Word reads: `firstLine` 32768 reads as `hanging` 32768.
+- **uint16 with 65535 written -1, as `before`:** `w:spacing/@w:after`, and `w:pgMar` `left`, `right`, `header`, `footer`
+  and `gutter`.
+- **int16:**
+  - `w:ind` `right`, `start` and `end` (`start` and `end` are written back as `left` and `right`);
+  - `w:pgMar/@w:bottom`;
+  - `w:framePr` `w`, `hSpace`, `vSpace`, `x` and `y`;
+  - all six of `w:tblpPr`'s;
+  - `w:cols/@w:space` and `w:lnNumType/@w:distance`;
+  - `w:tblCellSpacing` and the cell margins, as `TblWidth`.
+- **Frame height:** `w:framePr/@w:h` keeps 15 bits, and bit 15 clears `hRule="exact"`.
+- **Newspaper columns:** `w:col/@w:w` is int16, then a negative width is replaced by one Word computes. `w:col/@w:space`
+  is int16, then a negative becomes -1.
+- **Rules in the sign:** `w:spacing/@w:line` under `atLeast`, and `w:trHeight` under `exact`, keep their rule in the sign,
+  as inferred. Under `auto`, Word drops a row height at every value.
+- **Other widths:**
+  - `w:fitText` is at least 32 bits: every value was kept;
+  - `w:szCs` and `w:kern` are uint16, as `w:sz`;
+  - the settings' `w:defaultTabStop` and `w:hyphenationZone` are uint16;
+  - run, cell, table and page borders store `sz` and `space` as a paragraph's do.
+- **Not measured:**
+  - `w:gridCol`, which Word recomputes even under a fixed layout;
+  - `w:wBefore`/`w:wAfter`, which Word dropped with the grid spans that didn't fit;
+  - a level's `w:legacy`, which Word 365 drops;
+  - an object's original size, which needs an OLE object.
 
-So for an unmeasured one only the certain range holds. A value outside -32768 to 65535 changes in every measured
-attribute.
+  These four attributes keep the certain range only: a value outside -32768 to 65535 changes in every measured twips
+  attribute.
 
 `w:pgMar/@w:top` (and `bottom`) is `ST_SignedTwipsMeasure` in docx4j's `wml.xsd`, as in ECMA-376, so its int16 storage
 matches the schema. CR-066 section 3.1 had it as `ST_TwipsMeasure`, and was corrected on 2026-10-26. `w:trHeight/@w:val`
@@ -100,17 +122,23 @@ is the one measured attribute whose storage sign differs from its schema type.
 - **a function** (`wordIntegerReading`) of the type, the property, the value and, for a rule, the rule beside it,
   giving what Word reads: its `value`, what its own save `written`, the `rule` for `line` and `trHeight`, whether it
   is `kept`, and the `storage` for a message. It returns `undefined` for an attribute not in the table.
-- **What it covers:** 51 attributes (`WORD_INTEGER_STORAGE`):
-  - the 44 twips attributes, of which 26 `ST_TwipsMeasure` attributes are unmeasured;
+- **What it covers:** 51 attributes (`WORD_INTEGER_STORAGE`), keyed by class, so a class's other uses store as the
+  measured one:
+  - the 44 twips attributes, of which 4 are unmeasured after round 6: `w:gridCol`, a level's legacy spacing, and an
+    object's original width and height;
   - `w:position`, `w:sz` (with `w:szCs` and `w:kern`), text scale, a border's `sz` and `space`, `TblWidth.w` and
     `w:pgNumType/@w:start`.
 
-  The other `ST_SignedTwipsMeasure` attributes are int16, as every measured one of the type is (CR-066 D7).
-- **`atLeast` lines and `exact` and `auto` row heights** are read by the same storage as the measured `exact` lines and
-  absent row rules: Word's binary format keeps the rule in one sign for both. Round 5 measured `auto` and `exact` lines
-  and absent row rules.
+  `w:legacy/@w:legacyIndent` is int16 by its type, as every measured `ST_SignedTwipsMeasure` attribute is (CR-066 D7).
+- **The rules round 6 added:**
+  - `pair`, for `firstLine` and `hanging`;
+  - `heightFlag`, for a frame's height;
+  - `negative`, for a column's width and spacing;
+  - a row height under `auto`, ignored and so never reported.
+
+  The reading gives the `attribute` Word reads the pair's value as.
 - **in range** means Word reads the value as written. `before`'s `-1`, Word's own spelling of `65535`, is in range.
-- **Unmeasured ST_TwipsMeasure attributes (G6):** the certain range only. A value outside -32768 to 65535 is reported,
+- **Unmeasured attributes (G6):** the certain range only. A value outside -32768 to 65535 is reported,
   and the reading is given as unknown, not guessed.
 - **Not in the table:** `ST_DecimalNumber`'s ids and counts, the `*Chars` and `*Lines` attributes, w14's DrawingML-style
   units, and every other mapping. Their width is unmeasured, and EMUs are 64-bit.
@@ -189,24 +217,32 @@ stand below.
 
 Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in the smoke.
 
-- **Fixtures:** `test/fixtures/cr066-probe/` holds round 5's six group files and Word's saves, as extracted part XML,
-  with `cases.txt`, `families.txt` and a `SOURCE.md` naming the share and docx4j CR-066 section 3.1. Never edited by
-  hand.
+- **Fixtures:**
+  - `test/fixtures/cr066-probe/` holds round 5's six group files and Word's saves, as extracted part XML, with
+    `cases.txt`, `families.txt` and a `SOURCE.md` naming the share and docx4j CR-066 section 3.1;
+  - `test/fixtures/cr066-round6/` holds round 6's seven groups and twenty settings singles, likewise (CR-066 section
+    3.4);
+  - never edited by hand.
 - **Word as the oracle** (`test/word365-ranges.mjs`):
-  - for each of the 190 cases, `wordIntegerReading` gives what Word's save wrote, with the rule for `line` and
-    `trHeight`;
-  - Word left out 2, `w:tblInd` and `w:trHeight` at 65536, which wrap to the default 0;
-  - `kept` is false exactly where Word's save changed the value or its rule. The one exception is `before`'s 65535,
-    which Word reads as written and writes as `-1`;
-  - `onOutOfRange` on read reports exactly those 118 cases. On save it reports the same ones, with paths, and writes
-    every value as held;
-  - dropping the tab stops' clamp fails the test (checked by changing the build).
+  - **Every case matches.** Rounds 5 and 6 together give 652 integer cases. For each, `wordIntegerReading` gives what
+    Word's save wrote: the value, the rule for `line`, `trHeight` and a frame's height, and the attribute for
+    `firstLine` and `hanging`. 614 are compared directly, and 16 read as 0 and are left out by Word.
+  - **Stated:**
+    - 30 cases, strict both ways: `w:gridCol`, which Word recomputes, and `w:wBefore`/`w:wAfter`, which it dropped;
+    - a row height under `auto`, which Word drops;
+    - a negative column width, which Word computes.
+  - **`kept`** is false exactly where Word's save changed the value, its rule or its attribute. The exception is
+    65535 in the four attributes Word writes as `-1`: Word reads it as written.
+  - **The report:** `onOutOfRange` on read reports exactly those 432 cases. On save it reports the same ones, with paths,
+    and writes every value as held.
+  - **Mutation checks** (each checked by changing the build): dropping the tab stops' clamp, the pair's switch, or the
+    frame's flag fails the test.
 - **The table** (smoke):
   - each of its 51 entries is an integer attribute of its class, in `w`'s namespace, by its local name, so a
     regeneration that renames one fails;
-  - 26 entries are unmeasured;
-  - the reading of a wrap, a clamp, a rule, `before`'s `-1`, and an unmeasured attribute inside and outside the
-    certain range;
+  - 4 entries are unmeasured;
+  - the reading of a wrap, a clamp, a rule, `before`'s `-1`, the pair, a frame's height, a column's computed width,
+    a row height under `auto`, and an unmeasured attribute inside and outside the certain range;
   - an attribute not in the table gives `undefined`.
 - **The channel** (smoke):
   - on read, the tree keeps the value;

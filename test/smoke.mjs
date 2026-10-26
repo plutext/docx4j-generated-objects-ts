@@ -1021,8 +1021,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
       const read = (text) => wordInvalidValue(text, property, classInfo, null, error);
       assert.deepEqual([read('7.9'), read('-7.9'), read('+240.5'), read('.5'), read('240.')], [7, -7, 240, 0, 240], `${classInfo.name}.${property.name}`);
       assert.ok(Object.is(read('-0.5'), 0), 'never -0');
-      for (const refused of [' 7.9 ', '7.9 ', '7,9', '2.5e0', '0x1.8', 'abc', '.', '-', 'Infinity', 'NaN', ' 240 ', '\t240', '0x10', '1e3', '1.5e2']) assert.equal(read(refused), undefined, JSON.stringify(refused));
-      assert.deepEqual([read(''), read('10206.0')], [0, 10206], '"" as 0, and a decimal with no fraction');
+      for (const refused of [' 7.9 ', '7.9 ', '7,9', '2.5e0', '0x1.8', 'abc', 'Infinity', 'NaN', ' 240 ', '\t240', '0x10', '1e3', '1.5e2', '. ', '++']) assert.equal(read(refused), undefined, JSON.stringify(refused));
+      assert.deepEqual(['', '.', '+', '-', '+.', '10206.0'].map(read), [0, 0, 0, 0, 0, 10206], 'the forms with no digit as 0 (round 6, group E), and a decimal with no fraction');
     }
   }
   assert.equal(word, 178, "178 integer attributes on Word's own mappings");
@@ -1105,26 +1105,32 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
       if (!storage.measured) unmeasured++;
     }
   }
-  assert.deepEqual([entries, unmeasured], [51, 26], "44 twips attributes (30 ST_TwipsMeasure, 14 signed), and 7 others; ST_TwipsMeasure's 26 unmeasured");
+  assert.deepEqual([entries, unmeasured], [51, 4], '44 twips attributes (30 ST_TwipsMeasure, 14 signed) and 7 others; 4 unmeasured after round 6 (gridCol, legacySpace, dxaOrig, dyaOrig)');
   assert.equal(wordIntegerReading('org_docx4j_wml.Lvl.Start', 'val', 70000), undefined, 'not in the table');
   // The reading: wrapped, clamped, the rule in the sign; an unmeasured attribute only outside -32768..65535.
   assert.deepEqual(wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001), { value: -3959, written: -3959, kept: false, storage: 'int16' });
   assert.deepEqual(wordIntegerReading('org_docx4j_wml.SectPr.PgSz', 'w', 40000), { value: 31681, written: 31681, kept: false, storage: 'uint16, then 144..31681' });
   assert.deepEqual(wordIntegerReading('org_docx4j_wml.PPrBase.Spacing', 'line', 65535, 'exact'), { value: 1, written: 1, rule: 'atLeast', kept: false, storage: 'int16, the sign the rule' });
   assert.equal(wordIntegerReading('org_docx4j_wml.PPrBase.Spacing', 'before', -1).kept, true, "before's -1 is Word's own 65535");
-  assert.deepEqual(wordIntegerReading('org_docx4j_wml.PPrBase.Spacing', 'after', 70000), { value: null, written: null, kept: false, storage: 'unmeasured: changed outside -32768..65535' });
-  assert.equal(wordIntegerReading('org_docx4j_wml.PPrBase.Spacing', 'after', 40000).kept, true, 'unmeasured, inside the certain range');
+  assert.deepEqual(wordIntegerReading('org_docx4j_wml.TblGridCol', 'w', 70000), { value: null, written: null, kept: false, storage: 'unmeasured: changed outside -32768..65535' });
+  assert.equal(wordIntegerReading('org_docx4j_wml.TblGridCol', 'w', 40000).kept, true, 'unmeasured, inside the certain range');
+  // Round 6: firstLine and hanging share one field; a frame's height keeps 15 bits; a column's negative width is computed.
+  assert.deepEqual(wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'firstLine', 32768), { value: 32768, written: 32768, attribute: 'hanging', kept: false, storage: 'int16, shared by firstLine (+) and hanging (-)' });
+  assert.equal(wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'hanging', 32768).kept, true);
+  assert.deepEqual(wordIntegerReading('org_docx4j_wml.CTFramePr', 'h', 32768, 'exact'), { value: 0, written: 0, rule: 'auto', kept: false, storage: '15 bits, bit 15 clearing exact' });
+  assert.deepEqual(wordIntegerReading('org_docx4j_wml.CTColumn', 'w', -1), { value: null, written: null, kept: false, storage: 'int16, a negative computed' });
+  assert.equal(wordIntegerReading('org_docx4j_wml.CTHeight', 'val', 7205001, 'auto').kept, true, 'a row height under auto is ignored');
 
   // The channel: on read, the tree keeps the value; on save, written as held, with or without the normaliser.
   const doc = `<w:document xmlns:w="${W_}"><w:body><w:p><w:pPr><w:spacing w:before="240" w:after="70000" w:line="65535" w:lineRule="exact"/><w:ind w:left="7205001"/></w:pPr><w:r><w:t>x</w:t></w:r></w:p></w:body></w:document>`;
   const read = [];
   const tree = await unmarshalString(doc, { onOutOfRange: (r) => read.push(r) });
   assert.deepEqual(read.map((r) => [r.element.localName, r.attribute.localPart, r.value, r.wordReads.value, r.wordReads.rule]).sort(), [
-    ['ind', 'left', 7205001, -3959, undefined], ['spacing', 'after', 70000, null, undefined], ['spacing', 'line', 65535, 1, 'atLeast'],
+    ['ind', 'left', 7205001, -3959, undefined], ['spacing', 'after', 70000, 4464, undefined], ['spacing', 'line', 65535, 1, 'atLeast'],
   ]);
   const pPr = unwrap(tree).body.content[0].value.pPr;
   assert.deepEqual([pPr.ind.left, pPr.spacing.after, pPr.spacing.line], [7205001, 70000, 65535], 'held as written');
-  pPr.spacing.before = 70000; // set by code: unmeasured, outside the certain range
+  pPr.spacing.before = 70000; // set by code
   for (const normaliseOnSave of [true, false]) {
     const saved = [];
     const xml = await marshalString(tree, { normaliseOnSave, onOutOfRange: (r) => saved.push([r.path, r.value]) });
@@ -1147,5 +1153,5 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(tbl([['a', 'b']], { widths: [20000, 12767] }).value.tblPr.tblW.w, 32767);
   assert.equal(applyRunOptions({}, { size: 32767.5 }).sz.val, 65535);
   for (const size of [32768, -1, NaN, Infinity]) assert.throws(() => applyRunOptions({}, { size }), /Font size .* is outside Word's range: w:sz is stored in 16 bits, 0 to 32767.5 points/, `size ${size}`);
-  console.log("CR-016: Word's integer storage (51 attributes, 26 at the certain range) read as round 5 measured; onOutOfRange on read and on save, nothing rewritten; the builders' widths and size within Word's range OK");
+  console.log("CR-016: Word's integer storage (51 attributes, 4 at the certain range) read as rounds 5 and 6 measured; onOutOfRange on read and on save, nothing rewritten; the builders' widths and size within Word's range OK");
 }

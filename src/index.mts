@@ -558,12 +558,16 @@ const INTEGER_TYPES: ReadonlySet<string> = new Set(['Integer', 'Long', 'Int', 'S
  */
 const WORD_NUMBER = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
 
+/** Word's form with no digit: `""`, `.`, a sign, or a sign and a dot, which Word reads as 0 (round 6's group E). */
+const NO_DIGITS = /^[+-]?\.?$/;
+
 /**
- * An integer attribute's text as Word 365 reads it: `""` as 0; Word's form as its integer part,
- * truncated toward zero (never `-0`); undefined for a form Word refuses.
+ * An integer attribute's text as Word 365 reads it: `""` and the forms with no digit (`.`, `+`, `-`,
+ * `+.`; docx4j CR-066's round 6, group E) as 0; Word's form as its integer part, truncated toward
+ * zero (never `-0`); undefined for a form Word refuses.
  */
 function wordInteger(text: string): number | undefined {
-  if (text === '') return 0;
+  if (NO_DIGITS.test(text)) return 0;
   if (!WORD_NUMBER.test(text)) return undefined;
   const value = Math.trunc(Number(text));
   return value === 0 ? 0 : value;
@@ -582,7 +586,7 @@ function wordInteger(text: string): number | undefined {
  *   value shows through); except `w:u`'s `true`, `false`, `on`, `off`, `1` and `0`, exactly, which
  *   Word reads as `'none'`.
  * - A refused integer (CR-015) in Word's form (`259.2`, `-120.5`, `+240.5`, `.5`, `10206.0`) is its
- *   integer part, truncated toward zero, as Word 365 reads it, and `""` is 0. Any other form
+ *   integer part, truncated toward zero, as Word 365 reads it, and `""`, `.`, `+`, `-` and `+.` are 0. Any other form
  *   (`" 240 "`, `240,5`, `0x10`, `1e3`, `abc`), for which Word refuses the whole document, is
  *   dropped. The facade's unmarshal functions pass jsonix-CR-012's `strictIntegers`, so every text
  *   but an optional sign and digits arrives here.
@@ -622,8 +626,8 @@ export interface WordReading {
    * For a boolean or an enumeration, `'value.kept.exact'` when the text, trimmed of XML whitespace,
    * is a form its type reads (`" false"`), else `'value.kept.invalid'` (`"yes"`, `"Single"`). For an
    * integer (CR-015), `'value.truncated'` (`"259.2"` read as 259, `"10206.0"` as 10206),
-   * `'value.kept.invalid'` for `""` read as 0, or `'value.refused'` where the form is one Word
-   * refuses the whole document for and the value was dropped.
+   * `'value.kept.invalid'` for a form with no digit (`""`, `.`, `+`, `-`, `+.`) read as 0, or
+   * `'value.refused'` where the form is one Word refuses the whole document for and the value was dropped.
    */
   readonly kind: 'value.kept.exact' | 'value.kept.invalid' | 'value.truncated' | 'value.refused';
 }
@@ -710,7 +714,7 @@ function reportingWordReadings(onWordReading: (reading: WordReading) => void): N
   return (text, propertyInfo, classInfo, node, error) => {
     const value = wordInvalidValue(text, propertyInfo, classInfo, node, error) as WordReading['value'];
     const kind: WordReading['kind'] = INTEGER_TYPES.has(propertyInfo.typeInfo.name)
-      ? (value === undefined ? 'value.refused' : text === '' ? 'value.kept.invalid' : 'value.truncated')
+      ? (value === undefined ? 'value.refused' : NO_DIGITS.test(text) ? 'value.kept.invalid' : 'value.truncated')
       : (readOnceTrimmed(text, propertyInfo.typeInfo) ? 'value.kept.exact' : 'value.kept.invalid');
     onWordReading({ element: node, attribute: propertyInfo.attributeName, text, value, kind });
     return value;

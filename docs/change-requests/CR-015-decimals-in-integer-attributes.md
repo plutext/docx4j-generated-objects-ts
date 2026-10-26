@@ -123,8 +123,8 @@ prompt, and Word's saves are `families/cr065-{B..I}-word365.docx`. Read here aga
 
   So **Word's form** is an optional `+` or `-`, then digits with an optional `.` and fraction, or a `.` and a fraction,
   with no whitespace around it; or the empty string, read as `0`. The fraction is truncated toward zero. Anything else
-  refuses the whole document: whitespace around the value, a comma, hex, an exponent, letters. A lone `.` or sign is
-  unmeasured.
+  refuses the whole document: whitespace around the value, a comma, hex, an exponent, letters. A form with no digit
+  (`.`, `+`, `-`, `+.`) Word opens and reads as 0, like `""` (round 6's group E, measured under a style's 100).
 
 So docx4j's repair differs from Word's reading in 7 of the probe's values on its own list: `141.5`, `241.5`,
 `141.99999999999994`, `1.8`, `9001.5`, `400.7` and `11907.5`, each one more than Word's.
@@ -179,8 +179,10 @@ defect, unreported and unmeasured.
 - nothing is trimmed, since Word refuses `" 240.5 "`. docx4j's CR-065 takes the same form, with no trimming (its D3
   (a)), so the three ports read identically.
 
-**A form Word refuses that reaches the facade (N4).** Examples are `" 240.5 "`, `240,5`, `2.5e0` and `abc`, and a lone
-`.` or sign, which are unmeasured and outside Word's form. Word refuses the whole document for any of them. There are two choices:
+**A form Word refuses that reaches the facade (N4).** Examples are `" 240.5 "`, `240,5`, `2.5e0` and `abc`. Word
+refuses the whole document for any of them. (The forms with no digit, `.`, `+`, `-` and `+.`, are not among them:
+round 6's group E found that Word opens them and reads them as 0, so the facade reads them as 0, reported as
+`'value.kept.invalid'`, as it does `""`.) There are two choices:
 - **(a) fail the part**, as 0.5.0 does;
 - **(b) drop the attribute, reported.** The kind is `'value.refused'` and the value undefined. The part loads, the
   attribute reads as absent, and a save writes a document Word opens. docx4j's CR-065 recommends the same (its D3).
