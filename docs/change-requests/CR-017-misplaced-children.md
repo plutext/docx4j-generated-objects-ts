@@ -441,5 +441,6 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   (section 3). The smoke checks the new refusals in the builders and on save, each message as docx4j words it, and the
   branch cases: a run-level control, and a control and custom XML nested in it, in a paragraph's `mc:Choice` report
   nothing; a paragraph inside that control does. Fidelity reports none, and all 342 marshalled parts are byte-identical.
+  core-ts's rerun at 202b58d gives the same 35 reports as at 2b87bdf, report for report, over its 9,075 parts.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
   Jason's.
