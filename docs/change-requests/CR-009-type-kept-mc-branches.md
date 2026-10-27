@@ -1,12 +1,13 @@
 # CR-009: Type what a kept `mc:AlternateContent` branch holds, as docx4j does
 
-**Status:** Implemented 2026-10-18 (proposal 2 by regeneration from docx4j CR-048, `97c43b9`; proposal 1 in the facade, section 9); released the same day in 0.4.0 (tag `4a4bf9b`)
+**Status:** Implemented 2026-10-18 (proposal 2 by regeneration from docx4j CR-048, `97c43b9`; proposal 1 in the facade, section 9); released the same day in 0.4.0 (tag `4a4bf9b`); list C, nine elements beyond docx4j's roots, added 2026-10-28 by CR-017 M7, a recorded divergence (section 10)
 **Requested by:** `plutext/docx4j-core-ts` CR-010 phase 2 (Jason asked for phase 2 in the core-ts
 session, 2026-10-17). CR-010 keeps `mc:AlternateContent` and saves every branch, docx4j CR-021's
 policy. Its phase 1 is done (core-ts `6b178af`); phase 3 puts the content API over kept branches.
 **Depends on:** docx4j CR-048 (`CR-048-vml-attributes-word-writes.md`), implemented in docx4j as `acd0defc9` on VERSION_17_3_4, pushed 2026-10-18, to ship in docx4j 17.3.4; regenerated here as `97c43b9`. Nothing else. The measurements below ran on 0.3.2 and `@docx4j/jsonix` 3.4.1.
 **Counterpart:** docx4j's `@XmlRootElement` classes and unscoped `ObjectFactory` `@XmlElementDecl`s,
-which its JAXB context types in a lax wildcard.
+which its JAXB context types in a lax wildcard. Since 2026-10-28 the mapping also declares nine elements docx4j doesn't
+root (section 10).
 
 ## 1. Summary
 
@@ -314,3 +315,22 @@ announcer to the typed form: `mce.test.mjs` asserts the typed `w:drawing` and `w
 `v:shapetype`'s `w14:anchorId` through a save, and fails on 0.3.2. Suite 838/838, typecheck green;
 core-ts CR-010 section 10.4 records the acceptance.
 
+## 10. Nine more, beyond docx4j's roots (CR-017 M7, 2026-10-28)
+
+The rule of this CR was that the mapping declares exactly the elements docx4j declares as roots and the generated
+mapping doesn't declare globally. Reconciled on 2026-10-28 against docx4j's generated sources at HEAD: 99 wml root names
+(103 `@XmlRootElement` annotations, nested classes included, and 7 unscoped declarations), of which the generated mapping
+declares 37, this mapping the 61 of lists A and B, and `w:sdtContent`, with four classes, neither. No root is missing.
+
+CR-017's M7 (d), decided by Jason on 2026-10-28, adds list C: `w:instrText` and `w:delInstrText` (`Text`), `w:object`
+(`CTObject`), `w:ruby` (`CTRuby`), `w:footnoteReference` and `w:endnoteReference` (`CTFtnEdnRef`), `w:dir` (`P.Dir`),
+`w:bdo` (`P.Bdo`) and `w:subDoc` (`CTRel`). None is a docx4j root. A content list types any element the context
+declares globally, so without them one of these misplaced, such as a `w:instrText` straight in a `w:p`, failed the read
+of its whole part, where a misplaced `w:t` reads typed. With them it reads typed, is kept, and CR-017's `onMisplaced`
+reports it.
+
+This is a divergence from docx4j, recorded here as docx4j asked (docx4j-12, 2026-10-28). docx4j won't root the nine on
+its own account: its lax wildcards never legitimately hold them, so a root would type them only where they are
+misplaced. It called the divergence harmless to itself and its consumers, since its root set is an artefact of the
+schema's global declarations, not a contract. The divergence shows only on misplaced content, which this package keeps
+and docx4j's JAXB drops from a strict container. The marshalled output of all 342 fidelity parts is unchanged by it.

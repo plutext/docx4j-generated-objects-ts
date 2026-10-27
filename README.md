@@ -158,6 +158,13 @@ green. `'darkYellow'`, which is no CSS name, throws. `textOf` reads the text bac
 `walk`, `find` and `linkParents` are `TraversalUtil`, `ClassFinder` and what the unmarshaller does
 for `PARENT`.
 
+The builders refuse a child its container never admits (CR-017), before anything is built, with a
+`TypeError` in docx4j's wording: `tc([r('a')])` throws "You can't add a run (w:r) directly to a table
+cell (w:tc); add it to a paragraph (w:p) and add that." `p`, `tc`, `tr` and `sdt` test what they are
+given, and the tagged form of `wml` tests each interpolated element where it lands. The rules are
+docx4j CR-064's: a container refuses only what its schema never allows there, such as a run in the
+body or a cell, a table in a paragraph, a paragraph in a run, or a cell straight in a table.
+
 ### Navigating with `TYPE_NAME` and `PARENT`
 
 ```ts
@@ -274,6 +281,16 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   docx4j CR-066's round 5 measured it, which `test/word365-ranges.mjs` reads against Word's saves. The
   builders throw a `RangeError` for a table or cell width outside 0 to 32767 twips, and for a run size
   outside 0 to 32767.5 points.
+- **A misplaced child** (CR-017): a run straight in a cell, a table in a paragraph, a string in a run. Word
+  refuses most such files outright and repairs the rest silently (core-ts's check 72). TypeScript's
+  declarations refuse each at compile time, but a JavaScript caller, a cast or a mismatched `{ name, value }`
+  gets past them. `onMisplaced`, an unmarshal and a marshal option, receives each misplaced child, with the
+  container, the child, the rule and docx4j's message, and on save its path. On save each container's list is
+  tested as the container is opened, before its children are written. So a string in a run is reported before
+  the runtime refuses it, and a callback that throws stops the save with its own error. Otherwise the child is
+  kept as read and written as held. The rules are docx4j CR-064's sets, a child tested by its class, plus one
+  for a name and value that disagree (a `w:p` whose value is a table; a block-level content control in a
+  paragraph), and an `mc:AlternateContent` branch is tested by its host's.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
@@ -302,7 +319,11 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `org_docx4j_wml`, so a kept branch's `w:drawing` and `w:pict` unmarshal typed, as docx4j's context
   types them, and marshal back whole. `WML_GLOBAL_ELEMENTS` is the list (local name to type). Two
   consequences: each of the 61 is now a valid root for `unmarshalString` and `marshalString`, and a
-  `w:tc`, `w:tbl` or `w:drawing` marshalled on its own no longer carries an `xsi:type`.
+  `w:tc`, `w:tbl` or `w:drawing` marshalled on its own no longer carries an `xsi:type`. Nine more are
+  declared beyond docx4j's roots (CR-017): `w:instrText`, `w:delInstrText`, `w:object`, `w:ruby`,
+  `w:footnoteReference`, `w:endnoteReference`, `w:dir`, `w:bdo` and `w:subDoc`. Without them, one of these
+  misplaced (a field instruction straight in a paragraph) would fail the read of its whole part; with them it
+  reads typed, is kept, and `onMisplaced` reports it.
 - **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
   (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
   Word writes it. The facade's marshal functions declare on the root element the namespaces the

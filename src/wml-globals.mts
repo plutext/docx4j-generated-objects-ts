@@ -11,16 +11,26 @@
 // holding `org_docx4j_wml`. A side effect: each of these is a valid root for `unmarshalString`
 // and `marshalString`, as docx4j's root classes are for JAXB. `w:sdtContent` is left out: docx4j
 // maps it to four classes, so it is ambiguous there too.
+//
+// List C goes beyond docx4j's roots, a recorded divergence (CR-017 M7, 2026-10-28): nine run and
+// paragraph elements no docx4j class or unscoped declaration roots. A content list types any element
+// the context declares globally, so without them one misplaced (a `w:instrText` straight in a
+// `w:p`) fails the read of its whole part, where a misplaced `w:t` reads typed, is kept, and is
+// reported by `onMisplaced`. docx4j won't root them (its lax wildcards never hold them legitimately)
+// and called the divergence harmless; it shows only on misplaced content, which this package keeps
+// and docx4j's JAXB drops.
 import type { Jsonix } from '@docx4j/jsonix';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 
 /**
- * The 61 elements, local name to the mapping's type (an `org_docx4j_wml` type name, docx4j's
+ * The 70 elements, local name to the mapping's type (an `org_docx4j_wml` type name, docx4j's
  * class name with `.` for nesting). List A of CR-009 (46 declared only within parents, each with
  * one type across its scopes) then list B (15 declared only as properties; for `pPr`, `sectPr`,
  * `tblPr` and `tblGrid` the root class, not the `...Base` type their `w:pPrChange` siblings use).
- * Source: docx4j VERSION_17_3_4 generated objects, compared with the mapping's `##global` scope.
+ * Source: docx4j VERSION_17_3_4 generated objects, compared with the mapping's `##global` scope;
+ * reconciled 2026-10-28 at docx4j HEAD, whose 99 wml root names are the generated mapping's 37,
+ * these 61 and `w:sdtContent`. Then list C (CR-017 M7): nine that are not docx4j roots.
  */
 export const WML_GLOBAL_ELEMENTS: Readonly<Record<string, string>> = Object.freeze({
   // List A: declared here only within parents
@@ -86,6 +96,16 @@ export const WML_GLOBAL_ELEMENTS: Readonly<Record<string, string>> = Object.free
   sdtPr: 'SdtPr',
   lvl: 'Lvl',
   tblGrid: 'TblGrid',
+  // List C (CR-017 M7): not docx4j roots; declared here so a misplaced one reads typed instead of failing its part
+  instrText: 'Text',
+  delInstrText: 'Text',
+  object: 'CTObject',
+  ruby: 'CTRuby',
+  footnoteReference: 'CTFtnEdnRef',
+  endnoteReference: 'CTFtnEdnRef',
+  dir: 'P.Dir',
+  bdo: 'P.Bdo',
+  subDoc: 'CTRel',
 });
 
 /**

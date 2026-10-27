@@ -1,8 +1,8 @@
 # CR-017: Misplaced children: refused by the builders, reported on read and on save
 
-**Status:** Accepted 2026-10-28, M1 to M7 as recommended (Jason: "CR-017 decisions as recommended; commit then
-implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064 phase 1's code (befc57371), core-ts
-CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
+**Status:** Implemented 2026-10-28, unreleased (section 10); M1 to M7 decided as recommended (Jason: "CR-017
+decisions as recommended; commit then implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064
+phase 1's code (befc57371), core-ts CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
 **Requested by:** Jason, 2026-10-26 ("a CR for checking misplaced children (in the builders or as a validation pass)
 please"). The question came from docx4j CR-064's hand-off (its section 7): whether the TypeScript port's content lists
 refuse a misplaced child, with CR-064 section 2's table of mistakes as the list worth catching. Revised at Jason's word,
@@ -142,7 +142,8 @@ As in docx4j, `w:tcPr` is refused in every block-level container; as proposed on
 in that list, or globally where the list doesn't name it, such as `{ name: w:p, value: <a run> }`. A content control at
 the wrong level is one: `w:sdt` in a paragraph declares the run-level class, so a block-level value there disagrees.
 Such a child is exactly one the marshal writes with an `xsi:type`, which Office never writes. The runtime types each
-element it reads by its name, so a file read always agrees, and this rule catches code only.
+element it reads by its name, so a file read always agrees, and this rule catches code only. The class rule is tested
+first, as docx4j tests the value a `JAXBElement` wraps: a `w:p` whose value is a run, in the body, is a misplaced run.
 
 **`mc:AlternateContent`'s branches** are tested by their host's set (core-ts D3): a kept `mc:Choice` or `mc:Fallback`
 in a paragraph is tested as run-level content.
@@ -178,11 +179,14 @@ Where a caller hands a builder a child, the builder tests it against section 3 b
   `sdt([p('a'), r('b')])`, inferred block-level from its first item, refuses the run. The row and cell forms are tested
   by the name rule only;
 - **`wml`'s tagged form:** an interpolated element, once the fragment is parsed and the element placed, as a child of
-  the element it lands in. The plain form parses XML text, so a misplaced element there is the caller's markup,
-  reported like any other read (section 4.2).
+  the element it lands in. Each interpolated element's root is marked as it is marshalled into the fragment, the mark
+  is removed before the read, and the read's report is matched to the marked elements. The plain form parses XML text,
+  so a misplaced element there is the caller's markup, reported like any other read (section 4.2).
 
 A refusal is a `TypeError` with the message of section 3, thrown before anything is built, so nothing half-made is
-returned. `r`, `t` and `tbl` take strings and options only, so they can't receive a child.
+returned. `r`, `t` and `tbl` take strings and options only, so they can't receive a child. The builders work without
+the context, which a builder's caller may not have built, so they test the name rule for `w:sdt` alone, from a table of
+each list's declaration that the smoke holds to the context. A save's report tests it for every child.
 
 ### 4.2 A report on read and on save (M2)
 
@@ -194,9 +198,13 @@ returned. `r`, `t` and `tbl` take strings and options only, so they can't receiv
 - `child`, the child's element name, or `'#text'` for a string, and `childType`, its class where it has one;
 - `index`, its position in the container's list;
 - `rule`, `'misplaced'` or `'name-value'` (section 3), and `message`, section 3's;
+- for a child of an `mc:AlternateContent` branch, `via`, the steps from the container to the branch
+  (`mc:AlternateContent[1]/mc:Choice[1]`);
+- on read, `childElement`, the child's element in the source (the tagged form of `wml` matches its marks with it);
 - on save, `path`, in `Normalisation`'s and `OutOfRange`'s form and built by the same function: the container's path
-  and the child's step (`/w:document/w:body[1]/w:r[1]`), or the container's path for a string. core-ts formats all
-  three reports with one formatter (its ask, 2026-10-28).
+  and the child's step (`/w:document/w:body[1]/w:r[1]`), or the container's path for a string. A step counts the
+  container's own property elements of the same name that the marshal writes before its list, so a `w:pPr` pushed into
+  a paragraph that has one is `w:pPr[2]`. core-ts formats all three reports with one formatter (its ask, 2026-10-28).
 
 Both sides test each container's list as a whole, once, when the container is met. On read that is the composed
 unmarshal `onElement`, once the container's value is complete. On save it is the marshal's `onElement`, which the
@@ -366,5 +374,23 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
 
 - **Changes:** the builders throw where they wrote a broken document before, and the API gains `onMisplaced`.
 - **Version:** a minor under Jason's rule, 0.7.0. It can't ride with the 0.6.1 patch, `OutOfRange`'s table entry at
-  core-ts's ask. (As proposed on 2026-10-26, it was to ride with 0.6.0, since released without it.)
+  core-ts's ask (73b9606), which is committed before it, so 0.6.1 can still be cut from that commit. (As proposed on
+  2026-10-26, it was to ride with 0.6.0, since released without it.)
 - **Effort:** a day: the rules, both reports, the nine declarations and the gates.
+
+## 10. Implemented (2026-10-28)
+
+- **Code:** `src/misplaced.mts` (internal, not an exported path) holds the containers, the refused classes, each class's
+  element names and `w:sdt`'s declaration per list, with docx4j's messages. `src/index.mts` adds `MisplacedChild`,
+  `onMisplaced` on both option types, the context's declarations for the name rule, the read side in the composed
+  unmarshal `onElement`, and the save side composed outside `onOutOfRange`'s. `builders/wml.mts` refuses in `p`, `tc`,
+  `tr`, `sdt` and the tagged form. `wml-globals.mts` gains list C, the nine of M7.
+- **The gate (M5):** the fidelity test reports no misplaced child in its 341 parts, on read or on save, with the mc
+  branches unresolved and resolved; the marshalled output of all 342 parts is byte-identical to the build before
+  CR-017. The builders' own output in the smoke tests passes. One existing smoke assertion built the refused form,
+  `sdt([r('x')], { form: 'block' })`, to show that `form` overrides the inference; it now shows that with a bookmark,
+  the same at both levels, and that the refused form throws.
+- **Tests:** section 7's, in the smoke's CR-017 block, the CR-009 block (70 entries, list C) and the fidelity test.
+  `test/nodenext/consumer.mts` types the report and the callback on both sides.
+- **What is left:** core-ts's survey of 9,071 parts, the larger gate, at its next run; core-ts CR-016 phase 2 builds
+  its refused save on the save report.

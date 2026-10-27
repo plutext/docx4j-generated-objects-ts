@@ -554,7 +554,10 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(sdt([aRow], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.CTSdtRow', 'a w:tr gives the row form');
   const [aCell] = await wml('<w:tc><w:p/></w:tc>');
   assert.equal(sdt([aCell], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.CTSdtCell', 'a w:tc gives the cell form');
-  assert.equal(sdt([r('x')], { id: 1, form: 'block' }).value.TYPE_NAME, 'org_docx4j_wml.SdtBlock', 'form overrides the inference');
+  const [bookmark] = await wml('<w:bookmarkStart w:id="1" w:name="b"/>');
+  assert.equal(sdt([bookmark], { id: 1 }).value.TYPE_NAME, 'org_docx4j_wml.SdtBlock', 'a bookmark, the same at both levels, infers block');
+  assert.equal(sdt([bookmark], { id: 1, form: 'run' }).value.TYPE_NAME, 'org_docx4j_wml.SdtRun', 'form overrides the inference');
+  assert.throws(() => sdt([r('x')], { id: 1, form: 'block' }), TypeError, 'but not into content the form never admits (CR-017)');
   assert.throws(() => sdt([r('x')], { kind: 'RepeatingSection' }), /block-level control/);
   const checkbox = sdt([r('x')], { kind: 'CheckBox', id: 2 });
   assert.equal(sdtProperty(checkbox.value.sdtPr, 'checkbox', W14).value.checked.val, false, 'w14:checked is a boolean since 0.1.3');
@@ -661,11 +664,13 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
 // CR-009: the WordprocessingML elements docx4j declares as roots are declared globally by one more
 // mapping, so a kept mc:Choice or mc:Fallback types its w:drawing and w:pict as docx4j's context does.
+// CR-017 M7 adds nine that are not docx4j roots (list C), so a misplaced one reads typed.
 {
   resetContext();
   const ctx = await getContext();
   const names = Object.keys(WML_GLOBAL_ELEMENTS);
-  assert.equal(names.length, 61, 'CR-009 lists 61');
+  assert.equal(names.length, 70, 'CR-009 lists 61, and CR-017 M7 nine more');
+  assert.deepEqual(names.slice(61), ['instrText', 'delInstrText', 'object', 'ruby', 'footnoteReference', 'endnoteReference', 'dir', 'bdo', 'subDoc'], "list C: CR-017 M7's nine, beyond docx4j's roots");
   const wmlGlobals = new Set(MODULES.org_docx4j_wml.elementInfos.filter((e) => !e.scope).map((e) => e.elementName.localPart ?? e.elementName));
   for (const [localPart, type] of Object.entries(WML_GLOBAL_ELEMENTS)) {
     const info = ctx.getElementInfo({ key: `{${W}}${localPart}` }, undefined);
@@ -684,7 +689,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.match(written, /<w:drawing><wp:inline distT="0"><wp:extent cx="1" cy="2"\/><\/wp:inline><\/w:drawing>/, 'the Choice marshals whole');
   assert.match(written, /<v:shapetype [^>]*w14:anchorId="7969C50B"[^>]*o:spt="202"/, 'the Fallback keeps w14:anchorId (docx4j CR-048) and writes o:spt as read');
   assert.equal(unwrap(await unmarshalString(`<w:drawing xmlns:w="${W}"/>`)).TYPE_NAME, 'org_docx4j_wml.Drawing', 'each of the 61 is a valid root now, as docx4j\'s root classes are');
-  console.log('CR-009: 61 WordprocessingML elements declared globally; kept mc branches typed as docx4j types them OK');
+  console.log('CR-009: 61 WordprocessingML elements declared globally as docx4j roots them, and CR-017 M7\'s nine beyond them; kept mc branches typed as docx4j types them OK');
 }
 
 // docx4j CR-051 (xsd 1cff2cd5c): mc:AlternateContent is admitted in EG_ContentBlockContent,
@@ -1166,4 +1171,207 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(applyRunOptions({}, { size: 32767.5 }).sz.val, 65535);
   for (const size of [32768, -1, NaN, Infinity]) assert.throws(() => applyRunOptions({}, { size }), /Font size .* is outside Word's range: w:sz is stored in 16 bits, 0 to 32767.5 points/, `size ${size}`);
   console.log("CR-016: Word's integer storage (51 attributes, 4 at the certain range) read as rounds 5 and 6 measured; onOutOfRange on read and on save, nothing rewritten; the builders' widths and size within Word's range OK");
+}
+
+// CR-017: misplaced children. docx4j CR-064's checkParent sets, a child tested by its class, core-ts CR-016's name rule
+// and docx4j's messages: the builders refuse (a TypeError), onMisplaced reports on read and on save, M7's nine read typed.
+{
+  const { CONTAINERS, REFUSED, SDT_CONTENT_TYPES, CLASS_NAMES, SDT_DECLARED } = await import('../dist/misplaced.mjs');
+  const { p, r, t, br, tab, tc, tr, tbl, sdt, wml, inlinePicture } = await import('../dist/builders/wml.mjs');
+  const el = await import('../modules/org_docx4j_wml.el.mjs');
+  const context = await getContext();
+  const all = context.modules.flatMap((m) => m.typeInfos ?? []);
+  const w = (localPart) => ({ namespaceURI: W, localPart, prefix: 'w' });
+
+  // The tables, held to the context: each container's list; no subtype of a container or a refused class (so a
+  // TYPE_NAME tested exactly is docx4j's instanceof); each refused class's element names; w:sdt as each list declares it.
+  const watched = new Set([...Object.keys(CONTAINERS), ...Object.values(REFUSED).flatMap((set) => [...set]), ...SDT_CONTENT_TYPES]);
+  for (const ti of all) for (let base = ti.baseTypeInfo; base; base = base.baseTypeInfo) assert.ok(!watched.has(base.name), `${ti.name} extends ${base.name}: test it as that class too`);
+  const namesOf = new Map();
+  const note = (qn, info) => { if (qn?.namespaceURI === W && info?.name) { if (!namesOf.has(info.name)) namesOf.set(info.name, new Set()); namesOf.get(info.name).add(qn.localPart); } };
+  for (const m of context.modules) {
+    for (const ti of m.typeInfos ?? []) for (const property of ti.properties ?? []) { note(property.elementName, property.typeInfo); for (const e of property.elementTypeInfos ?? []) note(e.elementName, e.typeInfo); }
+    for (const e of m.elementInfos ?? []) note(e.elementName, e.typeInfo);
+  }
+  for (const [type, names] of Object.entries(CLASS_NAMES)) assert.deepEqual([...(namesOf.get(type) ?? [])].sort(), [...names].sort(), `the element names of ${type}`);
+  for (const [type, spec] of Object.entries(CONTAINERS)) {
+    const list = context.getTypeInfoByName(type)?.properties?.find((property) => property.name === spec.list);
+    assert.ok(list?.elementTypeInfos?.length > 0, `${type}.${spec.list} is its content list`);
+    const sdtDeclared = list.elementTypeInfos.find((e) => e.elementName.namespaceURI === W && e.elementName.localPart === 'sdt')?.typeInfo?.name;
+    assert.equal(sdtDeclared, SDT_DECLARED[spec.set ?? type], `w:sdt in ${type}`);
+  }
+
+  // The builders refuse, before anything is built, with docx4j's message naming the container and the fix (M1, M4).
+  const refuses = [
+    [() => tc([r('a')]), /^You can't add a run \(w:r\) directly to a table cell \(w:tc\); add it to a paragraph \(w:p\) and add that\.$/],
+    [() => tc([tc('a')]), /a table cell \(w:tc\) to a table cell \(w:tc\); a cell goes in a row \(w:tr\), in a table \(w:tbl\)/],
+    [() => tc([tr(['a'])]), /a table row \(w:tr\) to a table cell \(w:tc\); a row goes in a table/],
+    [() => tc(['a']), /a string to a table cell \(w:tc\); put it in text \(w:t\), in a run \(w:r\), in a paragraph \(w:p\)/],
+    [() => tc([t('a')]), /text \(w:t\) directly to a table cell/],
+    [() => p([tbl([['a']])]), /^You can't add a table \(w:tbl\) inside a paragraph \(w:p\); it should be a sibling of the paragraph\.$/],
+    [() => p([p('a')]), /^You can't nest a paragraph \(w:p\) inside a paragraph \(w:p\)\.$/],
+    [() => p([t('a')]), /text \(w:t\) directly to a paragraph \(w:p\); add it to a run \(w:r\) and add that/],
+    [() => p([{ name: w('instrText'), value: { TYPE_NAME: 'org_docx4j_wml.Text', value: 'PAGE' } }]), /text \(w:instrText\) directly to a paragraph/],
+    [() => p([br()]), /a break \(w:br\) directly to a paragraph/],
+    [() => p([inlinePicture('rId1', { cx: 1, cy: 1 })]), /a drawing \(w:drawing\) directly to a paragraph/],
+    [() => p(['a']), /a string to a paragraph \(w:p\); put it in text \(w:t\), in a run \(w:r\), and add the run/],
+    [() => p([sdt([p('a')])]), /a w:sdt whose value is a block-level content control \(SdtBlock\) to a paragraph \(w:p\); there a w:sdt is a run-level content control \(SdtRun\)/],
+    [() => tr([p('a')]), /a paragraph \(w:p\) directly to a table row \(w:tr\); add it to a cell \(w:tc\)/],
+    [() => tr([r('a')]), /a run \(w:r\) directly to a table row/],
+    [() => tr([tbl([['a']])]), /nest a table \(w:tbl\) in a table row/],
+    [() => sdt([r('a')], { form: 'block' }), /a run \(w:r\) directly to block-level sdt content \(w:sdtContent\)/],
+    [() => sdt([p('a'), r('b')]), /a run \(w:r\) directly to block-level sdt content/],
+    [() => sdt([p('a')], { form: 'run' }), /nest a paragraph \(w:p\) inside run-level sdt content/],
+  ];
+  for (const [build, message] of refuses) assert.throws(build, (e) => e instanceof TypeError && message.test(e.message), String(build));
+  await assert.rejects(wml`<w:p>${tbl([['a']])}</w:p>`, (e) => e instanceof TypeError && /a table \(w:tbl\) inside a paragraph \(w:p\)/.test(e.message), 'an interpolated table lands in a paragraph');
+  await assert.rejects(wml`<w:tc>${r('z')}</w:tc>`, (e) => e instanceof TypeError && /a run \(w:r\) directly to a table cell/.test(e.message), 'an interpolated run lands in a cell');
+  // The accepted children pass: a hyperlink, a field, w:ins, a content control and mc:AlternateContent in a paragraph;
+  // a table, a content control and custom XML in a cell; a cell, a row-level content control and custom XML in a row.
+  const inline = await wml(`<w:hyperlink><w:r><w:t>h</w:t></w:r></w:hyperlink><w:fldSimple w:instr="PAGE"><w:r><w:t>1</w:t></w:r></w:fldSimple><w:ins w:id="1" w:author="a"><w:r><w:t>i</w:t></w:r></w:ins><mc:AlternateContent xmlns:mc="${MC}"><mc:Choice Requires="w14"><w:r><w:t>c</w:t></w:r></mc:Choice></mc:AlternateContent>`, { wrapper: 'p' });
+  p([r('a'), ...inline, sdt([r('b')])]);
+  const blockXml = await wml(`<w:customXml w:element="x"><w:p/></w:customXml>`, { wrapper: 'body' });
+  tc([p('a'), tbl([['b']]), sdt([p('c')]), ...blockXml]);
+  const rowXml = await wml(`<w:customXml w:element="x"><w:tc><w:p/></w:tc></w:customXml>`, { wrapper: 'tr' });
+  tr([tc('a'), sdt([tc('b')]), ...rowXml]);
+  await wml`<w:p>${r('a')}</w:p>`;
+  await wml('<w:p><w:tbl><w:tr><w:tc><w:p/></w:tc></w:tr></w:tbl></w:p>'); // the plain form is the caller's markup: read, not refused
+
+  // On save: each mistake pushed into a model's array is reported with its path and message, and written as held.
+  const document = (blocks) => ({ name: w('document'), value: { TYPE_NAME: 'org_docx4j_wml.Document', body: { TYPE_NAME: 'org_docx4j_wml.Body', content: blocks } } });
+  const pushed = (container, ...items) => { container.value.content.push(...items); return container; };
+  const run = pushed(r('r'), r('x'), p('x'), tbl([['x']]));
+  const para = pushed(p('p'), tbl([['x']]), p('x'), t('x'), br(), { name: w('instrText'), value: { TYPE_NAME: 'org_docx4j_wml.Text', value: 'PAGE' } });
+  const table = pushed(tbl([['a']]), tc('x'), p('x'), r('x'), tbl([['x']]));
+  table.value.content[0].value.content.push(p('x'), r('x'), tbl([['x']])); // the row's
+  table.value.content[0].value.content[0].value.content.push(r('x')); // the cell's
+  const tree = document([pushed(para, run), r('x'), t('x'), br(), el.drawing({}), tc('x'), tr(['x']), table]);
+  const saved = [];
+  const xml = await marshalString(tree, { onMisplaced: (report) => saved.push([report.path, report.rule, report.child.localPart ?? report.child]) });
+  assert.deepEqual(saved, [
+    ['/w:document/w:body[1]/w:r[1]', 'misplaced', 'r'],
+    ['/w:document/w:body[1]/w:t[1]', 'misplaced', 't'],
+    ['/w:document/w:body[1]/w:br[1]', 'misplaced', 'br'],
+    ['/w:document/w:body[1]/w:drawing[1]', 'misplaced', 'drawing'],
+    ['/w:document/w:body[1]/w:tc[1]', 'misplaced', 'tc'],
+    ['/w:document/w:body[1]/w:tr[1]', 'misplaced', 'tr'],
+    ['/w:document/w:body[1]/w:p[1]/w:tbl[1]', 'misplaced', 'tbl'],
+    ['/w:document/w:body[1]/w:p[1]/w:p[1]', 'misplaced', 'p'],
+    ['/w:document/w:body[1]/w:p[1]/w:t[1]', 'misplaced', 't'],
+    ['/w:document/w:body[1]/w:p[1]/w:br[1]', 'misplaced', 'br'],
+    ['/w:document/w:body[1]/w:p[1]/w:instrText[1]', 'misplaced', 'instrText'],
+    ['/w:document/w:body[1]/w:p[1]/w:r[2]/w:r[1]', 'misplaced', 'r'],
+    ['/w:document/w:body[1]/w:p[1]/w:r[2]/w:p[1]', 'misplaced', 'p'],
+    ['/w:document/w:body[1]/w:p[1]/w:r[2]/w:tbl[1]', 'misplaced', 'tbl'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tc[1]', 'misplaced', 'tc'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:p[1]', 'misplaced', 'p'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:r[1]', 'misplaced', 'r'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tbl[1]', 'misplaced', 'tbl'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:p[1]', 'misplaced', 'p'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:r[1]', 'misplaced', 'r'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:tbl[1]', 'misplaced', 'tbl'],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:tc[1]/w:r[1]', 'misplaced', 'r'],
+  ], 'on save, each container\'s whole list as it is opened, containers in document order');
+  assert.ok(!/xsi:type/.test(xml) && xml.includes('<w:p><w:r><w:t>p</w:t></w:r><w:tbl>') && xml.includes('<w:br/><w:instrText>PAGE</w:instrText><w:r>'), 'written as held, w:instrText without an xsi:type (M7)');
+  assert.equal(await marshalString(tree), xml, 'no callback: the same output, nothing reported');
+
+  // On read: the same file, each mistake reported where it stands; the tree as read marshals as written.
+  const read = [];
+  const reread = await unmarshalString(xml, { onMisplaced: (report) => read.push([report.element.nodeName, report.index, report.rule, report.child.localPart, report.childElement?.localName]) });
+  assert.equal(read.length, saved.length, 'on read, the same children');
+  assert.ok(read.every(([, , rule, child, source]) => rule === 'misplaced' && child === source), 'each with its own source element');
+  assert.equal(await marshalString(reread), xml, 'kept as read');
+
+  // Property elements in content are reported on save; on read they are absorbed into their property and written first.
+  const props = (name, type) => ({ name: w(name), value: { TYPE_NAME: `org_docx4j_wml.${type}` } });
+  const centred = pushed(p('x'), props('pPr', 'PPr'));
+  centred.value.pPr = { jc: { val: 'center' } };
+  const bold = pushed(r('y', { bold: true }), props('rPr', 'RPr'));
+  const framed = pushed(tbl([['x']]), props('tblPr', 'TblPr'));
+  framed.value.content[0].value.content.push(props('trPr', 'TrPr'));
+  framed.value.content[0].value.content[0].value.content.push(props('tcPr', 'TcPr'));
+  const withProps = document([centred, p([bold]), props('sectPr', 'SectPr'), props('tcPr', 'TcPr'), framed]);
+  const propReports = [];
+  await marshalString(withProps, { onMisplaced: (report) => propReports.push([report.path, report.message]) });
+  assert.deepEqual(propReports.map(([path]) => path), [
+    '/w:document/w:body[1]/w:sectPr[1]', '/w:document/w:body[1]/w:tcPr[1]', '/w:document/w:body[1]/w:p[1]/w:pPr[2]', '/w:document/w:body[1]/w:p[2]/w:r[1]/w:rPr[2]',
+    '/w:document/w:body[1]/w:tbl[1]/w:tblPr[2]', '/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:trPr[1]', '/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:tc[1]/w:tcPr[2]',
+  ], "a step counts the property element the marshal writes before the list (pPr, rPr, tblPr, tcPr), not one written after it (the body's sectPr)");
+  assert.match(propReports[0][1], /section properties \(w:sectPr\) to the content of the body \(w:body\); set the body's sectPr, or pPr\.sectPr/);
+  assert.match(propReports[1][1], /cell properties \(w:tcPr\) to the content of the body \(w:body\); they belong to a cell/);
+  assert.match(propReports[2][1], /paragraph properties \(w:pPr\) to the content of a paragraph \(w:p\); set them as the paragraph's pPr/);
+  assert.match(propReports[3][1], /run properties \(w:rPr\) to a run's content; set them as the run's rPr/);
+  assert.match(propReports[6][1], /cell properties \(w:tcPr\) to a cell's content; set them as the cell's tcPr/);
+  const absorbed = [];
+  const runWithRPr = await unmarshalString(`<w:p xmlns:w="${W}"><w:r><w:t>x</w:t><w:rPr><w:b/></w:rPr></w:r><w:pPr><w:jc w:val="center"/></w:pPr></w:p>`, { onMisplaced: (report) => absorbed.push(report) });
+  assert.deepEqual([absorbed.length, unwrap(runWithRPr).pPr.jc.val, !!unwrap(runWithRPr).content[0].value.rPr.b], [0, 'center', true], 'absorbed on read, not reported');
+
+  // A string in a run is reported before the runtime refuses it; a callback that throws stops the save with its own error.
+  const stray = r('x');
+  stray.value.content.push('stray');
+  const strings = [];
+  await assert.rejects(marshalString(document([p([stray])]), { onMisplaced: (report) => strings.push([report.path, report.child, report.message]) }), /Property is not mixed/);
+  assert.deepEqual(strings, [['/w:document/w:body[1]/w:p[1]/w:r[1]', '#text', "You can't add a string to a run (w:r); put it in text (w:t) and add that."]]);
+  class Refused extends Error {}
+  await assert.rejects(marshalString(document([p([stray])]), { onMisplaced: (report) => { throw new Refused(report.path); } }), (e) => e instanceof Refused && e.message === '/w:document/w:body[1]/w:p[1]/w:r[1]');
+
+  // The name rule: a name and value that disagree, and content controls at the wrong level (only on save: a read always agrees).
+  const names = [];
+  const nested = sdt([p('d')]);
+  nested.value.sdtContent.content.push({ name: w('sdtContent'), value: { TYPE_NAME: 'org_docx4j_wml.SdtContentBlock', content: [] } });
+  const disagreeing = document([{ name: w('p'), value: tbl([['m']]).value }, pushed(p('x'), sdt([p('b')])), sdt([r('c')]), nested]);
+  const written = await marshalString(disagreeing, { onMisplaced: (report) => names.push([report.path, report.rule, report.message]) });
+  assert.deepEqual(names.map(([path, rule]) => [path, rule]), [
+    ['/w:document/w:body[1]/w:p[1]', 'name-value'],
+    ['/w:document/w:body[1]/w:sdt[1]', 'name-value'],
+    ['/w:document/w:body[1]/w:p[2]/w:sdt[1]', 'name-value'],
+    ['/w:document/w:body[1]/w:sdt[2]/w:sdtContent[1]/w:sdtContent[1]', 'misplaced'],
+  ], 'the name rule, and sdt content directly in sdt content');
+  assert.match(names[0][2], /a w:p whose value is a table \(w:tbl\) to the body \(w:body\); there a w:p is a paragraph \(w:p\)/);
+  assert.match(names[1][2], /a w:sdt whose value is a run-level content control \(SdtRun\) to the body \(w:body\); there a w:sdt is a block-level content control \(SdtBlock\)/);
+  assert.match(names[3][2], /nest sdt content \(w:sdtContent\) directly inside block-level sdt content \(w:sdtContent\); nest a content control \(w:sdt\) that holds it/);
+  assert.match(written, /<w:p xsi:type="[^"]+">/, 'what the rule is: the marshal writes the mismatch with an xsi:type');
+  // The class rule comes first, as docx4j tests the value a JAXBElement wraps: a w:p whose value is a run is a run in the body.
+  const classFirst = [];
+  await marshalString(document([{ name: w('p'), value: r('m').value }]), { onMisplaced: (report) => classFirst.push([report.rule, report.childType, report.message]) });
+  assert.deepEqual(classFirst, [['misplaced', 'org_docx4j_wml.R', "You can't add a run (w:r) directly to the body (w:body); add it to a paragraph (w:p) and add that."]]);
+
+  // mc:AlternateContent's branches are tested by their host's set; on read and on save.
+  const branches = [];
+  const mcXml = `<w:p xmlns:w="${W}" xmlns:mc="${MC}"><w:r><mc:AlternateContent><mc:Choice Requires="w14"><w:p/></mc:Choice><mc:Fallback><w:t>f</w:t></mc:Fallback></mc:AlternateContent></w:r></w:p>`;
+  const mcTree = await unmarshalString(mcXml, { onMisplaced: (report) => branches.push(['read', report.via, report.child.localPart]) });
+  await marshalString(mcTree, { onMisplaced: (report) => branches.push(['saved', report.path, report.child.localPart]) });
+  assert.deepEqual(branches, [
+    ['read', 'mc:AlternateContent[1]/mc:Choice[1]', 'p'],
+    ['saved', '/w:p/w:r[1]/mc:AlternateContent[1]/mc:Choice[1]/w:p[1]', 'p'],
+  ], "a paragraph in a run's Choice is misplaced; text in its Fallback is not");
+
+  // M7 (d): a misplaced w:instrText reads typed and is reported; a w:moveFrom inside a run still fails the read.
+  const m7 = [];
+  const instr = await unmarshalString(`<w:p xmlns:w="${W}"><w:instrText>PAGE</w:instrText></w:p>`, { onMisplaced: (report) => m7.push(report.message) });
+  assert.equal(unwrap(instr).content[0].value.TYPE_NAME, 'org_docx4j_wml.Text');
+  assert.deepEqual(m7, ["You can't add text (w:instrText) directly to a paragraph (w:p); add it to a run (w:r) and add that."]);
+  await assert.rejects(unmarshalString(`<w:p xmlns:w="${W}"><w:r><w:moveFrom w:id="1" w:author="a"/></w:r></w:p>`), /w:moveFrom.*is not known in this context/);
+
+  // core-ts's check 72 forms (its fixtures/check72/build.mjs), one misplaced child each between BEFORE and AFTER: each
+  // reported on read and on save, but the string in a run, which the read drops as Word does.
+  const P = (text) => `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
+  const row = (inner) => `<w:tbl><w:tr><w:tc>${P('CELL A1')}</w:tc>${inner}</w:tr></w:tbl>`;
+  const check72 = {
+    '72a': '<w:r><w:t>MISPLACED</w:t></w:r>', '72b': '<w:t>MISPLACED</w:t>', '72c': `<w:tc>${P('MISPLACED')}</w:tc>`, '72d': `<w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tr>`,
+    '72e': '<w:br/>', '72f': `<w:tbl><w:tr><w:tc>${P('CELL')}<w:r><w:t>MISPLACED</w:t></w:r></w:tc></w:tr></w:tbl>`,
+    '72g': `<w:p><w:r><w:t>x</w:t></w:r><w:tbl><w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tr></w:tbl></w:p>`, '72h': `<w:p><w:r><w:t>x</w:t></w:r>${P('MISPLACED')}</w:p>`,
+    '72i': '<w:p><w:t>MISPLACED</w:t></w:p>', '72j': '<w:p><w:r><w:t>a</w:t></w:r><w:br/><w:r><w:t>b</w:t></w:r></w:p>',
+    '72k': '<w:p><w:r><w:r><w:t>MISPLACED</w:t></w:r></w:r></w:p>', '72l': `<w:p><w:r><w:t>outer</w:t>${P('MISPLACED')}</w:r></w:p>`, '72m': '<w:p><w:r>MISPLACED<w:t>x</w:t></w:r></w:p>',
+    '72n': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tbl>`, '72o': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr>${P('MISPLACED')}</w:tbl>`,
+    '72p': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr><w:tbl><w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tr></w:tbl></w:tbl>`,
+    '72q': row(P('MISPLACED')), '72r': row('<w:r><w:t>MISPLACED</w:t></w:r>'),
+  };
+  for (const [form, inner] of Object.entries(check72)) {
+    const counts = { read: 0, saved: 0 };
+    const formTree = await unmarshalString(`<w:document xmlns:w="${W}"><w:body>${P('BEFORE')}${inner}${P('AFTER')}</w:body></w:document>`, { onMisplaced: () => counts.read++ });
+    await marshalString(formTree, { onMisplaced: () => counts.saved++ });
+    assert.deepEqual(counts, form === '72m' ? { read: 0, saved: 0 } : { read: 1, saved: 1 }, `check 72's ${form}`);
+  }
+  console.log("CR-017: docx4j CR-064's sets by class with core-ts's name rule, held to the context; p, tc, tr, sdt and wml's interpolation refuse with docx4j's messages; onMisplaced on read and on save (before a container's children, so a string is reported before the runtime's throw), mc branches by their host's set, check 72's 18 forms; M7's nine read typed OK");
 }

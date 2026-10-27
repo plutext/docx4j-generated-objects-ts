@@ -10,7 +10,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 [docx4j](https://github.com/plutext/docx4j)'s `xsd/ROOT.xsd`. `src/` holds the only hand-written
 code: a facade with docx4j's names (`index.mts`), the module registry (`modules.mts`), `wml-globals.mts` (CR-009: one more
 mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
-`w:drawing`/`w:pict`; `getContext` and `modulesFor` add it), `helpers/wml.mts` (per-type docx4j decisions,
+`w:drawing`/`w:pict`, and nine more beyond docx4j's roots, CR-017 M7, so a misplaced one reads typed; `getContext` and
+`modulesFor` add it), `misplaced.mts` (CR-017, internal: docx4j CR-064's `checkParent` sets and messages, which the
+facade's `onMisplaced` reports and the builders refuse with), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
@@ -97,6 +99,13 @@ There are eight tests and no test framework:
   its class, so a regeneration that renames one fails. It also checks `wordIntegerReading`'s wrap, clamp, rule and
   certain range, and `onOutOfRange` on read and on save. Nothing is rewritten, with or without the normaliser. The
   builders' `RangeError` is checked at the boundaries.
+  CR-017's block holds `misplaced.mts`'s tables to the context: each container's list, no subtype of a container or a
+  refused class, each refused class's element names, and `w:sdt` as each list declares it. It checks that `p`, `tc`,
+  `tr`, `sdt` and `wml`'s interpolation refuse with docx4j's messages and accept the legal children. On save it checks
+  each mistake's path, rule and message, property elements counted in a step, a string reported before the runtime's
+  throw, a callback's throw, the name rule (and the class rule first), and sdt content in sdt content. On read it checks
+  the same file, property elements absorbed, mc branches by their host's set, M7's `w:instrText`, and core-ts's
+  check 72 forms.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -126,8 +135,9 @@ There are eight tests and no test framework:
   `Requires` names in a marshalled part is also checked to resolve where it is written (CR-001
   section 3.2).
   Run against 0.1.5's `modules/` the test reports all five losses that release carried. A part that
-  reaches CR-013's `onWordReading` or `onNormalised`, or CR-016's `onOutOfRange`, fails too: Office writes only values
-  the runtime reads, colours in their normal form, and integers within its own storage.
+  reaches CR-013's `onWordReading` or `onNormalised`, CR-016's `onOutOfRange` or CR-017's `onMisplaced` fails too:
+  Office writes only values the runtime reads, colours in their normal form, integers within its own storage, and no
+  child where its container never admits it.
 - `test/word365.mjs` (runtime, CR-013) reads Word 365's run property probes (rounds 1 to 7 of
   2026-10-24, `test/fixtures/word365-probes/`, each probe's `word/document.xml` beside Word's save
   of it and, for fifteen, docx4j's): each marker run's direct toggles, underline and its colour,
@@ -260,6 +270,20 @@ rule in the sign for exact lines and row heights. `wordIntegerReading` gives wha
 - **Why per attribute:** docx4j's type-bound print method can be exact only per type, but the adapters know the class
   and the property, so this report is exact per attribute.
 - **The builders** throw a `RangeError` for a width or size Word can't hold.
+
+CR-017 (implemented 2026-10-28, M1 to M7 as recommended) refuses and reports misplaced children, with docx4j CR-064's
+`checkParent` sets (`src/misplaced.mts`):
+- **The rules:** a child is tested by its class (its value's `TYPE_NAME`, or the class its name gives). There is also
+  core-ts CR-016's name-and-value rule: a value whose class isn't the one its name declares there, which the marshal
+  would write with `xsi:type`. An `mc:AlternateContent` branch is tested by its host's set.
+- **The builders:** `p`, `tc`, `tr`, `sdt` and `wml`'s interpolation throw a `TypeError` in docx4j's wording. Without
+  the context, the builders apply the name rule to `w:sdt` alone. The tagged form marks each interpolated element and
+  refuses only those.
+- **The report:** `onMisplaced` on read and on save, each container's list tested once. On save that is as the
+  container is opened, so a string is reported before the runtime's throw and a callback's throw stops the save; the
+  `path` is in `OutOfRange`'s form. core-ts CR-016 phase 2 refuses a save from it.
+- **M7:** nine run and paragraph elements are declared globally beyond docx4j's roots (`wml-globals.mts` list C), so a
+  misplaced one reads typed rather than failing its part. docx4j called the divergence harmless.
 
 ## What the declarations promise
 

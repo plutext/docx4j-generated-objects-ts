@@ -6,6 +6,7 @@ import { Jsonix } from '@docx4j/jsonix';
 import { MODULES } from './modules.mjs';
 import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
 import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading, type WordIntegerStorage } from './helpers/wml.mjs';
+import { CONTAINERS, misplacement, alternateContentOf, branchItems, type Declarations, type Misplacement, type MisplacedRule } from './misplaced.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -516,8 +517,10 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
  * `strictIntegers` too.
  */
 function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
-  const { onWordReading, onOutOfRange, ...runtimeOptions } = options ?? {};
+  const { onWordReading, onOutOfRange, onMisplaced, ...runtimeOptions } = options ?? {};
   const callerOnElement = runtimeOptions.onElement;
+  // CR-017: each typed value's source element, so a report can name a misplaced child's (its onElement comes first).
+  const sources = onMisplaced ? new WeakMap<object, Element>() : undefined;
   return {
     ...runtimeOptions,
     onElement(element: Element, value: object): void {
@@ -526,6 +529,7 @@ function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOption
         if (bindings) { sourceBindings.set(value, bindings); recorded = true; }
       }
       if (onOutOfRange) reportOutOfRange(element, value, onOutOfRange);
+      if (onMisplaced) { sources!.set(value, element); reportMisplacedOnRead(element, value, sources!, onMisplaced); }
       callerOnElement?.(element, value);
     },
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
@@ -715,6 +719,134 @@ function reportOutOfRange(element: Element, value: object, onOutOfRange: (report
   }
 }
 
+// ---------------------------------------------------------------------------------------------
+// CR-017: misplaced children
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * A child its container never admits (CR-017), as `onMisplaced` receives it: a class docx4j CR-064's `checkParent`
+ * refuses there (a run in a cell, a table in a paragraph, a string in a run, ...), sdt content directly in sdt content,
+ * or a name and value that disagree (a `w:p` whose value is a run; a block-level content control in a paragraph). The
+ * tree keeps it, and a save writes it as held unless the callback throws.
+ */
+export interface MisplacedChild {
+  /** The container's element: on read in the source; on save the element written, open, its children not yet written. */
+  readonly element: Element;
+  /** The container's `TYPE_NAME`. */
+  readonly container: string;
+  /** The child's element name, or `'#text'` for a string. */
+  readonly child: { readonly namespaceURI: string; readonly localPart: string; readonly prefix?: string } | '#text';
+  /** The child's class, where it has one: its value's `TYPE_NAME`, or the class its element name gives. */
+  readonly childType?: string;
+  /** Its position in the list holding it. */
+  readonly index: number;
+  /**
+   * For a child of an `mc:AlternateContent` branch, tested by its host's set: the steps from the container to the
+   * branch, `mc:AlternateContent[1]/mc:Choice[1]`.
+   */
+  readonly via?: string;
+  /** `'misplaced'`, a class the container refuses; `'name-value'`, a value whose class isn't the one its name declares there. */
+  readonly rule: MisplacedRule;
+  /** docx4j's wording, with element names: "You can't add a run (w:r) directly to a table cell (w:tc); ...". */
+  readonly message: string;
+  /** On save, from the part root, in `OutOfRange`'s form: `/w:document/w:body[1]/w:r[1]`; the container's path for a string. */
+  readonly path?: string;
+  /** On read, the child's element in the source. */
+  readonly childElement?: Element;
+}
+
+/** The context's declarations, for the name rule: the class a list (or, where it names none, the context) gives a name. */
+let declarationsOf: { context: Jsonix.Context; declarations: Declarations } | undefined;
+function declarations(): Declarations {
+  const context = getContextSync();
+  if (declarationsOf?.context === context) return declarationsOf.declarations;
+  const cache = new Map<string, string | undefined>();
+  const typed = (info: unknown): string | undefined => {
+    const name = typeof info === 'object' && info !== null ? (info as { name?: unknown }).name : undefined;
+    return typeof name === 'string' ? name : undefined;
+  };
+  const result: Declarations = {
+    declared(containerType, list, name) {
+      const key = `${containerType} ${list} {${name.namespaceURI}}${name.localPart}`;
+      if (cache.has(key)) return cache.get(key);
+      const property = (context.getTypeInfoByName(containerType) as unknown as { properties?: { name: string; elementTypeInfos?: { elementName: { namespaceURI: string; localPart: string }; typeInfo: unknown }[] }[] } | undefined)
+        ?.properties?.find((p) => p.name === list);
+      const local = property?.elementTypeInfos?.find((e) => e.elementName.namespaceURI === name.namespaceURI && e.elementName.localPart === name.localPart);
+      const found = local ? typed(local.typeInfo)
+        : typed(context.getElementInfo({ key: `{${name.namespaceURI}}${name.localPart}` } as unknown as string, undefined as unknown as string)?.typeInfo);
+      cache.set(key, found);
+      return found;
+    },
+    isA(type, base) {
+      for (let ti: Jsonix.TypeInfo | undefined = context.getTypeInfoByName(type); ti; ti = ti.baseTypeInfo) if (ti.name === base) return true;
+      return false;
+    },
+  };
+  declarationsOf = { context, declarations: result };
+  return result;
+}
+
+/**
+ * Tests a container's list, and each `mc:AlternateContent` branch in it by the container's set, calling `found` with
+ * each misplaced child, its index in its own list, and the steps to it from the container (each `name[n]`, from
+ * `stepName`; `offset` adds the same-named property elements written before the list).
+ */
+function testList(containerType: string, items: readonly unknown[], stepName: (item: unknown) => string | undefined, offset: (step: string) => number,
+  mc: string, found: (misplaced: Misplacement, item: unknown, index: number, via: readonly string[], step: string | undefined) => void, via: readonly string[] = []): void {
+  const context = declarations();
+  const seen = new Map<string, number>();
+  items.forEach((item, index) => {
+    const name = stepName(item);
+    let step: string | undefined;
+    if (name !== undefined) {
+      const n = (seen.get(name) ?? 0) + 1;
+      seen.set(name, n);
+      step = `${name}[${n + offset(name)}]`;
+    }
+    const misplaced = misplacement(containerType, item, context);
+    if (misplaced) found(misplaced, item, index, via, step);
+    const alternate = alternateContentOf(item);
+    if (alternate && step !== undefined) {
+      (alternate.choice ?? []).forEach((choice, k) => testList(containerType, branchItems(choice), stepName, () => 0, mc, found, [...via, step!, `${mc}:Choice[${k + 1}]`]));
+      if (alternate.fallback) testList(containerType, branchItems(alternate.fallback), stepName, () => 0, mc, found, [...via, step, `${mc}:Fallback[1]`]);
+    }
+  });
+}
+
+/** A list item's element name, as a report gives it. */
+function childName(item: unknown): MisplacedChild['child'] {
+  if (typeof item !== 'object' || item === null) return '#text';
+  if (isNode(item)) {
+    const e = item as Element;
+    return { namespaceURI: e.namespaceURI ?? '', localPart: e.localName, ...(e.prefix ? { prefix: e.prefix } : {}) };
+  }
+  const name = (item as { name?: MisplacedChild['child'] }).name;
+  return typeof name === 'object' && name !== null ? name : '#text';
+}
+
+/** The read side (CR-017 section 4.2): a typed container's list, once its value is complete. */
+function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap<object, Element>, onMisplaced: (report: MisplacedChild) => void): void {
+  const container = (value as { TYPE_NAME?: string }).TYPE_NAME;
+  const spec = container === undefined ? undefined : CONTAINERS[container];
+  if (spec === undefined) return;
+  const items = (value as Record<string, unknown>)[spec.list];
+  if (!Array.isArray(items)) return;
+  const table = getContextSync().namespacePrefixes;
+  const stepName = (item: unknown): string | undefined => {
+    const name = childName(item);
+    return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
+  };
+  testList(container!, items, stepName, () => 0, table[MC_NS] || 'mc',
+    (misplaced, item, index, via) => {
+      const childValue = typeof item === 'object' && item !== null ? ((item as { value?: unknown }).value ?? item) : undefined;
+      const childElement = isNode(item) ? item as Element : typeof childValue === 'object' && childValue !== null ? sources.get(childValue) : undefined;
+      onMisplaced({
+        element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
+        ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message, ...(childElement ? { childElement } : {}),
+      });
+    });
+}
+
 /** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */
 export interface UnmarshalOptions extends Jsonix.UnmarshallerOptions {
   /**
@@ -727,6 +859,11 @@ export interface UnmarshalOptions extends Jsonix.UnmarshallerOptions {
    * it in. The tree keeps the value as written. Not called unless passed.
    */
   onOutOfRange?(report: OutOfRange): void;
+  /**
+   * Called for each misplaced child (CR-017): a class its container never admits, or a name and value that disagree.
+   * Each container's list is tested once its value is complete. The tree keeps what it read. Not called unless passed.
+   */
+  onMisplaced?(report: MisplacedChild): void;
 }
 
 function readOnceTrimmed(text: string, typeInfo: Jsonix.TypeInfo): boolean {
@@ -808,7 +945,7 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * original node, which is still in its source document.
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, facadeOptions?: MarshalOptions): Document {
-  const { normaliseOnSave, onNormalised, onOutOfRange, ...options } = facadeOptions ?? {};
+  const { normaliseOnSave, onNormalised, onOutOfRange, onMisplaced, ...options } = facadeOptions ?? {};
   const table = namespacePrefixesFor(context, element, options.namespacePrefixes);
   const choices = new Map<Element, ReadonlyMap<string, string>>();
   const callerOnElement = options.onElement;
@@ -829,7 +966,8 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
   };
   const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement };
   const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions;
-  const doc = context.createMarshaller(onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised)
+  const ranged = onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised;
+  const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, onMisplaced) : ranged)
     .marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
   const rootValue = rootValueOf(element);
@@ -875,6 +1013,12 @@ export interface MarshalOptions extends Jsonix.MarshallerOptions {
    * written as held, whether or not `normaliseOnSave` is on. Not called unless passed.
    */
   onOutOfRange?(report: OutOfRange): void;
+  /**
+   * Called for each misplaced child (CR-017), with its path. Each container's list is tested as the container is
+   * opened, before its children are written, so a string in a run is reported before the runtime refuses it, and a
+   * callback that throws stops the save there with its own error. Otherwise written as held. Not called unless passed.
+   */
+  onMisplaced?(report: MisplacedChild): void;
 }
 
 /**
@@ -1036,6 +1180,55 @@ function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<
         }
       }
       return result;
+    },
+  };
+}
+
+/**
+ * The number of the container's own property elements named `step` that the marshal writes before its list (a
+ * `w:pPr` before a paragraph's content), so a misplaced one's step counts them, as the written document will.
+ */
+function writtenBefore(container: object, list: string, step: string, table: Readonly<Record<string, string>>): number {
+  const chain: Jsonix.TypeInfo[] = [];
+  for (let ti: Jsonix.TypeInfo | undefined = getContextSync().getTypeInfoByName((container as { TYPE_NAME: string }).TYPE_NAME); ti; ti = ti.baseTypeInfo) chain.unshift(ti);
+  let count = 0;
+  for (const ti of chain) {
+    for (const property of (ti as unknown as { properties?: { name: string; elementName?: Jsonix.XML.QName }[] }).properties ?? []) {
+      if (property.name === list) return count;
+      const held = (container as Record<string, unknown>)[property.name];
+      if (property.elementName && held !== undefined && held !== null && qualifiedName(property.elementName, table) === step) count += Array.isArray(held) ? held.length : 1;
+    }
+  }
+  return count;
+}
+
+/**
+ * The marshaller options reporting each misplaced child (CR-017 section 4.2), on the marshal's `onElement`, which the
+ * runtime calls as it opens an element, before its children: each container's list is tested then. Composed around the
+ * options it is given; it never changes what is written.
+ */
+function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onMisplaced: (report: MisplacedChild) => void): Jsonix.MarshallerOptions {
+  const { onElement } = options;
+  return {
+    ...options,
+    onElement(written: Node, value: unknown): void {
+      const container = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
+      const spec = container === undefined ? undefined : CONTAINERS[container];
+      const items = spec ? (value as Record<string, unknown>)[spec.list] : undefined;
+      if (spec && Array.isArray(items)) {
+        const base = pathOf(written);
+        const stepName = (item: unknown): string | undefined => {
+          const name = childName(item);
+          return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
+        };
+        testList(container!, items, stepName, (step) => writtenBefore(value as object, spec.list, step, table), table[MC_NS] || 'mc',
+          (misplaced, item, index, via, step) => onMisplaced({
+            element: written as Element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
+            ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
+            path: [base, ...via, ...(step ? [step] : [])].join('/'),
+          }));
+      }
+      onElement?.(written, value);
     },
   };
 }

@@ -3,7 +3,7 @@
 // which accepts extensionless relative imports in declarations; nodenext rejects them (TS2835), and with
 // skipLibCheck they silently degrade to any. Run by npm test after the build.
 import { unmarshalString, marshalString, unwrap, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULES, MODULE_NAMES, modulesFor, getContext, WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals, wordInvalidValue, setNormaliseOnSave } from '@docx4j/generated-objects-ts';
-import type { WordReading, Normalisation, OutOfRange } from '@docx4j/generated-objects-ts';
+import type { WordReading, Normalisation, OutOfRange, MisplacedChild } from '@docx4j/generated-objects-ts';
 import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/org_docx4j_wml';
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
@@ -35,6 +35,10 @@ export async function consume(xml: string): Promise<string> {
   const reported: WordIntegerStorage | undefined = ranges[0]?.storage;
   const rule: string | undefined = ranges[0]?.rule;
   void [entry, reported, rule];
+  // CR-017: onMisplaced on both sides; the report's rule, child and path.
+  const misplaced: MisplacedChild[] = [];
+  void unmarshalString('<w:p/>', { onMisplaced: (m) => misplaced.push(m) });
+  void marshalString(createPElement(createP()), { onMisplaced: (m) => { if (m.rule === 'name-value' && m.child !== '#text') void [m.child.localPart, m.path, m.via, m.childType]; } });
   const reading: WordIntegerReading | undefined = wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001);
   const measured: boolean | undefined = WORD_INTEGER_STORAGE['org_docx4j_wml.PPrBase.Ind']?.['left']?.measured;
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);
@@ -45,7 +49,7 @@ export async function consume(xml: string): Promise<string> {
   setNormaliseOnSave(true);
   // CR-008: the extension namespaces, a readonly list of URIs.
   const extensions: readonly string[] = IGNORABLE_EXTENSION_NAMESPACES;
-  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, integerKinds, truncatedTo, ranges, reading, measured, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
+  void [NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, extensions, MODULES.org_docx4j_wml, MODULE_NAMES[0], paragraphs, built, same, isCustomStyle({ customStyle: undefined }), highlightHexValue('yellow'), color, readings, normalised, integerKinds, truncatedTo, ranges, misplaced, reading, measured, WML_GLOBAL_ELEMENTS.drawing, org_docx4j_wml_globals.name];
   return textOf(doc) + (await marshalString(createPElement(createP())));
 }
 
@@ -61,3 +65,5 @@ export const notAKind: WordReading['kind'] = 'value.dropped';
 export const notAValue: OutOfRange['value'] = '7205001';
 // @ts-expect-error a normalisation's after is a string or null (with Normalisation as any, a number would do)
 export const notAfter: Normalisation['after'] = 1;
+// @ts-expect-error a misplaced child's rule is one of two (with MisplacedChild as any, anything would do)
+export const notARule: MisplacedChild['rule'] = 'allowed';

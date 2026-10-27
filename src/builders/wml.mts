@@ -31,6 +31,18 @@ import {
   createCTShapeProperties, createCTTransform2D, createCTPoint2D, createCTPresetGeometry2D, createCTGeomGuideList, createCTNonVisualPictureProperties,
 } from '../../modules/org_docx4j_dml.factory.mjs';
 import { highlightHexValue, highlightNameForColor, wordColor } from '../helpers/wml.mjs';
+import { misplacement } from '../misplaced.mjs';
+
+/**
+ * CR-017: refuses a child its container never admits, before anything is built, with docx4j's message (a TypeError,
+ * M4). Without the context, the name rule is tested for `w:sdt` alone; a save's `onMisplaced` tests it for all.
+ */
+function refuseMisplaced(containerType: string, items: readonly unknown[]): void {
+  for (const item of items) {
+    const misplaced = misplacement(containerType, item);
+    if (misplaced) throw new TypeError(misplaced.message);
+  }
+}
 
 /** A `{ name, value }` pair as content arrays hold them. */
 export type Element<T = unknown> = TypedNamedValue<T>;
@@ -99,11 +111,17 @@ function isRaw(value: unknown): value is Raw {
   return typeof value === 'object' && value !== null && (value as Raw).__wmlRaw === true && typeof (value as Raw).xml === 'string';
 }
 
+/**
+ * Marks an interpolated element's root, so that once the fragment is parsed the element is known where it lands
+ * (CR-017); `parseFragment` removes the mark before unmarshalling. No namespace, so nothing in the model binds it.
+ */
+const INTERPOLATED = 'data-wml-interpolated';
+
 async function interpolate(value: Interpolated): Promise<string> {
   if (value === null || value === undefined) return '';
   if (Array.isArray(value)) return (await Promise.all(value.map(interpolate))).join('');
   if (isRaw(value)) return value.xml;
-  if (isElement(value)) return marshalString(value);
+  if (isElement(value)) return (await marshalString(value)).replace(/^(\s*(?:<\?xml[^>]*\?>\s*)?<[^\s/>]+)/, `$1 ${INTERPOLATED}=""`);
   return escapeText(String(value));
 }
 
@@ -128,7 +146,7 @@ async function fromTemplate(strings: TemplateStringsArray, values: Interpolated[
 export function wml(xml: string, options?: WmlOptions): Promise<Element[]>;
 export function wml(strings: TemplateStringsArray, ...values: Interpolated[]): Promise<Element[]>;
 export async function wml(first: string | TemplateStringsArray, ...rest: unknown[]): Promise<Element[]> {
-  if (isTemplate(first)) return parseFragment(await fromTemplate(first, rest as Interpolated[]), {});
+  if (isTemplate(first)) return parseFragment(await fromTemplate(first, rest as Interpolated[]), { refuseInterpolated: true });
   return parseFragment(first, (rest[0] as WmlOptions | undefined) ?? {});
 }
 wml.raw = (xml: string): Raw => ({ __wmlRaw: true, xml });
@@ -152,7 +170,7 @@ function firstElementChild(node: Node, after?: globalThis.Element): globalThis.E
   return undefined;
 }
 
-async function parseFragment(xml: string, options: WmlOptions): Promise<Element[]> {
+async function parseFragment(xml: string, options: WmlOptions & { refuseInterpolated?: boolean }): Promise<Element[]> {
   if (!/<[A-Za-z_]/.test(xml)) throw new Error('Not an XML fragment');
   // Parsed once inside a neutral element carrying the declarations; the wrapper chain is then built around the fragment in the DOM.
   const doc = parseXml(`<w:fragment ${standardDeclarations()}>${xml}</w:fragment>`);
@@ -181,7 +199,21 @@ async function parseFragment(xml: string, options: WmlOptions): Promise<Element[
     doc.replaceChild(outer, neutral);
   }
   options.preprocess?.(doc);
-  let element: Element = await unmarshalNode(doc);
+  // The tagged form (CR-017): an interpolated element that lands where its container never admits it is refused.
+  const interpolated = new Set<Node>();
+  if (options.refuseInterpolated) {
+    const all = doc.getElementsByTagName('*');
+    for (let i = 0; i < all.length; i++) {
+      const e = all[i]!;
+      if (e.hasAttribute(INTERPOLATED)) { e.removeAttribute(INTERPOLATED); interpolated.add(e); }
+    }
+  }
+  // Collected and thrown once the read is done: a throw inside the read would reach the caller wrapped by the runtime.
+  let refused: string | undefined;
+  let element: Element = await unmarshalNode(doc, interpolated.size === 0 ? undefined : {
+    onMisplaced: (report) => { if (refused === undefined && report.childElement && interpolated.has(report.childElement)) refused = report.message; },
+  });
+  if (refused !== undefined) throw new TypeError(refused);
   if (chain.length === 0) return [element];
   for (let i = chain.length - 1; i >= 0; i--) {
     const content = (element.value as { content?: Element[] }).content ?? [];
@@ -417,6 +449,7 @@ export function p(textOrRuns: string | Element[], opts?: Omit<RunOptions, 'style
     const { style: _style, runStyle, ...runOpts } = opts ?? {};
     content = [r(textOrRuns, runStyle !== undefined ? { ...runOpts, style: runStyle } : runOpts)];
   } else {
+    refuseMisplaced('org_docx4j_wml.P', textOrRuns);
     content = textOrRuns;
   }
   const value: M.P = { content: content as M.P['content'] };
@@ -449,6 +482,7 @@ function widthInRange(what: string, width: number): number {
 
 /** A table cell: a string is one paragraph, an empty cell still gets the `w:p` Word requires. */
 export function tc(blocks: string | Element[], opts: CellOptions = {}): Element<M.Tc> {
+  if (typeof blocks !== 'string') refuseMisplaced('org_docx4j_wml.Tc', blocks);
   const content = typeof blocks === 'string' ? [p(blocks)] : (blocks.length > 0 ? blocks : [el.p({})]);
   const value: M.Tc = { content: content as M.Tc['content'] };
   if (opts.width !== undefined) value.tcPr = { tcW: { w: widthInRange('Cell width', opts.width), type: 'dxa' } };
@@ -457,6 +491,7 @@ export function tc(blocks: string | Element[], opts: CellOptions = {}): Element<
 
 /** A table row of cells; a string cell is one paragraph, and `widths` (twips) sets each `w:tcW`. */
 export function tr(cells: (string | Element<M.Tc>)[], opts: { widths?: number[] } = {}): Element<M.Tr> {
+  refuseMisplaced('org_docx4j_wml.Tr', cells.filter((cell) => isElement(cell)));
   return el.tr({
     content: cells.map((cell, i) => {
       const width = opts.widths?.[i];
@@ -651,6 +686,7 @@ export function sdt(content: Element[], options: SdtOptions = {}): Element<M.Sdt
     throw new Error('A repeating section is a block-level control; wrap paragraphs or a table, or pass form');
   }
   const [sdtType, contentType] = SDT_CONTENT_TYPE[form];
+  refuseMisplaced(contentType, content);
   const value = {
     TYPE_NAME: sdtType,
     sdtPr: sdtPr(options),
