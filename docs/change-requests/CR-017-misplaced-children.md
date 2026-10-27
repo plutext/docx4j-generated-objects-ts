@@ -221,10 +221,12 @@ a run, a paragraph or the body: the runtime skips non-whitespace character data 
 callback sees it, and has no callback for it (it reports unexpected attributes and elements only). So a file's string
 in a run is dropped unreported, as Word's repair drops it (check 72's 72m) and docx4j's JAXB does; only a string pushed
 from code reaches the save report. A runtime callback for skipped character data, a jsonix CR, would let the read side
-report it as `'#text'`. core-ts noted the gap, and Jason asked for that CR the same day (2026-10-28): core-ts sent the
-proposal, an `onUnexpectedText` for non-whitespace character data in content that isn't mixed, to the jsonix session.
-When it is released, the read side's `'#text'` report is this package's follow-up, and core-ts's D6 takes it through
-the version range. A JavaScript caller who pushed
+report it as `'#text'`. core-ts noted the gap, and Jason asked for that CR the same day (2026-10-28). It is jsonix-CR-013
+(proposed, T1 to T3 for Jason, planned for 3.10.0): `onUnexpectedText(text, node, classInfo)`, once per dropped text
+node holding a character outside XML whitespace, before the container's `onElement`. When it is released, this
+package's follow-up maps it: text whose parent is a container of section 3 becomes a `'#text'` report with the
+container's string message; text dropped inside a class that is no container (`<w:b>x</w:b>`) is not a misplaced child
+and isn't reported here. core-ts's D6 takes it through the version range. A JavaScript caller who pushed
 into a content array learns of it at save, the first point the package sees the tree.
 
 ### 4.3 Nine more elements declared globally (M7)
@@ -406,4 +408,4 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   save, with the paths and messages core-ts checked. The eighteenth, a string in a run, is the read case of section
   4.2: the runtime drops it unreported.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
-  Jason's. The `'#text'` read report waits on the jsonix `onUnexpectedText` CR (section 4.2).
+  Jason's. The `'#text'` read report waits on jsonix-CR-013's `onUnexpectedText` (section 4.2).
