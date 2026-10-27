@@ -420,7 +420,8 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   (9ac19ae) a string that was its container's only child went unreported, since the runtime leaves a list unset when it
   read no element and the read side returned on an unset list. core-ts's rerun over its 9,075 parts found it, on 72m's
   own form (`<w:r>MISPLACED string in a run</w:r>`), where the smoke's copy of 72m had a `w:t` beside the string. Fixed
-  the same day: an unset list is an empty one there. The smoke now has 72m's own form and the only-child, first and last
-  positions.
+  the same day (2b87bdf): an unset list is an empty one there. The smoke now has 72m's own form and the only-child,
+  first and last positions. core-ts's rerun at 2b87bdf gives 35 reports, the 34 before and 72m's one on read, and no
+  real file in its corpus holds such a string.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
   Jason's.
