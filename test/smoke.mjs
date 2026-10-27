@@ -1354,7 +1354,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   await assert.rejects(unmarshalString(`<w:p xmlns:w="${W}"><w:r><w:moveFrom w:id="1" w:author="a"/></w:r></w:p>`), /w:moveFrom.*is not known in this context/);
 
   // core-ts's check 72 forms (its fixtures/check72/build.mjs), one misplaced child each between BEFORE and AFTER: each
-  // reported on read and on save, but the string in a run, which the read drops as Word does.
+  // reported on read and on save, but the string in a run, which the read drops as Word does: reported on read through
+  // jsonix-CR-013's onUnexpectedText (3.10.0), and with nothing left in the tree, not on save.
   const P = (text) => `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
   const row = (inner) => `<w:tbl><w:tr><w:tc>${P('CELL A1')}</w:tc>${inner}</w:tr></w:tbl>`;
   const check72 = {
@@ -1371,7 +1372,30 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     const counts = { read: 0, saved: 0 };
     const formTree = await unmarshalString(`<w:document xmlns:w="${W}"><w:body>${P('BEFORE')}${inner}${P('AFTER')}</w:body></w:document>`, { onMisplaced: () => counts.read++ });
     await marshalString(formTree, { onMisplaced: () => counts.saved++ });
-    assert.deepEqual(counts, form === '72m' ? { read: 0, saved: 0 } : { read: 1, saved: 1 }, `check 72's ${form}`);
+    assert.deepEqual(counts, form === '72m' ? { read: 1, saved: 0 } : { read: 1, saved: 1 }, `check 72's ${form}`);
   }
-  console.log("CR-017: docx4j CR-064's sets by class with core-ts's name rule, held to the context; p, tc, tr, sdt and wml's interpolation refuse with docx4j's messages; onMisplaced on read and on save (before a container's children, so a string is reported before the runtime's throw), mc branches by their host's set, check 72's 18 forms; M7's nine read typed OK");
+  // A string a file holds where its container admits none: dropped by the runtime, reported on read as '#text' with the
+  // string and where it stood (objects-ts/CR-017.text, jsonix-CR-013). Not text inside a class that is no container, nor
+  // indentation; a lone no-break space in a run is a string there (jsonix-CR-013's T1). A caller's own callback still runs.
+  const dropped = async (inner) => {
+    const reports = [];
+    const callerSaw = [];
+    await unmarshalString(`<w:document xmlns:w="${W}" xmlns:mc="${MC}"><w:body>${inner}</w:body></w:document>`, {
+      onMisplaced: (report) => reports.push([report.container, report.child, report.index, report.via, report.text, report.rule, report.message]),
+      onUnexpectedText: (text) => callerSaw.push(text),
+    });
+    return { reports, callerSaw };
+  };
+  assert.deepEqual(await dropped('<w:p><w:r><w:t>a</w:t>MISPLACED<w:t>b</w:t></w:r></w:p>'), {
+    reports: [['org_docx4j_wml.R', '#text', 1, undefined, 'MISPLACED', 'misplaced', "You can't add a string to a run (w:r); put it in text (w:t) and add that."]],
+    callerSaw: ['MISPLACED'],
+  }, 'a string in a run, between its first and second w:t');
+  assert.deepEqual((await dropped('<w:p/>loose<w:p/>')).reports.map((r) => [r[0], r[2], r[4]]), [['org_docx4j_wml.Body', 1, 'loose']], 'a string in the body');
+  assert.deepEqual(await dropped('<w:p><w:r><w:rPr><w:b>x</w:b></w:rPr><w:t>a</w:t></w:r></w:p>'), { reports: [], callerSaw: ['x'] }, 'text inside w:b is no misplaced child');
+  assert.deepEqual((await dropped('<w:p><w:r><w:t>a</w:t>\u00A0</w:r></w:p>')).reports.map((r) => r[4]), ['\u00A0'], 'a lone no-break space in a run');
+  assert.deepEqual((await dropped('<w:p><w:r><mc:AlternateContent><mc:Choice Requires="w14">stray<w:t>c</w:t></mc:Choice></mc:AlternateContent></w:r></w:p>')).reports.map((r) => [r[0], r[3], r[4]]),
+    [['org_docx4j_wml.R', 'mc:AlternateContent[1]/mc:Choice[1]', 'stray']], "a string in a run's Choice, by its host's set");
+  assert.deepEqual(await dropped('<w:p>\n  <w:r>\n    <w:t>a</w:t>\n  </w:r>\n</w:p>'), { reports: [], callerSaw: [] }, 'indentation is not a string');
+
+  console.log("CR-017: docx4j CR-064's sets by class with core-ts's name rule, held to the context; p, tc, tr, sdt and wml's interpolation refuse with docx4j's messages; onMisplaced on read and on save (before a container's children, so a string is reported before the runtime's throw), mc branches by their host's set, check 72's 18 forms; a file's string read where none is admitted reported as '#text' (jsonix 3.10.0); M7's nine read typed OK");
 }

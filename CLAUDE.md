@@ -18,7 +18,7 @@ highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.9.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.10.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0; `onUnexpectedText`, which CR-017's `'#text'` read report goes through, jsonix-CR-013, 3.10.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -281,7 +281,9 @@ CR-017 (implemented 2026-10-28, M1 to M7 as recommended) refuses and reports mis
   refuses only those.
 - **The report:** `onMisplaced` on read and on save, each container's list tested once. On save that is as the
   container is opened, so a string is reported before the runtime's throw and a callback's throw stops the save; the
-  `path` is in `OutOfRange`'s form. core-ts CR-016 phase 2 refuses a save from it.
+  `path` is in `OutOfRange`'s form. On read, a string a file holds in a container, which the runtime drops, is
+  reported as `'#text'` through jsonix-CR-013's `onUnexpectedText` (CR-017.text); text inside a class that is no
+  container is not. core-ts CR-016 phase 2 refuses a save from it.
 - **M7:** nine run and paragraph elements are declared globally beyond docx4j's roots (`wml-globals.mts` list C), so a
   misplaced one reads typed rather than failing its part. docx4j called the divergence harmless.
 

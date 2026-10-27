@@ -519,17 +519,27 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
 function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
   const { onWordReading, onOutOfRange, onMisplaced, ...runtimeOptions } = options ?? {};
   const callerOnElement = runtimeOptions.onElement;
-  // CR-017: each typed value's source element, so a report can name a misplaced child's (its onElement comes first).
+  // CR-017: each typed value's source element, so a report can name a misplaced child's (its onElement comes first);
+  // and the character data the runtime drops (jsonix-CR-013, 3.10.0), by its parent, reported with that container.
   const sources = onMisplaced ? new WeakMap<object, Element>() : undefined;
+  const dropped = onMisplaced ? new WeakMap<Node, Text[]>() : undefined;
+  const callerOnUnexpectedText = runtimeOptions.onUnexpectedText;
   return {
     ...runtimeOptions,
+    ...(onMisplaced ? {
+      onUnexpectedText(text: string, node: Node, classInfo: Jsonix.ClassInfo): void {
+        const parent = node.parentNode;
+        if (parent) { const texts = dropped!.get(parent); if (texts) texts.push(node as Text); else dropped!.set(parent, [node as Text]); }
+        callerOnUnexpectedText?.(text, node, classInfo);
+      },
+    } : {}),
     onElement(element: Element, value: object): void {
       if ((value as { TYPE_NAME?: string }).TYPE_NAME === CHOICE_TYPE) {
         const bindings = choiceBindingsAt(element);
         if (bindings) { sourceBindings.set(value, bindings); recorded = true; }
       }
       if (onOutOfRange) reportOutOfRange(element, value, onOutOfRange);
-      if (onMisplaced) { sources!.set(value, element); reportMisplacedOnRead(element, value, sources!, onMisplaced); }
+      if (onMisplaced) { sources!.set(value, element); reportMisplacedOnRead(element, value, sources!, dropped!, onMisplaced); }
       callerOnElement?.(element, value);
     },
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
@@ -753,6 +763,11 @@ export interface MisplacedChild {
   readonly path?: string;
   /** On read, the child's element in the source. */
   readonly childElement?: Element;
+  /**
+   * On read, for `'#text'`: the string a file held where its container admits none, which the runtime drops
+   * (jsonix-CR-013's `onUnexpectedText`, 3.10.0); `index` is where it stood among the list's items.
+   */
+  readonly text?: string;
 }
 
 /** The context's declarations, for the name rule: the class a list (or, where it names none, the context) gives a name. */
@@ -824,8 +839,49 @@ function childName(item: unknown): MisplacedChild['child'] {
   return typeof name === 'object' && name !== null ? name : '#text';
 }
 
+/**
+ * The strings the runtime dropped from a container (jsonix-CR-013), with its list's items: each reported as `'#text'`
+ * where the container's set refuses a string, at the index it stood at among the items, and an `mc:AlternateContent`
+ * branch's by its host's set.
+ */
+function reportDroppedText(container: string, element: Element, items: readonly unknown[], via: readonly string[], sources: WeakMap<object, Element>,
+  dropped: WeakMap<Node, Text[]>, mc: string, onMisplaced: (report: MisplacedChild) => void): void {
+  const sourceOf = (item: unknown): Node | undefined => {
+    if (isNode(item)) return item as Node;
+    const v = typeof item === 'object' && item !== null ? ((item as { value?: unknown }).value ?? item) : undefined;
+    return typeof v === 'object' && v !== null ? sources.get(v) : undefined;
+  };
+  const texts = dropped.get(element);
+  if (texts) {
+    const misplaced = misplacement(container, '');
+    if (misplaced) {
+      const itemNodes = new Set(items.map(sourceOf).filter((n): n is Node => n !== undefined));
+      for (const text of texts) {
+        let index = 0;
+        for (let sibling = text.previousSibling; sibling; sibling = sibling.previousSibling) if (itemNodes.has(sibling)) index++;
+        onMisplaced({
+          element, container, child: '#text', index, ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
+          text: text.data,
+        });
+      }
+    }
+  }
+  items.forEach((item) => {
+    const alternate = alternateContentOf(item);
+    const acElement = alternate ? sourceOf(item) : undefined;
+    if (!alternate || !acElement) return;
+    const acStep = `${mc}:AlternateContent[${items.filter((other, i) => alternateContentOf(other) && i <= items.indexOf(item)).length}]`;
+    (alternate.choice ?? []).forEach((choice, k) => {
+      const choiceElement = sources.get(choice as object);
+      if (choiceElement) reportDroppedText(container, choiceElement as Element, branchItems(choice), [...via, acStep, `${mc}:Choice[${k + 1}]`], sources, dropped, mc, (report) => onMisplaced({ ...report, element }));
+    });
+    const fallbackElement = alternate.fallback ? sources.get(alternate.fallback as object) : undefined;
+    if (fallbackElement) reportDroppedText(container, fallbackElement as Element, branchItems(alternate.fallback), [...via, acStep, `${mc}:Fallback[1]`], sources, dropped, mc, (report) => onMisplaced({ ...report, element }));
+  });
+}
+
 /** The read side (CR-017 section 4.2): a typed container's list, once its value is complete. */
-function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap<object, Element>, onMisplaced: (report: MisplacedChild) => void): void {
+function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap<object, Element>, dropped: WeakMap<Node, Text[]>, onMisplaced: (report: MisplacedChild) => void): void {
   const container = (value as { TYPE_NAME?: string }).TYPE_NAME;
   const spec = container === undefined ? undefined : CONTAINERS[container];
   if (spec === undefined) return;
@@ -845,6 +901,7 @@ function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap
         ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message, ...(childElement ? { childElement } : {}),
       });
     });
+  reportDroppedText(container!, element, items, [], sources, dropped, table[MC_NS] || 'mc', onMisplaced);
 }
 
 /** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */

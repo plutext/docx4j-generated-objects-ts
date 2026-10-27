@@ -37,7 +37,9 @@ export async function consume(xml: string): Promise<string> {
   void [entry, reported, rule];
   // CR-017: onMisplaced on both sides; the report's rule, child and path.
   const misplaced: MisplacedChild[] = [];
-  void unmarshalString('<w:p/>', { onMisplaced: (m) => misplaced.push(m) });
+  void unmarshalString('<w:p/>', { onMisplaced: (m) => misplaced.push(m), onUnexpectedText: (text, node) => void [text.length, node.parentNode] });
+  const droppedText: string | undefined = misplaced[0]?.text;
+  void droppedText;
   void marshalString(createPElement(createP()), { onMisplaced: (m) => { if (m.rule === 'name-value' && m.child !== '#text') void [m.child.localPart, m.path, m.via, m.childType]; } });
   const reading: WordIntegerReading | undefined = wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001);
   const measured: boolean | undefined = WORD_INTEGER_STORAGE['org_docx4j_wml.PPrBase.Ind']?.['left']?.measured;

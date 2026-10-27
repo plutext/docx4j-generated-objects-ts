@@ -1,6 +1,6 @@
 # CR-017: Misplaced children: refused by the builders, reported on read and on save
 
-**Status:** Implemented 2026-10-28, unreleased (section 10); M1 to M7 decided as recommended (Jason: "CR-017
+**Status:** Implemented 2026-10-28, unreleased (section 10), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0; M1 to M7 decided as recommended (Jason: "CR-017
 decisions as recommended; commit then implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064
 phase 1's code (befc57371), core-ts CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
 **Requested by:** Jason, 2026-10-26 ("a CR for checking misplaced children (in the builders or as a validation pass)
@@ -216,17 +216,22 @@ So on save:
   nothing about the cause.
 
 The tree keeps what it read, and a save writes it as held unless the callback throws. On read, a misplaced property
-element never reaches a list (section 2.1), so those rules report a push from code only. Nor does a string read inside
-a run, a paragraph or the body: the runtime skips non-whitespace character data in content that isn't mixed before any
-callback sees it, and has no callback for it (it reports unexpected attributes and elements only). So a file's string
-in a run is dropped unreported, as Word's repair drops it (check 72's 72m) and docx4j's JAXB does; only a string pushed
-from code reaches the save report. A runtime callback for skipped character data, a jsonix CR, would let the read side
-report it as `'#text'`. core-ts noted the gap, and Jason asked for that CR the same day (2026-10-28). It is jsonix-CR-013
-(proposed, T1 to T3 for Jason, planned for 3.10.0): `onUnexpectedText(text, node, classInfo)`, once per dropped text
-node holding a character outside XML whitespace, before the container's `onElement`. When it is released, this
-package's follow-up maps it: text whose parent is a container of section 3 becomes a `'#text'` report with the
-container's string message; text dropped inside a class that is no container (`<w:b>x</w:b>`) is not a misplaced child
-and isn't reported here. core-ts's D6 takes it through the version range. A JavaScript caller who pushed
+element never reaches a list (section 2.1), so those rules report a push from code only.
+
+A string a file holds where its container admits none (a run, a paragraph, the body) never reaches a list either: the
+runtime drops non-whitespace character data in content that isn't mixed, as Word's repair drops it (check 72's 72m) and
+docx4j's JAXB does. As first implemented (bb18596) it went unreported on read, since the runtime had no callback for it.
+core-ts noted the gap and Jason asked for one the same day: jsonix-CR-013, `onUnexpectedText(text, node, classInfo)`,
+released in `@docx4j/jsonix` 3.10.0, once per dropped text node holding a character outside XML whitespace, before its
+container's `onElement`. When `onMisplaced` is passed, the facade composes its own in front of the caller's, keys each
+dropped text by its parent, and reports it with that container (CR-017.text):
+- **What is reported:** text whose parent is a container of section 3, as `child` `'#text'`, `rule` `'misplaced'`, the
+  container's string message, `text` the string, and `index` where it stood among the list's items; in an
+  `mc:AlternateContent` branch, by its host's set, with `via`. A lone no-break space in a run is such a string
+  (jsonix-CR-013's T1).
+- **What isn't:** text dropped inside a class that is no container (`<w:b>x</w:b>`), which is no misplaced child; and
+  whitespace. A caller can pass `onUnexpectedText` for those.
+- **On save:** the string is gone from the tree, so only a string pushed from code reaches the save report. A JavaScript caller who pushed
 into a content array learns of it at save, the first point the package sees the tree.
 
 ### 4.3 Nine more elements declared globally (M7)
@@ -407,5 +412,10 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   nothing is reported outside check 72's 18 files. Those give 34 reports, each of 17 children once on read and once on
   save, with the paths and messages core-ts checked. The eighteenth, a string in a run, is the read case of section
   4.2: the runtime drops it unreported.
+- **The `'#text'` read report** (CR-017.text, the same day): `@docx4j/jsonix` raised to `^3.10.0`, whose
+  `jsonix-factory.js` is byte-identical to the jsonix-CR-013 build objects ran over its corpus first (jsonix c259464:
+  0 reports in 359 checks, all 342 marshalled parts identical, smoke and the Word tests passing). The smoke checks a
+  string in a run, in the body and in a run's `mc:Choice`, a lone no-break space, text in `w:b` and indentation not
+  reported, a caller's own callback still called, and check 72's 72m now reported once on read.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
-  Jason's. The `'#text'` read report waits on jsonix-CR-013's `onUnexpectedText` (section 4.2).
+  Jason's.
