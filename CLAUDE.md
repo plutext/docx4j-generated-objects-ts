@@ -286,6 +286,11 @@ CR-017 (implemented 2026-10-28, M1 to M7 as recommended) refuses and reports mis
   container is not. core-ts CR-016 phase 2 refuses a save from it.
 - **M7:** nine run and paragraph elements are declared globally beyond docx4j's roots (`wml-globals.mts` list C), so a
   misplaced one reads typed rather than failing its part. docx4j called the divergence harmless.
+- **CR-064's addendum** (docx4j ce87ec6d7, mirrored): deleted text and a tab refused where text and a break are, and
+  a content control at the wrong level by class in every set.
+- **Branches:** a kept `mc:Choice` types its children by their global declarations (the global `w:sdt` is
+  block-level), so a branch's children are tested leniently, legal if the host's list names them, and sdt content or
+  custom XML below a branch is tested at the level the branch's host gives (`effectiveContainer`).
 
 ## What the declarations promise
 

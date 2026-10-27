@@ -117,7 +117,8 @@ says nothing about this runtime, which keeps the child (M5).
 
 ## 3. The rules
 
-docx4j's `checkParent` as befc57371 has it, with core-ts CR-016's D3 and D4. Each container refuses only children its
+docx4j's `checkParent` as befc57371 has it, with CR-064's addendum (its section 8.1, ce87ec6d7, Jason's yes of
+2026-10-28) and core-ts CR-016's D3 and D4. Each container refuses only children its
 schema never allows there, so a legal document can't trip it (CR-064 D4, D9). It never says "allow only":
 `mc:AlternateContent`, range markup, `w:altChunk`, the block- and run-level `w:sdt` and `w:customXml` wrappers,
 revisions and extension elements all pass.
@@ -129,24 +130,38 @@ where `Text` is; as proposed on 2026-10-26, the table tested `w:t` alone.
 
 | Container | Refuses | The fix in the message |
 |---|---|---|
-| **block-level**: the body, a cell, block-level sdt content, a text box, a header, a footer, a footnote or endnote, a comment, block-level custom XML | a run; text, a drawing, a break; a cell, a row; `w:sectPr`; `w:tcPr`; a string | add a run to a paragraph, and text, a drawing or a break to a run in a paragraph, and add the paragraph; a cell goes in a row, in a table; use the body's `sectPr`, or `pPr.sectPr` on the paragraph that ends the section; use `tcPr` |
-| **run-level**: a paragraph, a hyperlink, a simple field, `w:ins`/`w:del`, a smart tag, run-level custom XML, run-level sdt content | a table; a paragraph; text, a drawing, a break; `w:pPr`; a string | a table is a sibling of the paragraph; add it to a run and add that; use `pPr` |
-| **a run** | a run, a paragraph, a table; `w:rPr`; a string | add the run to the paragraph; use `rPr`; put text in `w:t` |
-| **a table** | a cell; a paragraph, a run; a table; `w:tblPr`; a string | a cell goes in a row; content goes in a cell in a row; a nested table goes in a cell; use `tblPr` |
-| **a row** | a paragraph, a run, a table; `w:trPr`; a string | content goes in a cell; use `trPr` |
+| **block-level**: the body, a cell, block-level sdt content, a text box, a header, a footer, a footnote or endnote, a comment, block-level custom XML | a run; text, deleted text, a drawing, a break, a tab; a cell, a row; `w:sectPr`; `w:tcPr`; a run-, row- or cell-level content control; a string | add a run to a paragraph, and text, a drawing, a break or a tab to a run in a paragraph, and add the paragraph; a cell goes in a row, in a table; use the body's `sectPr`, or `pPr.sectPr` on the paragraph that ends the section; use `tcPr`; where each control goes, and that a block-level one goes here |
+| **run-level**: a paragraph, a hyperlink, a simple field, `w:ins`/`w:del`, a smart tag, run-level custom XML, run-level sdt content | a table; a paragraph; text, deleted text, a drawing, a break, a tab; `w:pPr`; a block-, row- or cell-level content control; a string | a table is a sibling of the paragraph; add it to a run and add that; use `pPr`; where each control goes, and that a run-level one goes here |
+| **a run** | a run, a paragraph, a table; `w:rPr`; any content control; a string | add the run to the paragraph; use `rPr`; a run-level control goes in the paragraph, beside the run; put text in `w:t` |
+| **a table** | a cell; a paragraph, a run; a table; `w:tblPr`; a block-, run- or cell-level content control; a string | a cell goes in a row; content goes in a cell in a row; a nested table goes in a cell; use `tblPr`; a row-level control goes here |
+| **a row** | a paragraph, a run, a table; `w:trPr`; a block-, run- or row-level content control; a string | content goes in a cell; use `trPr`; a cell-level control goes here |
 | **sdt content** | sdt content directly | nest a `w:sdt` that holds it |
 
-As in docx4j, `w:tcPr` is refused in every block-level container; as proposed on 2026-10-26, only in a cell.
+As in docx4j, `w:tcPr` is refused in every block-level container; as proposed on 2026-10-26, only in a cell. Its
+message names the container, which CR-064's addendum also made docx4j's do.
 
 **A name and value that disagree** (core-ts D3): a child whose value's class isn't the one its element name declares
-in that list, or globally where the list doesn't name it, such as `{ name: w:p, value: <a run> }`. A content control at
-the wrong level is one: `w:sdt` in a paragraph declares the run-level class, so a block-level value there disagrees.
-Such a child is exactly one the marshal writes with an `xsi:type`, which Office never writes. The runtime types each
+in that list, or globally where the list doesn't name it, such as `{ name: w:p, value: <a table> }`. Such a child is
+exactly one the marshal writes with an `xsi:type`, which Office never writes. A content control at the wrong level was
+caught by this rule until CR-064's addendum made it a class rule in docx4j; it is a class rule here too now, with
+docx4j's message, and the name rule keeps the cases no set covers (a control in row- or cell-level sdt content). The runtime types each
 element it reads by its name, so a file read always agrees, and this rule catches code only. The class rule is tested
 first, as docx4j tests the value a `JAXBElement` wraps: a `w:p` whose value is a run, in the body, is a misplaced run.
 
 **`mc:AlternateContent`'s branches** are tested by their host's set (core-ts D3): a kept `mc:Choice` or `mc:Fallback`
-in a paragraph is tested as run-level content.
+in a paragraph is tested as run-level content. The runtime types a branch's children by their global declarations, not
+by the host's list, and the global `w:sdt` is the block-level class. So a legal run-level control in a paragraph's
+`mc:Choice` is typed block-level, and so is everything below it: its content is block-level sdt content, and a control
+or custom XML inside that is block-level again. As first implemented (bb18596) that made a legal document report twice,
+the control on the name rule and its runs as misplaced in block-level content; neither corpus holds the form. Fixed
+2026-10-28, while mirroring the addendum:
+- **Leniently:** a branch's child is legal if the host's own list names its element, whatever class the runtime gave
+  it. One the list doesn't name is tested by its class as usual, so a `w:p` in a run's branch is still refused.
+- **At the effective level:** sdt content or custom XML whose path up to the element that fixes its level (a
+  paragraph, a cell, a table, a row, ...) crosses a branch is tested as that level's class, leniently in the same way.
+  So a paragraph inside that run-level control is reported, as misplaced in run-level sdt content.
+
+Elsewhere the runtime types each element by the list it stands in, so a file read outside a branch needs neither.
 
 **The messages** are docx4j's (core-ts D4), one wording across the ports, with the element name where docx4j names a
 Java class: "You can't add a run (w:r) directly to a table cell (w:tc); add it to a paragraph (w:p) and add that." The
@@ -157,14 +172,11 @@ Containers are keyed by `TYPE_NAME` and their base types (`org_docx4j_wml.Body`,
 `.P.Hyperlink`, `.R`, `.Tbl`, `.Tr`, ...), each with its content property. That is `content` for all but `RunIns` and
 `RunDel`, whose runs are in `customXmlOrSmartTagOrSdt` (all checked in the context, 2026-10-26).
 
-**Three cases neither port refuses** were sent to docx4j on 2026-10-28 (section 8):
-- `w:delText`, whose docx4j class `DelText` is not a `Text`;
-- a `w:tab` straight in a paragraph, which CR-064 section 2's row 7 names and its code doesn't refuse;
-- a content control at the wrong level, which docx4j writes as a `w:sdt` holding the other level's content.
-
-The name rule covers the last here. The other two are added when docx4j adds them, so the ports agree. docx4j
-confirmed all three against `checkParent` the same day, and has put them to Jason as a CR-064 addendum, with the
-message fix below; not yet ruled.
+**CR-064's addendum** came from this CR's review (2026-10-28, section 8): three cases neither port refused, and the
+`w:tcPr` message. They are `w:delText`, whose docx4j class `DelText` is not a `Text`; a `w:tab` straight in a
+paragraph, which CR-064 section 2's row 7 names; and a content control at the wrong level, which docx4j wrote as a
+`w:sdt` holding the other level's content. Jason said yes the same day, docx4j built it (ce87ec6d7), and this package
+mirrors its sets and wording, in the table above.
 
 ## 4. Proposal
 
@@ -186,7 +198,8 @@ Where a caller hands a builder a child, the builder tests it against section 3 b
 A refusal is a `TypeError` with the message of section 3, thrown before anything is built, so nothing half-made is
 returned. `r`, `t` and `tbl` take strings and options only, so they can't receive a child. The builders work without
 the context, which a builder's caller may not have built, so they test the name rule for `w:sdt` alone, from a table of
-each list's declaration that the smoke holds to the context. A save's report tests it for every child.
+each list's declaration that the smoke holds to the context; since CR-064's addendum that matters only in row- and
+cell-level sdt content, the class rules covering every set. A save's report tests the name rule for every child.
 
 ### 4.2 A report on read and on save (M2)
 
@@ -423,5 +436,10 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   the same day (2b87bdf): an unset list is an empty one there. The smoke now has 72m's own form and the only-child,
   first and last positions. core-ts's rerun at 2b87bdf gives 35 reports, the 34 before and 72m's one on read, and no
   real file in its corpus holds such a string.
+- **CR-064's addendum and the branch fix** (2026-10-28): the sets and messages of docx4j's ce87ec6d7 (section 3), and
+  branch children tested leniently, with sdt content and custom XML below a branch at the level the branch's host gives
+  (section 3). The smoke checks the new refusals in the builders and on save, each message as docx4j words it, and the
+  branch cases: a run-level control, and a control and custom XML nested in it, in a paragraph's `mc:Choice` report
+  nothing; a paragraph inside that control does. Fidelity reports none, and all 342 marshalled parts are byte-identical.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
   Jason's.

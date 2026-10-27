@@ -1215,7 +1215,15 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     [() => p([br()]), /a break \(w:br\) directly to a paragraph/],
     [() => p([inlinePicture('rId1', { cx: 1, cy: 1 })]), /a drawing \(w:drawing\) directly to a paragraph/],
     [() => p(['a']), /a string to a paragraph \(w:p\); put it in text \(w:t\), in a run \(w:r\), and add the run/],
-    [() => p([sdt([p('a')])]), /a w:sdt whose value is a block-level content control \(SdtBlock\) to a paragraph \(w:p\); there a w:sdt is a run-level content control \(SdtRun\)/],
+    [() => p([sdt([p('a')])]), /^You can't add a block-level content control \(SdtBlock\) to a paragraph \(w:p\); it goes beside a paragraph \(in the body, a cell, a header or the like\); a run-level content control \(SdtRun\) goes here\.$/],
+    // docx4j CR-064's addendum (ce87ec6d7): deleted text where text is refused, a tab where a break is, a control at the wrong level.
+    [() => p([tab()]), /^You can't add a tab \(w:tab\) directly to a paragraph \(w:p\); add it to a run \(w:r\) and add that\.$/],
+    [() => tc([tab()]), /a tab \(w:tab\) directly to a table cell \(w:tc\); add it to a run \(w:r\) in a paragraph \(w:p\) and add the paragraph/],
+    [() => p([el.delText({ value: 'gone' })]), /^You can't add deleted text \(w:delText\) directly to a paragraph \(w:p\); add it to a run \(w:r\) and add that\.$/],
+    [() => tc([el.delText({ value: 'gone' })]), /deleted text \(w:delText\) directly to a table cell/],
+    [() => tc([sdt([r('a')])]), /a run-level content control \(SdtRun\) to a table cell \(w:tc\); it goes in a paragraph \(w:p\); a block-level content control \(SdtBlock\) goes here/],
+    [() => tc([sdt([tr(['a'])])]), /a row-level content control \(CTSdtRow\) to a table cell/],
+    [() => tr([sdt([p('a')])]), /a block-level content control \(SdtBlock\) to a table row \(w:tr\); it goes beside a paragraph .*; a cell-level content control \(CTSdtCell\) goes here/],
     [() => tr([p('a')]), /a paragraph \(w:p\) directly to a table row \(w:tr\); add it to a cell \(w:tc\)/],
     [() => tr([r('a')]), /a run \(w:r\) directly to a table row/],
     [() => tr([tbl([['a']])]), /nest a table \(w:tbl\) in a table row/],
@@ -1298,10 +1306,10 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     '/w:document/w:body[1]/w:tbl[1]/w:tblPr[2]', '/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:trPr[1]', '/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:tc[1]/w:tcPr[2]',
   ], "a step counts the property element the marshal writes before the list (pPr, rPr, tblPr, tcPr), not one written after it (the body's sectPr)");
   assert.match(propReports[0][1], /section properties \(w:sectPr\) to the content of the body \(w:body\); set the body's sectPr, or pPr\.sectPr/);
-  assert.match(propReports[1][1], /cell properties \(w:tcPr\) to the content of the body \(w:body\); they belong to a cell/);
+  assert.match(propReports[1][1], /^You can't add cell properties \(w:tcPr\) to the body \(w:body\); cell properties belong to a table cell \(w:tc\), as its tcPr\.$/);
   assert.match(propReports[2][1], /paragraph properties \(w:pPr\) to the content of a paragraph \(w:p\); set them as the paragraph's pPr/);
   assert.match(propReports[3][1], /run properties \(w:rPr\) to a run's content; set them as the run's rPr/);
-  assert.match(propReports[6][1], /cell properties \(w:tcPr\) to a cell's content; set them as the cell's tcPr/);
+  assert.match(propReports[6][1], /^You can't add cell properties \(w:tcPr\) to a table cell's content; set them as the cell's tcPr\.$/);
   const absorbed = [];
   const runWithRPr = await unmarshalString(`<w:p xmlns:w="${W}"><w:r><w:t>x</w:t><w:rPr><w:b/></w:rPr></w:r><w:pPr><w:jc w:val="center"/></w:pPr></w:p>`, { onMisplaced: (report) => absorbed.push(report) });
   assert.deepEqual([absorbed.length, unwrap(runWithRPr).pPr.jc.val, !!unwrap(runWithRPr).content[0].value.rPr.b], [0, 'center', true], 'absorbed on read, not reported');
@@ -1323,12 +1331,23 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const written = await marshalString(disagreeing, { onMisplaced: (report) => names.push([report.path, report.rule, report.message]) });
   assert.deepEqual(names.map(([path, rule]) => [path, rule]), [
     ['/w:document/w:body[1]/w:p[1]', 'name-value'],
-    ['/w:document/w:body[1]/w:sdt[1]', 'name-value'],
-    ['/w:document/w:body[1]/w:p[2]/w:sdt[1]', 'name-value'],
+    ['/w:document/w:body[1]/w:sdt[1]', 'misplaced'],
+    ['/w:document/w:body[1]/w:p[2]/w:sdt[1]', 'misplaced'],
     ['/w:document/w:body[1]/w:sdt[2]/w:sdtContent[1]/w:sdtContent[1]', 'misplaced'],
-  ], 'the name rule, and sdt content directly in sdt content');
+  ], 'the name rule; content controls at the wrong level (a class rule since docx4j CR-064\'s addendum); sdt content directly in sdt content');
   assert.match(names[0][2], /a w:p whose value is a table \(w:tbl\) to the body \(w:body\); there a w:p is a paragraph \(w:p\)/);
-  assert.match(names[1][2], /a w:sdt whose value is a run-level content control \(SdtRun\) to the body \(w:body\); there a w:sdt is a block-level content control \(SdtBlock\)/);
+  assert.equal(names[1][2], "You can't add a run-level content control (SdtRun) to the body (w:body); it goes in a paragraph (w:p); a block-level content control (SdtBlock) goes here.");
+  // In a run, any content control is refused; in a table any but a row-level one, in a row any but a cell-level one.
+  const controls = [];
+  const inRun = pushed(r('x'), sdt([r('y')]));
+  const inTable = pushed(tbl([['x']]), sdt([p('y')]));
+  inTable.value.content[0].value.content.push(sdt([tr(['z'])]));
+  await marshalString(document([p([inRun]), inTable]), { onMisplaced: (report) => controls.push([report.path, report.message]) });
+  assert.deepEqual(controls, [
+    ['/w:document/w:body[1]/w:p[1]/w:r[1]/w:sdt[1]', "You can't add a content control (w:sdt) inside a run (w:r); a run-level content control (SdtRun) goes in the paragraph, beside the run."],
+    ['/w:document/w:body[1]/w:tbl[1]/w:sdt[1]', "You can't add a block-level content control (SdtBlock) to a table (w:tbl); it goes beside a paragraph (in the body, a cell, a header or the like); a row-level content control (CTSdtRow) goes here."],
+    ['/w:document/w:body[1]/w:tbl[1]/w:tr[1]/w:sdt[1]', "You can't add a row-level content control (CTSdtRow) to a table row (w:tr); it goes in a table (w:tbl); a cell-level content control (CTSdtCell) goes here."],
+  ]);
   assert.match(names[3][2], /nest sdt content \(w:sdtContent\) directly inside block-level sdt content \(w:sdtContent\); nest a content control \(w:sdt\) that holds it/);
   assert.match(written, /<w:p xsi:type="[^"]+">/, 'what the rule is: the marshal writes the mismatch with an xsi:type');
   // The class rule comes first, as docx4j tests the value a JAXBElement wraps: a w:p whose value is a run is a run in the body.
@@ -1345,6 +1364,22 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     ['read', 'mc:AlternateContent[1]/mc:Choice[1]', 'p'],
     ['saved', '/w:p/w:r[1]/mc:AlternateContent[1]/mc:Choice[1]/w:p[1]', 'p'],
   ], "a paragraph in a run's Choice is misplaced; text in its Fallback is not");
+
+  // A kept branch types its children by their global declarations, and the global w:sdt is block-level: a legal run-level
+  // control in a paragraph's Choice, and everything below it, is typed block-level. Tested at the level the branch's host
+  // gives, leniently, so a legal document reports nothing; a real misplacement below it still does.
+  const branchTyped = async (choice) => {
+    const reports = [];
+    const xml = `<w:document xmlns:w="${W}" xmlns:mc="${MC}"><w:body><w:p><mc:AlternateContent><mc:Choice Requires="w14">${choice}</mc:Choice><mc:Fallback><w:r><w:t>f</w:t></w:r></mc:Fallback></mc:AlternateContent></w:p></w:body></w:document>`;
+    const branchTree = await unmarshalString(xml, { onMisplaced: (report) => reports.push(['read', report.container, report.child.localPart ?? report.child]) });
+    await marshalString(branchTree, { onMisplaced: (report) => reports.push(['saved', report.path]) });
+    return reports;
+  };
+  assert.deepEqual(await branchTyped('<w:sdt><w:sdtContent><w:r><w:t>x</w:t></w:r></w:sdtContent></w:sdt>'), [], 'a run-level control in a paragraph\'s Choice is legal');
+  assert.deepEqual(await branchTyped('<w:sdt><w:sdtContent><w:sdt><w:sdtContent><w:r><w:t>x</w:t></w:r></w:sdtContent></w:sdt><w:customXml w:element="e"><w:r><w:t>y</w:t></w:r></w:customXml></w:sdtContent></w:sdt>'), [], 'and a control and custom XML nested in it');
+  assert.deepEqual(await branchTyped('<w:sdt><w:sdtContent><w:p/></w:sdtContent></w:sdt>'), [
+    ['read', 'org_docx4j_wml.CTSdtContentRun', 'p'], ['saved', '/w:document/w:body[1]/w:p[1]/mc:AlternateContent[1]/mc:Choice[1]/w:sdt[1]/w:sdtContent[1]/w:p[1]'],
+  ], 'a paragraph inside it is misplaced, at the run level its host gives');
 
   // M7 (d): a misplaced w:instrText reads typed and is reported; a w:moveFrom inside a run still fails the read.
   const m7 = [];

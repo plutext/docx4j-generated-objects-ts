@@ -792,6 +792,11 @@ function declarations(): Declarations {
       cache.set(key, found);
       return found;
     },
+    listDeclares(containerType, list, name) {
+      const property = (context.getTypeInfoByName(containerType) as unknown as { properties?: { name: string; elementTypeInfos?: { elementName: { namespaceURI: string; localPart: string } }[] }[] } | undefined)
+        ?.properties?.find((p) => p.name === list);
+      return property?.elementTypeInfos?.some((e) => e.elementName.namespaceURI === name.namespaceURI && e.elementName.localPart === name.localPart) ?? false;
+    },
     isA(type, base) {
       for (let ti: Jsonix.TypeInfo | undefined = context.getTypeInfoByName(type); ti; ti = ti.baseTypeInfo) if (ti.name === base) return true;
       return false;
@@ -801,13 +806,56 @@ function declarations(): Declarations {
   return result;
 }
 
+const W_NS_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+/** The level an ancestor fixes for a content control or custom XML below it. */
+const LEVEL_OF: Readonly<Record<string, 'block' | 'run' | 'row' | 'cell'>> = {
+  body: 'block', tc: 'block', txbxContent: 'block', hdr: 'block', ftr: 'block', footnote: 'block', endnote: 'block', comment: 'block',
+  p: 'run', hyperlink: 'run', fldSimple: 'run', smartTag: 'run', ins: 'run', del: 'run', dir: 'run', bdo: 'run', tbl: 'row', tr: 'cell',
+};
+/** Containers whose class depends on the level they stand at, and that class per level. */
+const BY_LEVEL: Readonly<Record<string, Readonly<Partial<Record<'block' | 'run' | 'row' | 'cell', string>>>>> = Object.fromEntries([
+  ...['SdtContentBlock', 'CTSdtContentRun', 'CTSdtContentRow', 'CTSdtContentCell'].map((t) => [`org_docx4j_wml.${t}`,
+    { block: 'org_docx4j_wml.SdtContentBlock', run: 'org_docx4j_wml.CTSdtContentRun', row: 'org_docx4j_wml.CTSdtContentRow', cell: 'org_docx4j_wml.CTSdtContentCell' }]),
+  ...['CTCustomXmlBlock', 'CTCustomXmlRun'].map((t) => [`org_docx4j_wml.${t}`, { block: 'org_docx4j_wml.CTCustomXmlBlock', run: 'org_docx4j_wml.CTCustomXmlRun' }]),
+]);
+
+/**
+ * The class a container is tested as. A kept `mc:Choice` or `mc:Fallback` types its children by their global
+ * declarations, and the global `w:sdt` is the block-level class, so a run-level control in a paragraph's branch, and
+ * everything below it, is typed block-level. So for sdt content and custom XML whose path up to the element that fixes
+ * its level (a paragraph, a cell, a table, a row, ...) crosses a branch, the level is that element's, and its children
+ * are tested leniently: one its list names is legal whatever class the runtime gave it. Elsewhere the runtime typed
+ * it by the list it stands in, which is right. Undefined: a level with no container of that kind (custom XML in a row).
+ */
+function effectiveContainer(typed: string, element: Node): { type: string | undefined; lenient: boolean } {
+  const byLevel = BY_LEVEL[typed];
+  if (byLevel === undefined) return { type: typed, lenient: false };
+  let crossed = false;
+  let n: Node | null = element.parentNode;
+  while (n !== null && n.nodeType === 1) {
+    const e = n as Element;
+    n = e.parentNode;
+    if (e.namespaceURI === MC_NS && (e.localName === 'Choice' || e.localName === 'Fallback' || e.localName === 'AlternateContent')) {
+      crossed ||= e.localName !== 'AlternateContent';
+      continue;
+    }
+    if (e.namespaceURI !== W_NS_) break;
+    if (e.localName === 'sdt' || e.localName === 'sdtContent' || e.localName === 'customXml') continue;
+    const level = LEVEL_OF[e.localName];
+    if (level === undefined || !crossed) break;
+    return { type: byLevel[level], lenient: true };
+  }
+  return { type: typed, lenient: false };
+}
+
 /**
  * Tests a container's list, and each `mc:AlternateContent` branch in it by the container's set, calling `found` with
  * each misplaced child, its index in its own list, and the steps to it from the container (each `name[n]`, from
  * `stepName`; `offset` adds the same-named property elements written before the list).
  */
 function testList(containerType: string, items: readonly unknown[], stepName: (item: unknown) => string | undefined, offset: (step: string) => number,
-  mc: string, found: (misplaced: Misplacement, item: unknown, index: number, via: readonly string[], step: string | undefined) => void, via: readonly string[] = []): void {
+  mc: string, found: (misplaced: Misplacement, item: unknown, index: number, via: readonly string[], step: string | undefined) => void, via: readonly string[] = [],
+  lenient = false): void {
   const context = declarations();
   const seen = new Map<string, number>();
   items.forEach((item, index) => {
@@ -818,12 +866,13 @@ function testList(containerType: string, items: readonly unknown[], stepName: (i
       seen.set(name, n);
       step = `${name}[${n + offset(name)}]`;
     }
-    const misplaced = misplacement(containerType, item, context);
+    const misplaced = misplacement(containerType, item, context, lenient);
     if (misplaced) found(misplaced, item, index, via, step);
     const alternate = alternateContentOf(item);
     if (alternate && step !== undefined) {
-      (alternate.choice ?? []).forEach((choice, k) => testList(containerType, branchItems(choice), stepName, () => 0, mc, found, [...via, step!, `${mc}:Choice[${k + 1}]`]));
-      if (alternate.fallback) testList(containerType, branchItems(alternate.fallback), stepName, () => 0, mc, found, [...via, step, `${mc}:Fallback[1]`]);
+      // A branch's children are typed by their global declarations, not by the host's list: tested leniently.
+      (alternate.choice ?? []).forEach((choice, k) => testList(containerType, branchItems(choice), stepName, () => 0, mc, found, [...via, step!, `${mc}:Choice[${k + 1}]`], true));
+      if (alternate.fallback) testList(containerType, branchItems(alternate.fallback), stepName, () => 0, mc, found, [...via, step, `${mc}:Fallback[1]`], true);
     }
   });
 }
@@ -882,9 +931,11 @@ function reportDroppedText(container: string, element: Element, items: readonly 
 
 /** The read side (CR-017 section 4.2): a typed container's list, once its value is complete. */
 function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap<object, Element>, dropped: WeakMap<Node, Text[]>, onMisplaced: (report: MisplacedChild) => void): void {
-  const container = (value as { TYPE_NAME?: string }).TYPE_NAME;
-  const spec = container === undefined ? undefined : CONTAINERS[container];
+  const typed = (value as { TYPE_NAME?: string }).TYPE_NAME;
+  const spec = typed === undefined ? undefined : CONTAINERS[typed];
   if (spec === undefined) return;
+  const { type: container, lenient } = effectiveContainer(typed!, element);
+  if (container === undefined) return;
   // The runtime leaves the list unset when it read no element: a string that was the container's only child is still
   // to be reported, so an unset list is an empty one here.
   const listed = (value as Record<string, unknown>)[spec.list];
@@ -894,7 +945,7 @@ function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap
     const name = childName(item);
     return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
   };
-  testList(container!, items, stepName, () => 0, table[MC_NS] || 'mc',
+  testList(container, items, stepName, () => 0, table[MC_NS] || 'mc',
     (misplaced, item, index, via) => {
       const childValue = typeof item === 'object' && item !== null ? ((item as { value?: unknown }).value ?? item) : undefined;
       const childElement = isNode(item) ? item as Element : typeof childValue === 'object' && childValue !== null ? sources.get(childValue) : undefined;
@@ -902,8 +953,8 @@ function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap
         element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
         ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message, ...(childElement ? { childElement } : {}),
       });
-    });
-  reportDroppedText(container!, element, items, [], sources, dropped, table[MC_NS] || 'mc', onMisplaced);
+    }, [], lenient);
+  reportDroppedText(container, element, items, [], sources, dropped, table[MC_NS] || 'mc', onMisplaced);
 }
 
 /** The facade's unmarshal options: the runtime's, for this call only (CR-007), and `onWordReading` (CR-013). */
@@ -1271,10 +1322,11 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
   return {
     ...options,
     onElement(written: Node, value: unknown): void {
-      const container = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
-      const spec = container === undefined ? undefined : CONTAINERS[container];
+      const typed = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
+      const spec = typed === undefined ? undefined : CONTAINERS[typed];
       const items = spec ? (value as Record<string, unknown>)[spec.list] : undefined;
-      if (spec && Array.isArray(items)) {
+      const { type: container, lenient } = spec ? effectiveContainer(typed!, written) : { type: undefined, lenient: false };
+      if (spec && container !== undefined && Array.isArray(items)) {
         const base = pathOf(written);
         const stepName = (item: unknown): string | undefined => {
           const name = childName(item);
@@ -1285,7 +1337,7 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
             element: written as Element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
             ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
             path: [base, ...via, ...(step ? [step] : [])].join('/'),
-          }));
+          }), [], lenient);
       }
       onElement?.(written, value);
     },

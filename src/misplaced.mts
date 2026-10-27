@@ -55,13 +55,24 @@ export const CONTAINERS: Readonly<Record<string, Container>> = {
 
 const T = (name: string) => `org_docx4j_wml.${name}`;
 
-/** The classes refused, by set, as `checkParent` has them (CR-017 section 3). A string is refused by every set. */
+/**
+ * The classes refused, by set, as `checkParent` has them (CR-017 section 3), with docx4j CR-064's addendum (its section
+ * 8.1, ce87ec6d7): deleted text where text is refused, a tab where a break is, and a content control at the wrong level.
+ * A string is refused by every set.
+ */
 export const REFUSED: Readonly<Record<MisplacedSet, ReadonlySet<string>>> = {
-  'block-level': new Set(['R', 'Text', 'Drawing', 'Br', 'Tc', 'Tr', 'SectPr', 'TcPr'].map(T)),
-  'run-level': new Set(['Tbl', 'P', 'Text', 'Drawing', 'Br', 'PPr'].map(T)),
-  run: new Set(['R', 'P', 'Tbl', 'RPr'].map(T)),
-  table: new Set(['Tc', 'P', 'R', 'Tbl', 'TblPr'].map(T)),
-  row: new Set(['P', 'R', 'Tbl', 'TrPr'].map(T)),
+  'block-level': new Set(['R', 'Text', 'DelText', 'Drawing', 'Br', 'R.Tab', 'Tc', 'Tr', 'SectPr', 'TcPr', 'SdtRun', 'CTSdtRow', 'CTSdtCell'].map(T)),
+  'run-level': new Set(['Tbl', 'P', 'Text', 'DelText', 'Drawing', 'Br', 'R.Tab', 'PPr', 'SdtBlock', 'CTSdtRow', 'CTSdtCell'].map(T)),
+  run: new Set(['R', 'P', 'Tbl', 'RPr', 'SdtBlock', 'SdtRun', 'CTSdtRow', 'CTSdtCell'].map(T)),
+  table: new Set(['Tc', 'P', 'R', 'Tbl', 'TblPr', 'SdtBlock', 'SdtRun', 'CTSdtCell'].map(T)),
+  row: new Set(['P', 'R', 'Tbl', 'TrPr', 'SdtBlock', 'SdtRun', 'CTSdtRow'].map(T)),
+};
+
+const SDT_CONTROLS: ReadonlySet<string> = new Set(['SdtBlock', 'SdtRun', 'CTSdtRow', 'CTSdtCell'].map(T));
+/** Where a content control of each level goes, for a message (docx4j's `sdtGoes`). */
+const SDT_GOES: Readonly<Record<string, string>> = {
+  [T('SdtBlock')]: 'beside a paragraph (in the body, a cell, a header or the like)', [T('SdtRun')]: 'in a paragraph (w:p)',
+  [T('CTSdtRow')]: 'in a table (w:tbl)', [T('CTSdtCell')]: 'in a table row (w:tr)',
 };
 
 /** Sdt content's four classes, refused directly in sdt content. */
@@ -73,7 +84,7 @@ export const SDT_CONTENT_TYPES: ReadonlySet<string> = new Set(['SdtContentBlock'
  */
 export const CLASS_NAMES: Readonly<Record<string, readonly string[]>> = {
   [T('R')]: ['r'], [T('P')]: ['p'], [T('Tbl')]: ['tbl'], [T('Tc')]: ['tc'], [T('Tr')]: ['tr'],
-  [T('Text')]: ['t', 'instrText', 'delInstrText', 'fldData'], [T('Drawing')]: ['drawing'], [T('Br')]: ['br'],
+  [T('Text')]: ['t', 'instrText', 'delInstrText', 'fldData'], [T('DelText')]: ['delText'], [T('Drawing')]: ['drawing'], [T('Br')]: ['br'], [T('R.Tab')]: ['tab'],
   [T('PPr')]: ['pPr'], [T('RPr')]: ['rPr'], [T('SectPr')]: ['sectPr'], [T('TblPr')]: ['tblPr'], [T('TrPr')]: ['trPr'], [T('TcPr')]: ['tcPr'],
 };
 const CLASS_BY_NAME: ReadonlyMap<string, string> = new Map(Object.entries(CLASS_NAMES).flatMap(([type, names]) => names.map((n) => [n, type] as const)));
@@ -98,6 +109,8 @@ export interface Misplacement {
 /** What the facade knows from the context: the class a list, or the context globally, declares for a name, and subtyping. */
 export interface Declarations {
   declared(containerType: string, list: string, name: { namespaceURI: string; localPart: string }): string | undefined;
+  /** Whether the list itself names the element, as against the context declaring it globally. */
+  listDeclares(containerType: string, list: string, name: { namespaceURI: string; localPart: string }): boolean;
   isA(type: string, base: string): boolean;
 }
 
@@ -138,7 +151,7 @@ function display(name: { namespaceURI: string; localPart: string; prefix?: strin
 
 const CHILD_DESCRIPTIONS: Readonly<Record<string, string>> = {
   [T('R')]: 'a run (w:r)', [T('P')]: 'a paragraph (w:p)', [T('Tbl')]: 'a table (w:tbl)', [T('Tc')]: 'a table cell (w:tc)', [T('Tr')]: 'a table row (w:tr)',
-  [T('Drawing')]: 'a drawing (w:drawing)', [T('Br')]: 'a break (w:br)',
+  [T('Drawing')]: 'a drawing (w:drawing)', [T('Br')]: 'a break (w:br)', [T('DelText')]: 'deleted text (w:delText)', [T('R.Tab')]: 'a tab (w:tab)',
   [T('PPr')]: 'paragraph properties (w:pPr)', [T('RPr')]: 'run properties (w:rPr)', [T('SectPr')]: 'section properties (w:sectPr)',
   [T('TblPr')]: 'table properties (w:tblPr)', [T('TrPr')]: 'row properties (w:trPr)', [T('TcPr')]: 'cell properties (w:tcPr)',
   [T('SdtBlock')]: 'a block-level content control (SdtBlock)', [T('SdtRun')]: 'a run-level content control (SdtRun)',
@@ -164,6 +177,16 @@ function refusalMessage(container: Container, containerType: string, child: Chil
   }
   const type = child.type!;
   const what = describeChild(type, child.name);
+  if (SDT_CONTROLS.has(type)) {
+    const goes = `it goes ${SDT_GOES[type]}`;
+    switch (container.set) {
+      case 'run-level': return `You can't add ${what} to ${c}; ${goes}; a run-level content control (SdtRun) goes here.`;
+      case 'block-level': return `You can't add ${what} to ${c}; ${goes}; a block-level content control (SdtBlock) goes here.`;
+      case 'run': return `You can't add a content control (w:sdt) inside a run (w:r); a run-level content control (SdtRun) goes in the paragraph, beside the run.`;
+      case 'table': return `You can't add ${what} to a table (w:tbl); ${goes}; a row-level content control (CTSdtRow) goes here.`;
+      default: return `You can't add ${what} to a table row (w:tr); ${goes}; a cell-level content control (CTSdtCell) goes here.`;
+    }
+  }
   switch (container.set) {
     case 'run-level':
       if (type === T('Tbl')) return `You can't add a table (w:tbl) inside ${c}; it should be a sibling of the paragraph.`;
@@ -181,8 +204,8 @@ function refusalMessage(container: Container, containerType: string, child: Chil
       if (type === T('Tr')) return `You can't add a table row (w:tr) to ${c}; a row goes in a table (w:tbl).`;
       if (type === T('SectPr')) return `You can't add section properties (w:sectPr) to the content of ${c}; set the body's sectPr, or pPr.sectPr on the paragraph that ends the section.`;
       if (type === T('TcPr')) return containerType === T('Tc')
-        ? `You can't add cell properties (w:tcPr) to a cell's content; set them as the cell's tcPr.`
-        : `You can't add cell properties (w:tcPr) to the content of ${c}; they belong to a cell (w:tc), as its tcPr.`;
+        ? `You can't add cell properties (w:tcPr) to a table cell's content; set them as the cell's tcPr.`
+        : `You can't add cell properties (w:tcPr) to ${c}; cell properties belong to a table cell (w:tc), as its tcPr.`;
       return `You can't add ${what} directly to ${c}; add it to a run (w:r) in a paragraph (w:p) and add the paragraph.`;
     case 'table':
       if (type === T('Tc')) return `You can't add a table cell (w:tc) directly to a table (w:tbl); add it to a row (w:tr) and add that.`;
@@ -201,10 +224,13 @@ function refusalMessage(container: Container, containerType: string, child: Chil
  * refuses, sdt content directly in sdt content, or a name and value that disagree. With `declarations` (the facade's,
  * from the context) the name rule is tested for every child; without (the builders), for `w:sdt` alone.
  */
-export function misplacement(containerType: string, item: unknown, declarations?: Declarations): Misplacement | undefined {
+export function misplacement(containerType: string, item: unknown, declarations?: Declarations, lenient = false): Misplacement | undefined {
   const container = CONTAINERS[containerType];
   if (container === undefined) return undefined;
   const child = childOf(item);
+  // Lenient (a branch's child, or a child below one, typed by a global declaration rather than by its real level): a
+  // child the container's list names is legal there whatever class the runtime gave it.
+  if (lenient && declarations && child.name && declarations.listDeclares(containerType, container.list, child.name)) return undefined;
   const reported = (rule: MisplacedRule, message: string): Misplacement => ({
     rule, message, child: child.text || !child.name ? '#text' : child.name, ...(child.type ? { childType: child.type } : {}),
   });
