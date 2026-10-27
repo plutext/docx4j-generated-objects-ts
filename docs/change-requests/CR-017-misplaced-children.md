@@ -216,7 +216,12 @@ So on save:
   nothing about the cause.
 
 The tree keeps what it read, and a save writes it as held unless the callback throws. On read, a misplaced property
-element never reaches a list (section 2.1), so those rules report a push from code only. A JavaScript caller who pushed
+element never reaches a list (section 2.1), so those rules report a push from code only. Nor does a string read inside
+a run, a paragraph or the body: the runtime skips non-whitespace character data in content that isn't mixed before any
+callback sees it, and has no callback for it (it reports unexpected attributes and elements only). So a file's string
+in a run is dropped unreported, as Word's repair drops it (check 72's 72m) and docx4j's JAXB does; only a string pushed
+from code reaches the save report. A runtime callback for skipped character data, a jsonix CR, would let the read side
+report it as `'#text'`; it is not proposed (core-ts noted the gap, 2026-10-28). A JavaScript caller who pushed
 into a content array learns of it at save, the first point the package sees the tree.
 
 ### 4.3 Nine more elements declared globally (M7)
@@ -392,5 +397,10 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   the same at both levels, and that the refused form throws.
 - **Tests:** section 7's, in the smoke's CR-017 block, the CR-009 block (70 entries, list C) and the fidelity test.
   `test/nodenext/consumer.mts` types the report and the callback on both sides.
-- **What is left:** core-ts's survey of 9,071 parts, the larger gate, at its next run; core-ts CR-016 phase 2 builds
-  its refused save on the save report.
+- **core-ts's gate** (2026-10-28, at bb18596): every XML part of its fixtures and docx4j's charts corpus, 542 files and
+  9,075 parts (8,454 with a typed root), read and saved with `onMisplaced` on both sides. No read or save fails, and
+  nothing is reported outside check 72's 18 files. Those give 34 reports, each of 17 children once on read and once on
+  save, with the paths and messages core-ts checked. The eighteenth, a string in a run, is the read case of section
+  4.2: the runtime drops it unreported.
+- **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
+  Jason's.
