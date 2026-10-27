@@ -416,6 +416,11 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   `jsonix-factory.js` is byte-identical to the jsonix-CR-013 build objects ran over its corpus first (jsonix c259464:
   0 reports in 359 checks, all 342 marshalled parts identical, smoke and the Word tests passing). The smoke checks a
   string in a run, in the body and in a run's `mc:Choice`, a lone no-break space, text in `w:b` and indentation not
-  reported, a caller's own callback still called, and check 72's 72m now reported once on read.
+  reported, a caller's own callback still called, and check 72's 72m now reported once on read. As first committed
+  (9ac19ae) a string that was its container's only child went unreported, since the runtime leaves a list unset when it
+  read no element and the read side returned on an unset list. core-ts's rerun over its 9,075 parts found it, on 72m's
+  own form (`<w:r>MISPLACED string in a run</w:r>`), where the smoke's copy of 72m had a `w:t` beside the string. Fixed
+  the same day: an unset list is an empty one there. The smoke now has 72m's own form and the only-child, first and last
+  positions.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
   Jason's.

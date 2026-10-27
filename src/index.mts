@@ -885,8 +885,10 @@ function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap
   const container = (value as { TYPE_NAME?: string }).TYPE_NAME;
   const spec = container === undefined ? undefined : CONTAINERS[container];
   if (spec === undefined) return;
-  const items = (value as Record<string, unknown>)[spec.list];
-  if (!Array.isArray(items)) return;
+  // The runtime leaves the list unset when it read no element: a string that was the container's only child is still
+  // to be reported, so an unset list is an empty one here.
+  const listed = (value as Record<string, unknown>)[spec.list];
+  const items: readonly unknown[] = Array.isArray(listed) ? listed : [];
   const table = getContextSync().namespacePrefixes;
   const stepName = (item: unknown): string | undefined => {
     const name = childName(item);

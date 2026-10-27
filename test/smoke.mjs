@@ -1363,7 +1363,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     '72e': '<w:br/>', '72f': `<w:tbl><w:tr><w:tc>${P('CELL')}<w:r><w:t>MISPLACED</w:t></w:r></w:tc></w:tr></w:tbl>`,
     '72g': `<w:p><w:r><w:t>x</w:t></w:r><w:tbl><w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tr></w:tbl></w:p>`, '72h': `<w:p><w:r><w:t>x</w:t></w:r>${P('MISPLACED')}</w:p>`,
     '72i': '<w:p><w:t>MISPLACED</w:t></w:p>', '72j': '<w:p><w:r><w:t>a</w:t></w:r><w:br/><w:r><w:t>b</w:t></w:r></w:p>',
-    '72k': '<w:p><w:r><w:r><w:t>MISPLACED</w:t></w:r></w:r></w:p>', '72l': `<w:p><w:r><w:t>outer</w:t>${P('MISPLACED')}</w:r></w:p>`, '72m': '<w:p><w:r>MISPLACED<w:t>x</w:t></w:r></w:p>',
+    '72k': '<w:p><w:r><w:r><w:t>MISPLACED</w:t></w:r></w:r></w:p>', '72l': `<w:p><w:r><w:t>outer</w:t>${P('MISPLACED')}</w:r></w:p>`, '72m': '<w:p><w:r>MISPLACED string in a run</w:r></w:p>',
     '72n': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tbl>`, '72o': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr>${P('MISPLACED')}</w:tbl>`,
     '72p': `<w:tbl><w:tr><w:tc>${P('a')}</w:tc></w:tr><w:tbl><w:tr><w:tc>${P('MISPLACED')}</w:tc></w:tr></w:tbl></w:tbl>`,
     '72q': row(P('MISPLACED')), '72r': row('<w:r><w:t>MISPLACED</w:t></w:r>'),
@@ -1391,6 +1391,13 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     callerSaw: ['MISPLACED'],
   }, 'a string in a run, between its first and second w:t');
   assert.deepEqual((await dropped('<w:p/>loose<w:p/>')).reports.map((r) => [r[0], r[2], r[4]]), [['org_docx4j_wml.Body', 1, 'loose']], 'a string in the body');
+  // A string that is its container's only child: the runtime leaves the list unset (core-ts's rerun found it unreported).
+  for (const [inner, expected] of [
+    ['<w:p><w:r>ONLY</w:r></w:p>', [['org_docx4j_wml.R', 0, 'ONLY']]],
+    ['<w:p>ONLYP</w:p>', [['org_docx4j_wml.P', 0, 'ONLYP']]],
+    ['<w:p><w:r>FIRST<w:t>b</w:t></w:r></w:p>', [['org_docx4j_wml.R', 0, 'FIRST']]],
+    ['<w:p><w:r><w:t>a</w:t>LAST</w:r></w:p>', [['org_docx4j_wml.R', 1, 'LAST']]],
+  ]) assert.deepEqual((await dropped(inner)).reports.map((r) => [r[0], r[2], r[4]]), expected, inner);
   assert.deepEqual(await dropped('<w:p><w:r><w:rPr><w:b>x</w:b></w:rPr><w:t>a</w:t></w:r></w:p>'), { reports: [], callerSaw: ['x'] }, 'text inside w:b is no misplaced child');
   assert.deepEqual((await dropped('<w:p><w:r><w:t>a</w:t>\u00A0</w:r></w:p>')).reports.map((r) => r[4]), ['\u00A0'], 'a lone no-break space in a run');
   assert.deepEqual((await dropped('<w:p><w:r><mc:AlternateContent><mc:Choice Requires="w14">stray<w:t>c</w:t></mc:Choice></mc:AlternateContent></w:r></w:p>')).reports.map((r) => [r[0], r[3], r[4]]),
