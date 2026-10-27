@@ -163,6 +163,14 @@ the control on the name rule and its runs as misplaced in block-level content; n
 
 Elsewhere the runtime types each element by the list it stands in, so a file read outside a branch needs neither.
 
+docx4j isn't exposed (measured by docx4j-12, 2026-10-28, its loads in both `docx4j.jaxb.mc.onLoad` modes): its CR-051
+section 11.3, `McBranchSdt` (17.3.4), takes a `w:sdt` directly in a branch out of the lax list and binds it by the
+kind its container asks for, so a paragraph's branch holds an `SdtRun`. The mistyping itself is therefore this
+package's gap, the counterpart of that section, and not CR-017's: CR-017 only allows for it. It has a cost beyond the
+report. `textOf` reads a paragraph's run-level controls but not a block-level one, so the text of a run-level control
+in a paragraph's `mc:Choice` is left out ("before  after" where the same control outside a branch gives "before IN
+CONTROL after"; measured 2026-10-28). Typing it as docx4j does is for its own CR.
+
 **The messages** are docx4j's (core-ts D4), one wording across the ports, with the element name where docx4j names a
 Java class: "You can't add a run (w:r) directly to a table cell (w:tc); add it to a paragraph (w:p) and add that." The
 builders throw the message the report carries. Each names the container, since a person, or a model, fixes code from
