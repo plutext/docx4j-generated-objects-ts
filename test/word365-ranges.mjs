@@ -217,6 +217,9 @@ for (const [key, doc] of [...new Set(integerCases.map((c) => `${c.round}\t${c.fi
       const id = part === 'word/settings.xml' ? file.slice(c.round === 'cr066-round6' ? 'cr066-r6-'.length : 'cr066-'.length) : caseOf(r.element);
       assert.ok(integerCases.some((x) => x.round === round && x.id === id && Number(x.value) === r.value), `${side}: ${r.attribute.localPart}=${r.value} belongs to case ${id} (${key})`);
       assert.equal(r.wordReads.kept, false);
+      // The entry on the report (2026-10-27): the key pair names the table entry, which is the report's own.
+      assert.equal(r.storage, WORD_INTEGER_STORAGE[r.typeName][r.property], `${side}: ${id}'s report carries its table entry`);
+      assert.equal(r.property, r.attribute.localPart);
       reported[side].add(`${round} ${id}`);
     }
   }

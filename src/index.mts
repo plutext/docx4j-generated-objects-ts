@@ -5,7 +5,7 @@
 import { Jsonix } from '@docx4j/jsonix';
 import { MODULES } from './modules.mjs';
 import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
-import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading } from './helpers/wml.mjs';
+import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading, type WordIntegerStorage } from './helpers/wml.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -642,7 +642,10 @@ export interface WordReading {
  * save writes it as it is.
  */
 export interface OutOfRange {
-  /** On read, the element in the source; on save, the element written. */
+  /**
+   * On read, the element in the source; on save, the element written, as it stands when the attribute is written: its
+   * later attributes (`w:lineRule` after `w:line`) are not on it yet. `rule` and `storage` say what the element will.
+   */
   readonly element: Element;
   readonly attribute: Jsonix.XML.QName;
   /** On save, from the part root, as `Normalisation`'s: `/w:document/w:body[1]/w:p[3]/w:pPr[1]/w:ind[1]/@w:left`. */
@@ -651,6 +654,20 @@ export interface OutOfRange {
   readonly value: number;
   /** What Word reads for it, and how Word stores the attribute. */
   readonly wordReads: WordIntegerReading;
+  /**
+   * The `WORD_INTEGER_STORAGE` entry the report comes from, and its key pair: the `TYPE_NAME` declaring the property
+   * (`org_docx4j_wml.CTBorder` for `w:top`, `w:bdr` and every other border; `org_docx4j_wml.TblWidth` for `w:tblW` and
+   * `w:tcW`), which the element's name alone cannot give, and the property, the attribute's local name.
+   */
+  readonly typeName: string;
+  readonly property: string;
+  readonly storage: WordIntegerStorage;
+  /**
+   * For an attribute whose sign carries a rule (`storage.signRule`: `w:spacing/@w:line`, `w:trHeight`, `w:framePr/@w:h`),
+   * the rule the tree holds beside it (`lineRule` or `hRule`'s value), or undefined when absent (`auto`, or `atLeast`
+   * for `hRule`). Undefined for every other attribute.
+   */
+  readonly rule?: string;
 }
 
 /** For each type, its properties in `WORD_INTEGER_STORAGE` (its own and its base types'), with the attribute each is. */
@@ -672,12 +689,20 @@ function rangedProperties(typeName: string): readonly (readonly [string, string,
   return found;
 }
 
-/** The reading of an owner's integer property, with the rule beside it where its sign carries one; undefined when it isn't a number or isn't ranged. */
-function readingOf(typeName: string, property: string, owner: unknown, value: unknown): WordIntegerReading | undefined {
+/**
+ * The report for an owner's integer property, without its element and path, when Word would read it differently: its
+ * reading with the rule beside it where its sign carries one, and the table entry it comes from. Undefined when the
+ * value isn't a number, isn't ranged, or Word reads it as held.
+ */
+function outOfRangeOf(typeName: string, property: string, owner: unknown, value: unknown): Omit<OutOfRange, 'element' | 'attribute' | 'path'> | undefined {
   if (typeof value !== 'number') return undefined;
   const storage = WORD_INTEGER_STORAGE[typeName]?.[property];
-  const rule = storage?.measured && storage.signRule ? (owner as Record<string, unknown>)[storage.signRule] : undefined;
-  return wordIntegerReading(typeName, property, value, typeof rule === 'string' ? rule : undefined);
+  if (storage === undefined) return undefined;
+  const held = storage.measured && storage.signRule ? (owner as Record<string, unknown>)[storage.signRule] : undefined;
+  const rule = typeof held === 'string' ? held : undefined;
+  const wordReads = wordIntegerReading(typeName, property, value, rule);
+  if (wordReads === undefined || wordReads.kept) return undefined;
+  return { value, wordReads, typeName, property, storage, ...(rule === undefined ? {} : { rule }) };
 }
 
 /** The read side (CR-016 section 4.2): each ranged property of a typed object Word would read differently. */
@@ -685,9 +710,8 @@ function reportOutOfRange(element: Element, value: object, onOutOfRange: (report
   const typeName = (value as { TYPE_NAME?: string }).TYPE_NAME;
   if (typeof typeName !== 'string') return;
   for (const [declaring, property, attribute] of rangedProperties(typeName)) {
-    const held = (value as Record<string, unknown>)[property];
-    const reading = readingOf(declaring, property, value, held);
-    if (reading && !reading.kept) onOutOfRange({ element, attribute, value: held as number, wordReads: reading });
+    const report = outOfRangeOf(declaring, property, value, (value as Record<string, unknown>)[property]);
+    if (report) onOutOfRange({ ...report, element, attribute });
   }
 }
 
@@ -997,16 +1021,17 @@ function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<
     },
     onAttributeValue(value, text, owner, propertyInfo, classInfo) {
       const result = innerOnAttributeValue?.(value, text, owner, propertyInfo, classInfo);
-      const reading = readingOf(classInfo.name, propertyInfo.name, owner, value);
-      if (reading && !reading.kept) {
+      // classInfo is the class declaring the property (the runtime marshals a base type's properties through the base).
+      const report = outOfRangeOf(classInfo.name, propertyInfo.name, owner, value);
+      if (report) {
         // The owner's element is open, and every element written since is inside it.
         let element: Node | null | undefined = lastWritten;
         while (element && writtenFrom.get(element) !== owner) element = element.parentNode;
         element ??= lastWritten;
         if (element) {
           onOutOfRange({
-            element: element as Element, attribute: propertyInfo.attributeName,
-            path: `${pathOf(element)}/@${qualifiedName(propertyInfo.attributeName, table)}`, value: value as number, wordReads: reading,
+            ...report, element: element as Element, attribute: propertyInfo.attributeName,
+            path: `${pathOf(element)}/@${qualifiedName(propertyInfo.attributeName, table)}`,
           });
         }
       }

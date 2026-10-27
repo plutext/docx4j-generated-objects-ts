@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in
+**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in; the table entry added to the report 2026-10-27 (core-ts's ask, section 4.4), unreleased
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -165,9 +165,15 @@ A new callback, `onOutOfRange(report)`, on `UnmarshalOptions` and `MarshalOption
 caller passes it. That is this package's rule for reporting: no reporting callback by default. The report gives:
 - `element`, `attribute` and, on save, `path` (as `Normalisation`'s);
 - `value`, the number held and written;
-- `wordReads`, what Word reads (with the rule where one applies), or `undefined` for an unmeasured attribute outside
-  the certain range;
-- `storage`, for the message (`int16`, `uint16, clamped to 144..31681`, ...).
+- `wordReads`, what Word reads (with the rule where one applies; `value: null` for an unmeasured attribute outside
+  the certain range), and in it `storage`, a string for the message (`int16`, `uint16, then 144..31681`, ...);
+- `typeName` and `property`, the `WORD_INTEGER_STORAGE` key pair the report comes from, and `storage`, the entry itself
+  (added 2026-10-27 at core-ts's ask). An element's name alone does not give its class (`CTBorder` is `w:top`, `w:bdr`
+  and every other border; `TblWidth` is `w:tblW`, `w:tcW`, ...), so without these a consumer wanting the range Word keeps
+  had to find the entry back from `wordReads.storage`'s prose, which core-ts's CR-017 P2 and P3 did against 0.6.0;
+- `rule`, for an attribute whose sign carries one (`storage.signRule`), the `lineRule` or `hRule` the tree holds beside
+  it, undefined when absent. On save the report arrives as the attribute is written, so the element in it does not yet
+  carry a later attribute (`w:lineRule` is written after `w:line`); `rule` says what it will.
 
 `onWordReading` and `onNormalised` are not used. Their records say what the tree holds instead of the text, and what a
 save rewrote, and here neither changes.
@@ -259,7 +265,17 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
 
 - **core-ts:** its content API's setters can refuse with the exported table, as docx4j-python's CR-022 does at its
   setters. It can also map `onOutOfRange` to part warnings beside its `ValueKeptWarning`. That is its own CR.
-- **docx4j:** CR-066 is the counterpart. It cites this CR in its section 8 when its phase 1 is designed.
+- **docx4j:** CR-066 is the counterpart. Its phase 4 (docx4j 338beec18, 2026-10-27) holds the shared table as one TSV
+  resource, `docx4j-core/.../model/text/word-integer-storage.tsv` (118 rows by element and attribute, with a deciding
+  sibling attribute as context), read by its inspector and its Python oracle. Compared with `WORD_INTEGER_STORAGE` the
+  same day: no storage or range differs where both are measured. The differences are of claim, not evidence: the TSV
+  ignores a `TblWidth` under `type="auto"` or `nil`, which this table has no context for and so reports; this table
+  carries the type's width to `w:fitText` (int32; the TSV ignores it), `w:legacy/@w:legacyIndent` (int16 by type; the
+  TSV ignores both, since Word drops the element) and the settings' `drawingGrid*` and a frameset splitbar (uint16 by
+  type; the TSV holds them unmeasured); this table covers `w:checkBox/w:size` (`HpsMeasure`) by type, and the TSV gained
+  that row from the comparison. Whether Word drops a literal `w:trHeight` of 0 under `atLeast` is unmeasured on both
+  sides (CR-066 section 3.1); both keep it as written. Read-side leniency recorded as such: a uint16 written -1 (`w:spacing` `before`/`after`, five page
+  margins) is kept, since Word writes 65535 so. This package keeps its three structures and maps to the TSV's tokens.
 - **docx4j-python:** CR-022. It refuses a negative in a schema-unsigned attribute at its setters; this CR refuses only
   where its own builders take a measure (G4).
 
@@ -268,3 +284,5 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
 - **Changes:** new API (the table, its function, `onOutOfRange`), and the builders throw where they wrote a wrong
   number before.
 - **Version:** under Jason's rule, a minor: released in 0.6.0 (2026-10-26) with CR-014 and CR-015.
+- **The entry on the report** (2026-10-27): four fields added to `OutOfRange`, nothing removed or changed in meaning. A
+  patch, under Jason's rule; core-ts drops its lookup on the prose when a release has it.

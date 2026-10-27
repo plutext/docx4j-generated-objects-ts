@@ -8,7 +8,7 @@ import type { DocumentElement, P } from '@docx4j/generated-objects-ts/modules/or
 import { createP, createPElement } from '@docx4j/generated-objects-ts/factory/org_docx4j_wml';
 import * as el from '@docx4j/generated-objects-ts/el/org_docx4j_wml';
 import { p, r, textOf, find } from '@docx4j/generated-objects-ts/builders/wml';
-import { isCustomStyle, highlightHexValue, wordColor, WORD_COLOR_NAMES, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading } from '@docx4j/generated-objects-ts/helpers/wml';
+import { isCustomStyle, highlightHexValue, wordColor, WORD_COLOR_NAMES, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading, type WordIntegerStorage } from '@docx4j/generated-objects-ts/helpers/wml';
 
 export async function consume(xml: string): Promise<string> {
   const doc = unwrap(await unmarshalString<DocumentElement>(xml));
@@ -30,6 +30,11 @@ export async function consume(xml: string): Promise<string> {
   const ranges: OutOfRange[] = [];
   void unmarshalString('<w:p/>', { onOutOfRange: (r) => ranges.push(r) });
   void marshalString(createPElement(createP()), { onOutOfRange: (r) => void r.path });
+  // The entry on the report (2026-10-27): the key pair finds it back in the table, and the entry is the table's type.
+  const entry: WordIntegerStorage | undefined = ranges[0] && WORD_INTEGER_STORAGE[ranges[0].typeName]?.[ranges[0].property];
+  const reported: WordIntegerStorage | undefined = ranges[0]?.storage;
+  const rule: string | undefined = ranges[0]?.rule;
+  void [entry, reported, rule];
   const reading: WordIntegerReading | undefined = wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001);
   const measured: boolean | undefined = WORD_INTEGER_STORAGE['org_docx4j_wml.PPrBase.Ind']?.['left']?.measured;
   const color: string | undefined = wordColor(WORD_COLOR_NAMES.red);

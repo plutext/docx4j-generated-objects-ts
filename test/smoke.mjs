@@ -1128,13 +1128,25 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.deepEqual(read.map((r) => [r.element.localName, r.attribute.localPart, r.value, r.wordReads.value, r.wordReads.rule]).sort(), [
     ['ind', 'left', 7205001, -3959, undefined], ['spacing', 'after', 70000, 4464, undefined], ['spacing', 'line', 65535, 1, 'atLeast'],
   ]);
+  // Each report names the table entry it comes from (core-ts's ask, 2026-10-27): the key pair, the entry itself, and
+  // the rule the tree holds beside a sign-carried attribute, so a consumer need not find the entry back from the prose.
+  const entryOf = (r) => [r.typeName, r.property, r.storage === WORD_INTEGER_STORAGE[r.typeName][r.property], 'rule' in r ? r.rule : '(absent)'];
+  const expectedEntries = [
+    ['org_docx4j_wml.PPrBase.Ind', 'left', true, '(absent)'], ['org_docx4j_wml.PPrBase.Spacing', 'after', true, '(absent)'],
+    ['org_docx4j_wml.PPrBase.Spacing', 'line', true, 'exact'],
+  ];
+  assert.deepEqual(read.map(entryOf).sort(), expectedEntries, 'on read: the entry, by identity, and the rule written');
   const pPr = unwrap(tree).body.content[0].value.pPr;
   assert.deepEqual([pPr.ind.left, pPr.spacing.after, pPr.spacing.line], [7205001, 70000, 65535], 'held as written');
   pPr.spacing.before = 70000; // set by code
   for (const normaliseOnSave of [true, false]) {
     const saved = [];
-    const xml = await marshalString(tree, { normaliseOnSave, onOutOfRange: (r) => saved.push([r.path, r.value]) });
+    const savedReports = [];
+    const xml = await marshalString(tree, { normaliseOnSave, onOutOfRange: (r) => { saved.push([r.path, r.value]); savedReports.push(r); } });
     assert.ok(xml.includes('w:left="7205001"') && xml.includes('w:before="70000"'), 'never rewritten');
+    assert.deepEqual(savedReports.map(entryOf).sort(), [...expectedEntries, ['org_docx4j_wml.PPrBase.Spacing', 'before', true, '(absent)']].sort(),
+      `on save, normaliseOnSave ${normaliseOnSave}: the entry and the rule, though w:lineRule is written after w:line`);
+    assert.ok(savedReports.every((r) => r.property === r.attribute.localPart && r.storage.measured === true));
     assert.deepEqual(saved.sort(), [
       ['/w:document/w:body[1]/w:p[1]/w:pPr[1]/w:ind[1]/@w:left', 7205001],
       ['/w:document/w:body[1]/w:p[1]/w:pPr[1]/w:spacing[1]/@w:after', 70000],

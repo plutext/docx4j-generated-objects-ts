@@ -255,7 +255,8 @@ from docx4j CR-066's round 5): int16, uint16, 8 or 5 bits, or int32, with clamps
 rule in the sign for exact lines and row heights. `wordIntegerReading` gives what Word reads for a value.
 - **The report:** the facade's `onOutOfRange` reports each value Word would read differently, on read (through the
   composed unmarshal `onElement`) and on save (an adapter on `onAttributeValue`, outside the normaliser). It never
-  rewrites.
+  rewrites. Each report carries the table entry it comes from (`typeName`, `property`, `storage`) and the rule held
+  beside a sign-carried attribute (core-ts's ask, 2026-10-27), since an element's name does not give its class.
 - **Why per attribute:** docx4j's type-bound print method can be exact only per type, but the adapters know the class
   and the property, so this report is exact per attribute.
 - **The builders** throw a `RangeError` for a width or size Word can't hold.

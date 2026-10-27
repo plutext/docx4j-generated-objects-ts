@@ -267,7 +267,9 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   and reads anything wider modulo it, sometimes then clamped. For example, `w:ind/@w:left="7205001"`
   reads as `-3959`, and `w:pgSz/@w:w="40000"` as `31681`. It neither refuses nor repairs the document.
   `onOutOfRange`, an unmarshal and a marshal option, receives each value Word would read differently,
-  with what Word reads. The value is never rewritten: the tree keeps it, and a save writes it as held.
+  with what Word reads, the `WORD_INTEGER_STORAGE` entry it comes from (`typeName`, `property`, `storage`)
+  and the `lineRule` or `hRule` beside it where the sign carries one. The value is never rewritten: the
+  tree keeps it, and a save writes it as held.
   `helpers/wml`'s `WORD_INTEGER_STORAGE` and `wordIntegerReading` give Word's storage per attribute, as
   docx4j CR-066's round 5 measured it, which `test/word365-ranges.mjs` reads against Word's saves. The
   builders throw a `RangeError` for a table or cell width outside 0 to 32767 twips, and for a run size
