@@ -109,8 +109,6 @@ export interface Misplacement {
 /** What the facade knows from the context: the class a list, or the context globally, declares for a name, and subtyping. */
 export interface Declarations {
   declared(containerType: string, list: string, name: { namespaceURI: string; localPart: string }): string | undefined;
-  /** Whether the list itself names the element, as against the context declaring it globally. */
-  listDeclares(containerType: string, list: string, name: { namespaceURI: string; localPart: string }): boolean;
   isA(type: string, base: string): boolean;
 }
 
@@ -224,13 +222,10 @@ function refusalMessage(container: Container, containerType: string, child: Chil
  * refuses, sdt content directly in sdt content, or a name and value that disagree. With `declarations` (the facade's,
  * from the context) the name rule is tested for every child; without (the builders), for `w:sdt` alone.
  */
-export function misplacement(containerType: string, item: unknown, declarations?: Declarations, lenient = false): Misplacement | undefined {
+export function misplacement(containerType: string, item: unknown, declarations?: Declarations): Misplacement | undefined {
   const container = CONTAINERS[containerType];
   if (container === undefined) return undefined;
   const child = childOf(item);
-  // Lenient (a branch's child, or a child below one, typed by a global declaration rather than by its real level): a
-  // child the container's list names is legal there whatever class the runtime gave it.
-  if (lenient && declarations && child.name && declarations.listDeclares(containerType, container.list, child.name)) return undefined;
   const reported = (rule: MisplacedRule, message: string): Misplacement => ({
     rule, message, child: child.text || !child.name ? '#text' : child.name, ...(child.type ? { childType: child.type } : {}),
   });

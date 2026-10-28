@@ -1,18 +1,18 @@
 # CR-018: A content control in a kept `mc:AlternateContent` branch, typed at its host's level
 
-**Status:** Accepted 2026-10-28, B1 to B4 as recommended (Jason: "CR-018 decisions as recommended"); not yet
-implemented. It waits on jsonix-CR-014's release, `@docx4j/jsonix` 3.11.0, and is for 0.7.0 with CR-017 (section 9).
+**Status:** Implemented 2026-10-28 on `@docx4j/jsonix` 3.11.0, unreleased, for 0.7.0 with CR-017 (sections 9 and 10).
+Accepted the same day, B1 to B4 as recommended (Jason: "CR-018 decisions as recommended"; "then implement CR-018").
 Proposed the same day, and revised before the decision to take a runtime hook for both B1 and B2 (Jason: "B2 if it
 would be neater to ask for a jsonix change, we can do that"). The hook was prototyped, then measured against jsonix's
 candidate (section 4.1).
 **Requested by:** Jason, 2026-10-28 ("write the CR please"). The gap came up while CR-017's branch fix was being
 implemented (202b58d). docx4j-12 then answered that docx4j isn't exposed, so the mistyping is this package's own
 (CR-017 section 3, d4d34d2).
-**Depends on:** jsonix-CR-014, `@docx4j/jsonix` 3.11.0. It adds `wildcardTypeInfo`, a per-call option through which a
-caller declares the type of an element a wildcard holds, on unmarshal and on marshal (section 4.1). Its W1 to W3 are
-decided, and it is implemented as the 3.11.0 candidate, which objects' downstream check passed on 2026-10-28; it is
-unreleased. The fallback not taken (B1 (b), B2 (b)) would have needed nothing new. B3 changes CR-017, which is
-implemented and unreleased.
+**Depends on:** jsonix-CR-014, `@docx4j/jsonix` 3.11.0 (released 2026-10-28, tag 222c2bd). It adds `wildcardTypeInfo`,
+a per-call option through which a caller declares the type of an element a wildcard holds, on unmarshal and on marshal
+(section 4.1). objects' downstream check of its candidate passed the same day, and the published `jsonix-factory.js` is
+byte-identical to the bytes tested. The fallback not taken (B1 (b), B2 (b)) would have needed nothing new. B3 changes
+CR-017, which is implemented and unreleased.
 **Counterparts:**
 - docx4j CR-051 section 11.3 (`McBranchSdt`, 17.3.4, phase 1, 2026-10-20) is the same fix in Java. docx4j binds a
   `w:sdt` directly in a branch by the kind its container asks for (section 3). The route decided is the same
@@ -35,7 +35,7 @@ class is told the wrong level. And CR-017 has to allow for the wrong class when 
 docx4j fixed the same gap in its CR-051 section 11.3, by binding such a control by its container's kind. This CR does
 the same here:
 - **The runtime** resolves an element a wildcard holds through one lookup, on each side. jsonix-CR-014's
-  `wildcardTypeInfo` would let a caller answer first.
+  `wildcardTypeInfo` lets a caller answer first.
 - **The facade's answer:** a `w:sdt` directly in a branch is declared as its host's level asks (`SdtRun`, `CTSdtRow` or
   `CTSdtCell`).
 - **On read,** the control and everything below it are then typed by the right lists from the start.
@@ -148,13 +148,16 @@ where it chooses (section 4.1), so a hook there does in one step what docx4j doe
 
 Unset, nothing changes and nothing is called.
 
-**The facade's answer** is a name test, then CR-017's `effectiveContainer` walk over the ancestors:
+**The facade's answer** is a name test, then a walk over the ancestors (`branchSdtType`, `src/branches.mts`, the walk
+CR-017's `effectiveContainer` made):
 - Only a `w:sdt` whose parent is an `mc:Choice` or `mc:Fallback` is answered.
 - **Skipped in the walk:** `mc:Choice`, `mc:Fallback`, `mc:AlternateContent`, `w:sdt`, `w:sdtContent` and
   `w:customXml`.
-- **Fixing the level:** a paragraph, a hyperlink, a simple field, `w:ins`/`w:del`, a smart tag, `w:dir` or `w:bdo` is
-  run level; a table is row level; a row is cell level; the body, a cell, a text box, a header, a footer, a note or a
-  comment is block level.
+- **Fixing the level (`HOST_LEVEL`):** a paragraph, a hyperlink, a simple field, `w:ins`/`w:del`,
+  `w:moveFrom`/`w:moveTo`, a smart tag, `w:dir` or `w:bdo` is run level; a table is row level; a row is cell level; the
+  body, a glossary's `w:docPartBody`, a cell, a text box, a header, a footer, a note or a comment is block level. That
+  is every element whose list declares `w:sdt`, at the level of the class it declares, but `w:sdtContent` and
+  `w:customXml`, whose level is their host's (measured from the context; the smoke holds it so).
 - The answer is that level's class: `SdtBlock`, `SdtRun`, `CTSdtRow` or `CTSdtCell`.
 
 On read the control is then typed by that class, its content by that class's `sdtContent`, and what is below by those
@@ -193,8 +196,8 @@ It is always on, through every facade read and save:
 - `unmarshalString`, `unmarshalNode` and `unmarshalPackage`, and `wml`, which reads through `unmarshalNode`;
 - `marshalString`, `marshalNode` and `marshalPackage`.
 
-A caller's own option of the same name would be asked first, as CR-013's normaliser asks a caller's adapters first. The
-cost is a name test per element a wildcard holds.
+A caller's own option of the same name is asked first, as CR-013's normaliser asks a caller's adapters first. The cost
+is a name test per element a wildcard holds.
 
 ### 4.2 The fallback, not taken: without a runtime change (B1 (b), B2 (b))
 
@@ -359,9 +362,34 @@ core-ts reruns its survey (35 reports expected, all from check 72) and its reade
 
 A minor, since classes and `textOf`'s output change where the form occurs. It rides in 0.7.0 with CR-017 (B4 (a)), and
 the floor of `@docx4j/jsonix` rises to ^3.11.0 (B1 (a)). The order:
-1. jsonix releases 3.11.0;
-2. this CR is implemented, with the floor raised and the lockfile updated;
+1. jsonix releases 3.11.0 (done 2026-10-28);
+2. this CR is implemented, with the floor raised and the lockfile updated (done 2026-10-28, section 10);
 3. core-ts reruns its suite and survey against `main`, and says go (RELEASING.md, and Jason's rule);
 4. 0.7.0 is released.
 
 0.6.1 (73b9606) can still be cut alone before then.
+
+## 10. Implemented (2026-10-28)
+
+B1 to B4 as recommended, on `@docx4j/jsonix` 3.11.0 (`package.json` ^3.11.0; the lockfile at 3.11.0, whose
+`jsonix-factory.js` has sha256 `906bc9f2...7061d`):
+- **`src/branches.mts`** (internal, not an exported path): `HOST_LEVEL`, `SDT_AT_LEVEL` and `branchSdtType(name,
+  parent)`, which gives the class for a `w:sdt` whose parent is an `mc:Choice` or `mc:Fallback`, and nothing for any
+  other element.
+- **The facade** (`src/index.mts`): `branchTypes` composes a caller's `wildcardTypeInfo` first, then the facade's
+  answer, with the type info looked up on the context the unmarshaller or marshaller came from. It is passed by every
+  facade read (`recordingOptions`, which now takes the context: `unmarshalString`, `unmarshalNode`, `unmarshalPackage`,
+  and so `wml`) and every facade save (`marshalToDocument`: `marshalString`, `marshalNode`, `marshalPackage`).
+- **B3:** `LEVEL_OF`, `BY_LEVEL` and `effectiveContainer` are gone from the facade. So is `testList`'s and
+  `misplacement`'s `lenient` parameter, with `Declarations.listDeclares`, which only it used. A branch's children are
+  tested as the host's own, on read and on save.
+- **The smoke** gains section 7's CR-018 block. In it, `HOST_LEVEL` is held to the context, and `w:sdt` is checked to
+  be the only name a CR-017 list declares otherwise than the global declaration. CR-017's existing branch cases pass
+  unchanged without the allowances. A block-level control built into a paragraph's Choice is reported on save with
+  docx4j's message, and written with `xsi:type="w:SdtBlock"`, the mapping's name for the type.
+- **The gate:** `npm run typecheck` and `npm test` pass. Every fidelity part's marshalled hash (341 parts, 333
+  marshalled) is identical to the build before this CR on 3.10.0. `npm pack` gains `dist/branches.mjs` and its
+  declarations, 851 files.
+
+Also measured through the facade, beside the smoke: each form's save is byte-identical to the 3.10.0 build's save of
+the same input, and stable when read and saved again.

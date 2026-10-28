@@ -324,7 +324,10 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   declared beyond docx4j's roots (CR-017): `w:instrText`, `w:delInstrText`, `w:object`, `w:ruby`,
   `w:footnoteReference`, `w:endnoteReference`, `w:dir`, `w:bdo` and `w:subDoc`. Without them, one of these
   misplaced (a field instruction straight in a paragraph) would fail the read of its whole part; with them it
-  reads typed, is kept, and `onMisplaced` reports it.
+  reads typed, is kept, and `onMisplaced` reports it. A content control directly in a branch is typed at its host's
+  level (CR-018): the global `w:sdt` is block-level, so the facade declares a branch's `w:sdt` as its host's list
+  does, through `@docx4j/jsonix` 3.11.0's `wildcardTypeInfo`. A run-level control in a paragraph's `mc:Choice`
+  reads as `SdtRun`, as docx4j binds it, and is saved with no `xsi:type`.
 - **Namespace prefixes**: the context uses docx4j's prefix table, exported as `NAMESPACE_PREFIXES`
   (namespace URI to prefix: `w`, `w14`, `mc`, `r`, `a`, `pkg`, ...), so marshalled XML reads as
   Word writes it. The facade's marshal functions declare on the root element the namespaces the

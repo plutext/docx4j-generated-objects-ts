@@ -12,13 +12,14 @@ code: a facade with docx4j's names (`index.mts`), the module registry (`modules.
 mapping declaring globally the 61 WordprocessingML elements docx4j declares as roots, so kept `mc` branches type their
 `w:drawing`/`w:pict`, and nine more beyond docx4j's roots, CR-017 M7, so a misplaced one reads typed; `getContext` and
 `modulesFor` add it), `misplaced.mts` (CR-017, internal: docx4j CR-064's `checkParent` sets and messages, which the
-facade's `onMisplaced` reports and the builders refuse with), `helpers/wml.mts` (per-type docx4j decisions,
+facade's `onMisplaced` reports and the builders refuse with), `branches.mts` (CR-018, internal: the level each host
+gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.10.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0; `onUnexpectedText`, which CR-017's `'#text'` read report goes through, jsonix-CR-013, 3.10.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.11.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0; `onUnexpectedText`, which CR-017's `'#text'` read report goes through, jsonix-CR-013, 3.10.0; `wildcardTypeInfo`, through which CR-018 types a branch's content control at its host's level, jsonix-CR-014, 3.11.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -109,6 +110,12 @@ There are eight tests and no test framework:
   throw, a callback's throw, the name rule (and the class rule first), and sdt content in sdt content. On read it checks
   the same file, property elements absorbed, mc branches by their host's set, M7's `w:instrText`, and core-ts's
   check 72 forms.
+  CR-018's block holds `branches.mts`'s `HOST_LEVEL` to the context, and checks that `w:sdt` is the only name a CR-017
+  list declares as another class than the global declaration gives. It reads each level's form (a run-level control
+  with nested custom XML and a control, row, cell, block, a branch in a branch's control, a control below a paragraph
+  in a branch) and checks `textOf`, a save canonically equal to the source with no `xsi:type`, `PARENT`, a caller's
+  `onElement` and answer coming first, and a nested Choice's CR-011 record. A block-level control built into a
+  paragraph's Choice is reported, and written with its `xsi:type`.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -291,9 +298,21 @@ CR-017 (implemented 2026-10-28, M1 to M7 as recommended) refuses and reports mis
   misplaced one reads typed rather than failing its part. docx4j called the divergence harmless.
 - **CR-064's addendum** (docx4j ce87ec6d7, mirrored): deleted text and a tab refused where text and a break are, and
   a content control at the wrong level by class in every set.
-- **Branches:** a kept `mc:Choice` types its children by their global declarations (the global `w:sdt` is
-  block-level), so a branch's children are tested leniently, legal if the host's list names them, and sdt content or
-  custom XML below a branch is tested at the level the branch's host gives (`effectiveContainer`).
+- **Branches:** an `mc:AlternateContent` branch's children are tested as its host's own, by class and by the name rule
+  against the host's list. A branch's `w:sdt` is typed at its host's level (CR-018), so its class can be trusted; the
+  leniency and effective level CR-017 first had for the mistyping are retired.
+
+CR-018 (implemented 2026-10-28, B1 to B4 as recommended) types a content control in a kept `mc:AlternateContent` branch
+at its host's level, as docx4j CR-051 section 11.3 (`McBranchSdt`) binds it:
+- **The gap:** a branch's content is a lax wildcard, so the runtime types each child by its global declaration, and the
+  global `w:sdt` is `SdtBlock`. A run-level control in a paragraph's `mc:Choice` read block-level with everything below
+  it, and `textOf` left out its text.
+- **The fix:** every facade read and save passes jsonix-CR-014's `wildcardTypeInfo` (3.11.0), a caller's own answer
+  first. The facade answers for a `w:sdt` directly in an `mc:Choice` or `mc:Fallback` with the class its host's level
+  calls for (`branchSdtType` and `HOST_LEVEL`, `src/branches.mts`, held to the context by the smoke). On read the
+  control is typed by the host's lists from the start; on save the declaration matches the value, so no `xsi:type` is
+  written. The type info comes from the context in use, since the runtime compares it by identity.
+- **The gate:** every fidelity part's marshalled hash is identical to before.
 
 ## What the declarations promise
 

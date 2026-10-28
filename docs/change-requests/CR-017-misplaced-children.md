@@ -1,6 +1,6 @@
 # CR-017: Misplaced children: refused by the builders, reported on read and on save
 
-**Status:** Implemented 2026-10-28, unreleased (section 10), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0; M1 to M7 decided as recommended (Jason: "CR-017
+**Status:** Implemented 2026-10-28, unreleased (section 10), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0, its two branch allowances retired the same day by CR-018, which types a branch's `w:sdt` at its host's level; M1 to M7 decided as recommended (Jason: "CR-017
 decisions as recommended; commit then implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064
 phase 1's code (befc57371), core-ts CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
 **Requested by:** Jason, 2026-10-26 ("a CR for checking misplaced children (in the builders or as a validation pass)
@@ -148,29 +148,26 @@ docx4j's message, and the name rule keeps the cases no set covers (a control in 
 element it reads by its name, so a file read always agrees, and this rule catches code only. The class rule is tested
 first, as docx4j tests the value a `JAXBElement` wraps: a `w:p` whose value is a run, in the body, is a misplaced run.
 
-**`mc:AlternateContent`'s branches** are tested by their host's set (core-ts D3): a kept `mc:Choice` or `mc:Fallback`
-in a paragraph is tested as run-level content. The runtime types a branch's children by their global declarations, not
-by the host's list, and the global `w:sdt` is the block-level class. So a legal run-level control in a paragraph's
-`mc:Choice` is typed block-level, and so is everything below it: its content is block-level sdt content, and a control
-or custom XML inside that is block-level again. As first implemented (bb18596) that made a legal document report twice,
-the control on the name rule and its runs as misplaced in block-level content; neither corpus holds the form. Fixed
-2026-10-28, while mirroring the addendum:
-- **Leniently:** a branch's child is legal if the host's own list names its element, whatever class the runtime gave
-  it. One the list doesn't name is tested by its class as usual, so a `w:p` in a run's branch is still refused.
-- **At the effective level:** sdt content or custom XML whose path up to the element that fixes its level (a
-  paragraph, a cell, a table, a row, ...) crosses a branch is tested as that level's class, leniently in the same way.
-  So a paragraph inside that run-level control is reported, as misplaced in run-level sdt content.
+**`mc:AlternateContent`'s branches** are tested by their host's set (core-ts D3). A kept `mc:Choice` or `mc:Fallback`
+in a paragraph is tested as run-level content, its children as the paragraph's own: by class against the paragraph's
+set, and by the name rule against the paragraph's list. The runtime types a branch's children by their global
+declarations, and the global `w:sdt` is the block-level class. Since CR-018 (2026-10-28) the facade declares a
+branch's `w:sdt` at its host's level, through jsonix-CR-014's `wildcardTypeInfo`. So a run-level control in a
+paragraph's `mc:Choice` reads as `SdtRun`, with everything below it typed by the run-level lists, as docx4j's CR-051
+section 11.3 binds it. Every other element a host's list names has the same class globally, or isn't declared globally
+and stays DOM (CR-018 section 2.1), so a branch's classes can be trusted.
 
-Elsewhere the runtime types each element by the list it stands in, so a file read outside a branch needs neither.
+Before CR-018 the mistyping needed two allowances:
+- **As first implemented (bb18596),** a legal run-level control in a paragraph's `mc:Choice` reported twice: the control
+  on the name rule, and its runs as misplaced in block-level content. Neither corpus holds the form.
+- **202b58d added two allowances:** a branch's child was legal if the host's list named it, whatever class the runtime
+  gave it; and sdt content or custom XML below a branch was tested at the level its host gave.
+- **CR-018 retired both.** They existed only for the mistyping, and the first hid a real mistake: a block-level control
+  that code puts in a paragraph's branch went unreported. It is reported now, as outside a branch.
 
-docx4j isn't exposed (measured by docx4j-12, 2026-10-28, its loads in both `docx4j.jaxb.mc.onLoad` modes): its CR-051
-section 11.3, `McBranchSdt` (17.3.4), takes a `w:sdt` directly in a branch out of the lax list and binds it by the
-kind its container asks for, so a paragraph's branch holds an `SdtRun`. The mistyping itself is therefore this
-package's gap, the counterpart of that section, and not CR-017's: CR-017 only allows for it. It has a cost beyond the
-report. `textOf` reads a paragraph's run-level controls but not a block-level one, so the text of a run-level control
-in a paragraph's `mc:Choice` is left out ("before  after" where the same control outside a branch gives "before IN
-CONTROL after"; measured 2026-10-28). Typing it as docx4j does is CR-018 (proposed 2026-10-28), which would retire
-both allowances.
+docx4j-12 measured that docx4j wasn't exposed, since its `McBranchSdt` (17.3.4) binds such a control by its container's
+kind. The mistyping was this package's own gap, with a cost beyond the report: `textOf` left out a run-level control's
+text in a paragraph's `mc:Choice` ("before  after", where "before IN CONTROL after" is right).
 
 **The messages** are docx4j's (core-ts D4), one wording across the ports, with the element name where docx4j names a
 Java class: "You can't add a run (w:r) directly to a table cell (w:tc); add it to a paragraph (w:p) and add that." The
@@ -446,10 +443,12 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   first and last positions. core-ts's rerun at 2b87bdf gives 35 reports, the 34 before and 72m's one on read, and no
   real file in its corpus holds such a string.
 - **CR-064's addendum and the branch fix** (2026-10-28): the sets and messages of docx4j's ce87ec6d7 (section 3), and
-  branch children tested leniently, with sdt content and custom XML below a branch at the level the branch's host gives
-  (section 3). The smoke checks the new refusals in the builders and on save, each message as docx4j words it, and the
-  branch cases: a run-level control, and a control and custom XML nested in it, in a paragraph's `mc:Choice` report
-  nothing; a paragraph inside that control does. Fidelity reports none, and all 342 marshalled parts are byte-identical.
-  core-ts's rerun at 202b58d gives the same 35 reports as at 2b87bdf, report for report, over its 9,075 parts.
+  branch children tested leniently, with sdt content and custom XML below a branch at the level the branch's host gave.
+  CR-018 retired both allowances the same day, once a branch's `w:sdt` was typed at its host's level, and the branch
+  cases below stand without them (section 3). The smoke checks the new refusals in the builders and on save, each
+  message as docx4j words it, and the branch cases: a run-level control, and a control and custom XML nested in it, in a
+  paragraph's `mc:Choice` report nothing; a paragraph inside that control does. Fidelity reports none, and all 342
+  marshalled parts are byte-identical. core-ts's rerun at 202b58d gives the same 35 reports as at 2b87bdf, report for
+  report, over its 9,075 parts.
 - **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
   Jason's.

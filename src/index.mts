@@ -7,6 +7,7 @@ import { MODULES } from './modules.mjs';
 import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
 import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading, type WordIntegerStorage } from './helpers/wml.mjs';
 import { CONTAINERS, misplacement, alternateContentOf, branchItems, type Declarations, type Misplacement, type MisplacedRule } from './misplaced.mjs';
+import { branchSdtType } from './branches.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -366,7 +367,7 @@ export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.
 ): Promise<E> {
   const context = await getContext();
   const doc = Jsonix.DOM.parse(xml);
-  return recordRootBindings(doc, context.createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(doc));
+  return recordRootBindings(doc, context.createUnmarshaller(recordingOptions(context, options)).unmarshalDocument<E>(doc));
 }
 
 /**
@@ -456,7 +457,8 @@ export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, 
 export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
   node: Node, options?: UnmarshalOptions,
 ): Promise<E> {
-  return recordRootBindings(node, (await getContext()).createUnmarshaller(recordingOptions(options)).unmarshalDocument<E>(node));
+  const context = await getContext();
+  return recordRootBindings(node, context.createUnmarshaller(recordingOptions(context, options)).unmarshalDocument<E>(node));
 }
 
 /** docx4j XmlUtils.marshaltoW3CDomDocument: the element as a DOM element, with docx4j's prefixes and namespace declarations. */
@@ -508,15 +510,31 @@ function choiceBindingsAt(element: Element): Map<string, string> | undefined {
 }
 
 /**
+ * jsonix-CR-014's `wildcardTypeInfo` for one call (CR-018): a caller's answer first, then the facade's, which declares a
+ * `w:sdt` directly in a kept `mc:Choice` or `mc:Fallback` as its host's list does (`branchSdtType`). The type info comes
+ * from `context`, the one the unmarshaller or marshaller was created from, since the runtime compares it with a value's
+ * class by identity on save.
+ */
+function branchTypes<Last>(context: Jsonix.Context, caller: ((name: Jsonix.XML.QName, parent: Element, propertyInfo: Jsonix.PropertyInfo, classInfo: Jsonix.ClassInfo, last: Last) => Jsonix.TypeInfo | null | undefined) | undefined) {
+  return (name: Jsonix.XML.QName, parent: Element, propertyInfo: Jsonix.PropertyInfo, classInfo: Jsonix.ClassInfo, last: Last): Jsonix.TypeInfo | null | undefined => {
+    const answer = caller?.(name, parent, propertyInfo, classInfo, last);
+    if (answer !== undefined && answer !== null) return answer;
+    const type = branchSdtType(name, parent);
+    return type === undefined ? undefined : context.getTypeInfoByName(type);
+  };
+}
+
+/**
  * The unmarshaller options with this package's `onElement` (jsonix-CR-008) composed in front of the
  * caller's: each typed mc:Choice records its source-only bindings as it is built. And
  * `wordInvalidValue` as the `onInvalidValue` (CR-013), unless the caller passes one, reporting to
  * `onWordReading` when the caller asks; with it, jsonix-CR-012's `strictIntegers` (CR-015 phase 2),
  * so that an integer the runtime's `Number()` would read (`" 240 "`, `0x10`, `""`) reaches Word's
  * rule. A caller's own `onInvalidValue` keeps the runtime's reading unless it asks for
- * `strictIntegers` too.
+ * `strictIntegers` too. And jsonix-CR-014's `wildcardTypeInfo`, a caller's answer first: a `w:sdt`
+ * directly in a kept branch is read at its host's level (CR-018).
  */
-function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
+function recordingOptions(context: Jsonix.Context, options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
   const { onWordReading, onOutOfRange, onMisplaced, ...runtimeOptions } = options ?? {};
   const callerOnElement = runtimeOptions.onElement;
   // CR-017: each typed value's source element, so a report can name a misplaced child's (its onElement comes first);
@@ -542,6 +560,7 @@ function recordingOptions(options?: UnmarshalOptions): Jsonix.UnmarshallerOption
       if (onMisplaced) { sources!.set(value, element); reportMisplacedOnRead(element, value, sources!, dropped!, onMisplaced); }
       callerOnElement?.(element, value);
     },
+    wildcardTypeInfo: branchTypes(context, runtimeOptions.wildcardTypeInfo),
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
     strictIntegers: runtimeOptions.strictIntegers ?? runtimeOptions.onInvalidValue === undefined,
   };
@@ -792,11 +811,6 @@ function declarations(): Declarations {
       cache.set(key, found);
       return found;
     },
-    listDeclares(containerType, list, name) {
-      const property = (context.getTypeInfoByName(containerType) as unknown as { properties?: { name: string; elementTypeInfos?: { elementName: { namespaceURI: string; localPart: string } }[] }[] } | undefined)
-        ?.properties?.find((p) => p.name === list);
-      return property?.elementTypeInfos?.some((e) => e.elementName.namespaceURI === name.namespaceURI && e.elementName.localPart === name.localPart) ?? false;
-    },
     isA(type, base) {
       for (let ti: Jsonix.TypeInfo | undefined = context.getTypeInfoByName(type); ti; ti = ti.baseTypeInfo) if (ti.name === base) return true;
       return false;
@@ -806,56 +820,13 @@ function declarations(): Declarations {
   return result;
 }
 
-const W_NS_ = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-/** The level an ancestor fixes for a content control or custom XML below it. */
-const LEVEL_OF: Readonly<Record<string, 'block' | 'run' | 'row' | 'cell'>> = {
-  body: 'block', tc: 'block', txbxContent: 'block', hdr: 'block', ftr: 'block', footnote: 'block', endnote: 'block', comment: 'block',
-  p: 'run', hyperlink: 'run', fldSimple: 'run', smartTag: 'run', ins: 'run', del: 'run', dir: 'run', bdo: 'run', tbl: 'row', tr: 'cell',
-};
-/** Containers whose class depends on the level they stand at, and that class per level. */
-const BY_LEVEL: Readonly<Record<string, Readonly<Partial<Record<'block' | 'run' | 'row' | 'cell', string>>>>> = Object.fromEntries([
-  ...['SdtContentBlock', 'CTSdtContentRun', 'CTSdtContentRow', 'CTSdtContentCell'].map((t) => [`org_docx4j_wml.${t}`,
-    { block: 'org_docx4j_wml.SdtContentBlock', run: 'org_docx4j_wml.CTSdtContentRun', row: 'org_docx4j_wml.CTSdtContentRow', cell: 'org_docx4j_wml.CTSdtContentCell' }]),
-  ...['CTCustomXmlBlock', 'CTCustomXmlRun'].map((t) => [`org_docx4j_wml.${t}`, { block: 'org_docx4j_wml.CTCustomXmlBlock', run: 'org_docx4j_wml.CTCustomXmlRun' }]),
-]);
-
-/**
- * The class a container is tested as. A kept `mc:Choice` or `mc:Fallback` types its children by their global
- * declarations, and the global `w:sdt` is the block-level class, so a run-level control in a paragraph's branch, and
- * everything below it, is typed block-level. So for sdt content and custom XML whose path up to the element that fixes
- * its level (a paragraph, a cell, a table, a row, ...) crosses a branch, the level is that element's, and its children
- * are tested leniently: one its list names is legal whatever class the runtime gave it. Elsewhere the runtime typed
- * it by the list it stands in, which is right. Undefined: a level with no container of that kind (custom XML in a row).
- */
-function effectiveContainer(typed: string, element: Node): { type: string | undefined; lenient: boolean } {
-  const byLevel = BY_LEVEL[typed];
-  if (byLevel === undefined) return { type: typed, lenient: false };
-  let crossed = false;
-  let n: Node | null = element.parentNode;
-  while (n !== null && n.nodeType === 1) {
-    const e = n as Element;
-    n = e.parentNode;
-    if (e.namespaceURI === MC_NS && (e.localName === 'Choice' || e.localName === 'Fallback' || e.localName === 'AlternateContent')) {
-      crossed ||= e.localName !== 'AlternateContent';
-      continue;
-    }
-    if (e.namespaceURI !== W_NS_) break;
-    if (e.localName === 'sdt' || e.localName === 'sdtContent' || e.localName === 'customXml') continue;
-    const level = LEVEL_OF[e.localName];
-    if (level === undefined || !crossed) break;
-    return { type: byLevel[level], lenient: true };
-  }
-  return { type: typed, lenient: false };
-}
-
 /**
  * Tests a container's list, and each `mc:AlternateContent` branch in it by the container's set, calling `found` with
  * each misplaced child, its index in its own list, and the steps to it from the container (each `name[n]`, from
  * `stepName`; `offset` adds the same-named property elements written before the list).
  */
 function testList(containerType: string, items: readonly unknown[], stepName: (item: unknown) => string | undefined, offset: (step: string) => number,
-  mc: string, found: (misplaced: Misplacement, item: unknown, index: number, via: readonly string[], step: string | undefined) => void, via: readonly string[] = [],
-  lenient = false): void {
+  mc: string, found: (misplaced: Misplacement, item: unknown, index: number, via: readonly string[], step: string | undefined) => void, via: readonly string[] = []): void {
   const context = declarations();
   const seen = new Map<string, number>();
   items.forEach((item, index) => {
@@ -866,13 +837,13 @@ function testList(containerType: string, items: readonly unknown[], stepName: (i
       seen.set(name, n);
       step = `${name}[${n + offset(name)}]`;
     }
-    const misplaced = misplacement(containerType, item, context, lenient);
+    const misplaced = misplacement(containerType, item, context);
     if (misplaced) found(misplaced, item, index, via, step);
     const alternate = alternateContentOf(item);
     if (alternate && step !== undefined) {
-      // A branch's children are typed by their global declarations, not by the host's list: tested leniently.
-      (alternate.choice ?? []).forEach((choice, k) => testList(containerType, branchItems(choice), stepName, () => 0, mc, found, [...via, step!, `${mc}:Choice[${k + 1}]`], true));
-      if (alternate.fallback) testList(containerType, branchItems(alternate.fallback), stepName, () => 0, mc, found, [...via, step, `${mc}:Fallback[1]`], true);
+      // A branch's children are tested as the host's own, its w:sdt typed at the host's level (CR-018).
+      (alternate.choice ?? []).forEach((choice, k) => testList(containerType, branchItems(choice), stepName, () => 0, mc, found, [...via, step!, `${mc}:Choice[${k + 1}]`]));
+      if (alternate.fallback) testList(containerType, branchItems(alternate.fallback), stepName, () => 0, mc, found, [...via, step, `${mc}:Fallback[1]`]);
     }
   });
 }
@@ -931,11 +902,10 @@ function reportDroppedText(container: string, element: Element, items: readonly 
 
 /** The read side (CR-017 section 4.2): a typed container's list, once its value is complete. */
 function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap<object, Element>, dropped: WeakMap<Node, Text[]>, onMisplaced: (report: MisplacedChild) => void): void {
-  const typed = (value as { TYPE_NAME?: string }).TYPE_NAME;
-  const spec = typed === undefined ? undefined : CONTAINERS[typed];
-  if (spec === undefined) return;
-  const { type: container, lenient } = effectiveContainer(typed!, element);
+  const container = (value as { TYPE_NAME?: string }).TYPE_NAME;
   if (container === undefined) return;
+  const spec = CONTAINERS[container];
+  if (spec === undefined) return;
   // The runtime leaves the list unset when it read no element: a string that was the container's only child is still
   // to be reported, so an unset list is an empty one here.
   const listed = (value as Record<string, unknown>)[spec.list];
@@ -950,10 +920,10 @@ function reportMisplacedOnRead(element: Element, value: object, sources: WeakMap
       const childValue = typeof item === 'object' && item !== null ? ((item as { value?: unknown }).value ?? item) : undefined;
       const childElement = isNode(item) ? item as Element : typeof childValue === 'object' && childValue !== null ? sources.get(childValue) : undefined;
       onMisplaced({
-        element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
+        element, container, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
         ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message, ...(childElement ? { childElement } : {}),
       });
-    }, [], lenient);
+    });
   reportDroppedText(container, element, items, [], sources, dropped, table[MC_NS] || 'mc', onMisplaced);
 }
 
@@ -1074,7 +1044,8 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
     }
     callerOnElement?.(written, value);
   };
-  const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement };
+  // CR-018: a branch's w:sdt declared at its host's level, so the runtime writes it with no xsi:type.
+  const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement, wildcardTypeInfo: branchTypes(context, options.wildcardTypeInfo) };
   const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions;
   const ranged = onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised;
   const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, onMisplaced) : ranged)
@@ -1322,22 +1293,21 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
   return {
     ...options,
     onElement(written: Node, value: unknown): void {
-      const typed = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
-      const spec = typed === undefined ? undefined : CONTAINERS[typed];
+      const container = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
+      const spec = container === undefined ? undefined : CONTAINERS[container];
       const items = spec ? (value as Record<string, unknown>)[spec.list] : undefined;
-      const { type: container, lenient } = spec ? effectiveContainer(typed!, written) : { type: undefined, lenient: false };
-      if (spec && container !== undefined && Array.isArray(items)) {
+      if (container !== undefined && spec && Array.isArray(items)) {
         const base = pathOf(written);
         const stepName = (item: unknown): string | undefined => {
           const name = childName(item);
           return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
         };
-        testList(container!, items, stepName, (step) => writtenBefore(value as object, spec.list, step, table), table[MC_NS] || 'mc',
+        testList(container, items, stepName, (step) => writtenBefore(value as object, spec.list, step, table), table[MC_NS] || 'mc',
           (misplaced, item, index, via, step) => onMisplaced({
-            element: written as Element, container: container!, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
+            element: written as Element, container, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
             ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
             path: [base, ...via, ...(step ? [step] : [])].join('/'),
-          }), [], lenient);
+          }));
       }
       onElement?.(written, value);
     },
@@ -1651,7 +1621,8 @@ function declareOnRoot(root: Element, table: Record<string, string>, ignorable: 
  */
 export async function unmarshalPackage(ooxml: string): Promise<PackageElement> {
   const pkg = await unmarshalString<PackageElement>(ooxml);
-  const unmarshaller = (await getContext()).createUnmarshaller(recordingOptions());
+  const context = await getContext();
+  const unmarshaller = context.createUnmarshaller(recordingOptions(context));
   for (const part of pkg.value.part ?? []) {
     const any = part.xmlData?.any;
     if (part.xmlData && isNode(any)) {

@@ -1373,9 +1373,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     ['saved', '/w:p/w:r[1]/mc:AlternateContent[1]/mc:Choice[1]/w:p[1]', 'p'],
   ], "a paragraph in a run's Choice is misplaced; text in its Fallback is not");
 
-  // A kept branch types its children by their global declarations, and the global w:sdt is block-level: a legal run-level
-  // control in a paragraph's Choice, and everything below it, is typed block-level. Tested at the level the branch's host
-  // gives, leniently, so a legal document reports nothing; a real misplacement below it still does.
+  // A run-level control in a paragraph's Choice, and everything below it, is typed at the paragraph's level (CR-018), and
+  // tested as the paragraph's own children are: a legal document reports nothing; a real misplacement below it still does.
   const branchTyped = async (choice) => {
     const reports = [];
     const xml = `<w:document xmlns:w="${W}" xmlns:mc="${MC}"><w:body><w:p><mc:AlternateContent><mc:Choice Requires="w14">${choice}</mc:Choice><mc:Fallback><w:r><w:t>f</w:t></w:r></mc:Fallback></mc:AlternateContent></w:p></w:body></w:document>`;
@@ -1448,4 +1447,96 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.deepEqual(await dropped('<w:p>\n  <w:r>\n    <w:t>a</w:t>\n  </w:r>\n</w:p>'), { reports: [], callerSaw: [] }, 'indentation is not a string');
 
   console.log("CR-017: docx4j CR-064's sets by class with core-ts's name rule, held to the context; p, tc, tr, sdt and wml's interpolation refuse with docx4j's messages; onMisplaced on read and on save (before a container's children, so a string is reported before the runtime's throw), mc branches by their host's set, check 72's 18 forms; a file's string read where none is admitted reported as '#text' (jsonix 3.10.0); M7's nine read typed OK");
+}
+
+// CR-018: a w:sdt directly in a kept mc:AlternateContent branch, typed at its host's level, through jsonix-CR-014's
+// wildcardTypeInfo (3.11.0): read by the host's lists, written with no xsi:type. docx4j CR-051 section 11.3's counterpart.
+{
+  const { HOST_LEVEL, SDT_AT_LEVEL, branchSdtType } = await import('../dist/branches.mjs');
+  const { CONTAINERS } = await import('../dist/misplaced.mjs');
+  const { textOf, walkAll, sdt, p } = await import('../dist/builders/wml.mjs');
+  const { compareCanonically } = await import('./lib/canonical.mjs');
+  const context = await getContext();
+  const all = context.modules.flatMap((m) => m.typeInfos ?? []);
+  const propertiesOf = (ti) => { const out = []; for (let t = ti; t; t = t.baseTypeInfo) out.push(...(t.properties ?? [])); return out; };
+  const LEVEL = Object.fromEntries(Object.entries(SDT_AT_LEVEL).map(([level, type]) => [type, level]));
+
+  // The context: HOST_LEVEL is every element whose list declares w:sdt, at the level of the class it declares there,
+  // but w:sdtContent and w:customXml, whose level is their host's.
+  const sdtLevelOf = new Map();
+  for (const ti of all) for (const property of propertiesOf(ti)) for (const e of property.elementTypeInfos ?? []) {
+    if (e.elementName.namespaceURI === W && e.elementName.localPart === 'sdt') sdtLevelOf.set(ti.name, LEVEL[e.typeInfo.name]);
+  }
+  const hosts = {};
+  const noteHost = (qn, info) => { if (qn?.namespaceURI === W && sdtLevelOf.has(info?.name) && qn.localPart !== 'sdtContent' && qn.localPart !== 'customXml') hosts[qn.localPart] = sdtLevelOf.get(info.name); };
+  for (const m of context.modules) {
+    for (const ti of m.typeInfos ?? []) for (const property of ti.properties ?? []) { noteHost(property.elementName, property.typeInfo); for (const e of property.elementTypeInfos ?? []) noteHost(e.elementName, e.typeInfo); }
+    for (const e of m.elementInfos ?? []) noteHost(e.elementName, e.typeInfo);
+  }
+  assert.deepEqual(Object.fromEntries(Object.entries(hosts).sort()), Object.fromEntries(Object.entries(HOST_LEVEL).sort()), 'HOST_LEVEL is the context\'s');
+  // And w:sdt is the only name a CR-017 container's list declares as another class than the global declaration gives
+  // (the others agree, or aren't global and stay DOM in a branch), so answering for it alone covers every branch.
+  const differing = new Set();
+  for (const [type, spec] of Object.entries(CONTAINERS)) {
+    for (const e of propertiesOf(context.getTypeInfoByName(type)).find((property) => property.name === spec.list)?.elementTypeInfos ?? []) {
+      const global = context.getElementInfo(e.elementName);
+      if (global && global.typeInfo !== e.typeInfo) differing.add(`{${e.elementName.namespaceURI}}${e.elementName.localPart}`);
+    }
+  }
+  assert.deepEqual([...differing], [`{${W}}sdt`], 'w:sdt is the only name a branch would type otherwise than its host');
+  assert.equal(branchSdtType({ namespaceURI: W, localPart: 'p' }, null), undefined, 'only w:sdt is answered');
+
+  const P = (text) => `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
+  const ac = (choice, fallback = '') => `<mc:AlternateContent><mc:Choice Requires="w14">${choice}</mc:Choice><mc:Fallback>${fallback}</mc:Fallback></mc:AlternateContent>`;
+  const docOf = (inner) => `<w:document xmlns:w="${W}" xmlns:mc="${MC}" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" mc:Ignorable="w14"><w:body>${inner}</w:body></w:document>`;
+  const sdtTypes = (tree) => { const types = []; walkAll(unwrap(tree), (v) => { if (/^org_docx4j_wml\.(Sdt(Block|Run)|CTSdt(Row|Cell)|SdtContentBlock|CTSdtContent(Run|Row|Cell)|CTCustomXml(Block|Run|Row|Cell))$/.test(v?.TYPE_NAME ?? '')) types.push(v.TYPE_NAME.replace('org_docx4j_wml.', '')); }); return types; };
+  const forms = {
+    run: [`<w:p><w:r><w:t>before </w:t></w:r>${ac('<w:sdt><w:sdtContent><w:r><w:t>IN CONTROL</w:t></w:r><w:customXml w:element="e"><w:sdt><w:sdtContent><w:r><w:t> NESTED</w:t></w:r></w:sdtContent></w:sdt></w:customXml></w:sdtContent></w:sdt>', '<w:r><w:t>F</w:t></w:r>')}<w:r><w:t> after</w:t></w:r></w:p>`,
+      ['SdtRun', 'CTSdtContentRun', 'CTCustomXmlRun', 'SdtRun', 'CTSdtContentRun'], 'before IN CONTROL NESTED after'],
+    row: [`<w:tbl><w:tr><w:tc>${P('A1')}</w:tc></w:tr>${ac(`<w:sdt><w:sdtContent><w:tr><w:tc>${P('B1')}</w:tc></w:tr></w:sdtContent></w:sdt>`)}</w:tbl>`, ['CTSdtRow', 'CTSdtContentRow']],
+    cell: [`<w:tbl><w:tr><w:tc>${P('A1')}</w:tc>${ac(`<w:sdt><w:sdtContent><w:tc><w:sdt><w:sdtContent>${P('C')}</w:sdtContent></w:sdt></w:tc></w:sdtContent></w:sdt>`)}</w:tr></w:tbl>`,
+      ['CTSdtCell', 'CTSdtContentCell', 'SdtBlock', 'SdtContentBlock']],
+    block: [`${P('before')}${ac(`<w:sdt><w:sdtContent>${P('IN')}</w:sdtContent></w:sdt>`, P('F'))}`, ['SdtBlock', 'SdtContentBlock']],
+    'a branch in a branch\'s control': [`<w:p>${ac(`<w:sdt><w:sdtContent>${ac('<w:sdt><w:sdtContent><w:r><w:t>DEEP</w:t></w:r></w:sdtContent></w:sdt>')}</w:sdtContent></w:sdt>`)}</w:p>`,
+      ['SdtRun', 'CTSdtContentRun', 'SdtRun', 'CTSdtContentRun'], 'DEEP'],
+    'below a paragraph in a branch': [ac(`<w:p><w:sdt><w:sdtContent><w:r><w:t>IN P</w:t></w:r></w:sdtContent></w:sdt></w:p>`, P('F')), ['SdtRun', 'CTSdtContentRun']],
+  };
+  for (const [form, [inner, types, text]] of Object.entries(forms)) {
+    const xml = docOf(inner);
+    const reports = [];
+    const tree = await unmarshalString(xml, { onMisplaced: (report) => reports.push(report.message) });
+    assert.deepEqual(sdtTypes(tree), types, `${form}: read at its host's level`);
+    if (text !== undefined) assert.equal(textOf(unwrap(tree)), text, `${form}: textOf`);
+    const saved = await marshalString(tree, { onMisplaced: (report) => reports.push(report.message) });
+    assert.deepEqual(reports, [], `${form}: nothing misplaced`);
+    assert.ok(!saved.includes('xsi:type'), `${form}: no xsi:type`);
+    const same = compareCanonically(xml, saved);
+    assert.ok(same.equal, `${form}: saved as read (${JSON.stringify(same)})`);
+  }
+
+  // PARENT, a caller's onElement seeing the final class, and a nested Choice's CR-011 record kept through a control.
+  const seen = [];
+  const nested = await unmarshalString(docOf(`<w:p>${ac(`<w:sdt><w:sdtContent><mc:AlternateContent><mc:Choice xmlns:zz9="urn:example:zz9" Requires="zz9"><w:r><w:t>z</w:t></w:r></mc:Choice><mc:Fallback/></mc:AlternateContent></w:sdtContent></w:sdt>`)}</w:p>`),
+    { onElement: (element, value) => { if (element.localName === 'sdt') seen.push(value.TYPE_NAME); } });
+  assert.deepEqual(seen, ['org_docx4j_wml.SdtRun'], "a caller's onElement sees the class the host's level gives");
+  const control = unwrap(nested).body.content[0].value.content[0].value.choice[0].any[0].value;
+  assert.equal(control.sdtContent.PARENT, control, 'PARENT');
+  assert.equal(control.PARENT.TYPE_NAME, 'org_docx4j_mce.AlternateContent.Choice');
+  assert.match(await marshalString(nested), /<mc:Choice xmlns:zz9="urn:example:zz9" Requires="zz9">/, "the nested Choice's source-only prefix is still declared on it (CR-011, CR-012)");
+
+  // A caller's own answer comes first; a control of another class in a branch keeps its xsi:type, and CR-017 reports it
+  // as it would outside a branch (B3: the allowances are retired).
+  const callerTree = await unmarshalString(docOf(`<w:p>${ac('<w:sdt><w:sdtContent><w:r><w:t>x</w:t></w:r></w:sdtContent></w:sdt>')}</w:p>`),
+    { wildcardTypeInfo: (name) => (name.localPart === 'sdt' ? context.getTypeInfoByName('org_docx4j_wml.SdtBlock') : undefined) });
+  assert.deepEqual(sdtTypes(callerTree).slice(0, 1), ['SdtBlock'], "a caller's answer first");
+  const misplacedTree = await unmarshalString(docOf(`<w:p>${ac('<w:sdt><w:sdtContent><w:r><w:t>x</w:t></w:r></w:sdtContent></w:sdt>')}</w:p>`));
+  const choiceItems = unwrap(misplacedTree).body.content[0].value.content[0].value.choice[0].any;
+  choiceItems[0] = sdt([p('a')], { id: 1 }); // a block-level control, built by code, in a paragraph's Choice
+  const misplacedReports = [];
+  const misplacedXml = await marshalString(misplacedTree, { onMisplaced: (report) => misplacedReports.push([report.path, report.message]) });
+  assert.deepEqual(misplacedReports, [['/w:document/w:body[1]/w:p[1]/mc:AlternateContent[1]/mc:Choice[1]/w:sdt[1]',
+    "You can't add a block-level content control (SdtBlock) to a paragraph (w:p); it goes beside a paragraph (in the body, a cell, a header or the like); a run-level content control (SdtRun) goes here."]]);
+  assert.match(misplacedXml, /<w:sdt xsi:type="w:SdtBlock">/, 'written with the xsi:type its class differs by');
+
+  console.log("CR-018: a w:sdt in a kept mc branch typed at its host's level (run, row, cell; nested; HOST_LEVEL held to the context) through jsonix-CR-014's wildcardTypeInfo, saved as read with no xsi:type; textOf reads it; a caller's answer first; CR-017 tests branches as their host's own OK");
 }
