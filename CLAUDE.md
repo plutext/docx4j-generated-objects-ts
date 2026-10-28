@@ -27,13 +27,16 @@ anything needing parts or relationships belongs there.
 ## Commands
 
 ```
-npm ci              # typescript and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
+npm ci              # typescript, esbuild, @xmldom/xmldom and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
 npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
+
+`@xmldom/xmldom` is declared although `@docx4j/jsonix` brings it: five tests import it, and installing a jsonix
+checkout with `npm install --no-save` (jsonix's downstream check) prunes a package nothing here declares.
 
 `test/lib/marshal-hashes.mjs` hashes the marshalled output of every fidelity part for the build
 `OBJECTS_TS_DIST` names, defaulting to `dist/`; `RELEASING.md` step 6 runs it against the published
