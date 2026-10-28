@@ -169,7 +169,8 @@ kind its container asks for, so a paragraph's branch holds an `SdtRun`. The mist
 package's gap, the counterpart of that section, and not CR-017's: CR-017 only allows for it. It has a cost beyond the
 report. `textOf` reads a paragraph's run-level controls but not a block-level one, so the text of a run-level control
 in a paragraph's `mc:Choice` is left out ("before  after" where the same control outside a branch gives "before IN
-CONTROL after"; measured 2026-10-28). Typing it as docx4j does is for its own CR.
+CONTROL after"; measured 2026-10-28). Typing it as docx4j does is CR-018 (proposed 2026-10-28), which would retire
+both allowances.
 
 **The messages** are docx4j's (core-ts D4), one wording across the ports, with the element name where docx4j names a
 Java class: "You can't add a run (w:r) directly to a table cell (w:tc); add it to a paragraph (w:p) and add that." The
