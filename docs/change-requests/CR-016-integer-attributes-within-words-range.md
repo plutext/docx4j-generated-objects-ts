@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in; the table entry added to the report 2026-10-27 (core-ts's ask, section 4.4), unreleased; a numbering level's `w:legacy` left out of the table 2026-10-28 (Jason, for parity with docx4j CR-066's table), unreleased
+**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in; the table entry added to the report 2026-10-27 (core-ts's ask, section 4.4) and a numbering level's `w:legacy` left out of the table 2026-10-28 (Jason, for parity with docx4j CR-066's table), both released in 0.7.0 (2026-10-28)
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -292,4 +292,6 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
   number before.
 - **Version:** under Jason's rule, a minor: released in 0.6.0 (2026-10-26) with CR-014 and CR-015.
 - **The entry on the report** (2026-10-27): four fields added to `OutOfRange`, nothing removed or changed in meaning. A
-  patch, under Jason's rule; core-ts drops its lookup on the prose when a release has it.
+  patch under Jason's rule, but released in 0.7.0 (2026-10-28) with CR-017 and CR-018 rather than cut alone as 0.6.1;
+  core-ts drops its lookup on the prose when it takes 0.7.0.
+- **`w:legacy` left out** (2026-10-28): released in 0.7.0 with the entry.

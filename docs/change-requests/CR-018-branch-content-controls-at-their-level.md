@@ -1,6 +1,6 @@
 # CR-018: A content control in a kept `mc:AlternateContent` branch, typed at its host's level
 
-**Status:** Implemented 2026-10-28 on `@docx4j/jsonix` 3.11.0, unreleased, for 0.7.0 with CR-017 (sections 9 and 10).
+**Status:** Implemented 2026-10-28 on `@docx4j/jsonix` 3.11.0, released in 0.7.0 (2026-10-28) with CR-017 (sections 9 and 10).
 Accepted the same day, B1 to B4 as recommended (Jason: "CR-018 decisions as recommended"; "then implement CR-018").
 Proposed the same day, and revised before the decision to take a runtime hook for both B1 and B2 (Jason: "B2 if it
 would be neater to ask for a jsonix change, we can do that"). The hook was prototyped, then measured against jsonix's
@@ -11,8 +11,8 @@ implemented (202b58d). docx4j-12 then answered that docx4j isn't exposed, so the
 **Depends on:** jsonix-CR-014, `@docx4j/jsonix` 3.11.0 (released 2026-10-28, tag 222c2bd). It adds `wildcardTypeInfo`,
 a per-call option through which a caller declares the type of an element a wildcard holds, on unmarshal and on marshal
 (section 4.1). objects' downstream check of its candidate passed the same day, and the published `jsonix-factory.js` is
-byte-identical to the bytes tested. The fallback not taken (B1 (b), B2 (b)) would have needed nothing new. B3 changes
-CR-017, which is implemented and unreleased.
+byte-identical to the bytes tested. The fallback not taken (B1 (b), B2 (b)) would have needed nothing new. B3 changed
+CR-017 before its release, so its allowances never shipped.
 **Counterparts:**
 - docx4j CR-051 section 11.3 (`McBranchSdt`, 17.3.4, phase 1, 2026-10-20) is the same fix in Java. docx4j binds a
   `w:sdt` directly in a branch by the kind its container asks for (section 3). The route decided is the same
@@ -338,7 +338,7 @@ The smoke gains a CR-018 block:
 
 `fidelity.mjs` passes unchanged, with every fidelity part's marshalled hash identical. The jsonix CR's own tests are
 jsonix's.
-core-ts reruns its survey (35 reports expected, all from check 72) and its readers (section 8).
+core-ts reran its suite and survey at 722f2f3: the same 35 reports, all from check 72 (sections 8 and 9).
 
 ## 8. Consumers and counterparts
 
@@ -348,8 +348,9 @@ core-ts reruns its survey (35 reports expected, all from check 72) and its reade
   - `tableRules.mts` and `tree.mts` count `SdtBlock` among the blocks;
   - `spanEdits.mts` treats it as a control.
 
-  A branch's control now reaches these at its level, and its readers that match `textOf` change with it. Which readers
-  change, and whether any of its checks expected the old class, is core-ts's to measure. Under B3 (a), its CR-016
+  A branch's control now reaches these at its level, and its readers that match `textOf` change with it. core-ts
+  measured it at 722f2f3: no kept-branch, readers or text-model test moved, and none took a branch's `w:sdt` as
+  `SdtBlock`. Under B3 (a), its CR-016
   phase 2 refuses a save holding a block-level control in a paragraph's branch, as it would outside one. With
   `mcePreprocess: true` it isn't exposed: the branch is resolved on the DOM, and the control is typed by its new host's
   list.
@@ -360,14 +361,16 @@ core-ts reruns its survey (35 reports expected, all from check 72) and its reade
 
 ## 9. Release
 
-A minor, since classes and `textOf`'s output change where the form occurs. It rides in 0.7.0 with CR-017 (B4 (a)), and
-the floor of `@docx4j/jsonix` rises to ^3.11.0 (B1 (a)). The order:
-1. jsonix releases 3.11.0 (done 2026-10-28);
-2. this CR is implemented, with the floor raised and the lockfile updated (done 2026-10-28, section 10);
-3. core-ts reruns its suite and survey against `main`, and says go (RELEASING.md, and Jason's rule);
-4. 0.7.0 is released.
+A minor, since classes and `textOf`'s output change where the form occurs. Released in 0.7.0 (2026-10-28, tag `0.7.0`
+= 5985887) with CR-017 (B4 (a)), and the floor of `@docx4j/jsonix` rose to ^3.11.0 (B1 (a)). The order:
+1. jsonix released 3.11.0 (2026-10-28);
+2. this CR was implemented, with the floor raised and the lockfile updated (section 10);
+3. core-ts reran its suite and survey against the pushed `main` (722f2f3) and said go: 1,639 of 1,640 tests, the one
+   failing its pin of `WORD_INTEGER_STORAGE`'s 51 entries (49 since CR-016 left `w:legacy` out); the same 35 reports;
+   9,071 parts byte-identical to 0.6.0's output;
+4. 0.7.0 was released. The tarball's 341 fidelity parts marshal byte-identically to the tree.
 
-0.6.1 (73b9606) can still be cut alone before then.
+0.6.1's candidate (73b9606) went out in 0.7.0, never cut alone.
 
 ## 10. Implemented (2026-10-28)
 

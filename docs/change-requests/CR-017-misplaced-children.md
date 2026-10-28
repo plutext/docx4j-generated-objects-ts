@@ -1,6 +1,6 @@
 # CR-017: Misplaced children: refused by the builders, reported on read and on save
 
-**Status:** Implemented 2026-10-28, unreleased (section 10), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0, its two branch allowances retired the same day by CR-018, which types a branch's `w:sdt` at its host's level; M1 to M7 decided as recommended (Jason: "CR-017
+**Status:** Implemented 2026-10-28 (section 10), released in 0.7.0 (2026-10-28), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0, its two branch allowances retired the same day by CR-018, which types a branch's `w:sdt` at its host's level; M1 to M7 decided as recommended (Jason: "CR-017
 decisions as recommended; commit then implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064
 phase 1's code (befc57371), core-ts CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
 **Requested by:** Jason, 2026-10-26 ("a CR for checking misplaced children (in the builders or as a validation pass)
@@ -407,9 +407,9 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
 ## 9. Release
 
 - **Changes:** the builders throw where they wrote a broken document before, and the API gains `onMisplaced`.
-- **Version:** a minor under Jason's rule, 0.7.0. It can't ride with the 0.6.1 patch, `OutOfRange`'s table entry at
-  core-ts's ask (73b9606), which is committed before it, so 0.6.1 can still be cut from that commit. (As proposed on
-  2026-10-26, it was to ride with 0.6.0, since released without it.)
+- **Version:** a minor under Jason's rule: released in 0.7.0 (2026-10-28) with CR-018, so its branch allowances never
+  shipped. `OutOfRange`'s table entry at core-ts's ask (73b9606), committed before it as a 0.6.1 candidate, went out in
+  0.7.0 too, never cut alone. (As proposed on 2026-10-26, it was to ride with 0.6.0, since released without it.)
 - **Effort:** a day: the rules, both reports, the nine declarations and the gates.
 
 ## 10. Implemented (2026-10-28)
@@ -450,5 +450,6 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   paragraph's `mc:Choice` report nothing; a paragraph inside that control does. Fidelity reports none, and all 342
   marshalled parts are byte-identical. core-ts's rerun at 202b58d gives the same 35 reports as at 2b87bdf, report for
   report, over its 9,075 parts.
-- **What is left:** core-ts CR-016 phase 2 builds its refused save on the save report; whether it waits for 0.7.0 is
-  Jason's.
+- **Released** in 0.7.0 (2026-10-28). core-ts's go on the pushed candidate (722f2f3) gave the same 35 reports, and
+  its 9,071 re-marshalled parts byte-identical to 0.6.0. core-ts CR-016 phase 2 builds its refused save on the save
+  report.
