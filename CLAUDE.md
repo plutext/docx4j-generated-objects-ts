@@ -98,7 +98,7 @@ There are eight tests and no test framework:
   forms as their integer part and drops the forms Word refuses, while other mappings still fail. It also checks the
   record, a caller's precedence, that a save writes integers while a caller's own non-integer still throws, and that
   an empty rsid is left out on save with its path.
-  CR-016's block checks that each entry of `WORD_INTEGER_STORAGE` (51, 4 unmeasured after round 6) is an integer `w:` attribute of
+  CR-016's block checks that each entry of `WORD_INTEGER_STORAGE` (49, 3 unmeasured after round 6; `w:legacy`, which Word drops, left out) is an integer `w:` attribute of
   its class, so a regeneration that renames one fails. It also checks `wordIntegerReading`'s wrap, clamp, rule and
   certain range, and `onOutOfRange` on read and on save. Nothing is rewritten, with or without the normaliser. The
   builders' `RangeError` is checked at the boundaries.

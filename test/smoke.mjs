@@ -1110,8 +1110,16 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
       if (!storage.measured) unmeasured++;
     }
   }
-  assert.deepEqual([entries, unmeasured], [51, 4], '44 twips attributes (30 ST_TwipsMeasure, 14 signed) and 7 others; 4 unmeasured after round 6 (gridCol, legacySpace, dxaOrig, dyaOrig)');
+  assert.deepEqual([entries, unmeasured], [49, 3], '42 twips attributes (29 ST_TwipsMeasure, 13 signed) and 7 others; 3 unmeasured after round 6 (gridCol, dxaOrig, dyaOrig)');
   assert.equal(wordIntegerReading('org_docx4j_wml.Lvl.Start', 'val', 70000), undefined, 'not in the table');
+  // A numbering level's w:legacy: Word 365 drops the element, so it reads none of its values (round 6's group N); left
+  // out, as docx4j CR-066's table ignores it (Jason, 2026-10-28).
+  assert.equal(wordIntegerReading('org_docx4j_wml.Lvl.Legacy', 'legacyIndent', 7205001), undefined, 'w:legacy is not in the table');
+  const legacyReports = [];
+  const numbering = await unmarshalString(`<w:numbering xmlns:w="${W_}"><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:legacy w:legacy="1" w:legacySpace="70000" w:legacyIndent="7205001"/></w:lvl></w:abstractNum></w:numbering>`, { onOutOfRange: (r) => legacyReports.push(r) });
+  const legacyXml = await marshalString(numbering, { onOutOfRange: (r) => legacyReports.push(r) });
+  assert.deepEqual(legacyReports, [], 'w:legacy: nothing reported on read or on save');
+  assert.ok(legacyXml.includes('w:legacyIndent="7205001"') && legacyXml.includes('w:legacySpace="70000"'), 'w:legacy: written as held');
   // The reading: wrapped, clamped, the rule in the sign; an unmeasured attribute only outside -32768..65535.
   assert.deepEqual(wordIntegerReading('org_docx4j_wml.PPrBase.Ind', 'left', 7205001), { value: -3959, written: -3959, kept: false, storage: 'int16' });
   assert.deepEqual(wordIntegerReading('org_docx4j_wml.SectPr.PgSz', 'w', 40000), { value: 31681, written: 31681, kept: false, storage: 'uint16, then 144..31681' });
@@ -1170,7 +1178,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.equal(tbl([['a', 'b']], { widths: [20000, 12767] }).value.tblPr.tblW.w, 32767);
   assert.equal(applyRunOptions({}, { size: 32767.5 }).sz.val, 65535);
   for (const size of [32768, -1, NaN, Infinity]) assert.throws(() => applyRunOptions({}, { size }), /Font size .* is outside Word's range: w:sz is stored in 16 bits, 0 to 32767.5 points/, `size ${size}`);
-  console.log("CR-016: Word's integer storage (51 attributes, 4 at the certain range) read as rounds 5 and 6 measured; onOutOfRange on read and on save, nothing rewritten; the builders' widths and size within Word's range OK");
+  console.log("CR-016: Word's integer storage (49 attributes, 3 at the certain range; w:legacy, which Word drops, left out) read as rounds 5 and 6 measured; onOutOfRange on read and on save, nothing rewritten; the builders' widths and size within Word's range OK");
 }
 
 // CR-017: misplaced children. docx4j CR-064's checkParent sets, a child tested by its class, core-ts CR-016's name rule

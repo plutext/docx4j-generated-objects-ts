@@ -182,8 +182,8 @@ export function highlightNameForColor(color: string | undefined): string | undef
  * How Word 365 stores an integer attribute (CR-016; docx4j CR-066's rounds 5 and 6, Jason's runs of 2026-10-26). Word
  * reads a value modulo its storage width, sometimes then clamped, and neither refuses nor repairs the document. A
  * measured entry gives the width, the sign and any clamp or rule; an unmeasured one (`w:gridCol`, which Word
- * recomputes, a numbering level's legacy spacing, which it drops, and an object's original size, not probed) is known
- * only to change outside -32768 to 65535, where every measured twips attribute does.
+ * recomputes, and an object's original size, not probed) is known only to change outside -32768 to 65535, where every
+ * measured twips attribute does.
  */
 export type WordIntegerStorage =
   | {
@@ -223,7 +223,8 @@ const UNMEASURED: WordIntegerStorage = { measured: false };
  * `w:tcW`, `w:tblInd`, `w:tblCellSpacing` and the cell margins, `HpsMeasure` on `w:sz`, `w:szCs` and `w:kern`, and
  * `CTTwipsMeasure` on the settings' `w:defaultTabStop` and `w:hyphenationZone`. `w:ind`'s `start` and `end` are read
  * as `left` and `right`. Not here: ids, counts, the `*Chars` and `*Lines` attributes and w14's DrawingML units, whose
- * width is unmeasured.
+ * width is unmeasured; and a numbering level's `w:legacy`, which Word 365 drops whole, so it reads none of its values
+ * (docx4j CR-066's table ignores it too; Jason, 2026-10-28).
  */
 export const WORD_INTEGER_STORAGE: Readonly<Record<string, Readonly<Record<string, WordIntegerStorage>>>> = {
   'org_docx4j_wml.PPrBase.Ind': {
@@ -250,7 +251,6 @@ export const WORD_INTEGER_STORAGE: Readonly<Record<string, Readonly<Record<strin
     h: { ...UINT16, heightFlag: true, signRule: 'hRule' },
   },
   'org_docx4j_wml.CTTblPPr': { tblpX: INT16, tblpY: INT16, leftFromText: INT16, rightFromText: INT16, topFromText: INT16, bottomFromText: INT16 },
-  'org_docx4j_wml.Lvl.Legacy': { legacyIndent: INT16, legacySpace: UNMEASURED },
   'org_docx4j_wml.TblGridCol': { w: UNMEASURED },
   'org_docx4j_wml.CTColumns': { space: INT16 },
   'org_docx4j_wml.CTColumn': { w: { ...INT16, negative: 'computed' }, space: { ...INT16, negative: -1 } },

@@ -1,6 +1,6 @@
 # CR-016: Integer attributes within Word's range: reported on read and on save, refused by the builders
 
-**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in; the table entry added to the report 2026-10-27 (core-ts's ask, section 4.4), unreleased
+**Status:** Implemented 2026-10-26, released in 0.6.0 (2026-10-26); G1 to G6 decided as recommended (Jason, 2026-10-26); round 6's measurements taken in; the table entry added to the report 2026-10-27 (core-ts's ask, section 4.4), unreleased; a numbering level's `w:legacy` left out of the table 2026-10-28 (Jason, for parity with docx4j CR-066's table), unreleased
 **Requested by:** Jason, 2026-10-26 ("write the guard CR"). He raised it through the portfolio session, relayed from
 docx4j-python-cd: Word 365 stores twips in 16 bits and wraps an integer too large to fit, so every engine should guard
 against code setting a measure Word can't hold.
@@ -91,11 +91,12 @@ section 3.4; `test/fixtures/cr066-round6/`) measured what round 5 left unmeasure
 - **Not measured:**
   - `w:gridCol`, which Word recomputes even under a fixed layout;
   - `w:wBefore`/`w:wAfter`, which Word dropped with the grid spans that didn't fit;
-  - a level's `w:legacy`, which Word 365 drops;
+  - a level's `w:legacy`, which Word 365 drops whole;
   - an object's original size, which needs an OLE object.
 
-  These four attributes keep the certain range only: a value outside -32768 to 65535 changes in every measured twips
-  attribute.
+  `w:gridCol` and an object's original size keep the certain range only: a value outside -32768 to 65535 changes in
+  every measured twips attribute. `w:wBefore` and `w:wAfter` are table widths, stored as the measured ones. `w:legacy`
+  is left out of the table, since Word reads none of it (section 4.1).
 
 `w:pgMar/@w:top` (and `bottom`) is `ST_SignedTwipsMeasure` in docx4j's `wml.xsd`, as in ECMA-376, so its int16 storage
 matches the schema. CR-066 section 3.1 had it as `ST_TwipsMeasure`, and was corrected on 2026-10-26. `w:trHeight/@w:val`
@@ -122,14 +123,16 @@ is the one measured attribute whose storage sign differs from its schema type.
 - **a function** (`wordIntegerReading`) of the type, the property, the value and, for a rule, the rule beside it,
   giving what Word reads: its `value`, what its own save `written`, the `rule` for `line` and `trHeight`, whether it
   is `kept`, and the `storage` for a message. It returns `undefined` for an attribute not in the table.
-- **What it covers:** 51 attributes (`WORD_INTEGER_STORAGE`), keyed by class, so a class's other uses store as the
+- **What it covers:** 49 attributes (`WORD_INTEGER_STORAGE`), keyed by class, so a class's other uses store as the
   measured one:
-  - the 44 twips attributes, of which 4 are unmeasured after round 6: `w:gridCol`, a level's legacy spacing, and an
-    object's original width and height;
+  - the 42 twips attributes, of which 3 are unmeasured after round 6: `w:gridCol`, and an object's original width and
+    height;
   - `w:position`, `w:sz` (with `w:szCs` and `w:kern`), text scale, a border's `sz` and `space`, `TblWidth.w` and
     `w:pgNumType/@w:start`.
 
-  `w:legacy/@w:legacyIndent` is int16 by its type, as every measured `ST_SignedTwipsMeasure` attribute is (CR-066 D7).
+  A numbering level's `w:legacy` is left out (Jason, 2026-10-28). Word 365 drops the element, so it reads none of its
+  values, and a report would claim a reading Word never makes. docx4j CR-066's table ignores it for the same reason.
+  Until then `legacyIndent` was int16 by its type (CR-066 D7) and `legacySpace` unmeasured.
 - **The rules round 6 added:**
   - `pair`, for `firstLine` and `hanging`;
   - `heightFlag`, for a frame's height;
@@ -244,9 +247,11 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
   - **Mutation checks** (each checked by changing the build): dropping the tab stops' clamp, the pair's switch, or the
     frame's flag fails the test.
 - **The table** (smoke):
-  - each of its 51 entries is an integer attribute of its class, in `w`'s namespace, by its local name, so a
+  - each of its 49 entries is an integer attribute of its class, in `w`'s namespace, by its local name, so a
     regeneration that renames one fails;
-  - 4 entries are unmeasured;
+  - 3 entries are unmeasured;
+  - `w:legacy` isn't in the table, and a `w:legacy` beyond any width is reported neither on read nor on save, and is
+    written as held;
   - the reading of a wrap, a clamp, a rule, `before`'s `-1`, the pair, a frame's height, a column's computed width,
     a row height under `auto`, and an unmeasured attribute inside and outside the certain range;
   - an attribute not in the table gives `undefined`.
@@ -270,12 +275,14 @@ Implemented as one new test, `test/word365-ranges.mjs`, and a CR-016 block in th
   sibling attribute as context), read by its inspector and its Python oracle. Compared with `WORD_INTEGER_STORAGE` the
   same day: no storage or range differs where both are measured. The differences are of claim, not evidence: the TSV
   ignores a `TblWidth` under `type="auto"` or `nil`, which this table has no context for and so reports; this table
-  carries the type's width to `w:fitText` (int32; the TSV ignores it), `w:legacy/@w:legacyIndent` (int16 by type; the
-  TSV ignores both, since Word drops the element) and the settings' `drawingGrid*` and a frameset splitbar (uint16 by
-  type; the TSV holds them unmeasured); this table covers `w:checkBox/w:size` (`HpsMeasure`) by type, and the TSV gained
-  that row from the comparison. Whether Word drops a literal `w:trHeight` of 0 under `atLeast` is unmeasured on both
-  sides (CR-066 section 3.1); both keep it as written. Read-side leniency recorded as such: a uint16 written -1 (`w:spacing` `before`/`after`, five page
-  margins) is kept, since Word writes 65535 so. This package keeps its three structures and maps to the TSV's tokens.
+  carries the type's width to `w:fitText` (int32; the TSV ignores it) and the settings' `drawingGrid*` and a frameset
+  splitbar (uint16 by type; the TSV holds them unmeasured); this table covers `w:checkBox/w:size` (`HpsMeasure`) by
+  type, and the TSV gained that row from the comparison. `w:legacy`, which the TSV ignores since Word drops the element,
+  was in this table then (`legacyIndent` int16 by type, `legacySpace` unmeasured). Jason left it out on 2026-10-28, so
+  the two agree. Whether Word drops a literal `w:trHeight` of 0 under `atLeast` is unmeasured on both sides (CR-066
+  section 3.1); both keep it as written. Read-side leniency recorded as such: a uint16 written -1 (`w:spacing`
+  `before`/`after`, five page margins) is kept, since Word writes 65535 so. This package keeps its three structures and
+  maps to the TSV's tokens.
 - **docx4j-python:** CR-022. It refuses a negative in a schema-unsigned attribute at its setters; this CR refuses only
   where its own builders take a measure (G4).
 
