@@ -1,6 +1,6 @@
 # CR-017: Misplaced children: refused by the builders, reported on read and on save
 
-**Status:** Implemented 2026-10-28 (section 10), released in 0.7.0 (2026-10-28), its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0, its two branch allowances retired the same day by CR-018, which types a branch's `w:sdt` at its host's level; M1 to M7 decided as recommended (Jason: "CR-017
+**Status:** Implemented 2026-10-28 (section 10), released in 0.7.0 (2026-10-28); a container built without its `TYPE_NAME` tested on save the same day, at core-ts's report, unreleased; its `'#text'` read report the same day on `@docx4j/jsonix` 3.10.0, its two branch allowances retired the same day by CR-018, which types a branch's `w:sdt` at its host's level; M1 to M7 decided as recommended (Jason: "CR-017
 decisions as recommended; commit then implement CR-017"); proposed 2026-10-26, revised 2026-10-28 to docx4j CR-064
 phase 1's code (befc57371), core-ts CR-016's decisions (D1 to D6, 2026-10-27) and core-ts's check 72 in Word 365
 **Requested by:** Jason, 2026-10-26 ("a CR for checking misplaced children (in the builders or as a validation pass)
@@ -174,9 +174,12 @@ Java class: "You can't add a run (w:r) directly to a table cell (w:tc); add it t
 builders throw the message the report carries. Each names the container, since a person, or a model, fixes code from
 it.
 
-Containers are keyed by `TYPE_NAME` and their base types (`org_docx4j_wml.Body`, `.Tc`, `.SdtContentBlock`, `.P`,
+Containers are keyed by class and their base types (`org_docx4j_wml.Body`, `.Tc`, `.SdtContentBlock`, `.P`,
 `.P.Hyperlink`, `.R`, `.Tbl`, `.Tr`, ...), each with its content property. That is `content` for all but `RunIns` and
-`RunDel`, whose runs are in `customXmlOrSmartTagOrSdt` (all checked in the context, 2026-10-26).
+`RunDel`, whose runs are in `customXmlOrSmartTagOrSdt` (all checked in the context, 2026-10-26). A container is tested
+as the class it is written as: its value's `TYPE_NAME`, or for a value built without one, the type the runtime offers
+the marshal's `omitElement` just before writing it (the class its name declares where it stands), or for the root,
+its element's declaration. A read always gives the value its `TYPE_NAME`.
 
 **CR-064's addendum** came from this CR's review (2026-10-28, section 8): three cases neither port refused, and the
 `w:tcPr` message. They are `w:delText`, whose docx4j class `DelText` is not a `Text`; a `w:tab` straight in a
@@ -213,7 +216,7 @@ cell-level sdt content, the class rules covering every set. A save's report test
 `onOutOfRange` is. The report gives:
 - `element`, the container's element: on read the source element, on save the element written, open, its children
   not yet written;
-- `container`, its `TYPE_NAME`;
+- `container`, its class: its `TYPE_NAME`, or on save, for a value built without one, the class it is written as;
 - `child`, the child's element name, or `'#text'` for a string, and `childType`, its class where it has one;
 - `index`, its position in the container's list;
 - `rule`, `'misplaced'` or `'name-value'` (section 3), and `message`, section 3's;
@@ -450,6 +453,15 @@ from (a) to (d) the same day, after docx4j's answer and a prototype (section 4.3
   paragraph's `mc:Choice` report nothing; a paragraph inside that control does. Fidelity reports none, and all 342
   marshalled parts are byte-identical. core-ts's rerun at 202b58d gives the same 35 reports as at 2b87bdf, report for
   report, over its 9,075 parts.
-- **Released** in 0.7.0 (2026-10-28). core-ts's go on the pushed candidate (722f2f3) gave the same 35 reports, and
+- **A container built without its `TYPE_NAME`** (2026-10-28, after 0.7.0): core-ts found, wiring its CR-016 phase 2,
+  that the save side tested a container only by its value's `TYPE_NAME`, so a value built by hand without one wasn't
+  tested, though the marshal writes it by the class its name declares. That is core-ts CR-016 section 2's second
+  escape, and how core-ts's own `createPackage` built its document until then. A document and body with no
+  `TYPE_NAME` holding a run, or an untyped paragraph holding a table, saved with no report. The save side now takes
+  the class from the type the runtime offers `omitElement` before it writes each element, and the root's from its
+  element's declaration, as `bindsIgnorable` does (section 3). A caller's `omitElement` is still asked first. The smoke
+  checks an untyped document and body, a paragraph in a body, a root paragraph and a paragraph in an `mc:Choice`, and
+  fails on the build before. Fidelity reports none, and all 341 marshalled hashes are identical to 0.7.0's.
+- **Released** in 0.7.0 (2026-10-28), but not the untyped containers' fix above. core-ts's go on the pushed candidate (722f2f3) gave the same 35 reports, and
   its 9,071 re-marshalled parts byte-identical to 0.6.0. core-ts CR-016 phase 2 builds its refused save on the save
   report.

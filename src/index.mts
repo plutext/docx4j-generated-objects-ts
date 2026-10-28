@@ -761,7 +761,7 @@ function reportOutOfRange(element: Element, value: object, onOutOfRange: (report
 export interface MisplacedChild {
   /** The container's element: on read in the source; on save the element written, open, its children not yet written. */
   readonly element: Element;
-  /** The container's `TYPE_NAME`. */
+  /** The container's class: its `TYPE_NAME`, or on save, for a value built without one, the class it is written as. */
   readonly container: string;
   /** The child's element name, or `'#text'` for a string. */
   readonly child: { readonly namespaceURI: string; readonly localPart: string; readonly prefix?: string } | '#text';
@@ -1048,10 +1048,10 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
   const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement, wildcardTypeInfo: branchTypes(context, options.wildcardTypeInfo) };
   const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions;
   const ranged = onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised;
-  const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, onMisplaced) : ranged)
+  const rootValue = rootValueOf(element);
+  const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, onMisplaced, rootValue, rootTypeOf(context, element)?.name) : ranged)
     .marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
-  const rootValue = rootValueOf(element);
   fixRootNamespaceDeclarations(doc.documentElement, table, typeof rootValue === 'object' && rootValue !== null ? sourceBindings.get(rootValue) : undefined, choices);
   return doc;
 }
@@ -1269,9 +1269,9 @@ function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<
  * The number of the container's own property elements named `step` that the marshal writes before its list (a
  * `w:pPr` before a paragraph's content), so a misplaced one's step counts them, as the written document will.
  */
-function writtenBefore(container: object, list: string, step: string, table: Readonly<Record<string, string>>): number {
+function writtenBefore(container: object, containerType: string, list: string, step: string, table: Readonly<Record<string, string>>): number {
   const chain: Jsonix.TypeInfo[] = [];
-  for (let ti: Jsonix.TypeInfo | undefined = getContextSync().getTypeInfoByName((container as { TYPE_NAME: string }).TYPE_NAME); ti; ti = ti.baseTypeInfo) chain.unshift(ti);
+  for (let ti: Jsonix.TypeInfo | undefined = getContextSync().getTypeInfoByName(containerType); ti; ti = ti.baseTypeInfo) chain.unshift(ti);
   let count = 0;
   for (const ti of chain) {
     for (const property of (ti as unknown as { properties?: { name: string; elementName?: Jsonix.XML.QName }[] }).properties ?? []) {
@@ -1285,15 +1285,24 @@ function writtenBefore(container: object, list: string, step: string, table: Rea
 
 /**
  * The marshaller options reporting each misplaced child (CR-017 section 4.2), on the marshal's `onElement`, which the
- * runtime calls as it opens an element, before its children: each container's list is tested then. Composed around the
+ * runtime calls as it opens an element, before its children: each container's list is tested then. A container is
+ * tested as the class it is written as: its value's `TYPE_NAME`, or for a value built without one, the type the runtime
+ * offers `omitElement` just before it writes the element, or the root's declaration (`rootType`). Composed around the
  * options it is given; it never changes what is written.
  */
-function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onMisplaced: (report: MisplacedChild) => void): Jsonix.MarshallerOptions {
-  const { onElement } = options;
+function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onMisplaced: (report: MisplacedChild) => void,
+  rootValue: unknown, rootType: string | undefined): Jsonix.MarshallerOptions {
+  const { onElement, omitElement } = options;
+  const writtenAs = new WeakMap<object, string>();
+  if (typeof rootValue === 'object' && rootValue !== null && rootType !== undefined) writtenAs.set(rootValue, rootType);
   return {
     ...options,
+    omitElement(value, name, typeInfo, propertyInfo, classInfo) {
+      if (typeof value === 'object' && value !== null && !isNode(value) && typeof typeInfo.name === 'string') writtenAs.set(value, typeInfo.name);
+      return omitElement?.(value, name, typeInfo, propertyInfo, classInfo);
+    },
     onElement(written: Node, value: unknown): void {
-      const container = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME : undefined;
+      const container = typeof value === 'object' && value !== null && !isNode(value) ? (value as { TYPE_NAME?: string }).TYPE_NAME ?? writtenAs.get(value) : undefined;
       const spec = container === undefined ? undefined : CONTAINERS[container];
       const items = spec ? (value as Record<string, unknown>)[spec.list] : undefined;
       if (container !== undefined && spec && Array.isArray(items)) {
@@ -1302,7 +1311,7 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
           const name = childName(item);
           return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
         };
-        testList(container, items, stepName, (step) => writtenBefore(value as object, spec.list, step, table), table[MC_NS] || 'mc',
+        testList(container, items, stepName, (step) => writtenBefore(value as object, container, spec.list, step, table), table[MC_NS] || 'mc',
           (misplaced, item, index, via, step) => onMisplaced({
             element: written as Element, container, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
             ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
@@ -1314,19 +1323,22 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
   };
 }
 
-/**
- * Whether the root's type binds `mc:Ignorable` (CR-008 section 4): the type its `TYPE_NAME` names,
- * or for a literal without one, the type its element name declares. A root that does not is left
- * alone, since the schema does not admit the attribute there and Office rejects a part that has it.
- */
-function bindsIgnorable(context: Jsonix.Context, element: Jsonix.TypedNamedValue): boolean {
+/** The root's type: the type its `TYPE_NAME` names, or for a literal without one, the type its element name declares. */
+function rootTypeOf(context: Jsonix.Context, element: Jsonix.TypedNamedValue): Jsonix.TypeInfo | undefined {
   const typeName = (element.value as { TYPE_NAME?: unknown } | null)?.TYPE_NAME;
   // getElementInfo reads only the name's key; its typings say string.
   const key = (element.name.namespaceURI ? `{${element.name.namespaceURI}}` : '') + element.name.localPart;
-  const typeInfo: Jsonix.TypeInfo | undefined = typeof typeName === 'string'
+  return typeof typeName === 'string'
     ? context.getTypeInfoByName(typeName)
     : context.getElementInfo({ key } as unknown as string, undefined as unknown as string)?.typeInfo;
-  for (let ti = typeInfo; ti; ti = ti.baseTypeInfo) {
+}
+
+/**
+ * Whether the root's type binds `mc:Ignorable` (CR-008 section 4). A root that does not is left
+ * alone, since the schema does not admit the attribute there and Office rejects a part that has it.
+ */
+function bindsIgnorable(context: Jsonix.Context, element: Jsonix.TypedNamedValue): boolean {
+  for (let ti = rootTypeOf(context, element); ti; ti = ti.baseTypeInfo) {
     for (const property of (ti as unknown as { properties?: { attributeName?: Jsonix.XML.QName | null }[] }).properties ?? []) {
       if (property.attributeName?.namespaceURI === MC_NS && property.attributeName.localPart === 'Ignorable') return true;
     }

@@ -106,10 +106,10 @@ There are eight tests and no test framework:
   CR-017's block holds `misplaced.mts`'s tables to the context: each container's list, no subtype of a container or a
   refused class, each refused class's element names, and `w:sdt` as each list declares it. It checks that `p`, `tc`,
   `tr`, `sdt` and `wml`'s interpolation refuse with docx4j's messages and accept the legal children. On save it checks
-  each mistake's path, rule and message, property elements counted in a step, a string reported before the runtime's
-  throw, a callback's throw, the name rule (and the class rule first), and sdt content in sdt content. On read it checks
-  the same file, property elements absorbed, mc branches by their host's set, M7's `w:instrText`, and core-ts's
-  check 72 forms.
+  each mistake's path, rule and message, containers built without a `TYPE_NAME`, property elements counted in a step,
+  a string reported before the runtime's throw, a callback's throw, the name rule (and the class rule first), and sdt
+  content in sdt content. On read it checks the same file, property elements absorbed, mc branches by their host's
+  set, M7's `w:instrText`, and core-ts's check 72 forms.
   CR-018's block holds `branches.mts`'s `HOST_LEVEL` to the context, and checks that `w:sdt` is the only name a CR-017
   list declares as another class than the global declaration gives. It reads each level's form (a run-level control
   with nested custom XML and a control, row, cell, block, a branch in a branch's control, a control below a paragraph
@@ -283,7 +283,9 @@ rule in the sign for exact lines and row heights. `wordIntegerReading` gives wha
 
 CR-017 (implemented 2026-10-28, M1 to M7 as recommended) refuses and reports misplaced children, with docx4j CR-064's
 `checkParent` sets (`src/misplaced.mts`):
-- **The rules:** a child is tested by its class (its value's `TYPE_NAME`, or the class its name gives). There is also
+- **The rules:** a child is tested by its class (its value's `TYPE_NAME`, or the class its name gives), and a container
+  by the class it is written as (on save, for a value built without a `TYPE_NAME`, the type the runtime offers
+  `omitElement`, or the root's declaration). There is also
   core-ts CR-016's name-and-value rule: a value whose class isn't the one its name declares there, which the marshal
   would write with `xsi:type`. An `mc:AlternateContent` branch is tested by its host's set.
 - **The builders:** `p`, `tc`, `tr`, `sdt` and `wml`'s interpolation throw a `TypeError` in docx4j's wording. Without

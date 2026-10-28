@@ -1362,6 +1362,25 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const classFirst = [];
   await marshalString(document([{ name: w('p'), value: r('m').value }]), { onMisplaced: (report) => classFirst.push([report.rule, report.childType, report.message]) });
   assert.deepEqual(classFirst, [['misplaced', 'org_docx4j_wml.R', "You can't add a run (w:r) directly to the body (w:body); add it to a paragraph (w:p) and add that."]]);
+  // A value built without its TYPE_NAME is tested as the class the marshal writes it as: the type its name declares
+  // where it stands, or the root's declaration (core-ts's report on 0.7.0: its CR-016 section 2's second escape).
+  const untyped = [];
+  const untypedReport = (report) => untyped.push([report.path, report.container]);
+  await marshalString({ name: w('document'), value: { body: { content: [p('BEFORE'), r('MISPLACED')] } } }, { onMisplaced: untypedReport });
+  await marshalString(document([{ name: w('p'), value: { content: [r('x'), tbl([['t']])] } }]), { onMisplaced: untypedReport });
+  await marshalString({ name: w('p'), value: { content: [tbl([['t']])] } }, { onMisplaced: untypedReport });
+  const inChoice = await unmarshalString(`<w:document xmlns:w="${W}" xmlns:mc="${MC}"><w:body><mc:AlternateContent><mc:Choice Requires="w14"><w:p/></mc:Choice></mc:AlternateContent></w:body></w:document>`);
+  inChoice.value.body.content[0].value.choice[0].any = [{ name: w('p'), value: { content: [tbl([['t']])] } }];
+  await marshalString(inChoice, { onMisplaced: untypedReport });
+  assert.deepEqual(untyped, [
+    ['/w:document/w:body[1]/w:r[1]', 'org_docx4j_wml.Body'],
+    ['/w:document/w:body[1]/w:p[1]/w:tbl[1]', 'org_docx4j_wml.P'],
+    ['/w:p/w:tbl[1]', 'org_docx4j_wml.P'],
+    ['/w:document/w:body[1]/mc:AlternateContent[1]/mc:Choice[1]/w:p[1]/w:tbl[1]', 'org_docx4j_wml.P'],
+  ], 'an untyped document and body, paragraph in a body, root paragraph and paragraph in a branch, each tested as written');
+  // The class comes through omitElement, so a caller's own is still asked first and still leaves its element out.
+  const omitted = await marshalString(p([r('x', { bold: true })]), { onMisplaced: () => {}, omitElement: (value, name) => name.localPart === 'b' || undefined });
+  assert.doesNotMatch(omitted, /<w:b\/>/, "a caller's omitElement still applies beside onMisplaced");
 
   // mc:AlternateContent's branches are tested by their host's set; on read and on save.
   const branches = [];

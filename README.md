@@ -286,7 +286,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   declarations refuse each at compile time, but a JavaScript caller, a cast or a mismatched `{ name, value }`
   gets past them. `onMisplaced`, an unmarshal and a marshal option, receives each misplaced child, with the
   container, the child, the rule and docx4j's message, and on save its path. On save each container's list is
-  tested as the container is opened, before its children are written. So a string in a run is reported before
+  tested as the container is opened, before its children are written, as the class the save writes it as, so a value
+  built without its `TYPE_NAME` is tested too. So a string in a run is reported before
   the runtime refuses it, and a callback that throws stops the save with its own error. Otherwise the child is
   kept as read and written as held. A string a file holds in a run, a paragraph or the body is dropped on read,
   as Word drops it, and reported as `'#text'` with the string (`@docx4j/jsonix` 3.10.0's `onUnexpectedText`). The rules are docx4j CR-064's sets, a child tested by its class, plus one
