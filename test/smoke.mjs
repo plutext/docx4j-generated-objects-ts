@@ -1559,3 +1559,50 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
   console.log("CR-018: a w:sdt in a kept mc branch typed at its host's level (run, row, cell; nested; HOST_LEVEL held to the context) through jsonix-CR-014's wildcardTypeInfo, saved as read with no xsi:type; textOf reads it; a caller's answer first; CR-017 tests branches as their host's own OK");
 }
+
+// CR-019: w:stylePaneFormatFilter's fifteen attributes, kept. docx4j's wml.xsd types the element CT_StylePaneFilter (its CR-078),
+// so all sixteen are read and written as the source spells them, and nothing keeps w:val and the attributes in step (D3).
+{
+  const WML = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const settingsOf = (inner) => `<w:settings xmlns:w="${WML}">${inner}</w:settings>`;
+  const filterOf = (element) => unwrap(element).stylePaneFormatFilter;
+  const attributesOf = (xml) => Object.fromEntries([...xml.match(/<w:stylePaneFormatFilter[^>]*>/)[0].matchAll(/w:(\w+)="([^"]*)"/g)].map(([, name, value]) => [name, value]));
+  // Word's own form, as NumberingImplicitNumId.docx holds it: 3F01, each attribute one bit of it.
+  const WORDS = {
+    val: '3F01', allStyles: '1', customStyles: '0', latentStyles: '0', stylesInUse: '0', headingStyles: '0', numberingStyles: '0', tableStyles: '0',
+    directFormattingOnRuns: '1', directFormattingOnParagraphs: '1', directFormattingOnNumbering: '1', directFormattingOnTables: '1',
+    clearFormatting: '1', top3HeadingStyles: '1', visibleStyles: '0', alternateStyleNames: '0',
+  };
+  const filterXml = (attributes) => settingsOf(`<w:stylePaneFormatFilter ${Object.entries(attributes).map(([name, value]) => `w:${name}="${value}"`).join(' ')}/>`);
+
+  const classInfo = (await getContext()).getTypeInfoByName('org_docx4j_wml.CTStylePaneFilter');
+  assert.deepEqual(classInfo.properties.map((property) => property.name).sort(), Object.keys(WORDS).sort(), 'the sixteen, and no more');
+
+  const dropped = [];
+  const read = await unmarshalString(filterXml(WORDS), { onUnexpectedAttribute: (name) => dropped.push(name.localPart) });
+  assert.deepEqual(dropped, [], 'nothing dropped');
+  assert.equal(filterOf(read).TYPE_NAME, 'org_docx4j_wml.CTStylePaneFilter');
+  assert.equal(filterOf(read).allStyles, '1', 'held as spelled');
+  assert.equal(filterOf(read).val, '3F01');
+  assert.deepEqual(attributesOf(await marshalString(read)), WORDS, "written as Word's form");
+
+  const spelled = { allStyles: 'on', customStyles: 'off', latentStyles: 'true', stylesInUse: 'false' };
+  assert.deepEqual(attributesOf(await marshalString(await unmarshalString(filterXml(spelled)))), spelled, "s:ST_OnOff's spellings kept (D2)");
+
+  const noVal = await unmarshalString(filterXml({ allStyles: '1' }));
+  assert.equal(filterOf(noVal).val, undefined, 'w:val is optional');
+  assert.deepEqual(attributesOf(await marshalString(noVal)), { allStyles: '1' });
+
+  // D3. Word ignores w:val when any attribute is beside it (docx4j CR-078), so a caller changing val alone changes nothing Word reads.
+  const outOfStep = await unmarshalString(filterXml(WORDS));
+  filterOf(outOfStep).val = 'FFFF';
+  assert.deepEqual(attributesOf(await marshalString(outOfStep)), { ...WORDS, val: 'FFFF' }, 'written as given: neither derives from the other');
+
+  for (const val of ['0000', 'name']) {
+    const sort = await unmarshalString(settingsOf(`<w:stylePaneSortMethod w:val="${val}"/>`));
+    assert.equal(unwrap(sort).stylePaneSortMethod.TYPE_NAME, 'org_docx4j_wml.CTShortHexNumber', 'w:stylePaneSortMethod keeps its type');
+    assert.match(await marshalString(sort), new RegExp(`<w:stylePaneSortMethod w:val="${val}"/>`));
+  }
+
+  console.log("CR-019: w:stylePaneFormatFilter's sixteen attributes read and written as spelled; w:val optional and unsynchronised; w:stylePaneSortMethod unchanged");
+}

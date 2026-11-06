@@ -1185,7 +1185,7 @@ export interface CTSettings {
   formsDesign?: BooleanDefaultTrue;
   attachedTemplate?: CTRel;
   linkStyles?: BooleanDefaultTrue;
-  stylePaneFormatFilter?: CTShortHexNumber;
+  stylePaneFormatFilter?: CTStylePaneFilter;
   stylePaneSortMethod?: CTShortHexNumber;
   documentType?: CTDocType;
   mailMerge?: CTMailMerge;
@@ -1342,6 +1342,27 @@ export interface CTString {
   TYPE_NAME?: 'org_docx4j_wml.CTString';
   readonly PARENT?: CTTblPrBase | CTTblPrEx | CTTblPrExBase | Dep_org_docx4j_w15.CTSdtRepeatedSection | TblPr;
   val: string;
+}
+
+export interface CTStylePaneFilter {
+  TYPE_NAME?: 'org_docx4j_wml.CTStylePaneFilter';
+  readonly PARENT?: CTSettings;
+  allStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  alternateStyleNames?: Dep_org_docx4j_sharedtypes.STOnOff;
+  clearFormatting?: Dep_org_docx4j_sharedtypes.STOnOff;
+  customStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  directFormattingOnNumbering?: Dep_org_docx4j_sharedtypes.STOnOff;
+  directFormattingOnParagraphs?: Dep_org_docx4j_sharedtypes.STOnOff;
+  directFormattingOnRuns?: Dep_org_docx4j_sharedtypes.STOnOff;
+  directFormattingOnTables?: Dep_org_docx4j_sharedtypes.STOnOff;
+  headingStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  latentStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  numberingStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  stylesInUse?: Dep_org_docx4j_sharedtypes.STOnOff;
+  tableStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  top3HeadingStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
+  val?: string;
+  visibleStyles?: Dep_org_docx4j_sharedtypes.STOnOff;
 }
 
 export interface CTTabStop {

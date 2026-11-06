@@ -203,6 +203,7 @@ export function createCTSmartTagPr(init) { return Object.assign({ TYPE_NAME: 'or
 export function createCTSmartTagRun(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTSmartTagRun' }, init); }
 export function createCTSmartTagType(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTSmartTagType' }, init); }
 export function createCTString(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTString' }, init); }
+export function createCTStylePaneFilter(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTStylePaneFilter' }, init); }
 export function createCTTabStop(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTTabStop' }, init); }
 export function createCTTargetScreenSz(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTTargetScreenSz' }, init); }
 export function createCTTblCellMar(init) { return Object.assign({ TYPE_NAME: 'org_docx4j_wml.CTTblCellMar' }, init); }

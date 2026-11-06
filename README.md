@@ -293,6 +293,10 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   as Word drops it, and reported as `'#text'` with the string (`@docx4j/jsonix` 3.10.0's `onUnexpectedText`). The rules are docx4j CR-064's sets, a child tested by its class, plus one
   for a name and value that disagree (a `w:p` whose value is a table; a block-level content control in a
   paragraph), and an `mc:AlternateContent` branch is tested by its host's.
+- **`w:stylePaneFormatFilter`** (CR-019): `stylePaneFormatFilter` is a `CTStylePaneFilter`, Word's fifteen on/off attributes beside an
+  optional `val`, each kept as the source spells it. Nothing keeps the two in step, and Word reads `w:val` only with no attribute
+  beside it, an attribute left out reading as on (measured, docx4j CR-078). So setting `val` alone on a loaded file that has the
+  attributes changes nothing Word reads: set the attributes.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as

@@ -4168,7 +4168,7 @@ var org_docx4j_wml_Module_Factory = function () {
             typeInfo: '.BooleanDefaultTrue'
           }, {
             name: 'stylePaneFormatFilter',
-            typeInfo: '.CTShortHexNumber'
+            typeInfo: '.CTStylePaneFilter'
           }, {
             name: 'stylePaneSortMethod',
             typeInfo: '.CTShortHexNumber'
@@ -4908,6 +4908,73 @@ var org_docx4j_wml_Module_Factory = function () {
         propertyInfos: [{
             name: 'val',
             required: true,
+            type: 'attribute'
+          }]
+      }, {
+        localName: 'CTStylePaneFilter',
+        typeName: 'CT_StylePaneFilter',
+        propertyInfos: [{
+            name: 'allStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'alternateStyleNames',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'clearFormatting',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'customStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'directFormattingOnNumbering',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'directFormattingOnParagraphs',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'directFormattingOnRuns',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'directFormattingOnTables',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'headingStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'latentStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'numberingStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'stylesInUse',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'tableStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'top3HeadingStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
+            type: 'attribute'
+          }, {
+            name: 'val',
+            type: 'attribute'
+          }, {
+            name: 'visibleStyles',
+            typeInfo: 'org_docx4j_sharedtypes.STOnOff',
             type: 'attribute'
           }]
       }, {

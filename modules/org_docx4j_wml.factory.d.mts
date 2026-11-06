@@ -404,6 +404,8 @@ export function createCTSmartTagRun(init?: Partial<Omit<M.CTSmartTagRun, 'TYPE_N
 export function createCTSmartTagType(init?: Partial<Omit<M.CTSmartTagType, 'TYPE_NAME' | 'PARENT'>>): M.CTSmartTagType;
 /** docx4j ObjectFactory.createCTString(): a org_docx4j_wml.CTString with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createCTString(init?: Partial<Omit<M.CTString, 'TYPE_NAME' | 'PARENT'>>): M.CTString;
+/** docx4j ObjectFactory.createCTStylePaneFilter(): a org_docx4j_wml.CTStylePaneFilter with TYPE_NAME set; a literal remains the stricter form (init is partial). */
+export function createCTStylePaneFilter(init?: Partial<Omit<M.CTStylePaneFilter, 'TYPE_NAME' | 'PARENT'>>): M.CTStylePaneFilter;
 /** docx4j ObjectFactory.createCTTabStop(): a org_docx4j_wml.CTTabStop with TYPE_NAME set; a literal remains the stricter form (init is partial). */
 export function createCTTabStop(init?: Partial<Omit<M.CTTabStop, 'TYPE_NAME' | 'PARENT'>>): M.CTTabStop;
 /** docx4j ObjectFactory.createCTTargetScreenSz(): a org_docx4j_wml.CTTargetScreenSz with TYPE_NAME set; a literal remains the stricter form (init is partial). */
