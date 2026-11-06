@@ -104,21 +104,22 @@ Nothing is lost, so nothing changes.
 
 ## 5. The attribute type and `w:val` (D2, D3)
 
-Both types were prototyped:
+Both types were prototyped here, through jsonix:
 
-| | `s:ST_OnOff` (decided) | `xsd:boolean` (docx4j-python) |
+| | `s:ST_OnOff` (decided) | `xsd:boolean` |
 |---|---|---|
 | The fixture writes | `w:allStyles="1"`, as Word wrote it | `w:allStyles="true"` |
 | Held as | `'1'`, one of six spellings | `true` |
 | `on` | kept as `on` | written `true` |
 | A refused value (`maybe`, empty) | dropped and reported | read as on and reported (CR-013) |
-| Agrees with | ISO, and `CT_TblLook` in the same file | docx4j-python |
+| Agrees with | ISO, and `CT_TblLook` in the same file | docx4j-python's patch |
 
 D2 is `s:ST_OnOff`. Nothing reads these attributes, and the point of the change is that they survive, so
 keeping the source's spelling matters more than a convenient declaration. No new form reaches Word either.
 
-This departs from the registry's note that docx4j should follow docx4j-python. A `boolean` is the better declaration if
-anyone comes to read them.
+This departs from the registry's note that docx4j should follow docx4j-python, which has no objection (2026-11-06): none of
+its hand-written code or tests read these attributes. Its own `xsd:boolean` writes `1`/`0`, so the table's `true` is
+jsonix's spelling, not docx4j-python's. A `boolean` is the better declaration if anyone comes to read them.
 
 `w:val` stays and becomes optional, as in ISO and `CT_TblLook`. It is not derived from the attributes, nor they from it: a
 save writes what it was given. A caller who changes one and not the other writes a file whose reading is unmeasured
@@ -166,7 +167,7 @@ above except `w:cnfStyle` and `w:tc`, whose elements live in bodies. Its scan do
 | | Question | Decided 2026-11-06, as recommended |
 |---|---|---|
 | D1 | The route: docx4j's `wml.xsd`, then regenerate? | Yes. It needs a small docx4j CR under `docx4j/style-pane-format-filter`. |
-| D2 | The attributes' type? | `s:ST_OnOff` (section 5). docx4j-python's view is still wanted, since this departs from its patch. |
+| D2 | The attributes' type? | `s:ST_OnOff` (section 5). docx4j-python has no objection, though this departs from its patch. |
 | D3 | `w:val`? | Stays, optional, unsynchronised (section 5). |
 | D4 | Section 7's gaps? | Keep them out of this CR. Count the settings and numbering blobs first, then take `w:documentProtection` and `w:writeProtection` into the docx4j CR if they occur. |
 
@@ -186,7 +187,8 @@ above except `w:cnfStyle` and `w:tc`, whose elements live in bodies. Its scan do
   its 15 dropped attributes go to 0 and a `part.skipped` test needs another source. That file's settings hash changes.
 - **`@docx4j/generated-objects-ts` callers:** `stylePaneFormatFilter` becomes `CTStylePaneFilter`, so reading `.val` gives
   `string | undefined`. A value built with the old `TYPE_NAME` is written with `xsi:type="w:CT_ShortHexNumber"` (measured).
-- **docx4j-python:** D2 departs from its patch, which it can retire at its next refresh.
+- **docx4j-python:** it can retire its patch at its next refresh. Its generated class's 15 fields go from `bool` to the enum,
+  which takes a CHANGELOG line, and its normaliser, which picks on/off attributes by `bool`, stops covering them.
 
 The regeneration goes out in the next release, with core-ts's go as usual. Patch or minor is Jason's call: one property's
 declared type and one element's output change, and 0.3.2 was a patch for a change of that kind.
