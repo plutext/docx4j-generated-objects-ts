@@ -819,10 +819,14 @@ export interface McOptions {
 const CONVENTIONAL_PREFIXES: ReadonlySet<string> = new Set(Object.values(NAMESPACE_PREFIXES));
 
 /**
- * The branch of an `mc:AlternateContent` a reader takes, as docx4j's `McSelection` (ECMA-376
- * Part 3, 10.2.1) and Word do: the first `mc:Choice` whose `Requires` prefixes are all understood,
- * else the `mc:Fallback`, else the first `mc:Choice` (Choices with no Fallback: Word never writes
- * it, Excel's x15 `absPath` does), else nothing for an element with no branches.
+ * The branch of an `mc:AlternateContent` a reader takes, as docx4j's `McSelection` does (ECMA-376
+ * Part 3, 10.2.1): the first `mc:Choice` whose `Requires` prefixes are all understood, else the
+ * `mc:Fallback`, else the first `mc:Choice` (Excel's x15 `absPath` has no Fallback), else nothing
+ * for an element with no branches.
+ *
+ * Word takes the first two steps but not the third: with nothing understood and no Fallback it
+ * shows neither branch. The third step is WD REQ-305, a documented departure from ISO 29500-3 9.4,
+ * for reading only.
  *
  * docx4j applies the same rule (its `TextExtractor` holds an unpreferred Choice's text back until
  * the element ends, so the SAX stream can take the third step too). `Requires` names prefixes and

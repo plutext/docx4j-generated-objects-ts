@@ -225,8 +225,8 @@ branch it returns.
 Two notes, both settled with the docx4j session (2026-09-19):
 
 - **Rule 3 agrees with docx4j.** Its `TextUtils` at first dropped a Choices-without-Fallback element,
-  being a SAX stream that cannot know there is no `mc:Fallback` until the end (Word never writes one;
-  Excel's x15 `absPath` does). `TextExtractor` now holds the first unpreferred Choice's text back and
+  being a SAX stream that cannot know there is no `mc:Fallback` until the end (Excel's x15 `absPath`
+  has none). `TextExtractor` now holds the first unpreferred Choice's text back and
   writes it when the element ends, so both implementations apply the whole rule.
 - **"Understood" is judged by prefix, as docx4j judges it.** `Requires` names prefixes, and the
   unmarshalled model keeps no prefix-to-namespace mapping for the element, so the default set is the
