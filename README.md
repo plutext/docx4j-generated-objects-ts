@@ -301,7 +301,11 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   other than tab, line feed and carriage return, for U+FFFE and U+FFFF, and for an unpaired surrogate, naming it and where it
   is. No escape can write one, and Word refuses a part holding one. Office JS's `Paragraph.text` gives such characters for a
   line break and the like, so map them before passing that text to `r()`. `checkCharacters: false` on `marshalString` writes
-  the string as held, for a copy you read straight back. `marshalNode` writes no string and isn't checked.
+  the string as held, for a display or a copy read back on Node: a browser's parser refuses it. `wml` refuses such an element
+  when it interpolates one. `marshalNode` writes no string and isn't checked.
+- **Malformed XML** (CR-023): `unmarshalString`, `unmarshalNode`, `unmarshalPackage` and `wml` throw a `SyntaxError` with the
+  parser's message in a browser, whose `DOMParser` doesn't throw and in Chromium would otherwise leave a tree cut off at the fault.
+  On Node, xmldom throws its own `ParseError`, and reads a few faults, such as a bare `&`, that a browser refuses.
 - **`mcBranchOf` and `textOf`** (CR-021): a branch is chosen as Word chooses it: the first `mc:Choice` each of whose `Requires`
   prefixes resolves to a namespace in `UNDERSTOOD_NAMESPACES`, else the `mc:Fallback`, else nothing. That set is what Word 365
   was measured to understand in a main document part, so pass `understoodNamespaces` for a spreadsheet or a presentation.

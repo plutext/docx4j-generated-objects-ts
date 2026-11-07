@@ -8,6 +8,7 @@ import { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals } from './wml-globals.mjs';
 import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, type WordIntegerReading, type WordIntegerStorage } from './helpers/wml.mjs';
 import { CONTAINERS, misplacement, alternateContentOf, branchItems, type Declarations, type Misplacement, type MisplacedRule } from './misplaced.mjs';
 import { branchSdtType } from './branches.mjs';
+import { parseXml, refuseParserError } from './parse.mjs';
 export { MODULES };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
@@ -362,12 +363,14 @@ export function getContextSync(): Jsonix.Context {
  * own, which is how a Choice's bindings are recorded. `onInvalidValue` is `wordInvalidValue`
  * unless the caller passes one, so Word's own WordprocessingML loads as Word 365 reads it (CR-013),
  * and `onWordReading` is told of each value so read.
+ *
+ * Throws a `SyntaxError` for XML a browser's parser reports as malformed (CR-023), as xmldom throws its `ParseError` on Node.
  */
 export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
   xml: string, options?: UnmarshalOptions,
 ): Promise<E> {
   const context = await getContext();
-  const doc = Jsonix.DOM.parse(xml);
+  const doc = parseXml(xml);
   return recordRootBindings(doc, context.createUnmarshaller(recordingOptions(context, options)).unmarshalDocument<E>(doc));
 }
 
@@ -477,6 +480,7 @@ export function deepCopyAsSync<T extends { TYPE_NAME?: string }>(value: object, 
 export async function unmarshalNode<E extends Jsonix.TypedNamedValue = Jsonix.TypedNamedValue>(
   node: Node, options?: UnmarshalOptions,
 ): Promise<E> {
+  refuseParserError(node);
   const context = await getContext();
   return recordRootBindings(node, context.createUnmarshaller(recordingOptions(context, options)).unmarshalDocument<E>(node));
 }
@@ -1134,8 +1138,8 @@ export interface MarshalOptions extends Jsonix.MarshallerOptions {
   onMisplaced?(report: MisplacedChild): void;
   /**
    * Whether `marshalString` refuses a string holding a character XML 1.0 excludes (CR-020); on by default. False writes
-   * the string as held, for a caller reading it straight back rather than saving it. `marshalNode` writes no string and
-   * ignores this.
+   * the string as held, for a display or a copy read back on Node. A browser's parser refuses such a string, so reading
+   * it back there throws. `marshalNode` writes no string and ignores this.
    */
   checkCharacters?: boolean;
 }

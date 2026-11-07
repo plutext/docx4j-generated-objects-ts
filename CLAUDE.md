@@ -13,7 +13,7 @@ mapping declaring globally the 61 WordprocessingML elements docx4j declares as r
 `w:drawing`/`w:pict`, and nine more beyond docx4j's roots, CR-017 M7, so a misplaced one reads typed; `getContext` and
 `modulesFor` add it), `misplaced.mts` (CR-017, internal: docx4j CR-064's `checkParent` sets and messages, which the
 facade's `onMisplaced` reports and the builders refuse with), `branches.mts` (CR-018, internal: the level each host
-gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `understood.mts` (CR-021: docx4j's published understood set, which `mcBranchOf` selects by), `helpers/wml.mts` (per-type docx4j decisions,
+gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `understood.mts` (CR-021: docx4j's published understood set, which `mcBranchOf` selects by), `parse.mts` (CR-023, internal: `parseXml` and the check for a browser's `parsererror` document), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
@@ -120,7 +120,9 @@ There are nine tests and no test framework:
   element with no `w:val`, `w:val` changed alone and written as given, and `w:stylePaneSortMethod` still `CTShortHexNumber`.
   CR-020's block has `marshalString` refuse each class of character XML 1.0 excludes, in a `w:t`, in an attribute and read
   from a file, and `marshalPackage` in a typed part and one left as DOM, naming the part. It checks the characters beside
-  them still written, the message's position, `checkCharacters: false`, `marshalNode` unchanged and `wml()`'s interpolation.
+  them still written, the message's position, `checkCharacters: false`, `marshalNode` unchanged and `wml()`'s interpolation refused.
+  CR-023's block reads the documents Chromium and Firefox return for malformed XML, written out so xmldom can read them, through
+  `unmarshalString`, `unmarshalPackage`, `wml` and `unmarshalNode`, and checks the message. Nothing here runs in a browser.
   CR-021's block holds `UNDERSTOOD_NAMESPACES` to docx4j's list when `../docx4j` is checked out, and checks `requiresNamespaces`
   (a source's binding, a table prefix, one bound elsewhere, an alias, a `deepCopy`, a `wml()` fragment, a tree built by hand),
   what `mcBranchOf` selects for each, and `onNothingSelected`, at a root too.
@@ -335,8 +337,8 @@ CR-019 (implemented 2026-11-06, D1 to D3 as decided) is a regeneration alone: do
 CR-020 (implemented 2026-11-07, D1 to D3 as decided) refuses a character XML 1.0 excludes when the facade writes a string:
 `marshalString` and `marshalPackage` throw a `RangeError` naming it, its position and, from `marshalPackage`, its part. The
 check is on the string, so it covers attributes and whatever stayed DOM, and nothing is rewritten. `checkCharacters: false`
-on `marshalString` writes as held, for a caller reading the string straight back (`wml()`'s interpolation, docx4j-ts-editor's
-copies). `marshalNode` writes no string and is unchanged. core-ts CR-002 section 60 D3 is the same guard at a part's save.
+on `marshalString` writes as held, for a display or a copy read back on Node: xmldom reads such a string and a browser's parser
+doesn't (CR-020 section 3.1). `wml()`'s interpolation is refused too (D4). `marshalNode` writes no string and is unchanged. core-ts CR-002 section 60 D3 is the same guard at a part's save.
 
 CR-021 (implemented 2026-11-07, D1 to D5 as decided) has `mcBranchOf` select as WD REQ-302 to REQ-306 and Word do:
 - **The rule:** the first `mc:Choice` each of whose `Requires` prefixes resolves to an understood namespace, else the
@@ -347,6 +349,12 @@ CR-021 (implemented 2026-11-07, D1 to D5 as decided) has `mcBranchOf` select as 
   facade, or a prefix the table lacks counts as not understood.
 - **The report:** `onNothingSelected` on `mcBranchOf`. `textOf` follows it, the one stated exception to its frozen output, and
   stays silent, since it takes no options.
+
+CR-023 (implemented 2026-11-07) refuses malformed XML on every facade read. A browser's `DOMParser` doesn't throw: it returns a
+document holding a `parsererror` element, and Chromium's read on as a tree cut off at the fault. `parseXml` and `refuseParserError`
+(`src/parse.mts`) throw a `SyntaxError` with the parser's message, and `unmarshalString`, `unmarshalNode`, `unmarshalPackage` and
+`wml` go through them. core-ts CR-002 section 33 is the same guard. xmldom's own recovery on Node is unchanged. Results from one
+runtime don't carry to the other: every test here runs on xmldom, and add-ins run in a browser.
 
 ## What the declarations promise
 

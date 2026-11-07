@@ -14,6 +14,7 @@
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
 import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES, requiresNamespaces } from '../index.mjs';
+import { parseXml } from '../parse.mjs';
 import { UNDERSTOOD_NAMESPACES } from '../understood.mjs';
 import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
@@ -122,7 +123,7 @@ async function interpolate(value: Interpolated): Promise<string> {
   if (value === null || value === undefined) return '';
   if (Array.isArray(value)) return (await Promise.all(value.map(interpolate))).join('');
   if (isRaw(value)) return value.xml;
-  if (isElement(value)) return (await marshalString(value, { checkCharacters: false })).replace(/^(\s*(?:<\?xml[^>]*\?>\s*)?<[^\s/>]+)/, `$1 ${INTERPOLATED}=""`);
+  if (isElement(value)) return (await marshalString(value)).replace(/^(\s*(?:<\?xml[^>]*\?>\s*)?<[^\s/>]+)/, `$1 ${INTERPOLATED}=""`);
   return escapeText(String(value));
 }
 
@@ -159,10 +160,6 @@ export async function wmlOne<T = unknown>(first: string | TemplateStringsArray, 
   const all = isTemplate(first) ? await wml(first, ...(rest as Interpolated[])) : await wml(first, rest[0] as WmlOptions | undefined);
   if (all.length !== 1) throw new Error(`Expected one element, found ${all.length}`);
   return all[0] as Element<T>;
-}
-
-function parseXml(text: string): Document {
-  return Jsonix.DOM.parse(text);
 }
 
 function firstElementChild(node: Node, after?: globalThis.Element): globalThis.Element | undefined {

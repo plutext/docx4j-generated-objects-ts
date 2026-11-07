@@ -1,7 +1,7 @@
 // Runtime check of the facade against a small WordprocessingML document.
 import { existsSync, readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, WML_GLOBAL_ELEMENTS, Jsonix } from '../dist/index.mjs';
+import { unmarshalString, unmarshalNode, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, WML_GLOBAL_ELEMENTS, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
 import { highlightHexValue, isCustomStyle } from '../dist/helpers/wml.mjs';
 
@@ -1644,8 +1644,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     && e.message.includes('<w:t>a"'), 'the message gives the position and what comes before');
 
   assert.equal((await marshalNode(fromFile)).nodeName, 'w:document', 'marshalNode writes no string, so it is not checked (D3)');
-  const [interpolated] = await wml`<w:p>${r('a\u000Bb')}</w:p>`;
-  assert.equal(interpolated.name.localPart, 'p', "wml()'s interpolation copies an element, it doesn't save one");
+  await assert.rejects(wml`<w:p>${r('a\u000Bb')}</w:p>`, refuses('000B'), "wml()'s interpolation, since a browser's parser couldn't read it back (D4)");
 
   const part = (name, data) => `<pkg:part pkg:name="${name}" pkg:contentType="application/xml"><pkg:xmlData>${data}</pkg:xmlData></pkg:part>`;
   const packageOf = (...parts) => `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">${parts.join('')}</pkg:package>`;
@@ -1655,7 +1654,38 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
     (e) => e instanceof RangeError && e.message.startsWith('Part /customXml/item1.xml holds U+000B'), 'a part left as DOM');
   await marshalPackage(await unmarshalPackage(packageOf(part('/word/document.xml', documentOf('fine')))));
 
-  console.log('CR-020: characters XML 1.0 excludes refused by marshalString and marshalPackage, naming the character and the part; checkCharacters: false, marshalNode and wml() as before');
+  console.log("CR-020: characters XML 1.0 excludes refused by marshalString, marshalPackage and wml()'s interpolation, naming the character and the part; checkCharacters: false and marshalNode as before");
+}
+
+// CR-023: malformed XML refused on every read. These are the documents a browser's DOMParser returns, as Chromium and Firefox
+// returned them (2026-11-07), written out so xmldom can read them: nothing here runs in a browser.
+{
+  const { wml, textOf } = await import('../dist/builders/wml.mjs');
+  const W_NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const chromiumError = '<parsererror xmlns="http://www.w3.org/1999/xhtml" style="display: block"><h3>This page contains the following errors:</h3>'
+    + '<div style="font-family:monospace">error on line 1 at column 146: Invalid character U+000B\n</div><h3>Below is a rendering of the page up to the first error.</h3></parsererror>';
+  const paragraph = '<w:p><w:r><w:t>FIRST</w:t></w:r></w:p>';
+  const chromium = `<w:document ${W_NS}>${chromiumError}<w:body>${paragraph}</w:body></w:document>`;
+  const chromiumNoRoot = `<html xmlns="http://www.w3.org/1999/xhtml"><body>${chromiumError}</body></html>`;
+  const firefox = '<parsererror xmlns="http://www.mozilla.org/newlayout/xml/parsererror.xml" dir="ltr">XML Parsing Error: not well-formed\n'
+    + 'Location: about:blank\nLine Number 1, Column 146:<sourcetext>&lt;w:document&gt;a long source line\n---^</sourcetext></parsererror>';
+  const chromiumSays = (e) => e instanceof SyntaxError && e.message === 'Malformed XML: error on line 1 at column 146: Invalid character U+000B';
+  const firefoxSays = (e) => e instanceof SyntaxError && e.message === 'Malformed XML: XML Parsing Error: not well-formed Location: about:blank Line Number 1, Column 146:';
+
+  await assert.rejects(unmarshalString(chromium), chromiumSays, "Chromium's document, which read as the paragraphs before the fault");
+  await assert.rejects(unmarshalString(chromiumNoRoot), chromiumSays, 'Chromium with nothing parsed');
+  await assert.rejects(unmarshalString(firefox), firefoxSays, "Firefox's, without its source line");
+  await assert.rejects(unmarshalPackage(`<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">${chromiumError}</pkg:package>`), chromiumSays, 'a package');
+  await assert.rejects(wml(chromiumError), chromiumSays, "wml()'s parse");
+
+  const node = Jsonix.DOM.parse(chromium);
+  await assert.rejects(unmarshalNode(node), chromiumSays, 'unmarshalNode, a document');
+  await assert.rejects(unmarshalNode(node.documentElement), chromiumSays, 'unmarshalNode, its root');
+
+  const elsewhere = await unmarshalString(`<w:document ${W_NS}><x:parsererror xmlns:x="urn:x"/><w:body>${paragraph}</w:body></w:document>`);
+  assert.equal(textOf(elsewhere.value), 'FIRST', 'a parsererror in another namespace is only an element');
+  await assert.rejects(unmarshalString('<w:document'), (e) => !(e instanceof SyntaxError), "xmldom's own throw is left as it is");
+  console.log('CR-023: the documents Chromium and Firefox give for malformed XML refused by unmarshalString, unmarshalNode, unmarshalPackage and wml(), with the parser\'s message');
 }
 
 // CR-021: mcBranchOf by namespace, over the understood set, selecting nothing as Word does.

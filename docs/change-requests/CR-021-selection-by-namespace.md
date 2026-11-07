@@ -116,7 +116,12 @@ core-ts ran its suite in a scratch copy at its `1cae4ef`, both builds on jsonix 
 `mcBranchOf(value)`. Typecheck passes. Against `53e5a49`'s build, 8 more tests fail, all pinned to the old selection: 5 `PENDING`
 req303 entries, the `extraction-probe-inspect` golden, and 2 `kept-branches` tests using `cx3` as not understood. Each stops at its
 first failed assertion, so editing them may show more. All 119 `ul-*` files match Word through a kept and a resolved load.
-`onNothingSelected` wasn't exercised there. docx4j-ts-editor has not been run against it.
+core-ts then ran `b4373c8` on Node 22 with jsonix 3.13.0: the same 12 failures of 1,907, and through a prototype in its
+`compareBranches`, `onNothingSelected` fired on exactly the 24 of the 142 where Word shows neither branch.
+
+docx4j-ts-editor ran its suites against `b4373c8` on jsonix 3.13.0, against published 0.7.0 for comparison. One failure is this
+release's: `alternate-content.test.mts`'s no-Fallback `Requires="zz9"`, pinned to the third step, which it re-pins at install.
+core-ts still passed `understood` there, so selection ran on the default set, and its browser suite wasn't run.
 
 
 ## 7. Decisions
@@ -150,7 +155,10 @@ All five decided as recommended, 2026-11-07.
   goes in the commit that raises its dependency. `mcBranchOf(value)` with no option uses the understood set. Its load's own sets, and when it adopts REQ-305, are its own work. Its readers change
   with D1, and it raises `mce.nothing_selected` from `onNothingSelected`. Its load must read through the facade for a prefix
   like `q` to resolve.
-- **docx4j-ts-editor:** it calls `textOf`, so its text changes with D1. It doesn't call `mcBranchOf`. Not asked yet.
+- **docx4j-ts-editor:** it calls `textOf`, so its text changes with D1. It doesn't call `mcBranchOf`, but six of its reads use
+  core-ts's `selectedBranchOf`, so the branch it projects and edits moves too once core-ts raises its dependency. All six handle
+  nothing selected, and in its run the one element that moved stayed an opaque atom. Stores and rooms made under the old selection
+  are its to check at install.
 - **An add-in on this package alone:** `textOf` and `mcBranchOf` changed as section 5 has it.
 
 ## 10. Not in this CR
