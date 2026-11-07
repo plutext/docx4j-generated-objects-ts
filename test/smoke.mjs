@@ -1606,3 +1606,54 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
   console.log("CR-019: w:stylePaneFormatFilter's sixteen attributes read and written as spelled; w:val optional and unsynchronised; w:stylePaneSortMethod unchanged");
 }
+
+// CR-020: a character XML 1.0 excludes, refused when the facade writes a string.
+{
+  const { marshalNode } = await import('../dist/index.mjs');
+  const { wml, r } = await import('../dist/builders/wml.mjs');
+  const NS = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const documentOf = (text) => `<w:document ${NS}><w:body><w:p><w:bookmarkStart w:id="1" w:name="b"/><w:r><w:t>${text}</w:t></w:r></w:p></w:body></w:document>`;
+  const childrenOf = (document) => { const p = unwrap(document).body.content[0]; return (p.value ?? p).content; };
+  const holding = async (text) => {
+    const document = await unmarshalString(documentOf('x'));
+    const run = childrenOf(document)[1];
+    (run.value ?? run).content[0].value.value = text;
+    return document;
+  };
+  const refuses = (code) => (e) => e instanceof RangeError && e.message.includes(`holds U+${code}, which XML 1.0 excludes`);
+
+  for (const code of [0x0000, 0x0008, 0x000B, 0x000C, 0x000E, 0x001F, 0xFFFE, 0xFFFF, 0xD83D, 0xDE00]) {
+    const hex = code.toString(16).toUpperCase().padStart(4, '0');
+    await assert.rejects(marshalString(await holding(`a${String.fromCharCode(code)}b`)), refuses(hex), `U+${hex} refused`);
+  }
+  for (const text of ['a\tb', 'a\nb', 'a\rb', 'a\u007Fb', 'a\u0085b', 'a b', 'a퟿b', 'ab', 'a�b', 'a\u{1F600}b', 'a\u{10FFFF}b']) {
+    await marshalString(await holding(text));
+  }
+
+  const inAttribute = await unmarshalString(documentOf('x'));
+  const bookmark = childrenOf(inAttribute)[0];
+  (bookmark.value ?? bookmark).name = 'a\u000Bb';
+  await assert.rejects(marshalString(inAttribute), refuses('000B'), 'in an attribute');
+
+  const fromFile = await unmarshalString(documentOf('a\u000Bb'));
+  await assert.rejects(marshalString(fromFile), refuses('000B'), 'read from a file, then written');
+
+  const held = await marshalString(fromFile, { checkCharacters: false });
+  assert.ok(held.includes('a\u000Bb'), 'checkCharacters: false writes the string as held');
+  await assert.rejects(marshalString(fromFile), (e) => e.message.startsWith('The XML holds') && e.message.includes(`(character ${held.indexOf('\u000B')}, after "`)
+    && e.message.includes('<w:t>a"'), 'the message gives the position and what comes before');
+
+  assert.equal((await marshalNode(fromFile)).nodeName, 'w:document', 'marshalNode writes no string, so it is not checked (D3)');
+  const [interpolated] = await wml`<w:p>${r('a\u000Bb')}</w:p>`;
+  assert.equal(interpolated.name.localPart, 'p', "wml()'s interpolation copies an element, it doesn't save one");
+
+  const part = (name, data) => `<pkg:part pkg:name="${name}" pkg:contentType="application/xml"><pkg:xmlData>${data}</pkg:xmlData></pkg:part>`;
+  const packageOf = (...parts) => `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">${parts.join('')}</pkg:package>`;
+  await assert.rejects(marshalPackage(await unmarshalPackage(packageOf(part('/word/document.xml', documentOf('x')), part('/word/typed.xml', documentOf('a\u000Bb'))))),
+    (e) => e instanceof RangeError && e.message.startsWith('Part /word/typed.xml holds U+000B'), 'a typed part, named');
+  await assert.rejects(marshalPackage(await unmarshalPackage(packageOf(part('/customXml/item1.xml', '<z:v xmlns:z="urn:z">a\u000Bb</z:v>')))),
+    (e) => e instanceof RangeError && e.message.startsWith('Part /customXml/item1.xml holds U+000B'), 'a part left as DOM');
+  await marshalPackage(await unmarshalPackage(packageOf(part('/word/document.xml', documentOf('fine')))));
+
+  console.log('CR-020: characters XML 1.0 excludes refused by marshalString and marshalPackage, naming the character and the part; checkCharacters: false, marshalNode and wml() as before');
+}

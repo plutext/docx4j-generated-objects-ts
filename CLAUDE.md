@@ -118,6 +118,9 @@ There are eight tests and no test framework:
   paragraph's Choice is reported, and written with its `xsi:type`.
   CR-019's block reads and writes `w:stylePaneFormatFilter`'s sixteen attributes as the source spells them, and checks an
   element with no `w:val`, `w:val` changed alone and written as given, and `w:stylePaneSortMethod` still `CTShortHexNumber`.
+  CR-020's block has `marshalString` refuse each class of character XML 1.0 excludes, in a `w:t`, in an attribute and read
+  from a file, and `marshalPackage` in a typed part and one left as DOM, naming the part. It checks the characters beside
+  them still written, the message's position, `checkCharacters: false`, `marshalNode` unchanged and `wml()`'s interpolation.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -322,6 +325,12 @@ at its host's level, as docx4j CR-051 section 11.3 (`McBranchSdt`) binds it:
 CR-019 (implemented 2026-11-06, D1 to D3 as decided) is a regeneration alone: docx4j CR-078 types `w:stylePaneFormatFilter`
 `CT_StylePaneFilter`, with fifteen `s:ST_OnOff` attributes and an optional `w:val`, and nothing in `src/` changes. Nothing keeps
 `w:val` and the attributes in step, and Word reads `w:val` only with no attribute beside it (CR-078's measurement).
+
+CR-020 (implemented 2026-11-07, D1 to D3 as decided) refuses a character XML 1.0 excludes when the facade writes a string:
+`marshalString` and `marshalPackage` throw a `RangeError` naming it, its position and, from `marshalPackage`, its part. The
+check is on the string, so it covers attributes and whatever stayed DOM, and nothing is rewritten. `checkCharacters: false`
+on `marshalString` writes as held, for a caller reading the string straight back (`wml()`'s interpolation, docx4j-ts-editor's
+copies). `marshalNode` writes no string and is unchanged. core-ts CR-002 section 60 D3 is the same guard at a part's save.
 
 ## What the declarations promise
 

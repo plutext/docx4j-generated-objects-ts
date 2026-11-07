@@ -373,9 +373,28 @@ export async function unmarshalString<E extends Jsonix.TypedNamedValue = Jsonix.
 /**
  * docx4j XmlUtils.marshaltoString: serialise an element to XML, with docx4j's prefixes and namespace declarations.
  * Run properties are written in their normal form (CR-013's normaliser), unless `normaliseOnSave` is false.
+ * Throws a `RangeError` if the XML would hold a character XML 1.0 excludes (CR-020), unless `checkCharacters` is false.
  */
 export async function marshalString(element: Jsonix.TypedNamedValue, options?: MarshalOptions): Promise<string> {
-  return serialize(marshalToDocument(await getContext(), element, options));
+  const xml = serialize(marshalToDocument(await getContext(), element, options));
+  return options?.checkCharacters === false ? xml : refuseExcludedCharacters(xml, () => 'The XML');
+}
+
+/** Any character outside XML 1.0's `Char` production; with the `u` flag an unpaired surrogate is one (CR-020). */
+const NOT_XML_CHAR = /[^\t\n\r\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/u;
+
+/**
+ * The XML, refused where it holds a character XML 1.0 excludes, which no escape can write (CR-020, core-ts CR-002
+ * section 60 D3). The check is on the string, so it covers attributes and whatever stayed DOM. Nothing is rewritten.
+ */
+function refuseExcludedCharacters(xml: string, where: (index: number) => string): string {
+  const found = NOT_XML_CHAR.exec(xml);
+  if (found === null) return xml;
+  const code = found[0].charCodeAt(0).toString(16).toUpperCase().padStart(4, '0');
+  const before = xml.slice(Math.max(0, found.index - 40), found.index)
+    .replace(/[^\x20-\x7e]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`);
+  throw new RangeError(`${where(found.index)} holds U+${code}, which XML 1.0 excludes, so it can't be written as well-formed XML `
+    + `(character ${found.index}, after "${before}"); remove it, or write it as the element it stands for`);
 }
 
 /** docx4j XmlUtils.unwrap: the value of an element. */
@@ -1025,7 +1044,7 @@ function namespacePrefixesFor(context: Jsonix.Context, root: Jsonix.TypedNamedVa
  * original node, which is still in its source document.
  */
 function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedValue, facadeOptions?: MarshalOptions): Document {
-  const { normaliseOnSave, onNormalised, onOutOfRange, onMisplaced, ...options } = facadeOptions ?? {};
+  const { normaliseOnSave, onNormalised, onOutOfRange, onMisplaced, checkCharacters: _checkCharacters, ...options } = facadeOptions ?? {};
   const table = namespacePrefixesFor(context, element, options.namespacePrefixes);
   const choices = new Map<Element, ReadonlyMap<string, string>>();
   const callerOnElement = options.onElement;
@@ -1100,6 +1119,12 @@ export interface MarshalOptions extends Jsonix.MarshallerOptions {
    * callback that throws stops the save there with its own error. Otherwise written as held. Not called unless passed.
    */
   onMisplaced?(report: MisplacedChild): void;
+  /**
+   * Whether `marshalString` refuses a string holding a character XML 1.0 excludes (CR-020); on by default. False writes
+   * the string as held, for a caller reading it straight back rather than saving it. `marshalNode` writes no string and
+   * ignores this.
+   */
+  checkCharacters?: boolean;
 }
 
 /**
@@ -1648,7 +1673,10 @@ export async function unmarshalPackage(ooxml: string): Promise<PackageElement> {
   return pkg;
 }
 
-/** The inverse of `unmarshalPackage`: typed XML parts become DOM again, then the package is serialised. The input is not modified. */
+/**
+ * The inverse of `unmarshalPackage`: typed XML parts become DOM again, then the package is serialised. The input is not
+ * modified. Throws a `RangeError` naming the part if one would hold a character XML 1.0 excludes (CR-020).
+ */
 export async function marshalPackage(pkg: PackageElement): Promise<string> {
   const context = await getContext();
   const parts: Part[] = (pkg.value.part ?? []).map((part) => {
@@ -1659,5 +1687,9 @@ export async function marshalPackage(pkg: PackageElement): Promise<string> {
     return part;
   });
   const value: Package = { ...pkg.value, part: parts };
-  return serialize(marshalToDocument(context, { name: pkg.name, value }));
+  const xml = serialize(marshalToDocument(context, { name: pkg.name, value }));
+  return refuseExcludedCharacters(xml, (index) => {
+    const name = xml.lastIndexOf('pkg:name="', index);
+    return name < 0 ? 'The package' : `Part ${xml.slice(name + 10, xml.indexOf('"', name + 10))}`;
+  });
 }

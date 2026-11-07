@@ -121,7 +121,7 @@ async function interpolate(value: Interpolated): Promise<string> {
   if (value === null || value === undefined) return '';
   if (Array.isArray(value)) return (await Promise.all(value.map(interpolate))).join('');
   if (isRaw(value)) return value.xml;
-  if (isElement(value)) return (await marshalString(value)).replace(/^(\s*(?:<\?xml[^>]*\?>\s*)?<[^\s/>]+)/, `$1 ${INTERPOLATED}=""`);
+  if (isElement(value)) return (await marshalString(value, { checkCharacters: false })).replace(/^(\s*(?:<\?xml[^>]*\?>\s*)?<[^\s/>]+)/, `$1 ${INTERPOLATED}=""`);
   return escapeText(String(value));
 }
 

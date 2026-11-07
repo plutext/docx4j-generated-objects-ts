@@ -297,6 +297,11 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   optional `val`, each kept as the source spells it. Nothing keeps the two in step, and Word reads `w:val` only with no attribute
   beside it, an attribute left out reading as on (measured, docx4j CR-078). So setting `val` alone on a loaded file that has the
   attributes changes nothing Word reads: set the attributes.
+- **Characters XML 1.0 excludes** (CR-020): `marshalString` and `marshalPackage` throw a `RangeError` for a control character
+  other than tab, line feed and carriage return, for U+FFFE and U+FFFF, and for an unpaired surrogate, naming it and where it
+  is. No escape can write one, and Word refuses a part holding one. Office JS's `Paragraph.text` gives such characters for a
+  line break and the like, so map them before passing that text to `r()`. `checkCharacters: false` on `marshalString` writes
+  the string as held, for a copy you read straight back. `marshalNode` writes no string and isn't checked.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
