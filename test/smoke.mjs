@@ -1,5 +1,5 @@
 // Runtime check of the facade against a small WordprocessingML document.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { unmarshalString, marshalString, unmarshalPackage, marshalPackage, unwrap, deepCopy, deepCopyAs, deepCopyAsSync, getContext, getContextSync, resetContext, NAMESPACE_PREFIXES, IGNORABLE_PREFIX_ALIASES, IGNORABLE_EXTENSION_NAMESPACES, MODULE_NAMES, MODULES, modulesFor, WML_GLOBAL_ELEMENTS, Jsonix } from '../dist/index.mjs';
 import { createRequire } from 'node:module';
@@ -640,7 +640,7 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   walkAll(pkgElement, (v) => { typedSeen.push(v); }, () => {});
   assert.ok(typedSeen.length > 0, 'walkAll visits typed objects like walk');
 
-  // CR-003 section 3.8: the mc:AlternateContent branch a reader takes (docx4j's McSelection).
+  // CR-003 section 3.8, as CR-021 has it: the mc:AlternateContent branch a reader takes.
   const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
   const alt = (branches) => `<w:p xmlns:w="${W}" xmlns:mc="${MC}" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" xmlns:zz="urn:not-known"><w:r><w:t xml:space="preserve">a </w:t></w:r><mc:AlternateContent>${branches}</mc:AlternateContent></w:p>`;
   const paragraphOf = async (xml) => unwrap(await unmarshalString(xml));
@@ -649,14 +649,14 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   const fallback = '<mc:Fallback><w:r><w:t>fallback</w:t></w:r></mc:Fallback>';
   assert.equal(textOf(await paragraphOf(alt(choiceUnknown + choiceWps + fallback))), 'a wps', 'rule 1: the first understood Choice');
   assert.equal(textOf(await paragraphOf(alt(choiceUnknown + fallback))), 'a fallback', 'rule 2: the Fallback when no Choice is understood');
-  assert.equal(textOf(await paragraphOf(alt(choiceUnknown))), 'a unknown', 'rule 3: Choices with no Fallback take the first, which docx4j TextUtils cannot');
+  assert.equal(textOf(await paragraphOf(alt(choiceUnknown))), 'a ', 'rule 3: nothing understood and no Fallback selects nothing, as Word does (CR-021)');
   assert.equal(textOf(await paragraphOf(alt(''))), 'a ', 'rule 4: no branches, no text');
   const withBoth = await paragraphOf(alt(choiceUnknown + choiceWps + fallback));
   const ac = withBoth.content[1].value;
   assert.equal(mcBranchOf(ac).length, 1);
   assert.equal(textOf(mcBranchOf(ac)[0]), 'wps', 'mcBranchOf returns the branch items');
-  assert.equal(textOf(mcBranchOf(ac, { understood: ['zz'] })[0]), 'unknown', 'a caller can say what it understands');
-  assert.equal(textOf(mcBranchOf(ac, { understood: [] })[0]), 'fallback', 'nothing understood: the Fallback');
+  assert.equal(textOf(mcBranchOf(ac, { understoodNamespaces: ['urn:not-known'] })[0]), 'unknown', 'a caller can say what it understands');
+  assert.equal(textOf(mcBranchOf(ac, { understoodNamespaces: [] })[0]), 'fallback', 'nothing understood: the Fallback');
   assert.equal(mcBranchOf(undefined), undefined);
 
   console.log('builders/wml: fragments (content controls by first decisive descendant), tagged form, text sugar, run mapping, traversal OK');
@@ -1656,4 +1656,75 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   await marshalPackage(await unmarshalPackage(packageOf(part('/word/document.xml', documentOf('fine')))));
 
   console.log('CR-020: characters XML 1.0 excludes refused by marshalString and marshalPackage, naming the character and the part; checkCharacters: false, marshalNode and wml() as before');
+}
+
+// CR-021: mcBranchOf by namespace, over the understood set, selecting nothing as Word does.
+{
+  const { requiresNamespaces } = await import('../dist/index.mjs');
+  const { wml, mcBranchOf, textOf, UNDERSTOOD_NAMESPACES } = await import('../dist/builders/wml.mjs');
+  const WML = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
+  const W14 = 'http://schemas.microsoft.com/office/word/2010/wordml';
+  const C16R2 = 'http://schemas.microsoft.com/office/drawing/2015/06/chart';
+  const CX5 = 'http://schemas.microsoft.com/office/drawing/2016/5/11/chartex';
+  const choice = (requires, words = 'choice') => `<mc:Choice Requires="${requires}"><w:r><w:t>${words}</w:t></w:r></mc:Choice>`;
+  const fallback = '<mc:Fallback><w:r><w:t>fallback</w:t></w:r></mc:Fallback>';
+  const altOf = async (branches, declarations = '') => unwrap(await unmarshalString(
+    `<w:p xmlns:w="${WML}" xmlns:mc="${MC}" ${declarations}><mc:AlternateContent>${branches}</mc:AlternateContent></w:p>`)).content[0].value;
+  const selected = (value, options) => { const branch = mcBranchOf(value, options); return branch && branch.map(textOf).join(''); };
+
+  // The set: docx4j's, not the marshalling table.
+  assert.equal(UNDERSTOOD_NAMESPACES.size, 114);
+  assert.ok(UNDERSTOOD_NAMESPACES.has(C16R2) && UNDERSTOOD_NAMESPACES.has(W14), 'what Word understands');
+  assert.ok(!UNDERSTOOD_NAMESPACES.has(CX5), 'cx5 is in NAMESPACE_PREFIXES, and Word does not understand it');
+  const published = new URL('../../docx4j/docx4j-core/src/main/resources/org/docx4j/jaxb/understood-namespaces.txt', import.meta.url);
+  let setHeld = 'docx4j not checked out beside';
+  if (existsSync(published)) {
+    const uris = readFileSync(published, 'utf8').split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
+    assert.deepEqual([...UNDERSTOOD_NAMESPACES], uris, "docx4j's published list, in its order");
+    setHeld = "held to docx4j's list";
+  }
+
+  // By namespace: the source's binding, then the table, then the aliases.
+  const bound = await altOf(choice('q') + fallback, `xmlns:q="${W14}"`);
+  assert.deepEqual(requiresNamespaces(bound.choice[0]), [W14], "the source's binding");
+  assert.equal(selected(bound), 'choice', 'an understood namespace under any prefix');
+  assert.deepEqual(requiresNamespaces(deepCopy(bound).choice[0]), [W14], 'a deepCopy keeps the record');
+  assert.equal(selected(await altOf(choice('w14') + fallback, `xmlns:w14="${W14}"`)), 'choice', 'the conventional prefix, which leaves no record');
+  const rebound = await altOf(choice('w14') + fallback, 'xmlns:w14="urn:other"');
+  assert.deepEqual(requiresNamespaces(rebound.choice[0]), ['urn:other'], 'a table prefix bound to something else');
+  assert.equal(selected(rebound), 'fallback');
+  assert.equal(selected(await altOf(choice('c16r2') + fallback, `xmlns:c16r2="${C16R2}"`)), 'choice', 'understood, with no table entry');
+  assert.equal(selected(await altOf(choice('cx5') + fallback, `xmlns:cx5="${CX5}"`)), 'fallback', 'in the table, not understood');
+  assert.equal(selected(await altOf(choice(`w14 q`) + fallback, `xmlns:w14="${W14}" xmlns:q="urn:other"`)), 'fallback', 'every prefix must be understood');
+  const [fragment] = await wml`<w:p xmlns:q="${W14}"><mc:AlternateContent>${wml.raw(choice('q'))}</mc:AlternateContent></w:p>`;
+  assert.equal(selected(fragment.value.content[0].value), 'choice', 'a wml() fragment is read through the facade');
+
+  // A tree built by hand: the table alone, and a prefix it doesn't hold is not understood (D4).
+  assert.deepEqual(requiresNamespaces({ requires: 'wps w14' }), ['http://schemas.microsoft.com/office/word/2010/wordprocessingShape', W14]);
+  assert.deepEqual(requiresNamespaces({ requires: 'x' }), ['http://schemas.openxmlformats.org/spreadsheetml/2006/main'], 'an alias');
+  assert.deepEqual(requiresNamespaces({ requires: 'c16r2' }), [undefined], 'no table entry and no record');
+  assert.deepEqual(requiresNamespaces({ requires: '  ' }), []);
+  assert.equal(mcBranchOf({ choice: [{ requires: 'c16r2', any: [] }] }), undefined);
+  assert.equal(mcBranchOf({ choice: [{ requires: '  ', any: [] }] }), undefined, 'an empty Requires is not understood (REQ-304)');
+
+  // Nothing selected: undefined, and a report (REQ-305).
+  const reports = [];
+  const onNothingSelected = (report) => reports.push(report);
+  const nothing = await altOf(choice('q') + choice('r wx') + choice('wx'), `xmlns:q="urn:one" xmlns:r="urn:two" xmlns:wx="urn:one"`);
+  assert.equal(mcBranchOf(nothing, { onNothingSelected }), undefined);
+  assert.deepEqual(reports.map((report) => report.namespaces), [['urn:one', 'urn:two']], 'each namespace once, in order');
+  assert.equal(reports[0].value, nothing);
+  reports.length = 0;
+  mcBranchOf(bound, { onNothingSelected });
+  mcBranchOf(rebound, { onNothingSelected });
+  assert.equal(mcBranchOf(await altOf(''), { onNothingSelected }), undefined, 'no branches');
+  assert.equal(reports.length, 0, 'a Choice, a Fallback or no branches at all: no report');
+
+  // The root (rw-24): the third step is gone there too.
+  const root = await unmarshalString(`<mc:AlternateContent xmlns:mc="${MC}" xmlns:w="${WML}" xmlns:z="urn:z"><mc:Choice Requires="z"><w:document><w:body/></w:document></mc:Choice></mc:AlternateContent>`);
+  assert.equal(mcBranchOf(unwrap(root), { onNothingSelected }), undefined, 'an mc:AlternateContent root selecting nothing');
+  assert.deepEqual(reports[0].namespaces, ['urn:z']);
+
+  console.log(`CR-021: selection by namespace through CR-011's records, over the 114 of the understood set (${setHeld}); nothing selected, and reported, where nothing is understood and there is no Fallback`);
 }

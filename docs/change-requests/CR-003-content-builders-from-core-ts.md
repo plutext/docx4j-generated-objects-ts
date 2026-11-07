@@ -222,6 +222,9 @@ content, `w:numPicBullet`, a DrawingML text paragraph), so a tree can now hold o
 understood, else the `mc:Fallback`, else the first `mc:Choice`, else nothing. `textOf` reads the
 branch it returns.
 
+CR-021 (2026-11-07) replaced the third step and the prefix comparison: `mcBranchOf` now selects nothing where the first Choice
+was taken, and resolves `Requires` to namespaces over the understood set. The two notes below are what was settled then.
+
 Two notes, both settled with the docx4j session (2026-09-19):
 
 - **Rule 3 agrees with docx4j.** Its `TextUtils` at first dropped a Choices-without-Fallback element,

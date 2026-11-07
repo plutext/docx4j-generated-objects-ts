@@ -110,8 +110,8 @@ phase B), so it gets the fix by upgrading. Nothing to change there.
 ## 6. What this is not
 
 Not a general aliasing mechanism for reading. The model never sees prefixes - it resolves
-namespaces at unmarshal - and `mcBranchOf` (CR-003 section 3.8) judges `Requires` by prefix
-against `NAMESPACE_PREFIXES` for a documented reason of its own. This CR touches one question on
+namespaces at unmarshal - and `mcBranchOf` (CR-003 section 3.8) judged `Requires` by prefix
+against `NAMESPACE_PREFIXES` for a documented reason of its own, until CR-021. This CR touches one question on
 the marshal side: what a prefix in a root's `mc:Ignorable` must be declared as.
 
 ## 7. As implemented (2026-09-24)

@@ -13,7 +13,7 @@ mapping declaring globally the 61 WordprocessingML elements docx4j declares as r
 `w:drawing`/`w:pict`, and nine more beyond docx4j's roots, CR-017 M7, so a misplaced one reads typed; `getContext` and
 `modulesFor` add it), `misplaced.mts` (CR-017, internal: docx4j CR-064's `checkParent` sets and messages, which the
 facade's `onMisplaced` reports and the builders refuse with), `branches.mts` (CR-018, internal: the level each host
-gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `helpers/wml.mts` (per-type docx4j decisions,
+gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `understood.mts` (CR-021: docx4j's published understood set, which `mcBranchOf` selects by), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
@@ -31,7 +31,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript, esbuild, @xmldom/xmldom and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, bundle.mjs
+npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, word365-understood.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -60,7 +60,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are eight tests and no test framework:
+There are nine tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -121,6 +121,9 @@ There are eight tests and no test framework:
   CR-020's block has `marshalString` refuse each class of character XML 1.0 excludes, in a `w:t`, in an attribute and read
   from a file, and `marshalPackage` in a typed part and one left as DOM, naming the part. It checks the characters beside
   them still written, the message's position, `checkCharacters: false`, `marshalNode` unchanged and `wml()`'s interpolation.
+  CR-021's block holds `UNDERSTOOD_NAMESPACES` to docx4j's list when `../docx4j` is checked out, and checks `requiresNamespaces`
+  (a source's binding, a table prefix, one bound elsewhere, an alias, a `deepCopy`, a `wml()` fragment, a tree built by hand),
+  what `mcBranchOf` selects for each, and `onNothingSelected`, at a root too.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -181,6 +184,9 @@ There are eight tests and no test framework:
   - **The report:** `onOutOfRange` must report exactly the 432 cases Word reads differently, on read and on save, and the
     save must write every value as held.
   - **Group E:** round 6's group E holds CR-015's no-digit forms to Word's 0.
+- `test/word365-understood.mjs` (runtime, CR-021) reads the rounds behind docx4j's understood set (Word 365, 6 and 7 November
+  2026; `test/fixtures/understood-probe/`): 142 `Choice`-only main parts, each beside the text Word saved from it. `textOf` must
+  give Word's text, and `mcBranchOf` must report nothing selected exactly where Word showed neither branch.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -331,6 +337,16 @@ CR-020 (implemented 2026-11-07, D1 to D3 as decided) refuses a character XML 1.0
 check is on the string, so it covers attributes and whatever stayed DOM, and nothing is rewritten. `checkCharacters: false`
 on `marshalString` writes as held, for a caller reading the string straight back (`wml()`'s interpolation, docx4j-ts-editor's
 copies). `marshalNode` writes no string and is unchanged. core-ts CR-002 section 60 D3 is the same guard at a part's save.
+
+CR-021 (implemented 2026-11-07, D1 to D5 as decided) has `mcBranchOf` select as WD REQ-302 to REQ-306 and Word do:
+- **The rule:** the first `mc:Choice` each of whose `Requires` prefixes resolves to an understood namespace, else the
+  `mc:Fallback`, else nothing. The old third step, taking the first Choice, is gone.
+- **The set:** `UNDERSTOOD_NAMESPACES` (`src/understood.mts`), docx4j's 114 URIs. `NAMESPACE_PREFIXES` says how to write a
+  namespace, not whether Word takes a Choice in it, and stays for marshalling. A caller passes `understoodNamespaces`.
+- **By URI:** `requiresNamespaces` resolves a prefix by CR-011's record, then the table, then the aliases. Read through the
+  facade, or a prefix the table lacks counts as not understood.
+- **The report:** `onNothingSelected` on `mcBranchOf`. `textOf` follows it, the one stated exception to its frozen output, and
+  stays silent, since it takes no options.
 
 ## What the declarations promise
 

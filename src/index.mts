@@ -13,6 +13,7 @@ export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
 import type { PackageElement, Package, Part } from '../modules/org_docx4j_xmlPackage.mjs';
+import type * as Mce from '../modules/org_docx4j_mce.mjs';
 export type { PackageElement, Package, Part };
 
 /**
@@ -503,6 +504,18 @@ const TABLE_BY_PREFIX: ReadonlyMap<string, string> = new Map(Object.entries(NAME
 /** Only what the table and the aliases would not give is worth recording: Office's own files leave no record. */
 function sourceOnly(prefix: string, namespaceURI: string): boolean {
   return (TABLE_BY_PREFIX.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]) !== namespaceURI;
+}
+
+/**
+ * docx4j McSelection.requiresNamespaces: the namespace of each prefix an `mc:Choice`'s `Requires` names, in order (WD REQ-303):
+ * the binding the source declared, else the table's, else the aliases'. A Choice read through the facade carries the first
+ * (CR-011's record), so it answers for the declarations in scope where it was written. In a tree built by hand the table is
+ * all there is, and a prefix it doesn't hold is `undefined`.
+ */
+export function requiresNamespaces(choice: Mce.AlternateContent.Choice): (string | undefined)[] {
+  const bindings = sourceBindings.get(choice);
+  return String(choice.requires ?? '').split(/\s+/).filter(Boolean)
+    .map((prefix) => bindings?.get(prefix) ?? TABLE_BY_PREFIX.get(prefix) ?? IGNORABLE_PREFIX_ALIASES[prefix]);
 }
 
 type ChoiceAttribute = 'Requires' | 'mc:Ignorable' | 'mc:MustUnderstand';

@@ -9,11 +9,12 @@
 //     `sdtProperty` / `sdtKindOf`; rows and cells (`tr`, `tc`) and `inlinePicture`, docx4j's
 //     createImageInline over the generated dml factories;
 //   - run properties as the element list `w:rPrChange/w:rPr` keeps (`rPrToElements` / `rPrFromElements`);
-//   - the mc:AlternateContent branch a reader takes (`mcBranchOf`, docx4j's McSelection);
+//   - the mc:AlternateContent branch a reader takes (`mcBranchOf`, docx4j's McSelection for text);
 //   - traversal: `walk`, `walkAll` (DOM in `xs:any` properties too), `find`, `linkParents`.
 // `helpers/wml` (the per-type docx4j decisions) is imported here; it never imports this module.
 // Compiled to dist/builders/wml.mjs by `npm run build`.
-import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES } from '../index.mjs';
+import { Jsonix, unmarshalNode, marshalString, NAMESPACE_PREFIXES, requiresNamespaces } from '../index.mjs';
+import { UNDERSTOOD_NAMESPACES } from '../understood.mjs';
 import type { TypedNamedValue } from '../index.mjs';
 import type * as M from '../../modules/org_docx4j_wml.mjs';
 import type * as Mce from '../../modules/org_docx4j_mce.mjs';
@@ -806,42 +807,47 @@ export function inlinePicture(relId: string, options: InlinePictureOptions): Ele
 /** The graphic data uri of a DrawingML picture. */
 const PIC_NS = 'http://schemas.openxmlformats.org/drawingml/2006/picture';
 
+export { UNDERSTOOD_NAMESPACES };
+
 export interface McOptions {
   /**
-   * The prefixes this reader understands; `NAMESPACE_PREFIXES`' own prefixes by default, which are
-   * the namespaces this package types. `mc:Choice/@Requires` names prefixes, not namespaces, and
-   * the unmarshalled model does not keep the declarations in force at the element, so a prefix is
-   * all there is to go on; Word writes the conventional ones and docx4j matches prefixes too.
+   * The namespace URIs this reader understands; `UNDERSTOOD_NAMESPACES` by default, docx4j's published set (WD REQ-306), what
+   * Word was measured to understand in a main document part. A caller reading a spreadsheet or a presentation can pass its own.
    */
-  understood?: Iterable<string>;
+  understoodNamespaces?: Iterable<string>;
+  /** Called for an element with Choices, none of them understood, and no Fallback, which selects nothing (WD REQ-305). */
+  onNothingSelected?(report: NothingSelected): void;
 }
 
-const CONVENTIONAL_PREFIXES: ReadonlySet<string> = new Set(Object.values(NAMESPACE_PREFIXES));
+/** An `mc:AlternateContent` that selected nothing. A caller raising WD REQ-801's `mce.nothing_selected` adds the part's name. */
+export interface NothingSelected {
+  /** The namespaces its Choices require, each once, in order. A prefix nothing resolves has none. */
+  namespaces: string[];
+  value: Mce.AlternateContent;
+}
 
 /**
- * The branch of an `mc:AlternateContent` a reader takes, as docx4j's `McSelection` does (ECMA-376
- * Part 3, 10.2.1): the first `mc:Choice` whose `Requires` prefixes are all understood, else the
- * `mc:Fallback`, else the first `mc:Choice` (Excel's x15 `absPath` has no Fallback), else nothing
- * for an element with no branches.
+ * The branch of an `mc:AlternateContent` a reader takes (WD REQ-302 to REQ-305, ISO 29500-3 9.3 and 9.4, and Word's reading,
+ * CR-021): the first `mc:Choice` whose `Requires` names at least one prefix and resolves each to an understood namespace, else
+ * the `mc:Fallback`, else nothing. `undefined` when nothing is selected, as for an element with no branches.
  *
- * Word takes the first two steps but not the third: with nothing understood and no Fallback it
- * shows neither branch. The third step is WD REQ-305, a documented departure from ISO 29500-3 9.4,
- * for reading only.
- *
- * docx4j applies the same rule (its `TextExtractor` holds an unpreferred Choice's text back until
- * the element ends, so the SAX stream can take the third step too). `Requires` names prefixes and
- * docx4j compares them as prefixes, which ECMA-376 Part 3 also does for `mc:Ignorable`.
+ * Prefixes resolve through `requiresNamespaces`, so a Choice read through the facade is matched by the bindings in scope where
+ * it was written. In a tree built by hand the prefix table is all there is to go on, and a prefix it doesn't hold counts as not
+ * understood: this is the note REQ-303 asks for. docx4j's counterpart is `McSelection`'s text purpose.
  */
 export function mcBranchOf(value: Mce.AlternateContent | undefined, options: McOptions = {}): Element[] | undefined {
   if (!value) return undefined;
-  const understood = options.understood === undefined ? CONVENTIONAL_PREFIXES : new Set(options.understood);
+  const understood = options.understoodNamespaces === undefined ? UNDERSTOOD_NAMESPACES : new Set(options.understoodNamespaces);
   const choices = value.choice ?? [];
   for (const choice of choices) {
-    const required = String(choice.requires ?? '').split(/\s+/).filter(Boolean);
-    if (required.length > 0 && required.every((prefix) => understood.has(prefix))) return (choice.any ?? []) as Element[];
+    const required = requiresNamespaces(choice);
+    if (required.length > 0 && required.every((uri) => uri !== undefined && understood.has(uri))) return (choice.any ?? []) as Element[];
   }
   if (value.fallback) return (value.fallback.any ?? []) as Element[];
-  if (choices.length > 0) return (choices[0]!.any ?? []) as Element[];
+  if (choices.length > 0) {
+    const namespaces = choices.flatMap((choice) => requiresNamespaces(choice)).filter((uri): uri is string => uri !== undefined);
+    options.onNothingSelected?.({ namespaces: [...new Set(namespaces)], value });
+  }
   return undefined;
 }
 
@@ -856,7 +862,8 @@ export function mcBranchOf(value: Mce.AlternateContent | undefined, options: McO
  * read, fields are not computed, and there are no options, since hidden text can come from a style
  * and a field's value from the engine, neither of which a tree helper has. Its output is kept stable,
  * because core-ts's Office JS readers (`Paragraph.text`, `ContentControl.text`, table and cell text)
- * match it; docx4j deprecates `TextUtils` with CR-046, but this stays (Jason, 2026-10-19).
+ * match it; docx4j deprecates `TextUtils` with CR-046, but this stays (Jason, 2026-10-19). The one stated exception is CR-021's
+ * D1: it reads through `mcBranchOf`, so it selects as Word does, and an element that selects nothing gives no text and no report.
  */
 export function textOf(value: Element | object): string {
   const v = isElement(value) ? value.value : value;

@@ -302,6 +302,12 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   is. No escape can write one, and Word refuses a part holding one. Office JS's `Paragraph.text` gives such characters for a
   line break and the like, so map them before passing that text to `r()`. `checkCharacters: false` on `marshalString` writes
   the string as held, for a copy you read straight back. `marshalNode` writes no string and isn't checked.
+- **`mcBranchOf` and `textOf`** (CR-021): a branch is chosen as Word chooses it: the first `mc:Choice` each of whose `Requires`
+  prefixes resolves to a namespace in `UNDERSTOOD_NAMESPACES`, else the `mc:Fallback`, else nothing. That set is what Word 365
+  was measured to understand in a main document part, so pass `understoodNamespaces` for a spreadsheet or a presentation.
+  `onNothingSelected` reports an element that selected nothing, whose words Word doesn't show either. Prefixes resolve through
+  what the file declared, so read through the facade; in a tree built by hand a prefix `NAMESPACE_PREFIXES` lacks counts as not
+  understood. `requiresNamespaces(choice)` gives a Choice's namespaces.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as
@@ -379,7 +385,7 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   integer attribute's value (CR-016).
 - **`@docx4j/generated-objects-ts/builders/wml`** (`src/builders/wml.mts`): `wml` fragments, `p` / `r` / `t` / `tbl`,
   the run mapping, `tr` / `tc`, `inlinePicture`, `sdt` / `sdtPr` / `sdtProperty` / `sdtKindOf` for
-  content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `mcBranchOf`, `textOf`,
+  content controls, `rPrToElements` / `rPrFromElements`, `walkAll`, `mcBranchOf`, `UNDERSTOOD_NAMESPACES`, `textOf`,
   `runItemsOf`, `walk` / `find` / `linkParents` (CR-002, CR-003).
 - `modules/bindings.xjb`: the Jsonix customizations the files were generated with (kept for reference; the
   source of truth is the compiler repository's `OfficeOpenXML/bindings.xjb`).
