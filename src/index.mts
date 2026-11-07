@@ -359,7 +359,9 @@ export function getContextSync(): Jsonix.Context {
  *
  * `options` are for this call only (CR-007): `onUnexpectedElement` and `onUnexpectedAttribute`
  * report what the model dropped, at the point it was dropped. They are never set by default - see
- * the note on `UnmarshallerOptions`. An `onElement` (jsonix-CR-008) is called after the facade's
+ * the note on `UnmarshallerOptions`. Setting `onUnexpectedElement` also changes the read: an unknown
+ * element that would fail it in a `w:p` or `w:body` is skipped and reported instead (jsonix-CR-015).
+ * One at the root or inside a `w:t` still throws. An `onElement` (jsonix-CR-008) is called after the facade's
  * own, which is how a Choice's bindings are recorded. `onInvalidValue` is `wordInvalidValue`
  * unless the caller passes one, so Word's own WordprocessingML loads as Word 365 reads it (CR-013),
  * and `onWordReading` is told of each value so read.

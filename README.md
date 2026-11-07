@@ -234,8 +234,10 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
 - **Per-call options** (CR-007): `unmarshalString`, `unmarshalNode`, `marshalString` and
   `marshalNode` each take an optional second argument, passed to the runtime for that call alone -
   `onUnexpectedElement` and `onUnexpectedAttribute` to be told what the model dropped and where,
-  `onElement` to record what a marshal wrote, `namespacePrefixes` for one call's table. These are
-  the opposite of `getContext`'s options, which are read once when the context is built: nothing
+  `onElement` to record what a marshal wrote, `namespacePrefixes` for one call's table. Setting
+  `onUnexpectedElement` also changes the read: an unknown element that would fail it in a `w:p` or
+  `w:body` is skipped and reported instead (`@docx4j/jsonix` 3.12.0). One at the root or inside a
+  `w:t` still throws. These are the opposite of `getContext`'s options, which are read once when the context is built: nothing
   here touches the shared context, and `resetContext()` is not involved. **No reporting callback is
   set by default and none should be**: for some callers a drop is the mechanism rather than a fault,
   so reporting belongs to whoever asked for it. (The facade does set `onInvalidValue`, which reads a
