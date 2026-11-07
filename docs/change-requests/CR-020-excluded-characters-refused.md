@@ -129,7 +129,8 @@ All three decided as recommended, 2026-11-07.
 ## 8. Consumers
 
 - **core-ts:** the four routes in section 3 gain the refusal. Its part saves don't change. Release gate as usual.
-- **docx4j-ts-editor:** `session.mts:558` and `1197` would need `checkCharacters: false`, or another way to copy, when it
-  takes the release. Its other calls (`partsync.mts`, `format.ts`) want reading too. Not asked yet.
+- **docx4j-ts-editor:** eleven calls of `marshalString`, by its count. `session.mts:558` and `1197` and `stories.mts:355`, `811`
+  and `864` build copies and source entries, and could throw mid-edit. It will opt out at copies and displays and keep the
+  check on a real save. Filed against its install of the release, not yet run.
 - **An add-in on this package alone:** a save that wrote a bad part now throws. That is the point of the CR, and it is
   still a new throw.
