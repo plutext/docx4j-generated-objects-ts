@@ -1,6 +1,6 @@
 # CR-021: `mcBranchOf` by namespace, over the understood set, selecting nothing as Word does
 
-**Status:** Implemented 2026-11-07, D1 to D5 as decided. Not released. Accepted the same day, D1 to D5 as recommended (Jason:
+**Status:** Implemented 2026-11-07, D1 to D5 as decided, released in 0.8.0 (2026-11-08). Accepted the same day, D1 to D5 as recommended (Jason:
 "CR-021 decisions as recommended. please implement"; section 7). Proposed the same day.
 **Requested by:** Jason, 2026-11-07 ("write the objects CR for the four items: removing the third step, the
 mce.nothing_selected warning, the new understood set, and matching by URI"). It follows his rulings recorded in the WD:
@@ -107,7 +107,7 @@ export interface McOptions {
 
 - `textOf` against Word's saved text, over `ul-*`, `uc-*`, `c305-*` and `rw-25`: **142 of 142 match**. 118 did before: the 24
   were 14 `ul`, 6 `uc`, 3 `c305` and `rw-25`. Word showed the Choice in 118 and neither branch in 24, each of those reported.
-- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0.
+- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0, and on each again at 0.8.0 with 3.13.0.
 - All 341 marshalled hashes are identical to `53e5a49`'s.
 - Every `Requires` in the fidelity fixtures, Excel's `x15` and `x14` with no Fallback among them, resolves into the set, so
   no fixture's selection moved.
@@ -118,6 +118,8 @@ req303 entries, the `extraction-probe-inspect` golden, and 2 `kept-branches` tes
 first failed assertion, so editing them may show more. All 119 `ul-*` files match Word through a kept and a resolved load.
 core-ts then ran `b4373c8` on Node 22 with jsonix 3.13.0: the same 12 failures of 1,907, and through a prototype in its
 `compareBranches`, `onNothingSelected` fired on exactly the 24 of the 142 where Word shows neither branch.
+It gave its go at `9a2a945` with its CR-029 in its tree, which carries the rename and updates those pins: 1,917 of 1,917 on Node 18,
+20 and 22.
 
 docx4j-ts-editor ran its suites against `b4373c8` on jsonix 3.13.0, against published 0.7.0 for comparison. One failure is this
 release's: `alternate-content.test.mts`'s no-Fallback `Requires="zz9"`, pinned to the third step, which it re-pins at install.
@@ -151,7 +153,7 @@ All five decided as recommended, 2026-11-07.
 ## 9. Consumers
 
 - **core-ts:** `selectedBranchOf` (`src/model/content/tree.mts:77`) passes `understood: READ_UNDERSTOOD_PREFIXES`. The rename
-  fails its typecheck until it changes, and the change can't land ahead of this release, since 0.7.0 has no such default, so it
+  fails its typecheck until it changes, and the change can't land ahead of 0.8.0, since 0.7.0 has no such default, so it
   goes in the commit that raises its dependency. `mcBranchOf(value)` with no option uses the understood set. Its load's own sets, and when it adopts REQ-305, are its own work. Its readers change
   with D1, and it raises `mce.nothing_selected` from `onNothingSelected`. Its load must read through the facade for a prefix
   like `q` to resolve.

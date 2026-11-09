@@ -1,7 +1,7 @@
 # CR-019: `w:stylePaneFormatFilter`'s fifteen attributes, kept on a re-marshal
 
-**Status:** Implemented 2026-11-06, D1 to D3 as decided (Jason: "do the real regeneration"), on docx4j CR-078 (`f960df59e`). Not
-released. Accepted 2026-11-06, D1 to D4 as recommended (Jason: "CR-019 decisions as recommended; please commit"; section 8).
+**Status:** Implemented 2026-11-06, D1 to D3 as decided (Jason: "do the real regeneration"), on docx4j CR-078 (`f960df59e`), released
+in 0.8.0 (2026-11-08). Accepted 2026-11-06, D1 to D4 as recommended (Jason: "CR-019 decisions as recommended; please commit"; section 8).
 Proposed 2026-11-05.
 **Requested by:** Jason, 2026-11-05 ("similarly the objects agent its CR"), through core-ts CR-025 D6 (core-ts `5c75758`,
 local).
@@ -213,5 +213,4 @@ count made first. The count waits for the home copy of the catalogue (Jason, 202
 - **docx4j-python:** it can retire its patch at its next refresh. Its generated class's 15 fields go from `bool` to the enum,
   which takes a CHANGELOG line, and its normaliser, which picks on/off attributes by `bool`, stops covering them.
 
-The regeneration goes out in the next release, with core-ts's go as usual. Patch or minor is Jason's call: one property's
-declared type and one element's output change, and 0.3.2 was a patch for a change of that kind.
+The regeneration went out in 0.8.0, a minor for CR-020, CR-021 and CR-023 beside it, with core-ts's go at `9a2a945`.

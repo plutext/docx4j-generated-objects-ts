@@ -1,7 +1,7 @@
 # CR-023: Malformed XML refused on every facade read, in a browser as on Node
 
-**Status:** Implemented 2026-11-07, D1 as decided, D2 to D5 as built (section 5). Not released. For 0.8.0 (Jason: "Add the guard to the
-facade in 0.8.0").
+**Status:** Implemented 2026-11-07, D1 as decided, D2 to D5 as built (section 5), released in 0.8.0 (2026-11-08; Jason: "Add the guard
+to the facade in 0.8.0").
 **Requested by:** Jason, 2026-11-07, as above. It came out of docx4j-ts-editor's correction of CR-020 (its section 3.1).
 **Depends on:** nothing. No change to the runtime, the compiler or `modules/`.
 **Counterparts:**
@@ -55,11 +55,13 @@ In a new internal `src/parse.mts`, not in the `exports` map:
 - In Chromium and Firefox: eight malformed shapes through `unmarshalString`, four faults in a `w:document` and in a package, a string
   `checkCharacters: false` wrote, `wml` given such text, and `unmarshalNode` of a document parsed by the caller. All are refused with
   the parser's line and column, or by CR-020's `RangeError` where `wml` interpolates an element. The controls read as before.
-- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0.
+- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0, and on each again at 0.8.0 with 3.13.0.
 - All 341 marshalled hashes are identical to `106319f`'s.
 
 WebKit wasn't run: its system libraries aren't on this machine. core-ts's `src/xml/dom.mts` records Chromium's form as WebKit's too.
-core-ts and docx4j-ts-editor have not been run against this CR.
+core-ts ran `9a2a945` on Node 18, 20 and 22, 1,917 of 1,917, with one difference. A well-formed XHTML part shaped `html > body >
+parsererror` now reports "Malformed XML" where it reported "Element html could not be unmarshalled". That is a `PartUnmarshalException`
+either way, and an untouched save is unchanged. core-ts didn't run this in a browser, and docx4j-ts-editor has not been run against this CR.
 
 ## 5. Decisions
 
@@ -84,7 +86,7 @@ D1 is Jason's. D2 to D5 were settled in building it and weren't put to him.
 ## 7. Consumers
 
 - **core-ts:** its own reads refuse first, so nothing should change. A direct `unmarshalString` in a browser now throws where it read a
-  truncated tree. Its release gate as usual.
+  truncated tree. It gave its go at `9a2a945`.
 - **docx4j-ts-editor:** it reads through core-ts. A read-back of such a string in a browser now fails with this message, in any root.
 - **An add-in on this package alone:** a read that lost content silently now throws. That is the point of the CR, and it is still a
   new throw.

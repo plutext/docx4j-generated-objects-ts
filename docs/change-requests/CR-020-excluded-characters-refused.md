@@ -1,6 +1,6 @@
 # CR-020: A character XML 1.0 excludes, refused when the facade writes a string
 
-**Status:** Implemented 2026-11-07, D1 to D4 as decided. Not released. Accepted the same day, D1 to D3 as recommended (Jason:
+**Status:** Implemented 2026-11-07, D1 to D4 as decided, released in 0.8.0 (2026-11-08). Accepted the same day, D1 to D3 as recommended (Jason:
 "CR-020's D1 to D3 as recommended; commit then implement"; section 6), and D4 after it. Proposed the same day.
 **Requested by:** Jason, 2026-11-07 ("yes", to writing it). It came out of the Word check of an ill-formed main part
 (2026-11-06): Word refuses a part holding U+000B, this package reads one, and its save keeps the character.
@@ -123,14 +123,16 @@ separate question from writing one.
 
 ## 5. Results
 
-- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0.
+- `npm run typecheck` and `npm test` pass on Node 18.20.8, 20.20.2 and 22.23.4, with jsonix 3.11.0, and on each again at 0.8.0 with 3.13.0.
 - All 341 marshalled hashes are identical to `4f84e1e`'s on each Node. The fixtures hold no such character, raw or as a
   reference.
 - The expression agrees with core-ts's on 65,542 strings: every BMP code unit between letters, and the surrogate pairings.
 - The scan takes about 10 ms over 10.8 million characters.
 
 core-ts and docx4j-ts-editor ran their suites against `b4373c8`, before D4, on Node 22 (CR-021 section 6), with no failure from this
-CR. The editor's browser suite wasn't run.
+CR. core-ts then ran `9a2a945`, with D4, on Node 18, 20 and 22: 1,917 of 1,917. No route of its interpolates an element into `wml()`,
+since its one call in `src/` passes a string, but it re-exports `wml` and `wmlOne` from `./model`, so its callers meet the new throw.
+The editor's suites weren't run with D4, and its browser suite wasn't run at all.
 
 ## 6. Decisions
 
@@ -154,7 +156,7 @@ D1 to D3 decided as recommended, and D4 afterwards, all 2026-11-07.
 
 ## 8. Consumers
 
-- **core-ts:** the four routes in section 3 gain the refusal. Its part saves don't change. Release gate as usual.
+- **core-ts:** the four routes in section 3 gain the refusal. Its part saves don't change. It gave its go at `9a2a945`.
 - **docx4j-ts-editor:** eleven calls of `marshalString`, by its count, none a real save, since part saves go through `marshalNode`.
   Jason has asked it to keep these characters out of its edit layer at the ways in, so it opts out at its two pure displays only,
   unless its build shows otherwise.
