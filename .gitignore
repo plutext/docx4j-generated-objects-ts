@@ -1,3 +1,7 @@
 node_modules
 # built from src/ by `npm run build`
 /dist
+# Claude Code: personal and runtime state (shared config under .claude/ is committed)
+/.claude/settings.local.json
+/.claude/worktrees/
+/.claude/scheduled_tasks.lock
