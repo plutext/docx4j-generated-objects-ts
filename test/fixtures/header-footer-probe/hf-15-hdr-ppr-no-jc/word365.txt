@@ -1,0 +1,5 @@
+BODY WORDS
+Case pPr-no-jc
+TARGET TEXT
+LAST LINE
+

@@ -1,0 +1,3 @@
+Case pPr-reversed
+TARGET TEXT
+LAST LINE

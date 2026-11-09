@@ -1,0 +1,142 @@
+{
+ "hr-00-control": {
+  "story": "header",
+  "source": null,
+  "known": "control: one header paragraph"
+ },
+ "hr-11-sdtcontent": {
+  "story": "header",
+  "source": "rc-11-sdtContent",
+  "known": "two w:sdtContent in a block w:sdt: joined in order (FIRST then SECOND CONTROL WORDS)"
+ },
+ "hr-12-txbxcontent": {
+  "story": "header",
+  "source": "rc-12-txbxContent",
+  "known": "two w:txbxContent in a VML box: joined in reverse (SECOND then FIRST BOX WORDS)"
+ },
+ "hr-21-ppr-merge": {
+  "story": "header",
+  "source": "rc-21-pPr-merge",
+  "known": "two w:pPr: merged (w:jc center and w:ind left 720)"
+ },
+ "hr-23-rpr-merge": {
+  "story": "header",
+  "source": "rc-23-rPr-merge",
+  "known": "two w:rPr: merged (w:b and w:i)"
+ },
+ "hr-60-tblpr-children": {
+  "story": "header",
+  "source": "sm-60-tblpr-children",
+  "known": "two w:tblPr: merged (the first's w:jc center stays)"
+ },
+ "hr-70-ind-in-one-ppr": {
+  "story": "header",
+  "source": "sm-70-ind-in-one-ppr",
+  "known": "two w:ind in one w:pPr: merged (left 720 and right 720)"
+ },
+ "hr-73-rfonts-in-one-rpr": {
+  "story": "header",
+  "source": "sm-73-rfonts-in-one-rpr",
+  "known": "two w:rFonts in one w:rPr: merged (ascii Arial and hAnsi Courier New)"
+ },
+ "hf-00-control": {
+  "story": "both",
+  "source": null,
+  "known": "control: one header and one footer paragraph"
+ },
+ "hf-10-hdr-ppr-values": {
+  "story": "header",
+  "source": "rc-20-pPr-values",
+  "known": "main part (rc-20): the later jc, right"
+ },
+ "hf-11-hdr-ppr-reversed": {
+  "story": "header",
+  "source": "reversed",
+  "known": "main twin hf-51; hr-21 had jc then ind and kept the first"
+ },
+ "hf-12-hdr-ppr-three": {
+  "story": "header",
+  "source": "rt-21-pPr-merge",
+  "known": "main part (rt-21): jc, ind and spacing all stand"
+ },
+ "hf-13-hdr-ppr-values-three": {
+  "story": "header",
+  "source": "rt-20-pPr-values",
+  "known": "main part (rt-20): the last jc, right"
+ },
+ "hf-14-hdr-ppr-empty-first": {
+  "story": "header",
+  "source": "empty-first",
+  "known": "main twin hf-54"
+ },
+ "hf-15-hdr-ppr-no-jc": {
+  "story": "header",
+  "source": "no-jc",
+  "known": "main twin hf-55: spacing then ind, no jc"
+ },
+ "hf-16-hdr-ppr-nested-rpr": {
+  "story": "header",
+  "source": "c79-40-ppr-nested-rpr",
+  "known": "main part (c79-40): the mark's b and i both"
+ },
+ "hf-17-hdr-rpr-three": {
+  "story": "header",
+  "source": "rt-23-rPr-merge",
+  "known": "main part (rt-23): merged"
+ },
+ "hf-18-hdr-sdtcontent-three": {
+  "story": "header",
+  "source": "rt-11-sdtContent",
+  "known": "main part (rt-11): joined in order"
+ },
+ "hf-19-hdr-txbx-three": {
+  "story": "header",
+  "source": "rt-12-txbxContent",
+  "known": "main part (rt-12): joined in reverse"
+ },
+ "hf-20-ftr-ppr-merge": {
+  "story": "footer",
+  "source": "rc-21-pPr-merge",
+  "known": "main part (rc-21): merged; header (hr-21): the first only"
+ },
+ "hf-21-ftr-ppr-values": {
+  "story": "footer",
+  "source": "rc-20-pPr-values",
+  "known": "main part (rc-20): the later jc, right"
+ },
+ "hf-22-ftr-ppr-three": {
+  "story": "footer",
+  "source": "rt-21-pPr-merge",
+  "known": "main part (rt-21): jc, ind and spacing all stand"
+ },
+ "hf-23-ftr-rpr-merge": {
+  "story": "footer",
+  "source": "rc-23-rPr-merge",
+  "known": "main part (rc-23) and header (hr-23): merged"
+ },
+ "hf-24-ftr-sdtcontent": {
+  "story": "footer",
+  "source": "rc-11-sdtContent",
+  "known": "main part (rc-11) and header (hr-11): joined in order"
+ },
+ "hf-25-ftr-txbx": {
+  "story": "footer",
+  "source": "rc-12-txbxContent",
+  "known": "main part (rc-12) and header (hr-12): joined in reverse"
+ },
+ "hf-51-main-ppr-reversed": {
+  "story": "main",
+  "source": "reversed",
+  "known": "the main-part twin of hf-11"
+ },
+ "hf-54-main-ppr-empty-first": {
+  "story": "main",
+  "source": "empty-first",
+  "known": "the main-part twin of hf-14"
+ },
+ "hf-55-main-ppr-no-jc": {
+  "story": "main",
+  "source": "no-jc",
+  "known": "the main-part twin of hf-15"
+ }
+}

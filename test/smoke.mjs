@@ -1758,3 +1758,200 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
   console.log(`CR-021: selection by namespace through CR-011's records, over the 114 of the understood set (${setHeld}); nothing selected, and reported, where nothing is understood and there is no Fallback`);
 }
+
+// CR-022: a child given more than once where the model holds one, read as Word 365 reads it (WD REQ-322), through
+// jsonix-CR-016's onOverwrittenElement (3.13.0). docx4j's RepeatedChildren (17.3.6) is the counterpart, rule for rule;
+// test/word365-repeated.mjs holds the reading to Word's saves.
+{
+  const { JOINED, MERGED_IN, MERGED, AS_THE_RUNTIME_LEAVES, FIRST_IN_HEADER_FOOTER, HEADER_FOOTER_STORIES, OTHER_STORIES } = await import('../dist/repeated.mjs');
+  const { wordOverwritten } = await import('../dist/index.mjs');
+  const { wml, textOf, walk, find } = await import('../dist/builders/wml.mjs');
+  const WML = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const VML = 'urn:schemas-microsoft-com:vml';
+  const MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006';
+  const context = await getContext();
+  const propertiesOf = (ti) => { const out = []; for (let t = ti; t; t = t.baseTypeInfo) out.push(...(t.properties ?? [])); return out; };
+  const propertyOf = (type, name) => propertiesOf(context.getTypeInfoByName(type)).find((property) => property.name === name);
+
+  // The tables, held to the context: each pair a single-valued property of its holder; a joined one a class holding a content
+  // list, a merged one a class MERGED names, and MERGED exactly the classes merged.
+  for (const [holder, properties] of Object.entries(JOINED)) for (const name of Object.keys(properties)) {
+    const property = propertyOf(holder, name);
+    assert.ok(property && !property.collection, `${holder}.${name} is single-valued`);
+    assert.ok(propertiesOf(property.typeInfo).some((p) => p.name === 'content' && p.collection), `${holder}.${name} holds a content list`);
+  }
+  const mergedTypes = new Set();
+  for (const [holder, names] of Object.entries(MERGED_IN)) for (const name of names) {
+    const property = propertyOf(holder, name);
+    assert.ok(property && !property.collection, `${holder}.${name} is single-valued`);
+    mergedTypes.add(property.typeInfo.name);
+  }
+  assert.deepEqual([...mergedTypes].sort(), [...MERGED].sort(), 'MERGED is the classes merged');
+  for (const name of AS_THE_RUNTIME_LEAVES) assert.ok(propertyOf('org_docx4j_wml.TblPr', name), `TblPr.${name}`);
+  assert.ok(propertyOf('org_docx4j_wml.SectPr', 'egHdrFtrReferences').collection, 'a w:sectPr\'s references are one list');
+
+  const parentsWrong = (root) => {
+    let walked = 0, wrong = 0;
+    walk(root, (value, parent) => { if (value.TYPE_NAME && parent) { walked++; if (value.PARENT !== parent) wrong++; } });
+    return { walked, wrong };
+  };
+  const doc = (body) => `<w:document xmlns:w="${WML}" xmlns:r="${REL}" xmlns:v="${VML}" xmlns:mc="${MC}">${body}</w:document>`;
+  const para = (words, pPr = '') => `<w:p>${pPr}<w:r><w:t>${words}</w:t></w:r></w:p>`;
+
+  // Three bodies: joined in order, the closing w:sectPr applied in order (the third's size with the second's orientation, the
+  // first's margins), a body with none passed over, and only the first copy's references, a header and a footer together.
+  const three = doc(
+    `<w:body>${para('A')}<w:sectPr><w:headerReference w:type="default" r:id="rId1"/><w:footerReference w:type="default" r:id="rId2"/>`
+    + `<w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body>`
+    + `<w:body>${para('B')}</w:body>`
+    + `<w:body>${para('C')}<w:sectPr><w:headerReference w:type="first" r:id="rId3"/><w:pgSz w:w="15840" w:h="12240" w:orient="landscape"/><w:titlePg/></w:sectPr></w:body>`
+    + `<w:body>${para('D')}<w:sectPr><w:footerReference w:type="even" r:id="rId4"/><w:pgSz w:w="12240" w:h="15840"/></w:sectPr></w:body>`);
+  const joined = await unmarshalString(three);
+  const body = unwrap(joined).body;
+  assert.equal(textOf(unwrap(joined)), 'A\nB\nC\nD', 'the bodies joined in order');
+  assert.deepEqual({ ...body.sectPr.pgSz, TYPE_NAME: undefined }, { TYPE_NAME: undefined, w: 12240, h: 15840, orient: 'landscape' }, 'attribute by attribute');
+  assert.equal(body.sectPr.pgMar.top, 1440, 'the first\'s w:pgMar stays');
+  assert.ok(body.sectPr.titlePg, 'the third\'s w:titlePg stays');
+  assert.deepEqual(body.sectPr.egHdrFtrReferences.map((ref) => [ref.TYPE_NAME.replace('org_docx4j_wml.', ''), ref.type, ref.id]),
+    [['HeaderReference', 'default', 'rId1'], ['FooterReference', 'default', 'rId2']], 'only the first copy\'s references stand');
+  assert.deepEqual(parentsWrong(unwrap(joined)), { walked: 19, wrong: 0 }, 'PARENT after the join: the body, four paragraphs, runs and texts, the w:sectPr, two references, w:pgSz, w:pgMar, w:titlePg');
+  const written = await marshalString(joined);
+  assert.equal(written.match(/<w:body>/g).length, 1);
+  assert.equal(written.match(/<w:sectPr\b/g).length, 1);
+  let overwritten = 0;
+  await unmarshalString(written, { onOverwrittenElement() { overwritten++; } });
+  assert.equal(overwritten, 0, 'a save read again repeats nothing');
+  assert.equal(await marshalString(deepCopy(joined)), written, 'a deepCopy writes the same');
+
+  // w:pPr in a paragraph: property by property, and w:ind, the mark's w:rPr and a w:sectPr in it merging in turn; w:rPr in a run,
+  // its w:rFonts attribute by attribute, an off w:b replaced whole by a later <w:b/>.
+  const merged = await unmarshalString(doc(`<w:body><w:p>`
+    + `<w:pPr><w:jc w:val="center"/><w:ind w:left="720"/><w:rPr><w:b/></w:rPr><w:sectPr><w:pgSz w:orient="landscape"/></w:sectPr></w:pPr>`
+    + `<w:pPr><w:spacing w:after="0"/><w:ind w:hanging="360"/><w:rPr><w:i/></w:rPr><w:sectPr><w:pgSz w:w="12240"/></w:sectPr></w:pPr>`
+    + `<w:r><w:rPr><w:rFonts w:ascii="Arial"/><w:b w:val="0"/><w:color w:val="FF0000"/></w:rPr><w:rPr><w:rFonts w:hAnsi="Arial"/><w:b/></w:rPr><w:t>T</w:t></w:r>`
+    + `</w:p></w:body>`));
+  const p0 = unwrap(merged).body.content[0].value;
+  const pPr = p0.pPr;
+  assert.equal(pPr.jc.val, 'center');
+  assert.equal(pPr.spacing.after, 0);
+  assert.deepEqual([pPr.ind.left, pPr.ind.hanging], [720, 360]);
+  assert.deepEqual([!!pPr.rPr.b, !!pPr.rPr.i], [true, true], 'the mark\'s w:rPr merges');
+  assert.deepEqual([pPr.sectPr.pgSz.orient, pPr.sectPr.pgSz.w], ['landscape', 12240], 'a w:pPr\'s w:sectPr merges');
+  const rPr = p0.content[0].value.rPr;
+  assert.deepEqual([rPr.rFonts.ascii, rPr.rFonts.hAnsi], ['Arial', 'Arial']);
+  assert.equal(rPr.b.val, undefined, 'the later <w:b/> whole: on');
+  assert.equal(rPr.color.val, 'FF0000');
+  assert.deepEqual(parentsWrong(unwrap(merged)), { walked: 17, wrong: 0 }, 'PARENT after the merges: the body, the paragraph, its w:pPr and five children, two in its w:rPr, one in its w:sectPr, the run, its w:rPr and three children, the text');
+
+  // A child given twice in one parent: w:ind, w:numPr and the mark's w:rPr in one w:pPr, w:rFonts in a run's w:rPr, w:pgSz in one
+  // w:sectPr merge; w:rFonts twice in a mark's w:rPr is unmeasured and keeps the last.
+  const oneParent = unwrap(await unmarshalString(doc(`<w:body><w:p><w:pPr>`
+    + `<w:numPr><w:ilvl w:val="1"/></w:numPr><w:numPr><w:numId w:val="2"/></w:numPr><w:ind w:left="720"/><w:ind w:right="360"/>`
+    + `<w:rPr><w:rFonts w:ascii="Arial"/><w:rFonts w:hAnsi="Arial"/><w:b/></w:rPr><w:rPr><w:i/></w:rPr></w:pPr>`
+    + `<w:r><w:rPr><w:rFonts w:ascii="Arial"/><w:rFonts w:hAnsi="Arial"/></w:rPr><w:t>T</w:t></w:r></w:p>`
+    + `<w:sectPr><w:pgSz w:orient="landscape"/><w:pgSz w:w="12240"/></w:sectPr></w:body>`))).body;
+  const onePPr = oneParent.content[0].value.pPr;
+  const oneRPr = oneParent.content[0].value.content[0].value.rPr;
+  assert.deepEqual([onePPr.numPr.ilvl.val, onePPr.numPr.numId.val], [1, 2]);
+  assert.deepEqual([onePPr.ind.left, onePPr.ind.right], [720, 360]);
+  assert.deepEqual([!!onePPr.rPr.b, !!onePPr.rPr.i], [true, true]);
+  assert.deepEqual([onePPr.rPr.rFonts.ascii, onePPr.rPr.rFonts.hAnsi], [undefined, 'Arial'], 'a mark\'s w:rFonts keeps the last');
+  assert.deepEqual([oneRPr.rFonts.ascii, oneRPr.rFonts.hAnsi], ['Arial', 'Arial']);
+  assert.deepEqual([oneParent.sectPr.pgSz.orient, oneParent.sectPr.pgSz.w], ['landscape', 12240]);
+  // A list is the later copy's, as docx4j's merge leaves it (a list has no setter there): w:cols' w:col, unmeasured by Word.
+  const columns = unwrap(await unmarshalString(doc(`<w:body>${para('A')}<w:sectPr><w:cols w:num="2" w:equalWidth="0"><w:col w:w="3000"/><w:col w:w="4000"/></w:cols>`
+    + `<w:cols w:space="720"/></w:sectPr></w:body>`))).body.sectPr.cols;
+  assert.deepEqual([columns.num, columns.equalWidth, columns.space, columns.col], [2, false, 720, undefined]);
+
+  // w:sdtContent at run level joined in order; w:txbxContent in a VML box joined in reverse; w:tblPr merged with w:tblW the
+  // later's, none where the later states none.
+  const controls = unwrap(await unmarshalString(doc(`<w:body><w:p><w:sdt><w:sdtContent><w:r><w:t>A</w:t></w:r></w:sdtContent>`
+    + `<w:sdtContent><w:r><w:t>B</w:t></w:r></w:sdtContent></w:sdt>`
+    + `<w:r><w:pict><v:shape><v:textbox><w:txbxContent>${para('X')}</w:txbxContent><w:txbxContent>${para('Y')}</w:txbxContent>`
+    + `<w:txbxContent>${para('Z')}</w:txbxContent></v:textbox></v:shape></w:pict></w:r></w:p>`
+    + `<w:tbl><w:tblPr><w:tblW w:w="4000" w:type="dxa"/><w:jc w:val="center"/></w:tblPr><w:tblPr><w:tblInd w:w="10" w:type="dxa"/></w:tblPr>`
+    + `<w:tblGrid><w:gridCol w:w="4000"/></w:tblGrid><w:tr><w:tc>${para('CELL')}</w:tc></w:tr></w:tbl></w:body>`)));
+  const runControl = find(controls, 'org_docx4j_wml.SdtRun')[0];
+  assert.equal(textOf(runControl.sdtContent), 'AB');
+  const [box] = find(controls, 'org_docx4j_wml.CTTxbxContent');
+  assert.equal(textOf(box), 'Z\nY\nX', 'the later\'s content first');
+  const tblPr = find(controls, 'org_docx4j_wml.TblPr')[0];
+  assert.deepEqual([tblPr.tblW, tblPr.jc.val, tblPr.tblInd.w], [undefined, 'center', 10]);
+  assert.deepEqual(parentsWrong(controls).wrong, 0);
+
+  // A pair not in the table is left to the runtime, the last whole: two w:tcPr, and w:rFonts in a w:style's w:rPr.
+  const calls = [];
+  const counting = (...args) => { calls.push([args[3].name, args[2].name, wordOverwritten(...args)]); };
+  const cell = unwrap(await unmarshalString(doc(`<w:body><w:tbl><w:tblGrid><w:gridCol w:w="100"/></w:tblGrid><w:tr><w:tc>`
+    + `<w:tcPr><w:tcW w:w="100" w:type="dxa"/></w:tcPr><w:tcPr><w:vAlign w:val="center"/></w:tcPr>${para('C')}</w:tc></w:tr></w:tbl></w:body>`),
+  { onOverwrittenElement: counting }));
+  const tcPr = find(cell, 'org_docx4j_wml.TcPr')[0];
+  assert.deepEqual([tcPr.tcW, tcPr.vAlign.val], [undefined, 'center']);
+  assert.deepEqual(calls, [['org_docx4j_wml.Tc', 'tcPr', false]], 'wordOverwritten says it applied nothing');
+
+  // A caller's callback replaces the facade's (D3): with one that does nothing, the runtime keeps the last; one that calls
+  // wordOverwritten reads as Word does and can count.
+  const lastOnly = await unmarshalString(three, { onOverwrittenElement() {} });
+  assert.equal(textOf(unwrap(lastOnly)), 'D');
+  calls.length = 0;
+  assert.equal(textOf(unwrap(await unmarshalString(three, { onOverwrittenElement: counting }))), 'A\nB\nC\nD');
+  assert.deepEqual(calls.map((call) => call[2]), [true, true, true], 'three overwrites, each read as Word reads it');
+
+  // Every facade read alike: unmarshalNode, unmarshalPackage, wml(), and a footnote (by class, D1, where docx4j reads the main
+  // document part's alone; a header's and a footer's w:pPr are D7's, below).
+  const { DOMParser } = await import('@xmldom/xmldom');
+  assert.equal(textOf(unwrap(await unmarshalNode(new DOMParser().parseFromString(three, 'application/xml')))), 'A\nB\nC\nD');
+  const flat = `<pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"><pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"><pkg:xmlData>${three}</pkg:xmlData></pkg:part></pkg:package>`;
+  assert.equal(textOf(unwrap((await unmarshalPackage(flat)).value.part[0].xmlData.any)), 'A\nB\nC\nD');
+  const [fragment] = await wml(`<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:pPr><w:ind w:left="720"/></w:pPr></w:p>`);
+  assert.deepEqual([fragment.value.pPr.jc.val, fragment.value.pPr.ind.left], ['center', 720]);
+  const notes = unwrap(await unmarshalString(`<w:footnotes xmlns:w="${WML}"><w:footnote w:id="1"><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:pPr><w:ind w:left="720"/></w:pPr></w:p></w:footnote></w:footnotes>`));
+  const note = notes.footnote[0].content[0].value;
+  assert.deepEqual([note.pPr.jc.val, note.pPr.ind.left], ['center', 720], 'a footnote too');
+
+  // CR-017's report and CR-011's record pass through a join: each copy's list tested once, before the join; a Choice's
+  // source-only binding moves with it.
+  const misplaced = [];
+  const withMistake = doc(`<w:body><w:r><w:t>M</w:t></w:r>${para('A')}</w:body><w:body>${para('B')}`
+    + `<w:p><mc:AlternateContent><mc:Choice xmlns:zz9="urn:zz9" Requires="zz9"><w:r><w:t>Z</w:t></w:r></mc:Choice></mc:AlternateContent></w:p></w:body>`);
+  const reread = await unmarshalString(withMistake, { onMisplaced: (report) => misplaced.push(report) });
+  assert.equal(misplaced.length, 1, 'the first body\'s misplaced w:r reported once');
+  assert.match(await marshalString(reread), /<mc:Choice xmlns:zz9="urn:zz9" Requires="zz9">/);
+
+  // D7 (c): in a header or a footer, a paragraph's repeated w:pPr keeps the first copy whole, as Word reads it there (header-repeats,
+  // header-footer-repeats); its nearest story decides, through a table, not a text box. The tables, held to the context.
+  for (const [holder, names] of Object.entries(FIRST_IN_HEADER_FOOTER)) for (const name of names) {
+    assert.ok(MERGED_IN[holder]?.includes(name), `${holder}.${name} is a merged pair, kept first in a header or a footer`);
+  }
+  const wmlElements = new Set();
+  for (const m of context.modules) {
+    for (const ti of m.typeInfos ?? []) for (const property of ti.properties ?? []) {
+      if (property.elementName?.namespaceURI === WML) wmlElements.add(property.elementName.localPart);
+      for (const e of property.elementTypeInfos ?? []) if (e.elementName.namespaceURI === WML) wmlElements.add(e.elementName.localPart);
+    }
+    for (const e of m.elementInfos ?? []) if (e.elementName.namespaceURI === WML) wmlElements.add(e.elementName.localPart);
+  }
+  for (const name of [...HEADER_FOOTER_STORIES, ...OTHER_STORIES]) assert.ok(wmlElements.has(name), `w:${name} is a WordprocessingML element`);
+  const twoPPr = (words) => `<w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:pPr><w:ind w:left="720"/></w:pPr><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:t>${words}</w:t></w:r></w:p>`;
+  const story = async (tag, content) => unwrap(await unmarshalString(`<w:${tag} xmlns:w="${WML}" xmlns:v="${VML}">${content}</w:${tag}>`));
+  for (const tag of ['hdr', 'ftr']) {
+    const kept = (await story(tag, twoPPr('H'))).content[0].value;
+    assert.deepEqual([kept.pPr.jc.val, kept.pPr.ind, !!kept.pPr.rPr.b], ['center', undefined, true], `w:${tag}: the first of three copies, whole`);
+    assert.equal(kept.pPr.PARENT, kept);
+    assert.ok(kept.pPr.jc.PARENT === kept.pPr && kept.pPr.rPr.PARENT === kept.pPr, `w:${tag}: PARENT re-linked, by identity`);
+  }
+  const emptyFirst = (await story('hdr', '<w:p><w:pPr/><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>E</w:t></w:r></w:p>')).content[0].value;
+  assert.equal(emptyFirst.pPr.jc, undefined, 'an empty first copy keeps nothing (hf-14)');
+  const inTable = find(await story('hdr', `<w:tbl><w:tblGrid><w:gridCol w:w="100"/></w:tblGrid><w:tr><w:tc>${twoPPr('T')}</w:tc></w:tr></w:tbl>`), 'org_docx4j_wml.P')[0];
+  assert.deepEqual([inTable.pPr.jc.val, inTable.pPr.ind], ['center', undefined], 'through a table: the header\'s story');
+  const inBox = find(await story('hdr', `<w:p><w:r><w:pict><v:rect><v:textbox><w:txbxContent>${twoPPr('X')}</w:txbxContent></v:textbox></v:rect></w:pict></w:r></w:p>`), 'org_docx4j_wml.P')
+    .find((value) => textOf(value) === 'X');
+  assert.deepEqual([inBox.pPr.jc.val, inBox.pPr.ind.left], ['right', 720], 'a header\'s text box is a story of its own: merged');
+  const [loose] = await wml(twoPPr('L'));
+  assert.deepEqual([loose.value.pPr.jc.val, loose.value.pPr.ind.left], ['right', 720], 'a wml() fragment: merged');
+  const headerRun = (await story('hdr', '<w:p><w:r><w:rPr><w:b/></w:rPr><w:rPr><w:i/></w:rPr><w:t>R</w:t></w:r></w:p>')).content[0].value.content[0].value;
+  assert.deepEqual([!!headerRun.rPr.b, !!headerRun.rPr.i], [true, true], 'a header\'s repeated w:rPr still merges');
+
+  console.log(`CR-022: a repeated w:body, w:sdtContent, w:txbxContent, w:pPr, w:rPr, w:sectPr and w:tblPr read as Word reads them; ${Object.values(MERGED_IN).flat().length} merged and ${Object.values(JOINED).length} joined pairs, held to the context; in a header or a footer a paragraph's repeated w:pPr keeps the first copy; anything else left to the runtime`);
+}

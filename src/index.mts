@@ -9,7 +9,9 @@ import { wordColor, HIGHLIGHT_COLORS, WORD_INTEGER_STORAGE, wordIntegerReading, 
 import { CONTAINERS, misplacement, alternateContentOf, branchItems, type Declarations, type Misplacement, type MisplacedRule } from './misplaced.mjs';
 import { branchSdtType } from './branches.mjs';
 import { parseXml, refuseParserError } from './parse.mjs';
+import { wordOverwritten } from './repeated.mjs';
 export { MODULES };
+export { wordOverwritten };
 export { WML_GLOBAL_ELEMENTS, org_docx4j_wml_globals };
 export { Jsonix };
 export type { TypedNamedValue, XmlQName, XmlCalendar, XmlDuration, JsonixMapping } from '../modules/org_docx4j_wml.mjs';
@@ -364,7 +366,9 @@ export function getContextSync(): Jsonix.Context {
  * One at the root or inside a `w:t` still throws. An `onElement` (jsonix-CR-008) is called after the facade's
  * own, which is how a Choice's bindings are recorded. `onInvalidValue` is `wordInvalidValue`
  * unless the caller passes one, so Word's own WordprocessingML loads as Word 365 reads it (CR-013),
- * and `onWordReading` is told of each value so read.
+ * and `onWordReading` is told of each value so read. `onOverwrittenElement` is `wordOverwritten`
+ * unless the caller passes one, so a child given more than once where the model holds one (a second
+ * `w:body`, `w:pPr` or `w:sectPr`) reads as Word 365 reads it (CR-022).
  *
  * Throws a `SyntaxError` for XML a browser's parser reports as malformed (CR-023), as xmldom throws its `ParseError` on Node.
  */
@@ -570,7 +574,9 @@ function branchTypes<Last>(context: Jsonix.Context, caller: ((name: Jsonix.XML.Q
  * so that an integer the runtime's `Number()` would read (`" 240 "`, `0x10`, `""`) reaches Word's
  * rule. A caller's own `onInvalidValue` keeps the runtime's reading unless it asks for
  * `strictIntegers` too. And jsonix-CR-014's `wildcardTypeInfo`, a caller's answer first: a `w:sdt`
- * directly in a kept branch is read at its host's level (CR-018).
+ * directly in a kept branch is read at its host's level (CR-018). And `wordOverwritten` as
+ * jsonix-CR-016's `onOverwrittenElement`, unless the caller passes one: a child given more than once
+ * where the model holds one is read as Word reads it (CR-022).
  */
 function recordingOptions(context: Jsonix.Context, options?: UnmarshalOptions): Jsonix.UnmarshallerOptions {
   const { onWordReading, onOutOfRange, onMisplaced, ...runtimeOptions } = options ?? {};
@@ -601,6 +607,7 @@ function recordingOptions(context: Jsonix.Context, options?: UnmarshalOptions): 
     wildcardTypeInfo: branchTypes(context, runtimeOptions.wildcardTypeInfo),
     onInvalidValue: runtimeOptions.onInvalidValue ?? (onWordReading ? reportingWordReadings(onWordReading) : wordInvalidValue),
     strictIntegers: runtimeOptions.strictIntegers ?? runtimeOptions.onInvalidValue === undefined,
+    onOverwrittenElement: runtimeOptions.onOverwrittenElement ?? wordOverwritten,
   };
 }
 

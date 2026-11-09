@@ -314,6 +314,15 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   `onNothingSelected` reports an element that selected nothing, whose words Word doesn't show either. Prefixes resolve through
   what the file declared, so read through the facade; in a tree built by hand a prefix `NAMESPACE_PREFIXES` lacks counts as not
   understood. `requiresNamespaces(choice)` gives a Choice's namespaces.
+- **A child given more than once** (CR-022): where a file repeats a child the model holds once, the runtime would keep the last
+  copy, losing a first `w:body`'s words or a first `w:pPr`'s properties that Word shows. Every facade read instead reads it as Word
+  365 does (WD REQ-322), through `@docx4j/jsonix` 3.13.0's `onOverwrittenElement`. `w:body` and `w:sdtContent` (at every level) join
+  in order, and `w:txbxContent` in a VML text box joins in reverse. `w:pPr`, `w:rPr`, `w:sectPr` and `w:tblPr` are applied in order
+  to one object: what a later copy states wins and what it doesn't stays, and `w:ind`, `w:spacing`, `w:rFonts`, `w:pgSz`,
+  `w:pgMar` and the like merge attribute by attribute. Only the first copy's header and footer references stand, and `w:tblW` is
+  the later copy's. In a header or a footer, a paragraph's repeated `w:pPr` keeps its first copy whole, as Word reads it there.
+  Anything else keeps the last copy. A save writes one container. A caller's `onOverwrittenElement` replaces the
+  facade's; `wordOverwritten` is exported to call from it, and returns whether it applied a reading.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their
   normal form, as docx4j does, so a save never writes what the schema rejects and never changes
   Word's reading. A colour Word accepts (a name, hex in any case, `#`, padding) is written as

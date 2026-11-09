@@ -1,0 +1,3 @@
+Case pPr-empty-first
+TARGET TEXT
+LAST LINE

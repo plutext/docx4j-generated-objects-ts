@@ -13,13 +13,13 @@ mapping declaring globally the 61 WordprocessingML elements docx4j declares as r
 `w:drawing`/`w:pict`, and nine more beyond docx4j's roots, CR-017 M7, so a misplaced one reads typed; `getContext` and
 `modulesFor` add it), `misplaced.mts` (CR-017, internal: docx4j CR-064's `checkParent` sets and messages, which the
 facade's `onMisplaced` reports and the builders refuse with), `branches.mts` (CR-018, internal: the level each host
-gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `understood.mts` (CR-021: docx4j's published understood set, which `mcBranchOf` selects by), `parse.mts` (CR-023, internal: `parseXml` and the check for a browser's `parsererror` document), `helpers/wml.mts` (per-type docx4j decisions,
+gives a `w:sdt` directly in a kept `mc` branch, which the facade answers jsonix-CR-014's `wildcardTypeInfo` with), `understood.mts` (CR-021: docx4j's published understood set, which `mcBranchOf` selects by), `parse.mts` (CR-023, internal: `parseXml` and the check for a browser's `parsererror` document), `repeated.mts` (CR-022, internal but `wordOverwritten`: the pairs a repeated child is joined or merged in, as Word reads them, which the facade answers jsonix-CR-016's `onOverwrittenElement` with), `helpers/wml.mts` (per-type docx4j decisions,
 compiler CR-007; Word 365's colour reading, `WORD_COLOR_NAMES`/`wordColor`, CR-013; Word's highlight palette and the
 highlight Word stores for a colour Office JS writes, `highlightNameForColor`, CR-014; Word's storage of each integer
 attribute and what it reads, `WORD_INTEGER_STORAGE`/`wordIntegerReading`, CR-016) and `builders/wml.mts` (CR-002: `wml` fragments, text sugar, the run mapping,
 `textOf`, `runItemsOf`, content controls, rows and cells, inline pictures, the `w:rPrChange` element
 list, `walkAll` and `mcBranchOf` (CR-003 phase A and section 3.8), traversal; imports the helpers, never the reverse). The runtime is
-[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.12.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0; `onUnexpectedText`, which CR-017's `'#text'` read report goes through, jsonix-CR-013, 3.10.0; `wildcardTypeInfo`, through which CR-018 types a branch's content control at its host's level, jsonix-CR-014, 3.11.0; `onUnexpectedElement` skipping an element a list can't hold, which core-ts's floor needs, jsonix-CR-015, 3.12.0). This is the counterpart of docx4j's
+[`@docx4j/jsonix`](https://github.com/plutext/jsonix) 3.13.0+ (on/off booleans, jsonix-CR-007; base64Binary in strict mode, 3.4.2; the unmarshal-side `onElement` CR-011 records through, jsonix-CR-008, 3.5.0; `onInvalidValue`, which CR-013's Word reading goes through, jsonix-CR-010, 3.7.0; the marshal-side `onAttributeValue` and `omitElement` CR-013's save normaliser goes through, jsonix-CR-011, 3.8.0; `strictIntegers`, which CR-015's phase 2 passes, jsonix-CR-012, 3.9.0; `onUnexpectedText`, which CR-017's `'#text'` read report goes through, jsonix-CR-013, 3.10.0; `wildcardTypeInfo`, through which CR-018 types a branch's content control at its host's level, jsonix-CR-014, 3.11.0; `onUnexpectedElement` skipping an element a list can't hold, which core-ts's floor needs, jsonix-CR-015, 3.12.0; `onOverwrittenElement`, through which CR-022 reads a repeated child as Word does, jsonix-CR-016, 3.13.0). This is the counterpart of docx4j's
 `docx4j-generated-objects` module and is usable on its own (Office JS add-ins); the engine layer
 (OPC packaging, parts, style/numbering resolution, the counterpart of `docx4j-core`) is the separate
 repository `plutext/docx4j-core-ts`, package `@docx4j/core-ts`, which depends on this one. Tree-only helpers belong here;
@@ -31,7 +31,7 @@ anything needing parts or relationships belongs there.
 npm ci              # typescript, esbuild, @xmldom/xmldom and the @docx4j/jsonix runtime, as locked in package-lock.json (committed)
 npm run build       # tsc -p tsconfig.build.json: src/ -> dist/ (index, helpers/wml, builders/wml: .mjs and .d.mts)
 npm run typecheck   # tsc --strict, noEmit, over modules/*.d.ts, modules/*.d.mts, src/, test/*.ts
-npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, word365-understood.mjs, bundle.mjs
+npm test            # build, the nodenext consumer check, then test/smoke.mjs, fidelity.mjs, word365.mjs, word365-integers.mjs, word365-ranges.mjs, word365-understood.mjs, word365-repeated.mjs, bundle.mjs
 node test/smoke.mjs # the single runtime test, when dist/ is already built
 npm pack --dry-run  # ships dist/, modules/, LICENSE, NOTICE, README.md, package.json only
 ```
@@ -60,7 +60,7 @@ take `mc:Choice` branches, so it sees what the smoke cannot. 0.1.5 (2026-09-20) 
 that check and regressed every pptx/xlsx with an equation in a text body (`a14:m` admitted, `a:rPr`
 unknown to OMML's `CT_R`), while core-ts 0.1.0's `^0.1.1` range pulled it into fresh installs.
 
-There are nine tests and no test framework:
+There are ten tests and no test framework:
 
 - `test/smoke.mjs` (runtime, plain `node:assert`) unmarshals `test/fixtures/document.xml` through the facade and checks `TYPE_NAME`,
   `PARENT`, `deepCopy` (children re-linked, the copy's own `PARENT` unset), a marshal round trip, the
@@ -126,6 +126,12 @@ There are nine tests and no test framework:
   CR-021's block holds `UNDERSTOOD_NAMESPACES` to docx4j's list when `../docx4j` is checked out, and checks `requiresNamespaces`
   (a source's binding, a table prefix, one bound elsewhere, an alias, a `deepCopy`, a `wml()` fragment, a tree built by hand),
   what `mcBranchOf` selects for each, and `onNothingSelected`, at a root too.
+  CR-022's block holds `src/repeated.mts`'s pairs to the context (each single-valued; a joined one holds a content list, a merged
+  one is a class `MERGED` names, and `MERGED` is exactly those). It checks three bodies joined, their `w:sectPr` applied in order
+  with only the first copy's references, `PARENT` after a join and after merges at each level, the children twice in one parent, a
+  list the later's, run-level `w:sdtContent`, a VML `w:txbxContent` in reverse, `w:tblW` the later's, a pair not in the table left
+  to the runtime, a caller's callback first, every read path and a footnote alike, a save read again repeating nothing, `deepCopy`,
+  and CR-017's report and CR-011's record through a join; and D7's header and footer rule, its story boundary and the names.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -189,6 +195,15 @@ There are nine tests and no test framework:
 - `test/word365-understood.mjs` (runtime, CR-021) reads the rounds behind docx4j's understood set (Word 365, 6 and 7 November
   2026; `test/fixtures/understood-probe/`): 142 `Choice`-only main parts, each beside the text Word saved from it. `textOf` must
   give Word's text, and `mcBranchOf` must report nothing selected exactly where Word showed neither branch.
+- `test/word365-repeated.mjs` (runtime, CR-022) reads docx4j's `repeated/` at `docx4j-17.3.6` (Word 16.0.20326.20232;
+  `test/fixtures/repeated-probe/`, each source's parts beside Word's save, a SHA-1 manifest of docx4j's files): 101 cases of the
+  rounds `rc-`, `rt-`, `sm-`, `ft-`, `c79-` and `op-`. Each is read through the facade and written again, and compared with Word's
+  save by docx4j's `RepeatedChildrenTest`, which ported docx4j-python's comparisons: the words, the sections, the target paragraph's
+  properties, the `sm-*` facts, the references by their part's text; and each text box's words in order, which `textOf` doesn't read. The three `mc:AlternateContent` roots (`rt-50`, `rt-51`,
+  `sm-52`) are core-ts's root pass and are stated, strict both ways. `textOf` must give the text Word saved but where that holds a
+  header's, a footer's or a list label's words (14, named). Every value's `PARENT`, and no save read again repeats a child. Then this
+  package's two header and footer rounds (`test/fixtures/header-footer-probe/`, 28 files): each story read and written, against
+  Word's save, with three stated (`hf-13`, `hf-14` to the same effect, `hf-16`'s run italic).
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -355,6 +370,22 @@ document holding a `parsererror` element, and Chromium's read on as a tree cut o
 (`src/parse.mts`) throw a `SyntaxError` with the parser's message, and `unmarshalString`, `unmarshalNode`, `unmarshalPackage` and
 `wml` go through them. core-ts CR-002 section 33 is the same guard. xmldom's own recovery on Node is unchanged. Results from one
 runtime don't carry to the other: every test here runs on xmldom, and add-ins run in a browser.
+
+CR-022 (implemented 2026-11-10, Jason's route (c) in core-ts CR-028 D2) reads a child given more than once where the model holds one
+as Word 365 does (WD REQ-322), as docx4j 17.3.6's `RepeatedChildren` does, rule for rule but in a header or a footer (D7):
+- **The hook:** every facade read passes `wordOverwritten` (`src/repeated.mts`) as jsonix-CR-016's `onOverwrittenElement`, unless the
+  caller passes one (D3). It edits the copy the runtime keeps while the earlier is still held, keyed by holder class and property.
+- **Joined:** `w:body` in a `w:document` and `w:sdtContent` at every level, in order, joined bodies' closing `w:sectPr` merged;
+  `w:txbxContent` in a VML box in reverse. In `wps:txbx` the runtime's last is Word's.
+- **Merged:** `w:pPr`, `w:rPr`, `w:sectPr`, `w:tblPr`, and the children measured twice in one parent: what the later states wins,
+  what it doesn't stays, the classes in `MERGED` merging in turn. Only the first copy's header and footer references stand. A list
+  and `w:tblW` are the later's. Anything else keeps the last.
+- **By class** (D1), so in any part and a `wml()` fragment, where docx4j reads the main document part's alone: a port difference.
+  But in a header or a footer a paragraph's repeated `w:pPr` keeps the first copy whole (D7 (c), Jason; two Word rounds of this
+  package's, `test/fixtures/header-footer-probe/`). The paragraph's nearest story, from `keptNode`'s ancestors, decides; a text box
+  is a story of its own.
+- **Not reported** (D4): a caller wraps `wordOverwritten`, which returns whether it applied a reading. core-ts CR-028 D8 is open.
+- **The gate:** every fidelity hash identical, 33 mutants of `dist/repeated.mjs` each caught.
 
 ## What the declarations promise
 
