@@ -203,7 +203,8 @@ There are ten tests and no test framework:
   `sm-52`) are core-ts's root pass and are stated, strict both ways. `textOf` must give the text Word saved but where that holds a
   header's, a footer's or a list label's words (14, named). Every value's `PARENT`, and no save read again repeats a child. Then this
   package's two header and footer rounds (`test/fixtures/header-footer-probe/`, 28 files): each story read and written, against
-  Word's save, with three stated (`hf-13`, `hf-14` to the same effect, `hf-16`'s run italic).
+  Word's save, with three stated (`hf-13`, `hf-14` to the same effect, `hf-16`'s run italic). Then the portfolio's round in notes,
+  comments and a header's text box (`test/fixtures/notes-comments-probe/`, 32 files), with the three files Word repairs stated.
 - `test/bundle.mjs` (runtime, CR-005) bundles an `import` consumer and a `require()` consumer with
   esbuild, so a bundle takes the registry's mappings and no more; its ESM consumer reads and writes
   `o:gfxdata` in strict mode (base64Binary, jsonix 3.4.2).
@@ -382,10 +383,11 @@ as Word 365 does (WD REQ-322), as docx4j 17.3.6's `RepeatedChildren` does, rule 
   and `w:tblW` are the later's. Anything else keeps the last.
 - **By class** (D1), so in any part and a `wml()` fragment, where docx4j reads the main document part's alone: a port difference.
   But in a header or a footer a paragraph's repeated `w:pPr` keeps the first copy whole (D7 (c), Jason; two Word rounds of this
-  package's, `test/fixtures/header-footer-probe/`). The paragraph's nearest story, from `keptNode`'s ancestors, decides; a text box
-  is a story of its own.
+  package's, `test/fixtures/header-footer-probe/`). The paragraph's nearest story, from `keptNode`'s ancestors, decides,
+  through a text box, whose paragraph reads as its host story's (Jason 2026-11-13, after the portfolio's `notes-comments-repeats`,
+  `test/fixtures/notes-comments-probe/`); notes and comments read as the main part.
 - **Not reported** (D4): a caller wraps `wordOverwritten`, which returns whether it applied a reading. core-ts CR-028 D8 is open.
-- **The gate:** every fidelity hash identical, 33 mutants of `dist/repeated.mjs` each caught.
+- **The gate:** every fidelity hash identical, 34 mutants of `dist/repeated.mjs` each caught.
 
 ## What the declarations promise
 

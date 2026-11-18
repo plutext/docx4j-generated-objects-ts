@@ -1920,7 +1920,8 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.match(await marshalString(reread), /<mc:Choice xmlns:zz9="urn:zz9" Requires="zz9">/);
 
   // D7 (c): in a header or a footer, a paragraph's repeated w:pPr keeps the first copy whole, as Word reads it there (header-repeats,
-  // header-footer-repeats); its nearest story decides, through a table, not a text box. The tables, held to the context.
+  // header-footer-repeats); its nearest story decides, through a table and a text box (a header's text box reads as its header,
+  // notes-comments-repeats' nr-tb-20 and nr-tb-21). The tables, held to the context.
   for (const [holder, names] of Object.entries(FIRST_IN_HEADER_FOOTER)) for (const name of names) {
     assert.ok(MERGED_IN[holder]?.includes(name), `${holder}.${name} is a merged pair, kept first in a header or a footer`);
   }
@@ -1947,11 +1948,19 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
   assert.deepEqual([inTable.pPr.jc.val, inTable.pPr.ind], ['center', undefined], 'through a table: the header\'s story');
   const inBox = find(await story('hdr', `<w:p><w:r><w:pict><v:rect><v:textbox><w:txbxContent>${twoPPr('X')}</w:txbxContent></v:textbox></v:rect></w:pict></w:r></w:p>`), 'org_docx4j_wml.P')
     .find((value) => textOf(value) === 'X');
-  assert.deepEqual([inBox.pPr.jc.val, inBox.pPr.ind.left], ['right', 720], 'a header\'s text box is a story of its own: merged');
+  assert.deepEqual([inBox.pPr.jc.val, inBox.pPr.ind], ['center', undefined], 'through a header\'s text box: the header\'s story');
+  const boxIn = async (root) => find(unwrap(await unmarshalString(root)), 'org_docx4j_wml.P').find((value) => textOf(value) === 'X');
+  const boxed = `<w:p><w:r><w:pict><v:rect><v:textbox><w:txbxContent>${twoPPr('X')}</w:txbxContent></v:textbox></v:rect></w:pict></w:r></w:p>`;
+  for (const [where, root] of [['the main part', `<w:document xmlns:w="${WML}" xmlns:v="${VML}"><w:body>${boxed}</w:body></w:document>`],
+    ['a footnote', `<w:footnotes xmlns:w="${WML}" xmlns:v="${VML}"><w:footnote w:id="1">${boxed}</w:footnote></w:footnotes>`],
+    ['a comment', `<w:comments xmlns:w="${WML}" xmlns:v="${VML}"><w:comment w:id="0" w:author="A">${boxed}</w:comment></w:comments>`]]) {
+    const merged = await boxIn(root);
+    assert.deepEqual([merged.pPr.jc.val, merged.pPr.ind.left], ['right', 720], `a text box in ${where}: merged`);
+  }
   const [loose] = await wml(twoPPr('L'));
   assert.deepEqual([loose.value.pPr.jc.val, loose.value.pPr.ind.left], ['right', 720], 'a wml() fragment: merged');
   const headerRun = (await story('hdr', '<w:p><w:r><w:rPr><w:b/></w:rPr><w:rPr><w:i/></w:rPr><w:t>R</w:t></w:r></w:p>')).content[0].value.content[0].value;
   assert.deepEqual([!!headerRun.rPr.b, !!headerRun.rPr.i], [true, true], 'a header\'s repeated w:rPr still merges');
 
-  console.log(`CR-022: a repeated w:body, w:sdtContent, w:txbxContent, w:pPr, w:rPr, w:sectPr and w:tblPr read as Word reads them; ${Object.values(MERGED_IN).flat().length} merged and ${Object.values(JOINED).length} joined pairs, held to the context; in a header or a footer a paragraph's repeated w:pPr keeps the first copy; anything else left to the runtime`);
+  console.log(`CR-022: a repeated w:body, w:sdtContent, w:txbxContent, w:pPr, w:rPr, w:sectPr and w:tblPr read as Word reads them; ${Object.values(MERGED_IN).flat().length} merged and ${Object.values(JOINED).length} joined pairs, held to the context; in a header or a footer, and their text boxes, a paragraph's repeated w:pPr keeps the first copy; anything else left to the runtime`);
 }

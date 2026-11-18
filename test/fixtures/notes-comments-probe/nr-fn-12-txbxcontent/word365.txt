@@ -1,0 +1,22 @@
+NR_BEGIN
+Case nr-fn-12-txbxcontent
+NOTE ANCHOR1 AND i
+COMMENTED WORDS[P1]
+NR_END
+
+Case txbxContent
+
+
+
+[P1]COMMENT_WORDS
+---------------
+
+------------------------------------------------------------
+
+---------------
+
+------------------------------------------------------------
+
+HEADER_WORDS
+
+

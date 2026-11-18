@@ -1,0 +1,21 @@
+NR_BEGIN
+Case nr-en-60-tblpr-children
+NOTE ANCHOR1 AND i
+COMMENTED WORDS[P1]
+NR_END
+FOOTNOTE_WORDS
+Case
+TARGET TEXTAFTER
+LAST LINE
+[P1]COMMENT_WORDS
+---------------
+
+------------------------------------------------------------
+
+---------------
+
+------------------------------------------------------------
+
+HEADER_WORDS
+
+

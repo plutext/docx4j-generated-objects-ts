@@ -320,7 +320,8 @@ are the documented ones; the snippets are compile-checked against minimal stubs 
   in order, and `w:txbxContent` in a VML text box joins in reverse. `w:pPr`, `w:rPr`, `w:sectPr` and `w:tblPr` are applied in order
   to one object: what a later copy states wins and what it doesn't stays, and `w:ind`, `w:spacing`, `w:rFonts`, `w:pgSz`,
   `w:pgMar` and the like merge attribute by attribute. Only the first copy's header and footer references stand, and `w:tblW` is
-  the later copy's. In a header or a footer, a paragraph's repeated `w:pPr` keeps its first copy whole, as Word reads it there.
+  the later copy's. In a header or a footer, and in a text box in one, a paragraph's repeated `w:pPr` keeps its first copy whole,
+  as Word reads it there; in a note or a comment it merges, as in the main part.
   Anything else keeps the last copy. A save writes one container. A caller's `onOverwrittenElement` replaces the
   facade's; `wordOverwritten` is exported to call from it, and returns whether it applied a reading.
 - **What a save writes** (CR-013): the facade's marshal functions write run properties in their

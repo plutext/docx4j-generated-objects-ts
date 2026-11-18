@@ -1,0 +1,260 @@
+{
+ "nr-00-control": {
+  "story": "all",
+  "parts": [
+   "footnotes.xml",
+   "endnotes.xml",
+   "comments.xml",
+   "header1.xml"
+  ],
+  "known": "control: each container one plain paragraph"
+ },
+ "nr-cm-11-sdtcontent": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-11-sdtcontent",
+  "known": "main part: joined in order (FIRST then SECOND CONTROL WORDS); header: joined in order (FIRST then SECOND CONTROL WORDS)"
+ },
+ "nr-cm-12-txbxcontent": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-12-txbxcontent",
+  "known": "main part: joined in reverse (SECOND then FIRST BOX WORDS); header: joined in reverse (SECOND then FIRST BOX WORDS)"
+ },
+ "nr-cm-20-ppr-values": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hf-10-hdr-ppr-values",
+  "known": "main part: the later jc, right; header: the first, jc center"
+ },
+ "nr-cm-21-ppr-merge": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-21-ppr-merge",
+  "known": "main part: merged (jc center and ind left 720); header: the first only (jc center)"
+ },
+ "nr-cm-23-rpr-merge": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-23-rpr-merge",
+  "known": "main part: merged (b and i); header: merged (b and i)"
+ },
+ "nr-cm-60-tblpr-children": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-60-tblpr-children",
+  "known": "main part: merged (the first's jc center stays); header: merged (the first's jc center stays)"
+ },
+ "nr-cm-70-ind-in-one-ppr": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-70-ind-in-one-ppr",
+  "known": "main part: merged (left 720 and right 720); header: merged (left 720 and right 720)"
+ },
+ "nr-cm-73-rfonts-in-one-rpr": {
+  "story": "comment",
+  "parts": [
+   "comments.xml"
+  ],
+  "from": "hr-73-rfonts-in-one-rpr",
+  "known": "main part: merged (ascii Arial and hAnsi Courier New); header: merged (ascii Arial and hAnsi Courier New)"
+ },
+ "nr-en-11-sdtcontent": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-11-sdtcontent",
+  "known": "main part: joined in order (FIRST then SECOND CONTROL WORDS); header: joined in order (FIRST then SECOND CONTROL WORDS)"
+ },
+ "nr-en-12-txbxcontent": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-12-txbxcontent",
+  "known": "main part: joined in reverse (SECOND then FIRST BOX WORDS); header: joined in reverse (SECOND then FIRST BOX WORDS)"
+ },
+ "nr-en-20-ppr-values": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hf-10-hdr-ppr-values",
+  "known": "main part: the later jc, right; header: the first, jc center"
+ },
+ "nr-en-21-ppr-merge": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-21-ppr-merge",
+  "known": "main part: merged (jc center and ind left 720); header: the first only (jc center)"
+ },
+ "nr-en-23-rpr-merge": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-23-rpr-merge",
+  "known": "main part: merged (b and i); header: merged (b and i)"
+ },
+ "nr-en-60-tblpr-children": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-60-tblpr-children",
+  "known": "main part: merged (the first's jc center stays); header: merged (the first's jc center stays)"
+ },
+ "nr-en-70-ind-in-one-ppr": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-70-ind-in-one-ppr",
+  "known": "main part: merged (left 720 and right 720); header: merged (left 720 and right 720)"
+ },
+ "nr-en-73-rfonts-in-one-rpr": {
+  "story": "endnote",
+  "parts": [
+   "endnotes.xml"
+  ],
+  "from": "hr-73-rfonts-in-one-rpr",
+  "known": "main part: merged (ascii Arial and hAnsi Courier New); header: merged (ascii Arial and hAnsi Courier New)"
+ },
+ "nr-fn-11-sdtcontent": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-11-sdtcontent",
+  "known": "main part: joined in order (FIRST then SECOND CONTROL WORDS); header: joined in order (FIRST then SECOND CONTROL WORDS)"
+ },
+ "nr-fn-12-txbxcontent": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-12-txbxcontent",
+  "known": "main part: joined in reverse (SECOND then FIRST BOX WORDS); header: joined in reverse (SECOND then FIRST BOX WORDS)"
+ },
+ "nr-fn-20-ppr-values": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hf-10-hdr-ppr-values",
+  "known": "main part: the later jc, right; header: the first, jc center"
+ },
+ "nr-fn-21-ppr-merge": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-21-ppr-merge",
+  "known": "main part: merged (jc center and ind left 720); header: the first only (jc center)"
+ },
+ "nr-fn-23-rpr-merge": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-23-rpr-merge",
+  "known": "main part: merged (b and i); header: merged (b and i)"
+ },
+ "nr-fn-60-tblpr-children": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-60-tblpr-children",
+  "known": "main part: merged (the first's jc center stays); header: merged (the first's jc center stays)"
+ },
+ "nr-fn-70-ind-in-one-ppr": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-70-ind-in-one-ppr",
+  "known": "main part: merged (left 720 and right 720); header: merged (left 720 and right 720)"
+ },
+ "nr-fn-73-rfonts-in-one-rpr": {
+  "story": "footnote",
+  "parts": [
+   "footnotes.xml"
+  ],
+  "from": "hr-73-rfonts-in-one-rpr",
+  "known": "main part: merged (ascii Arial and hAnsi Courier New); header: merged (ascii Arial and hAnsi Courier New)"
+ },
+ "nr-tb-11-sdtcontent": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-11-sdtcontent",
+  "known": "main part: joined in order (FIRST then SECOND CONTROL WORDS); header: joined in order (FIRST then SECOND CONTROL WORDS)"
+ },
+ "nr-tb-20-ppr-values": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hf-10-hdr-ppr-values",
+  "known": "main part: the later jc, right; header: the first, jc center"
+ },
+ "nr-tb-21-ppr-merge": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-21-ppr-merge",
+  "known": "main part: merged (jc center and ind left 720); header: the first only (jc center)"
+ },
+ "nr-tb-23-rpr-merge": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-23-rpr-merge",
+  "known": "main part: merged (b and i); header: merged (b and i)"
+ },
+ "nr-tb-60-tblpr-children": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-60-tblpr-children",
+  "known": "main part: merged (the first's jc center stays); header: merged (the first's jc center stays)"
+ },
+ "nr-tb-70-ind-in-one-ppr": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-70-ind-in-one-ppr",
+  "known": "main part: merged (left 720 and right 720); header: merged (left 720 and right 720)"
+ },
+ "nr-tb-73-rfonts-in-one-rpr": {
+  "story": "header text box",
+  "parts": [
+   "header1.xml"
+  ],
+  "from": "hr-73-rfonts-in-one-rpr",
+  "known": "main part: merged (ascii Arial and hAnsi Courier New); header: merged (ascii Arial and hAnsi Courier New)"
+ }
+}

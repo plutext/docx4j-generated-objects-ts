@@ -1,0 +1,19 @@
+NR_BEGIN
+Case nr-tb-73-rfonts-in-one-rpr
+NOTE ANCHOR1 AND i
+COMMENTED WORDS[P1]
+NR_END
+FOOTNOTE_WORDS
+ENDNOTE_WORDS
+[P1]COMMENT_WORDS
+---------------
+
+------------------------------------------------------------
+
+---------------
+
+------------------------------------------------------------
+
+HEADER_WORDS
+
+

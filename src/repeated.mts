@@ -57,8 +57,8 @@ export const AS_THE_RUNTIME_LEAVES: ReadonlySet<string> = new Set(['tblW']);
 /**
  * Where a header's or a footer's story reads a property otherwise (D7 (c), Jason 2026-11-10): a paragraph's repeated `w:pPr` keeps
  * the first copy whole, every later copy ignored, an empty first copy too. Word, in the rounds `header-repeats` and
- * `header-footer-repeats` (11 of 11 cases in a header and a footer; the main-part twins merge). A later copy's mark `w:rPr`, which
- * Word puts on the paragraph's run (`hf-16`), isn't followed.
+ * `header-footer-repeats` (11 of 11 cases in a header and a footer; the main-part twins merge), and in a header's text box
+ * (`notes-comments-repeats`, 2 of 2). A later copy's mark `w:rPr`, which Word puts on the paragraph's run (`hf-16`), isn't followed.
  */
 export const FIRST_IN_HEADER_FOOTER: Readonly<Record<string, readonly string[]>> = {
   [`${WML}P`]: ['pPr'],
@@ -70,12 +70,14 @@ const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 export const HEADER_FOOTER_STORIES: ReadonlySet<string> = new Set(['hdr', 'ftr']);
 
 /**
- * The other stories a paragraph can stand in, by element, which end the search for a header or a footer: a text box is a story of its
- * own in Word, so a paragraph in a header's text box reads by class, as in the main part. Unmeasured.
+ * The other stories a paragraph can stand in, by element, which end the search for a header or a footer; none stands in one, so they
+ * only shorten it. Notes and comments read as the main part (Word, the portfolio's round `notes-comments-repeats`, 7 shapes of 7 in
+ * each). A text box isn't among them: its paragraph reads as its host story's, so a header's text box keeps the first `w:pPr` (the
+ * same round, `nr-tb-20` and `nr-tb-21`).
  */
-export const OTHER_STORIES: ReadonlySet<string> = new Set(['body', 'txbxContent', 'footnote', 'endnote', 'comment', 'docPartBody']);
+export const OTHER_STORIES: ReadonlySet<string> = new Set(['body', 'footnote', 'endnote', 'comment', 'docPartBody']);
 
-/** Whether the element's nearest story is a header's or a footer's: through tables, controls and mc branches, not a text box. */
+/** Whether the element's nearest story is a header's or a footer's: through tables, controls, mc branches and text boxes. */
 function inHeaderOrFooter(element: Node | null): boolean {
   for (let e = element; e !== null && e.nodeType === 1; e = e.parentNode) {
     const { namespaceURI, localName } = e as Element;
@@ -195,7 +197,8 @@ function merge(earlier: Typed, later: Typed): void {
  *   twice in one parent: the later applied to the earlier, what it states winning and what it doesn't staying, the classes REQ-322
  *   names merging in turn. Only the first copy's `w:headerReference` and `w:footerReference` stand. `w:tblW` is the later's.
  * - **In a header or a footer,** a paragraph's repeated `w:pPr` keeps the first copy whole instead, as Word reads it there (D7 (c)):
- *   the paragraph's nearest story is a `w:hdr` or a `w:ftr`, found from `keptNode`'s ancestors, so a text box's paragraph merges.
+ *   the paragraph's nearest story is a `w:hdr` or a `w:ftr`, found from `keptNode`'s ancestors through any text box, so a paragraph
+ *   in a header's text box keeps the first copy too, and one in the main part's, a note's or a comment's merges.
  * - **Anything else** is left as the runtime leaves it, the last copy, as nothing measured says otherwise.
  *
  * By class, so in any part and in a `wml()` fragment too (CR-022 D1 and D7), where docx4j reads the main document part's alone. Returns

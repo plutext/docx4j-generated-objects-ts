@@ -5,7 +5,8 @@ by core-ts the same day). It reads as docx4j 17.3.6's `RepeatedChildren` does, r
 but in a header or a footer, where D7 follows Word. Section 4 is wider than the CR as accepted, by what Word was measured on since
 (section 4.1). Accepted 2026-11-07, D1 to D5 as recommended (Jason: "CR-022 as recommended") and D6 the same day (Jason: "D6: widen CR-022 to REQ-322"). D7 decided (c) 2026-11-10
 (Jason: "D7 (c) as recommended"), after two Word rounds, and built: in a header or a footer a paragraph's repeated `w:pPr` keeps the first copy.
-Not released. core-ts verifies the release candidate before Jason releases.
+In their text boxes too since 2026-11-13 (Jason: "do The CR-022 text box fix"), after the portfolio's round in notes, comments and a
+header's text box (section 3.2). Not released. core-ts verifies the release candidate before Jason releases.
 **Requested by:** Jason, 2026-11-07 ("ask objects for that CR"), relayed by jsonix-4b; built at his route (c), relayed by core-ts.
 **Depends on:** `jsonix/CR-016`, released in `@docx4j/jsonix` 3.13.0 (2026-11-07, tag `a5359c4`). Its `onOverwrittenElement` is the
 hook, so the floor here is `^3.13.0`.
@@ -26,13 +27,15 @@ Every facade read now passes `wordOverwritten` as the runtime's `onOverwrittenEl
 Word and docx4j do:
 - **Joined:** `w:body` and `w:sdtContent` at every level, in order, and `w:txbxContent` in a VML box in reverse.
 - **Applied in order to one object:** `w:pPr`, `w:rPr`, `w:sectPr` and `w:tblPr`, and the children measured twice in one parent.
-- **In a header or a footer,** a paragraph's repeated `w:pPr` keeps the first copy whole, as Word reads it there (D7).
+- **In a header or a footer,** and in a text box in one, a paragraph's repeated `w:pPr` keeps the first copy whole, as Word reads it
+  there (D7).
 
 Anything else stays as the runtime leaves it.
 
 Against Word's saves of docx4j's 101 files, 98 match on every comparison, against 33 with the runtime's reading. The other three
 are `mc:AlternateContent` roots, core-ts's root pass. In a header or a footer, 25 of this package's 28 match, two more to the same
-effect, and the last but for one run's italic. No fidelity hash moved.
+effect, and the last but for one run's italic. In notes, comments and a header's text box, the portfolio's 32 files match but the three
+Word repairs. No fidelity hash moved.
 
 ## 2. What was there
 
@@ -55,7 +58,7 @@ Word 16.0.20326.20232, each file twice, all silent, the runs equal apart from ge
 | `w:ind`, `w:spacing`, `w:numPr` and a mark's `w:rPr` in one `w:pPr`; `w:rFonts` in one `w:rPr`; `w:sectPr` in one `w:pPr`; `w:pgSz`, `w:pgMar` and `w:cols` in one `w:sectPr` | The same, as two copies of the parent (`sm-53`, `sm-70`, `sm-72`, `sm-73`, `op-10` to `op-21`) |
 
 **The limits:** one small file per shape, one level in, all in a main document part but section 3.2's. Unmeasured: a `w:pPr` or
-`w:rPr` not adjacent to its copy, a repeat in a note or a comment, in a `w:style` or a `w:lvl`, a second `w:tcPr` or `w:trPr`,
+`w:rPr` not adjacent to its copy, a repeat in a `w:style` or a `w:lvl`, a DrawingML text box outside the main part, a second `w:tcPr` or `w:trPr`,
 `a:ext`, `w:rFonts` twice in a mark's `w:rPr`, and a `w:col` list. core-ts CR-028's phase 0 lists most of these.
 
 ### 3.1 An attribute carried across `w:sectPr` copies
@@ -84,7 +87,7 @@ out stays, even where the schema gives it a default (`w:num`, `sm-21`; `w:orient
 - **Unexplained:** `w:tblW`. `w:w="4000" w:type="dxa"` then `w:type="auto"` saved as `w:w="0" w:type="dxa"` (`sm-61`, one file). That
   may be how Word reads `w:type="auto"` with no `w:w` on its own, and REQ-322 says nothing of it.
 
-### 3.2 In a header and a footer (D7)
+### 3.2 In a header, a footer, a note and a comment (D7)
 
 Two rounds of this package's, run by the portfolio on 10 November (bridge `da85101`, every job silent, the runs equal but for generated
 ids, the PDFs agreeing with the saves; `test/fixtures/header-footer-probe/`). `header-repeats` (`hr-*`, 8 files) put seven measured
@@ -96,6 +99,16 @@ seven forms, three copies of the other shapes, the same shapes in a footer, and 
 | `w:sdtContent`, `w:txbxContent` in a VML box, `w:rPr`, `w:tblPr`; `w:ind` and `w:rFonts` twice in one parent | As in the main part, with two and three copies (12 of 12) |
 | A paragraph's `w:pPr` | The first copy's paragraph properties stand, and every later copy is ignored: values (center, then right, gives center), reversed (`ind`, then `jc`, gives `ind`), three copies, three values, an empty first copy (which leaves none), and no `w:jc` (11 of 11). The main-part twins merge |
 | A paragraph mark's `w:rPr` in each `w:pPr` (`hf-16`) | The first's on the mark, and the later's on the paragraph's run, which the PDF draws in italic. One file |
+
+Then the portfolio's round `notes-comments-repeats` (`nr-*`, 31 files and a control, built by its `scripts/probes/ncrepeat_build.py`,
+bridge `ed94a27`, 10 November, every pair agreeing; `test/fixtures/notes-comments-probe/`): the header rounds' shapes in a footnote, an
+endnote, a comment and a VML text box in a header, each container else one plain paragraph.
+
+| Given more than once | Word |
+|---|---|
+| In a footnote, an endnote or a comment: `w:sdtContent`, a paragraph's `w:pPr` (values and merge), `w:rPr`, `w:tblPr`; `w:ind` and `w:rFonts` twice in one parent | As in the main part (7 shapes of 7 in each) |
+| Two `w:txbxContent` in a VML box in a note or a comment | Repaired: each job reports unreadable content, and the box's words and the container's later lines are lost (3 of 3). Whether any VML box there does the same is unmeasured |
+| In a VML text box in a header | As in the header: a paragraph's `w:pPr` keeps the first copy (`nr-tb-20`, `nr-tb-21`), and the other five shapes read as everywhere |
 
 ## 4. The change
 
@@ -119,9 +132,9 @@ Where both state one of a class in `MERGED` (`PPr`, `RPr`, `ParaRPr`, `SectPr`, 
 - **`w:tblW`** is the later's, or none if the later states none (docx4j's `AS_JAXB_LEAVES`, its CR-079 section 4).
 - **In a header or a footer** (D7 (c), `FIRST_IN_HEADER_FOOTER`): a paragraph's repeated `w:pPr` keeps the first copy whole, the later
   copy's own properties removed, so an empty first copy keeps nothing. Where the paragraph stands is read from `keptNode`'s ancestors:
-  the nearest WordprocessingML story element, `w:hdr` or `w:ftr`, through tables, controls and mc branches. A text box's
-  `w:txbxContent` is a story of its own in Word, and ends the search, as `w:body`, a note and a comment do, so their paragraphs merge.
-  A paragraph read with no such ancestor, in a `wml()` fragment say, merges. A later copy's mark `w:rPr`, which Word puts on the
+  the nearest WordprocessingML story element, `w:hdr` or `w:ftr`, through tables, controls, mc branches and text boxes, since a text
+  box's paragraph reads as its host story's (`nr-tb-20`, `nr-tb-21`). `w:body`, a note and a comment end the search, so their
+  paragraphs merge, in their text boxes too. A paragraph read with no such ancestor, in a `wml()` fragment say, merges. A later copy's mark `w:rPr`, which Word puts on the
   paragraph's run (`hf-16`), isn't followed.
 
 `wordOverwritten(node, keptNode, propertyInfo, classInfo, value, keptValue)` edits `keptValue`, the copy the runtime keeps, in place,
@@ -168,12 +181,17 @@ the `sm-*` facts and the references by their part's text, plus each text box's w
 - **In a header and a footer** (D7, section 3.2): this package's 28 files, 29 stories, compared by each control's and text box's words
   and the target paragraph's every property by its path. 26 of the 29 stories match, in 25 of the 28 files. `hf-13` and `hf-14` keep a first copy's `w:jc left` and an empty
   first `w:pPr`, which Word's save leaves out, to the same effect, and `hf-16`'s later mark `w:rPr` isn't put on the run. All three
-  are named, strict both ways. With the merge alone (D7 (a)) 8 more differ.
+  are named, strict both ways. With the merge alone (D7 (a)) 8 more differ. Each table's `w:tblPr`, as `RepeatedChildrenTest`'s
+  facts give it, is compared too, with no difference.
+- **In notes, comments and a header's text box** (section 3.2): the portfolio's 32 files, 35 parts, compared as the header rounds
+  are. 32 parts match. The three are the `w:txbxContent` pairs Word repairs in a note or a comment, where the facade joins them in
+  reverse; named, strict both ways. With a text box as a story of its own, as first built, `nr-tb-20` and `nr-tb-21` differ too.
 - **What a save does:** read again, no file repeats a child. A `deepCopy` writes the same.
 - **The gate:** the 341 fidelity hashes are identical to those of `7a85af2` (main), on jsonix 3.13.0. `npm run typecheck` and `npm test` pass on
-  Node 22.23.4; CI runs 18, 20 and 22.
-- **Mutants:** 33 of `dist/repeated.mjs`, one rule each, all caught by the smoke or the Word test. Six are D7's: the rule off, a
-  footer not a story, a text box not one, a table cell ending the search, and the later copy's own properties or `PARENT` kept.
+  Node 22.23.4 and 24.15.0; CI runs 18, 20 and 22.
+- **Mutants:** 34 of `dist/repeated.mjs`, one rule each, all caught by the smoke or the Word test. Seven are D7's: the rule off, a
+  footer not a story, a text box one, a table cell or a `w:pict` ending the search, and the later copy's own properties or `PARENT`
+  kept.
 
 **core-ts,** 2026-11-10, on a tarball of the working tree before D7 (c) (sha1 `514e7665`), its main `b25f9e3`, Node 22, jsonix 3.13.0.
 It found nothing against it:
@@ -196,6 +214,15 @@ It found nothing against it:
   and `hf-16`'s run italic, both stated here. Its comparison takes `hf-14`'s empty `w:pPr` as Word's.
 - **Not run there:** unchanged-since-read on the 28, and Node 18 and 20.
 
+**core-ts on the text box fix,** 2026-11-13, on a third candidate (sha1 `5905202b`), its main `1168069`, Node 22.23.4: it passes,
+nothing in its corpus moving.
+- **Its suite:** typecheck passes, and 2,032 of 2,032, as on its stock install.
+- **Its bytes:** 1,686 packages loaded, read whole and saved, 20,718 entries hashed, against `e8576a62` on the same build: none differ.
+  Nothing there has a repeated `w:pPr` in a header's text box.
+- **Through its own load:** the 28 header and footer files as before, 26 of 28. The portfolio's 32: 29 match Word's save, 27 on
+  `e8576a62`, the two that moved being `nr-tb-20` and `nr-tb-21`; the other three are the files Word repairs. docx4j's `repeated/`
+  reads as on the first two candidates, and all 112 main parts are unchanged since read.
+
 ## 7. Decisions
 
 D1 to D5 decided as recommended, and D6 as recommended with the change it states, all 2026-11-07. D5 is settled from core-ts's side
@@ -203,26 +230,28 @@ by its D2's route (c), 2026-11-10. D7 decided (c) as recommended, 2026-11-10 (Ja
 
 | D | Question | Decided |
 |---|---|---|
-| D1 | Which pairs? | The five first in section 4, which D6 and section 4.1 added to, including `w:txbxContent`'s reverse order, since the key is the one shape measured and its words are otherwise lost. The rule is by class, so it also applies in a header or a note, unmeasured, where REQ-322 speaks of the main part |
+| D1 | Which pairs? | The five first in section 4, which D6 and section 4.1 added to, including `w:txbxContent`'s reverse order, since the key is the one shape measured and its words are otherwise lost. The rule is by class, so it also applies outside the main part, where REQ-322 speaks of the main part alone: a header and a footer, measured since and refined by D7, and a note or a comment, measured since, which read as the main part |
 | D2 | Everything else? | Leave it to the runtime, and add a pair only when Word is measured |
 | D3 | On by default? | Yes, as CR-013's reading is: it changes only a file with the shape. A caller's `onOverwrittenElement` replaces it, and `wordOverwritten` is exported so a caller can call it too, as `wordInvalidValue` is |
 | D4 | Is the join reported? | Not by the facade yet. core-ts CR-028 D8, the code, is open with docx4j and python, and docx4j logs one WARN a part with a count and no code. A caller counts through `wordOverwritten`'s return meanwhile |
 | D5 | This or core-ts CR-028's containers pass? | This: core-ts's D2 took route (c), 2026-11-10. Its root pass stays |
 | D6 | Widen section 4 to REQ-322, as it stood at WD 0.100? | Yes, as D2 said to add what Word was measured on, and `sm-*` measures it. References are the exception, only the first copy's standing (`ft-*`) |
-| D7 | By class, or the main document part's alone, as docx4j? | **(c), as recommended** (Jason, 2026-11-10: "D7 (c) as recommended"), built as section 4 has it. Measured in two rounds first (Jason, 2026-11-10: "D7 let's measure a header", then "run a further round: a footer, three copies, and other properties"). Word 16.0.20326.20232, bridge da85101, every job silent, each file's two runs equal but for generated ids. `header-repeats` (`hr-*`, 8 files) put seven measured main-part cases into `word/header1.xml` as they are; `header-footer-repeats` (`hf-*`, 20 files) took a header's `w:pPr` through values, reversed order, three copies, an empty first copy, no `w:jc` and a mark's `w:rPr`, three copies of the other shapes, the same shapes in a footer, and main-part twins of the new markup. **Every shape but `w:pPr` reads in a header and a footer as in the main part**, 12 of 12: `w:sdtContent` joined in order and `w:txbxContent` in reverse (two and three copies), `w:rPr` merged (two and three), `w:tblPr`, and `w:ind` and `w:rFonts` twice in one parent. **A paragraph's repeated `w:pPr` doesn't:** in all 11 cases, header and footer alike, the first copy's paragraph properties stand and every later copy's are ignored, even where the first is empty (`hf-14`), where the main part merges them (the twins `hf-51`, `hf-54` and `hf-55` merge). The saves and the PDFs agree. In `hf-16`, the later copy's mark `w:rPr` (`w:i`) lands on the paragraph's run, which the PDF draws in italic. Against the 23: by class, as built, matches 12; the main part's alone (docx4j and python, the last copy) matches none. *Options:* (a) by class as built; (b) the main part's alone, as docx4j; (c) by class, and in a `w:hdr` or `w:ftr` a paragraph's repeated `w:pPr` keeps the first copy whole: 12 of 12 and the `w:pPr` cases in 8 exactly and 2 to the same effect (a first `jc left` and an empty first copy, the defaults Word leaves out), `hf-16`'s run italic not followed. *Recommended:* (c). Notes and comments stay by class, unmeasured |
+| D7 | By class, or the main document part's alone, as docx4j? | **(c), as recommended** (Jason, 2026-11-10: "D7 (c) as recommended"), built as section 4 has it. Measured in two rounds first (Jason, 2026-11-10: "D7 let's measure a header", then "run a further round: a footer, three copies, and other properties"). Word 16.0.20326.20232, bridge da85101, every job silent, each file's two runs equal but for generated ids. `header-repeats` (`hr-*`, 8 files) put seven measured main-part cases into `word/header1.xml` as they are; `header-footer-repeats` (`hf-*`, 20 files) took a header's `w:pPr` through values, reversed order, three copies, an empty first copy, no `w:jc` and a mark's `w:rPr`, three copies of the other shapes, the same shapes in a footer, and main-part twins of the new markup. **Every shape but `w:pPr` reads in a header and a footer as in the main part**, 12 of 12: `w:sdtContent` joined in order and `w:txbxContent` in reverse (two and three copies), `w:rPr` merged (two and three), `w:tblPr`, and `w:ind` and `w:rFonts` twice in one parent. **A paragraph's repeated `w:pPr` doesn't:** in all 11 cases, header and footer alike, the first copy's paragraph properties stand and every later copy's are ignored, even where the first is empty (`hf-14`), where the main part merges them (the twins `hf-51`, `hf-54` and `hf-55` merge). The saves and the PDFs agree. In `hf-16`, the later copy's mark `w:rPr` (`w:i`) lands on the paragraph's run, which the PDF draws in italic. Against the 23: by class, as built, matches 12. docx4j's reading, the main part's alone and the last copy elsewhere, matches none. Python's, the main part's alone and its fork's first copy elsewhere, matches 11, the `w:pPr` files but `hf-16`, and `hr-60`; it loses the later `w:sdtContent`'s words with no warning and refuses an edited save (python CR-039 section 10.3, measured at `9f565b6`). *Options:* (a) by class as built; (b) the main part's alone, as docx4j; (c) by class, and in a `w:hdr` or `w:ftr` a paragraph's repeated `w:pPr` keeps the first copy whole: 12 of 12 and the `w:pPr` cases in 8 exactly and 2 to the same effect (a first `jc left` and an empty first copy, the defaults Word leaves out), `hf-16`'s run italic not followed. *Recommended:* (c). Notes and comments stay by class, as the portfolio's round then measured them (section 3.2). A text box was first taken as a story of its own, unmeasured, and so merged in a header; the same round showed a header's text box reads as the header (`nr-tb-20`, `nr-tb-21`), and it does here since 2026-11-13 (Jason: "do The CR-022 text box fix"). Python proposes to read headers and footers as (c) does (its CR-039 phases E and F, proposed, nothing built) |
 
 ## 8. Tests and docs
 
 - **`test/word365-repeated.mjs`:** section 6, on `test/fixtures/repeated-probe/` (each source's parts beside Word's save, a
-  `SOURCE.md`, and a SHA-1 manifest of docx4j's files) and `test/fixtures/header-footer-probe/` (this package's two rounds, the same
-  layout, `cases.json`, and a SHA-256 manifest of the probes and Word's saves).
+  `SOURCE.md`, and a SHA-1 manifest of docx4j's files), `test/fixtures/header-footer-probe/` (this package's two rounds, the same
+  layout, `cases.json`, and a SHA-256 manifest of the probes and Word's saves) and `test/fixtures/notes-comments-probe/` (the
+  portfolio's round, laid out the same, each case's story part alone).
 - **Smoke:** the tables held to the context; three bodies joined with their `w:sectPr` applied in order and only the first copy's
   references, headers and footers together; `PARENT` after a join and after merges at each level; the children twice in one parent;
   a list the later's; run-level `w:sdtContent`; a VML `w:txbxContent` in reverse; `w:tblW` the later's; a pair not in the table left
   to the runtime; a caller's callback first; `unmarshalNode`, `unmarshalPackage`, `wml()` and a footnote alike; a save read again
   repeating nothing; `deepCopy`; and CR-017's report and CR-011's record through a join. D7: a header's and a footer's paragraph
-  keeping the first of three `w:pPr`, `PARENT` re-linked by identity, an empty first copy, through a table; a header's text box and a
-  `wml()` fragment merging; a header's `w:rPr` still merging; the story names held to the context.
+  keeping the first of three `w:pPr`, `PARENT` re-linked by identity, an empty first copy, through a table and a header's text box; a
+  text box in the main part, a footnote and a comment, and a `wml()` fragment, merging; a header's `w:rPr` still merging; the story
+  names held to the context.
 - **Docs:** `CLAUDE.md` and a README bullet.
 
 ## 9. Consumers

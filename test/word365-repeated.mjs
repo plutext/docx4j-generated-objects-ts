@@ -265,7 +265,8 @@ const storyFacts = (root) => {
   const p = all(root, 'p').find((e) => /TARGET TEXT|MARKED WORDS/.test(e.textContent) && all(e, 'p').length === 0);
   return { text: all(root, 'p').filter((e) => all(e, 'p').length === 0).map((e) => e.textContent),
     controls: all(root, 'sdtContent').map((c) => all(c, 'p').map((e) => e.textContent)),
-    boxes: all(root, 'txbxContent').map((b) => all(b, 't').map((t) => t.textContent)), target: p && propertiesByPath(p) };
+    boxes: all(root, 'txbxContent').map((b) => all(b, 't').map((t) => t.textContent)), target: p && propertiesByPath(p),
+    tables: all(root, 'tblPr').map(stated) };
 };
 let hfStories = 0;
 for (const [id, { story }] of Object.entries(hfCases)) {
@@ -276,20 +277,38 @@ for (const [id, { story }] of Object.entries(hfCases)) {
   }
 }
 
+// --- notes, comments and a header's text box, the portfolio's round notes-comments-repeats (test/fixtures/notes-comments-probe/, with a
+// SOURCE.md): the header rounds' shapes in a footnote, an endnote, a comment and a VML text box in a header. Each part read and written,
+// against Word's save of it, as the header rounds are ----------------------------------------------------------------------------------
+const nrDir = new URL('fixtures/notes-comments-probe/', import.meta.url);
+const nrCases = JSON.parse(readFileSync(new URL('cases.json', nrDir), 'utf8'));
+const nrRead = (path) => readFileSync(new URL(path, nrDir), 'utf8');
+let nrParts = 0;
+for (const [id, { parts }] of Object.entries(nrCases)) {
+  for (const part of parts) {
+    nrParts++;
+    const ours = parse(await marshalString(await unmarshalString(nrRead(`${id}/source/word/${part}`))));
+    compare(id, part, storyFacts(ours), storyFacts(parse(nrRead(`${id}/word365/word/${part}`))));
+  }
+}
+
 // --- the stated differences, strict both ways --------------------------------------------------------------------------------------------
 // An mc:AlternateContent root holding the copies, which core-ts's root pass reads (its CR-028 section 3.1): the facade reads a root
 // branch's w:document children as a list, which repeats nothing, and textOf gives no text for such a root (CR-021).
 const MC_ROOTS = ['rt-50-mc-root-three-in-choice', 'rt-51-mc-root-three-in-fallback', 'sm-52-branch-orient-first'];
 // In a header, a first copy's w:jc left and an empty first w:pPr are kept, where Word's save leaves out what states only the default,
 // to the same effect (hf-13, hf-14). And a later copy's paragraph-mark w:rPr, which Word puts on the paragraph's run, isn't followed
-// (hf-16, one file).
+// (hf-16, one file). Two w:txbxContent in a VML box in a note or a comment, which Word repairs (each job's "unreadable content"),
+// losing the box's words and the container's later lines: the facade joins them in reverse, as in the main part and a header.
 const STATED = ['rt-50-mc-root-three-in-choice: the words', 'rt-51-mc-root-three-in-fallback: the words',
   'sm-52-branch-orient-first: the sections, tables and target properties',
-  'hf-13-hdr-ppr-values-three: the header', 'hf-14-hdr-ppr-empty-first: the header', 'hf-16-hdr-ppr-nested-rpr: the header'];
+  'hf-13-hdr-ppr-values-three: the header', 'hf-14-hdr-ppr-empty-first: the header', 'hf-16-hdr-ppr-nested-rpr: the header',
+  'nr-cm-12-txbxcontent: comments.xml', 'nr-en-12-txbxcontent: endnotes.xml', 'nr-fn-12-txbxcontent: footnotes.xml'];
 assert.deepEqual(differ, STATED, 'every difference from Word\'s save is a stated one, and every stated one still differs');
 assert.deepEqual(notCompared.sort(), [...Object.values(NOT_THE_MAIN_STORY).flat(), ...MC_ROOTS].sort(),
   'textOf gives Word\'s text but where Word\'s holds more than the main story, and for an mc root');
 
-console.log(`word365 repeated (CR-022): docx4j's ${cases.length} files and this package's ${Object.keys(hfCases).length} in a header or a footer (${hfStories} stories), `
-  + `${checks} checks against Word's saves and texts: ${differ.length} stated, the mc roots core-ts reads and three in a header; `
+console.log(`word365 repeated (CR-022): docx4j's ${cases.length} files, this package's ${Object.keys(hfCases).length} in a header or a footer (${hfStories} stories) `
+  + `and the portfolio's ${Object.keys(nrCases).length} in notes, comments and a header's text box (${nrParts} parts), `
+  + `${checks} checks against Word's saves and texts: ${differ.length} stated, the mc roots core-ts reads, three in a header and three Word repairs; `
   + `textOf is Word's text in ${cases.length - notCompared.length}; ${walked} values' PARENT; no save repeats a child`);

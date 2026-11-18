@@ -1,0 +1,22 @@
+NR_BEGIN
+Case nr-cm-11-sdtcontent
+NOTE ANCHOR1 AND i
+COMMENTED WORDS[P1]
+NR_END
+FOOTNOTE_WORDS
+ENDNOTE_WORDS
+[P1]Case sdtContent
+FIRST CONTROL WORDS
+SECOND CONTROL WORDS
+LAST LINE
+---------------
+
+------------------------------------------------------------
+
+---------------
+
+------------------------------------------------------------
+
+HEADER_WORDS
+
+

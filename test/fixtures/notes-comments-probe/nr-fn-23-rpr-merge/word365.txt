@@ -1,0 +1,21 @@
+NR_BEGIN
+Case nr-fn-23-rpr-merge
+NOTE ANCHOR1 AND i
+COMMENTED WORDS[P1]
+NR_END
+Case rPr-merge
+TARGET TEXT
+LAST LINE
+ENDNOTE_WORDS
+[P1]COMMENT_WORDS
+---------------
+
+------------------------------------------------------------
+
+---------------
+
+------------------------------------------------------------
+
+HEADER_WORDS
+
+
