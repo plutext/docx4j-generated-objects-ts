@@ -160,29 +160,34 @@ for real, byte-identical to the third:
 ## 7. The same kind of gap elsewhere (D4)
 
 `wml.xsd` compared with the ISO 2016 transitional schema, type by type, then each candidate tried through the facade at
-0.7.0. The held count is a text search of the Word packages in section 2.3's trees, which are test fixtures rather than a
-sample of the world.
+0.7.0, and again at `71ef2e1` (CR-022's commit) with the same result. The portfolio counted them on 12 November 2026 on the
+gather host, 3,242,806 kept documents of 3,722,083: the settings and numbering parts by their blobs, and the main part,
+headers, footers and notes by a scan of each kept document.
 
-| Element | In ISO, not in docx4j | Through the facade | Held |
+| Element | In ISO, not in docx4j | Through the facade | Kept documents |
 |---|---|---|---|
-| `w:documentProtection` (settings) | `algorithmName`, `hashValue`, `saltValue`, `spinCount` | all 4 dropped; `w:edit` and `w:enforcement` stay | element in 1 package, without them |
-| `w:writeProtection` (settings) | the same 4 | all 4 dropped | element in none |
-| `w:cnfStyle` | 12 on/off attributes beside `w:val`, this element's shape | all 12 dropped | element in 2 packages, `w:val` alone |
-| `w:numFmt` | `w:format`, and the value `custom` | both go: `<w:numFmt/>` | none with `w:format` |
+| `w:documentProtection` (settings) | `algorithmName`, `hashValue`, `saltValue`, `spinCount` | all 4 dropped; `w:edit` and `w:enforcement` stay | 132 with them, of 146,005 with the element; 49,906 hold the older `w:hash` form |
+| `w:writeProtection` (settings) | the same 4 | all 4 dropped | none with them, of 2,861; 256 hold the older form |
+| `w:cnfStyle` | 12 on/off attributes beside `w:val`, this element's shape | all 12 dropped | 41,958 (6,363,324 elements), each attribute in about 41,800 |
+| `w:numFmt` | `w:format`, and the value `custom` | both go: `<w:numFmt/>`. In an `mc:AlternateContent` in a `w:lvl`, the whole `mc:AlternateContent` goes, Fallback too | 2,111 with `w:format`, 2,115 with `custom`; 2,098 with an `mc:AlternateContent` in a `w:lvl`, every one `Requires="w14"` and holding a `w:numFmt` |
 | `w:tc` | `w:id` | dropped | none |
 
-- **`w:documentProtection` matters most.** A file using ISO's attributes keeps its restriction and loses the password hash
-  behind it, so the loss is one of state, unlike section 2.2's. The older `w:hash`, `w:salt` and `w:crypt*` attributes do
-  round-trip (measured).
-- **`w:numFmt`:** an `mc:AlternateContent` holding one in a `w:lvl` is dropped whole, as CR-025's host list says of `w:lvl`.
-  That is believed to be Word's form for a custom format, but no file here shows it.
+- **`w:documentProtection` is the gravest per file.** A file using ISO's attributes keeps its restriction and loses the password
+  hash behind it, so the loss is one of state, unlike section 2.2's. It's rare: 132 documents, against 49,906 using the older
+  `w:hash`, `w:salt` and `w:crypt*` attributes, which round-trip (measured). docx4j's two types share its `AG_Password`, so one
+  schema change would cover `w:writeProtection` too, though nothing counted uses ISO's form there.
+- **`w:numFmt` is the largest loss of state:** the count shows the `mc:AlternateContent` form, `w:numFmt w:val="custom"` with
+  `w:format` in a `w14` Choice, in 2,098 documents. A save through the facade drops it whole, as CR-025's host list says of
+  `w:lvl`, leaving the level with no `w:numFmt`, which ISO reads as decimal. Keeping it takes `w:format`, `custom`, and an
+  `mc:AlternateContent` in a `w:lvl`.
+- **`w:cnfStyle` is the most frequent.** Whether `w:val` repeats the attributes, as `w:stylePaneFormatFilter`'s do (section
+  2.2), wasn't counted. Where it does, the loss is of form.
 - **Not attribute gaps:** ISO also has child elements docx4j lacks (`CT_TcMar/start`, `CT_TblBorders/start`, `CT_SdtPr/label`
   and others). Those are CR-026's kind of case and were not tried here.
 
-So core-ts's "only real loss" holds for what its corpus contains, not for what the model can lose. How often these occur
-isn't known. The portfolio's catalogue holds 2,274,603 settings and 1,618,539 numbering blobs, which can count everything
-above except `w:cnfStyle` and `w:tc`, whose elements live in bodies. Its scan doesn't record these attributes today, so D4 has that
-count made first. The count waits for the home copy of the catalogue (Jason, 2026-11-06), and the portfolio session has the go.
+So core-ts's "only real loss" holds for what its corpus contains, not for what the model can lose. By D4, `w:documentProtection`
+goes to docx4j, since its ISO form occurs. docx4j CR-078 is released in 17.3.6, so which docx4j CR takes it, and whether
+`w:numFmt` and `w:cnfStyle` go with it, is Jason's call.
 
 ## 8. Decisions
 
@@ -191,7 +196,7 @@ count made first. The count waits for the home copy of the catalogue (Jason, 202
 | D1 | The route: docx4j's `wml.xsd`, then regenerate? | Yes, as a small docx4j CR under `docx4j/style-pane-format-filter`: its CR-078. |
 | D2 | The attributes' type? | `s:ST_OnOff` (section 5). docx4j-python has no objection, though this departs from its patch. |
 | D3 | `w:val`? | Stays, optional, unsynchronised (section 5). |
-| D4 | Section 7's gaps? | Keep them out of this CR. Count the settings and numbering blobs first, then take `w:documentProtection` and `w:writeProtection` into the docx4j CR if they occur. |
+| D4 | Section 7's gaps? | Keep them out of this CR. Count the settings and numbering blobs first, then take `w:documentProtection` and `w:writeProtection` into the docx4j CR if they occur. Counted 2026-11-12 (section 7): `w:documentProtection`'s ISO form occurs, in 132 documents |
 
 ## 9. Tests and docs
 
