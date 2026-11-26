@@ -392,7 +392,7 @@ as Word 365 does (WD REQ-322), as docx4j 17.3.6's `RepeatedChildren` does, rule 
 - **Not reported** (D4): a caller wraps `wordOverwritten`, which returns whether it applied a reading. core-ts CR-028 D8 is open.
 - **The gate:** every fidelity hash identical, 34 mutants of `dist/repeated.mjs` each caught.
 
-CR-024 (implemented 2026-11-27, through the editor's ED-015 P4; unreleased) finds a save's report paths only for a report, in time
+CR-024 (implemented 2026-11-27, through the editor's ED-015 P4; released in 0.9.1) finds a save's report paths only for a report, in time
 linear in the part. `onMisplaced`'s path is found at a container's first report, not as each container is opened. One `pathsOf()` memo
 per marshal (each element's path and its position among same-named siblings) serves `onMisplaced`, `onNormalised` and
 `onOutOfRange`. A save with nothing reported finds no path; every report and saved byte is unchanged.

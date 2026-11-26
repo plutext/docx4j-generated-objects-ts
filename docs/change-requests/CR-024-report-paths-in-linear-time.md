@@ -1,8 +1,8 @@
 # CR-024: A save's report paths found only for a report, in time linear in the part
 
-**Status:** Implemented 2026-11-27, D1 and D2 as built (section 5), and committed at Jason's word ("make the commits then push"). Not
-released: it goes out as a patch, 0.9.1, after core-ts's go on the pushed commit. core-ts and the editor verified the candidate
-(section 4).
+**Status:** Implemented 2026-11-27, D1 and D2 as built (section 5), committed `8303385`, and released in 0.9.1 (2026-11-27, tag
+`37d6abb`; Jason: "release 0.9.1"), after core-ts's go on `8303385`. core-ts and the editor verified the candidate, whose files npm's
+tarball matches but for `package.json` (section 4).
 **Requested by:** Jason, through docx4j-ts-editor's ED-015 P4, accepted 2026-11-27 (editor `9d9efe6`): "The fix goes to
 `@docx4j/generated-objects-ts` as a change request of its own (section 5, with the position cache as its second half), released as a
 patch (0.9.1)". It was relayed by the editor's session the same day.
@@ -94,6 +94,9 @@ The 341 fidelity parts' marshalled hashes are identical to 0.9.0's published tar
   1,400 of them inside cells or controls.
 - **Not checked:** a browser, Node 18 and 20, and the published tarball. It compares that after the release, before raising its
   range at Jason's word.
+
+**The release,** 0.9.1, published 2026-11-27 (shasum `6c25a9b7`): its `dist/` and `modules/` are byte-identical to the tree, and to the
+candidate's but for `package.json`, and its 341 marshalled hashes equal the tree's (`RELEASING.md` step 6).
 
 ## 5. Decisions
 
