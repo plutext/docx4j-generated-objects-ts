@@ -6,7 +6,7 @@ but in a header or a footer, where D7 follows Word. Section 4 is wider than the 
 (section 4.1). Accepted 2026-11-07, D1 to D5 as recommended (Jason: "CR-022 as recommended") and D6 the same day (Jason: "D6: widen CR-022 to REQ-322"). D7 decided (c) 2026-11-10
 (Jason: "D7 (c) as recommended"), after two Word rounds, and built: in a header or a footer a paragraph's repeated `w:pPr` keeps the first copy.
 In their text boxes too since 2026-11-13 (Jason: "do The CR-022 text box fix"), after the portfolio's round in notes, comments and a
-header's text box (section 3.2). Not released. core-ts verifies the release candidate before Jason releases.
+header's text box (section 3.2). Released in 0.9.0 (2026-11-18, tag `54c9966`; Jason: "release 0.9.0"), after core-ts's go on `7958467`.
 **Requested by:** Jason, 2026-11-07 ("ask objects for that CR"), relayed by jsonix-4b; built at his route (c), relayed by core-ts.
 **Depends on:** `jsonix/CR-016`, released in `@docx4j/jsonix` 3.13.0 (2026-11-07, tag `a5359c4`). Its `onOverwrittenElement` is the
 hook, so the floor here is `^3.13.0`.
@@ -222,6 +222,8 @@ nothing in its corpus moving.
 - **Through its own load:** the 28 header and footer files as before, 26 of 28. The portfolio's 32: 29 match Word's save, 27 on
   `e8576a62`, the two that moved being `nr-tb-20` and `nr-tb-21`; the other three are the files Word repairs. docx4j's `repeated/`
   reads as on the first two candidates, and all 112 main parts are unchanged since read.
+- **The release:** core-ts packed the pushed `7958467` itself on 2026-11-18 and got this candidate, its go standing. 0.9.0's
+  tarball (`c9b6483b`) differs from it in `package.json` alone, and its 341 marshalled hashes equal the tree's (`RELEASING.md` step 6).
 
 ## 7. Decisions
 
@@ -256,7 +258,7 @@ by its D2's route (c), 2026-11-10. D7 decided (c) as recommended, 2026-11-10 (Ja
 
 ## 9. Consumers
 
-- **core-ts:** its CR-028 phase 2 takes this release, counting through `wordOverwritten`'s return at its read and re-read once
+- **core-ts:** its CR-028 phase 2 takes 0.9.0, counting through `wordOverwritten`'s return at its read and re-read once
   CR-028 D8's code is agreed. Verified on both candidates, before D7 (c) and with it (section 6). Three traps its section 3.2
   names, and how this meets them:
   - Carrying "what the lost copy holds and the kept doesn't" would carry `sm-81`'s `w:val="0"` over a `<w:vanish/>`. The merge takes

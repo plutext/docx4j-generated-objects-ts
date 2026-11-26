@@ -186,8 +186,14 @@ headers, footers and notes by a scan of each kept document.
   and others). Those are CR-026's kind of case and were not tried here.
 
 So core-ts's "only real loss" holds for what its corpus contains, not for what the model can lose. By D4, `w:documentProtection`
-goes to docx4j, since its ISO form occurs. docx4j CR-078 is released in 17.3.6, so which docx4j CR takes it, and whether
-`w:numFmt` and `w:cnfStyle` go with it, is Jason's call.
+goes to docx4j, since its ISO form occurs. No docx4j CR covered any of the four, open or planned (docx4j, 18 November 2026, at
+`6405804c8`; CR-078's section 3 left the protection pair for this count), so Jason had docx4j draft one (2026-11-18: "have it
+draft it"): docx4j CR-088, proposed the same day and awaiting his review. After a measuring phase it has three parts: `AG_Password`'s
+four attributes, which cover both protection elements; `CT_Cnf`'s twelve, `w:val` optional and not kept in step with them; and
+`CT_NumFmt`'s `w:format` with `custom` (and ISO's `bahtText` and `dollarText`), with an `mc:AlternateContent` admitted in a `w:lvl`
+as a choice with `w:numFmt`. `w:tc`'s `w:id` stays out. This package follows it with a regeneration, as it followed CR-078, with
+nothing in `src/` depending on these types. The first two parts change attributes only; the third changes `CT_Lvl`'s content, so a
+level holding the branch has no `numFmt`, which core-ts's numbering would read.
 
 ## 8. Decisions
 
@@ -196,7 +202,7 @@ goes to docx4j, since its ISO form occurs. docx4j CR-078 is released in 17.3.6, 
 | D1 | The route: docx4j's `wml.xsd`, then regenerate? | Yes, as a small docx4j CR under `docx4j/style-pane-format-filter`: its CR-078. |
 | D2 | The attributes' type? | `s:ST_OnOff` (section 5). docx4j-python has no objection, though this departs from its patch. |
 | D3 | `w:val`? | Stays, optional, unsynchronised (section 5). |
-| D4 | Section 7's gaps? | Keep them out of this CR. Count the settings and numbering blobs first, then take `w:documentProtection` and `w:writeProtection` into the docx4j CR if they occur. Counted 2026-11-12 (section 7): `w:documentProtection`'s ISO form occurs, in 132 documents |
+| D4 | Section 7's gaps? | Keep them out of this CR. Count the settings and numbering blobs first, then take `w:documentProtection` and `w:writeProtection` into the docx4j CR if they occur. Counted 2026-11-12 (section 7): `w:documentProtection`'s ISO form occurs, in 132 documents. No docx4j CR covered it, so docx4j drafted CR-088 for it, with `w:cnfStyle` and `w:numFmt` (Jason 2026-11-18; proposed) |
 
 ## 9. Tests and docs
 
