@@ -132,6 +132,9 @@ There are ten tests and no test framework:
   list the later's, run-level `w:sdtContent`, a VML `w:txbxContent` in reverse, `w:tblW` the later's, a pair not in the table left
   to the runtime, a caller's callback first, every read path and a footnote alike, a save read again repeating nothing, `deepCopy`,
   and CR-017's report and CR-011's record through a join; and D7's header and footer rule, its story boundary and the names.
+  CR-024's block counts, not times: every element the marshal creates reads its `previousSibling` through a counter (xmldom's
+  `createElementNS` wrapped, restored after). A save with `onMisplaced` and nothing misplaced reads what one without it reads; with a
+  report of each kind for every paragraph, every path is the expected one and the reads double with the paragraphs.
 - `test/readme-examples.ts` (compile-only, via `typecheck`) holds the README snippets against
   minimal Office JS stubs. Change a README example and this file together.
 - `test/fidelity.mjs` (runtime, CR-004 phases A and B) unmarshals and marshals **341 parts** Office 365
@@ -388,6 +391,11 @@ as Word 365 does (WD REQ-322), as docx4j 17.3.6's `RepeatedChildren` does, rule 
   `test/fixtures/notes-comments-probe/`); notes and comments read as the main part.
 - **Not reported** (D4): a caller wraps `wordOverwritten`, which returns whether it applied a reading. core-ts CR-028 D8 is open.
 - **The gate:** every fidelity hash identical, 34 mutants of `dist/repeated.mjs` each caught.
+
+CR-024 (implemented 2026-11-27, through the editor's ED-015 P4; unreleased) finds a save's report paths only for a report, in time
+linear in the part. `onMisplaced`'s path is found at a container's first report, not as each container is opened. One `pathsOf()` memo
+per marshal (each element's path and its position among same-named siblings) serves `onMisplaced`, `onNormalised` and
+`onOutOfRange`. A save with nothing reported finds no path; every report and saved byte is unchanged.
 
 ## What the declarations promise
 

@@ -1091,10 +1091,12 @@ function marshalToDocument(context: Jsonix.Context, element: Jsonix.TypedNamedVa
   };
   // CR-018: a branch's w:sdt declared at its host's level, so the runtime writes it with no xsi:type.
   const marshallerOptions: Jsonix.MarshallerOptions = { ...options, namespacePrefixes: table, onElement, wildcardTypeInfo: branchTypes(context, options.wildcardTypeInfo) };
-  const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, onNormalised) : marshallerOptions;
-  const ranged = onOutOfRange ? reportingOutOfRange(normalised, table, onOutOfRange) : normalised;
+  // CR-024: one path memo for the marshal's reports, so a path is found only for a report, and in linear time.
+  const pathOf = pathsOf();
+  const normalised = (normaliseOnSave ?? normaliseOnSaveByDefault) ? normalising(marshallerOptions, table, pathOf, onNormalised) : marshallerOptions;
+  const ranged = onOutOfRange ? reportingOutOfRange(normalised, table, pathOf, onOutOfRange) : normalised;
   const rootValue = rootValueOf(element);
-  const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, onMisplaced, rootValue, rootTypeOf(context, element)?.name) : ranged)
+  const doc = context.createMarshaller(onMisplaced ? reportingMisplaced(ranged, table, pathOf, onMisplaced, rootValue, rootTypeOf(context, element)?.name) : ranged)
     .marshalDocument(element);
   if (element.name.namespaceURI !== MC_NS && bindsIgnorable(context, element)) declareExtensionsIgnorable(doc.documentElement, table);
   fixRootNamespaceDeclarations(doc.documentElement, table, typeof rootValue === 'object' && rootValue !== null ? sourceBindings.get(rootValue) : undefined, choices);
@@ -1200,16 +1202,36 @@ function leftOutOnSave(value: unknown, typeInfo: Jsonix.TypeInfo): boolean {
   }
 }
 
-/** An element's path from the part root, each step after the root with its position among same-named siblings. */
-function pathOf(node: Node): string {
-  const steps: string[] = [];
-  for (let n: Node | null = node; n && n.nodeType === 1; n = n.parentNode) {
-    if (n.parentNode?.nodeType !== 1) { steps.unshift(n.nodeName); continue; }
+/**
+ * The paths of one marshal's elements, from the part root, each step after the root with its position among same-named
+ * siblings (CR-024). Each element's path and position are remembered, so a part's reports cost time linear in its size:
+ * a position counts back only to the nearest same-named sibling already placed, and an ancestor's path is found once.
+ * The marshal only appends, so a position, once found, stands for the rest of it. Made afresh for each marshal.
+ */
+function pathsOf(): (node: Node) => string {
+  const paths = new WeakMap<Node, string>();
+  const positions = new WeakMap<Node, number>();
+  const positionOf = (node: Node): number => {
     let position = 1;
-    for (let sibling = n.previousSibling; sibling; sibling = sibling.previousSibling) if (sibling.nodeName === n.nodeName) position++;
-    steps.unshift(`${n.nodeName}[${position}]`);
-  }
-  return '/' + steps.join('/');
+    for (let sibling = node.previousSibling; sibling; sibling = sibling.previousSibling) {
+      if (sibling.nodeName !== node.nodeName) continue;
+      const placed = positions.get(sibling);
+      if (placed !== undefined) { position += placed; break; }
+      position++;
+    }
+    positions.set(node, position);
+    return position;
+  };
+  const pathOf = (node: Node): string => {
+    let path = paths.get(node);
+    if (path === undefined) {
+      const parent = node.parentNode;
+      path = parent?.nodeType !== 1 ? `/${node.nodeName}` : `${pathOf(parent)}/${node.nodeName}[${positionOf(node)}]`;
+      paths.set(node, path);
+    }
+    return path;
+  };
+  return pathOf;
 }
 
 function qualifiedName(name: Jsonix.XML.QName, table: Readonly<Record<string, string>>): string {
@@ -1231,7 +1253,8 @@ function holds(owner: unknown, property: string, value: unknown): boolean {
  * normaliser applies. Marshal-only: the tree keeps what it read. Where `onNormalised` is passed,
  * `onElement` also tracks what has been written, so that each record can say where it is.
  */
-function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onNormalised?: (normalisation: Normalisation) => void): Jsonix.MarshallerOptions {
+function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, pathOf: (node: Node) => string,
+  onNormalised?: (normalisation: Normalisation) => void): Jsonix.MarshallerOptions {
   const { onAttributeValue: callerOnAttributeValue, omitElement: callerOmitElement, onElement } = options;
   const writtenFrom = new WeakMap<Node, unknown>();
   let lastWritten: Node | undefined;
@@ -1284,7 +1307,8 @@ function normalising(options: Jsonix.MarshallerOptions, table: Readonly<Record<s
  * jsonix-CR-011's `onAttributeValue`, composed around the options it is given (the normaliser's, or the caller's).
  * It never changes what is written: it returns what the options it wraps return.
  */
-function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onOutOfRange: (report: OutOfRange) => void): Jsonix.MarshallerOptions {
+function reportingOutOfRange(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, pathOf: (node: Node) => string,
+  onOutOfRange: (report: OutOfRange) => void): Jsonix.MarshallerOptions {
   const { onAttributeValue: innerOnAttributeValue, onElement } = options;
   const writtenFrom = new WeakMap<Node, unknown>();
   let lastWritten: Node | undefined;
@@ -1341,8 +1365,8 @@ function writtenBefore(container: object, containerType: string, list: string, s
  * offers `omitElement` just before it writes the element, or the root's declaration (`rootType`). Composed around the
  * options it is given; it never changes what is written.
  */
-function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, onMisplaced: (report: MisplacedChild) => void,
-  rootValue: unknown, rootType: string | undefined): Jsonix.MarshallerOptions {
+function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<Record<string, string>>, pathOf: (node: Node) => string,
+  onMisplaced: (report: MisplacedChild) => void, rootValue: unknown, rootType: string | undefined): Jsonix.MarshallerOptions {
   const { onElement, omitElement } = options;
   const writtenAs = new WeakMap<object, string>();
   if (typeof rootValue === 'object' && rootValue !== null && rootType !== undefined) writtenAs.set(rootValue, rootType);
@@ -1357,7 +1381,9 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
       const spec = container === undefined ? undefined : CONTAINERS[container];
       const items = spec ? (value as Record<string, unknown>)[spec.list] : undefined;
       if (container !== undefined && spec && Array.isArray(items)) {
-        const base = pathOf(written);
+        // Found at the first report (CR-024): testList reports before the container's children are written, so the path
+        // is the one found up front, and a container with nothing misplaced finds none.
+        let base: string | undefined;
         const stepName = (item: unknown): string | undefined => {
           const name = childName(item);
           return name === '#text' ? undefined : isNode(item) ? (item as Element).nodeName : qualifiedName(name as Jsonix.XML.QName, table);
@@ -1366,7 +1392,7 @@ function reportingMisplaced(options: Jsonix.MarshallerOptions, table: Readonly<R
           (misplaced, item, index, via, step) => onMisplaced({
             element: written as Element, container, child: childName(item), ...(misplaced.childType ? { childType: misplaced.childType } : {}), index,
             ...(via.length ? { via: via.join('/') } : {}), rule: misplaced.rule, message: misplaced.message,
-            path: [base, ...via, ...(step ? [step] : [])].join('/'),
+            path: [base ??= pathOf(written), ...via, ...(step ? [step] : [])].join('/'),
           }));
       }
       onElement?.(written, value);

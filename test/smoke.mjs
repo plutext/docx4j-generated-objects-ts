@@ -1964,3 +1964,70 @@ assert.equal(IGNORABLE_PREFIX_ALIASES.x, SML, 'the alias table is exported, as N
 
   console.log(`CR-022: a repeated w:body, w:sdtContent, w:txbxContent, w:pPr, w:rPr, w:sectPr and w:tblPr read as Word reads them; ${Object.values(MERGED_IN).flat().length} merged and ${Object.values(JOINED).length} joined pairs, held to the context; in a header or a footer, and their text boxes, a paragraph's repeated w:pPr keeps the first copy; anything else left to the runtime`);
 }
+
+// CR-024: a save's report paths found only for a report, each in time linear in the part (the editor's ED-015: a 255-page
+// save took 32 s in Chromium, 93% of it finding paths no report used). Counted, not timed: every element the marshal
+// creates reads its previousSibling through a counter, so the counts are exact on any machine.
+{
+  const { p, r } = await import('../dist/builders/wml.mjs');
+  const { DOMImplementation } = await import('@xmldom/xmldom');
+  const documentPrototype = Object.getPrototypeOf(new DOMImplementation().createDocument(null, null));
+  const createElementNS = documentPrototype.createElementNS;
+  let reads = 0;
+  documentPrototype.createElementNS = function (...args) {
+    const element = createElementNS.apply(this, args);
+    let previous = element.previousSibling;
+    Object.defineProperty(element, 'previousSibling', { get() { reads++; return previous; }, set(node) { previous = node; }, enumerable: true, configurable: true });
+    return element;
+  };
+  try {
+    const w = (localPart) => ({ namespaceURI: W, localPart, prefix: 'w' });
+    // n paragraphs, each with an empty w:rsidR (left out and reported by the normaliser) and a run whose w:sz Word can't
+    // hold (reported out of range), and after each, when asked, a run straight in the body (misplaced).
+    const tree = (n, misplaced) => {
+      const blocks = [];
+      for (let k = 0; k < n; k++) {
+        const run = r('x');
+        run.value.rPr = { TYPE_NAME: 'org_docx4j_wml.RPr', sz: { TYPE_NAME: 'org_docx4j_wml.HpsMeasure', val: 70000 } };
+        const para = p([run]);
+        para.value.rsidR = '';
+        blocks.push(para);
+        if (misplaced) blocks.push(r('m'));
+      }
+      return { name: w('document'), value: { TYPE_NAME: 'org_docx4j_wml.Document', body: { TYPE_NAME: 'org_docx4j_wml.Body', content: blocks } } };
+    };
+    const save = async (value, options) => {
+      const reports = [];
+      const record = (kind) => (report) => reports.push([kind, report.path]);
+      reads = 0;
+      await marshalString(value, { ...options, ...(options.onNormalised ? { onNormalised: record('normalised') } : {}),
+        ...(options.onOutOfRange ? { onOutOfRange: record('range') } : {}), ...(options.onMisplaced ? { onMisplaced: record('misplaced') } : {}) });
+      return { reads, reports };
+    };
+    const all = { normaliseOnSave: true, onNormalised: true, onOutOfRange: true, onMisplaced: true };
+
+    // Nothing misplaced: onMisplaced reads no sibling the save doesn't read anyway.
+    const quiet = tree(300, false);
+    const plain = await save(quiet, { normaliseOnSave: false });
+    const watched = await save(quiet, { normaliseOnSave: false, onMisplaced: true });
+    assert.deepEqual(watched, plain, 'onMisplaced with nothing misplaced: no path found');
+    assert.ok(plain.reads > 0, 'the counter counts');
+
+    // A report of each kind for every paragraph: every path as before, and the reads twice as many for twice the paragraphs.
+    const small = await save(tree(200, true), all);
+    const large = await save(tree(400, true), all);
+    const expected = (n) => Array.from({ length: n }, (_, i) => [
+      ['range', `/w:document/w:body[1]/w:p[${i + 1}]/w:r[1]/w:rPr[1]/w:sz[1]/@w:val`],
+      ['normalised', `/w:document/w:body[1]/w:p[${i + 1}]/@w:rsidR`],
+    ]).flat();
+    const sorted = (reports) => [...reports].sort(([a, x], [b, y]) => a.localeCompare(b) || x.localeCompare(y, 'en', { numeric: true }));
+    assert.deepEqual(sorted(large.reports.filter(([kind]) => kind !== 'misplaced')), sorted(expected(400)), 'each path as before');
+    assert.deepEqual(large.reports.filter(([kind]) => kind === 'misplaced').map(([, path]) => path),
+      Array.from({ length: 400 }, (_, i) => `/w:document/w:body[1]/w:r[${i + 1}]`), 'each misplaced run\'s path');
+    assert.ok(large.reads < 2.5 * small.reads, `linear: ${small.reads} sibling reads for 200 paragraphs, ${large.reads} for 400`);
+
+    console.log(`CR-024: a path found only for a report, in linear time; ${small.reads} sibling reads for 600 reports, ${large.reads} for 1,200`);
+  } finally {
+    documentPrototype.createElementNS = createElementNS;
+  }
+}
